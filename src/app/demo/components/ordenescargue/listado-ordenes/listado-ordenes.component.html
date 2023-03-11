@@ -1,0 +1,17 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <app-dynamic-table [dataTable]="tablaListadoOrdenesCargue.data" 
+                               [headersTable]="tablaListadoOrdenesCargue.headers"
+                               dataKey="id" 
+                               [rows]="10" 
+                               [paginator]="true"
+                               [selectionMode]="'single'"
+                               nameExport="solicitude_de_cargue"
+                               toolTipShowBtnNew ="Nueva solicitud"
+                               [permisosUsuarioPagina]="permisosUsuarioPagina">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>

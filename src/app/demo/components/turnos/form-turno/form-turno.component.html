@@ -1,0 +1,138 @@
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="cliente" 
+                               type="text" 
+                               disabled 
+                               [value]="cliente" />
+                        <label for="cliente"><h6>Cliente</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="localidad" 
+                               type="text" 
+                               disabled 
+                               [value]="localidad" />
+                        <label for="localidad"><h6>Localidad</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-calendar inputId="fechacargue" [showIcon]="true" [(ngModel)]="fechacargue" [minDate]="hoy"></p-calendar>
+                        <label for="fechacargue"><h6>Fecha estimada del cargue</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-calendar [(ngModel)]="horacargue"  [timeOnly]="true" [hourFormat]="'12'" inputId="timeonly"></p-calendar>
+                        <label for="horacargue"><h6>Hora estimada del cargue</h6></label>
+                    </span>
+                    
+                </div>
+                <div class="field col-12">
+                    <span class="p-float-label">
+                        <p-autoComplete id="almacen" 
+                                        [(ngModel)]="estadoSeleccionado" 
+                                        [suggestions]="estadosFiltrados" 
+                                        (completeMethod)="filtrarEstado($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        [disabled]="!estadoSeleccionado.code"
+                                        (onSelect)="seleccionarEstado(estadoSeleccionado)">
+                        </p-autoComplete>
+                        <label for="cliente"><h6>Seleccione estado</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-4">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="placa" 
+                               type="text" 
+                               disabled 
+                               [value]="placa" />
+                        <label for="placa"><h6>Placa</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-4">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="tipo" 
+                               type="text" 
+                               disabled 
+                               [value]="tipo" />
+                        <label for="tipo"><h6>Tipo vehículo</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-4">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="cantidad" 
+                               type="text" 
+                               disabled 
+                               [value]="cantidad" />
+                        <label for="cantidad"><h6>Cantidad cargada</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="conductor" 
+                               type="text" 
+                               disabled 
+                               [value]="conductor" />
+                        <label for="conductor"><h6>Conductor</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="telefono" 
+                               type="text" 
+                               disabled 
+                               [value]="telefono" />
+                        <label for="telefono"><h6># Télefonico</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="celular" 
+                               type="text" 
+                               disabled 
+                               [value]="celular" />
+                        <label for="celular"><h6># Celular</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="email" 
+                               type="text" 
+                               disabled 
+                               [value]="email" />
+                        <label for="email"><h6>E-mail</h6></label>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cancelar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>

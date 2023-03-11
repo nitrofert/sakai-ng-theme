@@ -1,0 +1,28 @@
+{
+	"data": [
+		{
+			"id": "1",
+			"code": "70152489",
+			"name": "Rafael Perez",
+			"label": "70152489 - Rafael Perez",
+			"telefono": "3155687841",
+			"email": ""
+		},
+        {
+			"id": "2",
+			"code": "72456123",
+			"name": "Raul Contreras",
+			"label": "72456123 - Raul Contreras",
+			"telefono": "3155687841",
+			"email": ""
+		},
+        {
+			"id": "3",
+			"code": "8452162",
+			"name": "Jose Peña",
+			"label": "8452162 - Jose Peña",
+			"telefono": "3124567896",
+			"email": ""
+		}
+    ]
+}

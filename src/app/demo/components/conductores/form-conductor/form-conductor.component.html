@@ -1,0 +1,71 @@
+<p-toast></p-toast>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="cedula" 
+                               type="text"
+                               [(ngModel)]="cedula" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaConductor && cedula==''}"/>
+                        <label for="cedula"><h6>Número identicficación</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="nombre" 
+                               type="text" 
+                               [(ngModel)]="nombre"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaConductor && nombre==''}"/>
+                        <label for="nombre"><h6>Nombre completo</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="numerotelefonico" 
+                               type="text" 
+                               [(ngModel)]="numerotelefonico" />
+                        <label for="numerotelefonico"><h6>Número télefonico</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="numerocelular" 
+                               type="text" 
+                                
+                               [(ngModel)]="numerocelular" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaConductor && numerocelular==''}"/>
+                        <label for="numerocelular"><h6>Número celular</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="numerocelular" 
+                               type="email" 
+                                
+                               [(ngModel)]="email"/>
+                        <label for="email"><h6>Email</h6></label>
+                    </span>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,139 @@
+<p-toast></p-toast>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="placa" 
+                               type="text"
+                               [(ngModel)]="placa"
+                               class="uppercase"
+                               maxlength="10"
+                               onkeydown="return /[a-z-0-9]/i.test(event.key)" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && placa==''}"/>
+                        <label for="placa"><h6>Número de placas</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <p-autoComplete id="tipo" 
+                                        [(ngModel)]="tipoSeleccionado" 
+                                        [suggestions]="tiposFiltrados" 
+                                        (completeMethod)="filtrarTipo($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        (onSelect)="seleccionarTipo(tipoSeleccionado)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && tipoSeleccionado.length==0}">
+
+                                        <ng-template let-value pTemplate="selectedItem">
+                                            <span style="font-size:18px">{{value}}</span>
+                                        </ng-template>
+
+                                       
+                        </p-autoComplete>
+                        <label for="tipo"><h6>Seleccione un tipo de vehículo</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6  ">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="capacidad" 
+                                   type="number" 
+                                   [(ngModel)]="capacidad" 
+                                   [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && (capacidad==0 || !capacidad)}"/>
+                            <label for="capacidad"><h6>Capacidad de carga</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">
+                            TON
+                        </span>
+                    </div>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="pesovacio" 
+                                   type="number" 
+                                   [(ngModel)]="pesovacio" 
+                                   [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && (pesovacio==0 || !pesovacio)}"/>
+                            <label for="pesovacio"><h6>Peso vacio</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">
+                            TON
+                        </span>
+                    </div>
+                    </div>
+                <div class="field col-12  md:col-6">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="pesomax" 
+                                   type="number" 
+                                   [(ngModel)]="pesomax" 
+                                   [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && (pesomax==0 || !pesomax)}"/>
+                            <label for="pesomax"><h6>Peso Maximo</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">
+                            TON
+                        </span>
+                    </div>
+                </div>
+                <div class="field col-12  md:col-6">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="volumen" 
+                                   type="number" 
+                                    
+                                   [(ngModel)]="volumen" 
+                                    
+                                   [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && (volumen==0 || !volumen)}"/>
+                            <label for="volumen"><h6>Volumen</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">
+                            <div class="">
+                                <span class="vertical-align-baseline">m</span>
+                                <span class="vertical-align-super text-xs">3</span>
+                            </div> 
+                            
+                        </span>
+                    </div>
+                </div>
+
+                <!--<div class="field col-12 ">
+                    <span class="p-float-label">
+                        <p-autoComplete id="tipo" 
+                                        [(ngModel)]="conductorSeleccionado" 
+                                        [suggestions]="conductoresFiltrados" 
+                                        (completeMethod)="filtrarConductor($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        (onSelect)="seleccionarConductor(conductorSeleccionado)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && conductorSeleccionado.length==0}">
+
+                                        <ng-template let-value pTemplate="selectedItem">
+                                            <span style="font-size:18px">{{value}}</span>
+                                        </ng-template>
+
+                                       
+                        </p-autoComplete>
+                        <label for="tipo"><h6>Seleccione un conductor</h6></label>
+                    </span>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>

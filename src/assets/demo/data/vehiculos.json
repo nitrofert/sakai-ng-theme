@@ -1,0 +1,42 @@
+{
+	"data": [
+		{
+			"id": "1",
+			"code": "SBL318",
+			"name": "SBL318",
+			"label": "SBL318",
+            "clase": "TRACTOMULA 5 EJES",
+			"capacidad": "30",
+			"pesovacio": "18",
+            "pesomax":"48",
+            "volumen":"65",
+			"conductor":"70152489"
+
+            
+		},
+        {
+			"id": "2",
+			"code": "SKN320",
+			"name": "SKN320",
+			"label": "SKN320",
+            "clase": "TURBO",
+			"capacidad": "4.5",
+			"pesovacio": "2",
+            "pesomax":"6.5",
+            "volumen":"18",
+			"conductor":"72456123"
+		},
+        {
+			"id": "3",
+			"code": "HNQ123",
+			"name": "HNQ123",
+			"label": "HNQ123",
+            "clase": "SENCILLO",
+			"capacidad": "8",
+			"pesovacio": "4",
+            "pesomax":"12",
+            "volumen":"32",
+			"conductor":"8452162"
+		}
+    ]
+}

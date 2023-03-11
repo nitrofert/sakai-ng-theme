@@ -1,0 +1,76 @@
+{
+	"data": [
+		{
+			"id": 1,
+            "id_solicitud":1,
+			"fechacargue":"2023-03-03",
+            "horacargue":"Wed Mar 01 2023 16:00:00 GMT-0500",
+            "cliente": "CN38142161",
+            "cliente_nombre":"MAGDA ROCIO RUIZ MOLANO",
+			"estado": "Pendiente",
+            "placa":"HNQ123",
+            "conductor":"70152489",
+            "conductor_nombre":"Rafael Perez",
+            
+            "pedido":"121004143",
+            "itemcode":"FS2030007",
+            "itemname":"SAM G/50",
+            "cantidad":10,
+            "almacen":"MINERVAL"
+		},
+        {
+			"id": "2",
+            "id_solicitud":2,
+			"fechacargue":"2023-03-02",
+            "horacargue":"Wed Mar 01 2023 10:00:00 GMT-0500",
+            "cliente": "CN890918965",
+			"cliente_nombre":"C.I.TECNICAS BALTIME DE COLOMBIA S.A.",
+			"estado": "Autorizado",
+            "placa":"SBL318",
+            "conductor":"72456123",
+            "conductor_nombre":"Raul Contreras",
+            
+            "pedido":"121004022",
+            "itemcode":"FS2030009",
+            "itemname":"UREA G /50",
+            "cantidad":30,
+            "almacen":"SM_N300"
+		},
+        {
+			"id": "3",
+            "id_solicitud":2,
+			"fechacargue":"2023-02-28",
+            "horacargue":"Wed Mar 01 2023 10:00:00 GMT-0500",
+            "cliente": "CN890918965",
+			"cliente_nombre":"C.I.TECNICAS BALTIME DE COLOMBIA S.A.",
+			"estado": "Fin cargue",
+            "placa":"SKN320",
+            "conductor":"8452162",
+            "conductor_nombre":"Jose Peña",
+            
+            "pedido":"121003935",
+            "itemcode":"ES2020002       ",
+            "itemname":"NITROSMART /50",
+            "cantidad":4.5,
+            "almacen":"SM_N300"
+		},
+        {
+			"id": 4,
+            "id_solicitud":1,
+			"fechacargue":"2023-03-02",
+            "horacargue":"Wed Mar 01 2023 16:00:00 GMT-0500",
+            "cliente": "CN38142161",
+            "cliente_nombre":"MAGDA ROCIO RUIZ MOLANO",
+			"estado": "Arribo a cargue",
+            "placa":"HNQ123",
+            "conductor":"70152489",
+            "conductor_nombre":"Rafael Perez",
+            
+            "pedido":"121004143",
+            "itemcode":"FS2030007",
+            "itemname":"SAM G/50",
+            "cantidad":10,
+            "almacen":"MINERVAL"
+		}
+    ]
+}

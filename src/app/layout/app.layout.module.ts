@@ -17,6 +17,8 @@ import { AppFooterComponent } from './app.footer.component';
 import { AppConfigModule } from './config/config.module';
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
+import { PrimengModule } from './primeng.module';
+import { AppBreadcrumbComponent } from './shared/breadcrumb/app.breadcrumb.component';
 
 @NgModule({
     declarations: [
@@ -26,20 +28,22 @@ import { AppLayoutComponent } from "./app.layout.component";
         AppMenuComponent,
         AppSidebarComponent,
         AppLayoutComponent,
+        
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpClientModule,
         BrowserAnimationsModule,
-        InputTextModule,
-        SidebarModule,
-        BadgeModule,
-        RadioButtonModule,
-        InputSwitchModule,
-        RippleModule,
+        //InputTextModule,
+        //SidebarModule,
+        //BadgeModule,
+        //RadioButtonModule,
+        //InputSwitchModule,
+        //RippleModule,
         RouterModule,
-        AppConfigModule
+        AppConfigModule,
+        PrimengModule
     ],
     exports: [AppLayoutComponent]
 })

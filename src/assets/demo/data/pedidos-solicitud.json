@@ -1,0 +1,37 @@
+{
+    "data":
+    [  
+        {  
+            "data":{  
+                "vehiculo":"SBL310",
+                "conductor":"Rafa",
+                "cntcarga":"15 TON"
+            },
+            "children":[  
+                {  
+                    "data":{  
+                        "vehiculo":"#pedido",
+                        "conductor":"material",
+                        "cntcarga":"15 TON"
+                    }
+                }
+            ]
+        },
+        {  
+            "data":{  
+                "vehiculo":"STN678",
+                "conductor":"Rafa",
+                "cntcarga":"15 TON"
+            },
+            "children":[  
+                {  
+                    "data":{  
+                        "vehiculo":"#pedido",
+                        "conductor":"material",
+                        "cntcarga":"15 TON"
+                    }
+                }
+            ]
+        }
+    ]
+}

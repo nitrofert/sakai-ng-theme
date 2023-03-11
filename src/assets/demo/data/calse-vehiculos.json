@@ -1,0 +1,86 @@
+{
+	"data": [
+		{
+			"id": "1",
+			"code": "CAMIONETA",
+			"name": "CAMIONETA",
+            "label": "CAMIONETA",
+			"capacidad": "1",
+			"pesovacio": "1",
+            "pesomax":"2",
+            "volumen":"5"
+            
+		},
+        {
+			"id": "2",
+			"code": "MINITURBO",
+			"name": "MINITURBO",
+            "label": "MINITURBO",
+			"capacidad": "2",
+			"pesovacio": "1",
+            "pesomax":"3",
+            "volumen":"12"
+		},
+        {
+			"id": "3",
+			"code": "TURBO",
+			"name": "TURBO",
+            "label": "TURBO",
+			"capacidad": "4.5",
+			"pesovacio": "2",
+            "pesomax":"6.5",
+            "volumen":"18"
+		},
+        {
+			"id": "4",
+			"code": "SENCILLO",
+			"name": "SENCILLO",
+            "label": "SENCILLO",
+			"capacidad": "8",
+			"pesovacio": "4",
+            "pesomax":"12",
+            "volumen":"32"
+		},
+        {
+			"id": "5",
+			"code": "TRACTOMULA 3 EJES",
+			"name": "TRACTOMULA 3 EJES",
+            "label": "TRACTOMULA 3 EJES",
+			"capacidad": "15",
+			"pesovacio": "12",
+            "pesomax":"27",
+            "volumen":"65"
+		},
+        {
+			"id": "6",
+			"code": "TRACTOMULA 4 EJES",
+			"name": "TRACTOMULA 4 EJES",
+            "label": "TRACTOMULA 4 EJES",
+			"capacidad": "18",
+			"pesovacio": "14",
+            "pesomax":"32",
+            "volumen":"65"
+		},
+        {
+			"id": "7",
+			"code": "TRACTOMULA 5 EJES",
+			"name": "TRACTOMULA 5 EJES",
+            "label": "TRACTOMULA 5 EJES",
+			"capacidad": "30",
+			"pesovacio": "18",
+            "pesomax":"48",
+            "volumen":"65"
+		},
+        {
+			"id": "8",
+			"code": "TRACTOMULA 6 EJES",
+			"name": "TRACTOMULA 6 EJES",
+            "label": "TRACTOMULA 6 EJES",
+			"capacidad": "35",
+			"pesovacio": "17",
+            "pesomax":"52",
+            "volumen":"65"
+		}
+        
+    ]
+}

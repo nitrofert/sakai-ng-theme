@@ -1,0 +1,39 @@
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<app-breadcrumb></app-breadcrumb>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 mt-3">
+                    <span class="p-float-label">
+                        <p-autoComplete id="almacen" 
+                                        [(ngModel)]="localidadSeleccionada" 
+                                        [suggestions]="localidadesFiltradas" 
+                                        (completeMethod)="filtrarLocalidad($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        
+                                        (onSelect)="seleccionarLocalidad(localidadSeleccionada)">
+                        </p-autoComplete>
+                        <label for="cliente"><h6>Seleccione una localidad</h6></label>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<full-calendar *ngIf="showCalendar" [options]="calendarOptions">
+    <ng-template #eventContent let-arg>
+
+        <div>
+            {{ (arg.event.title | objecrString:'cliente') | tooltips:20 }} 
+        </div>
+        <div>
+            Placa: {{ arg.event.title | objecrString:'placa'   }}
+        </div>
+        
+        
+      </ng-template>
+</full-calendar>

@@ -20,7 +20,8 @@ export class NodeService {
     }
 
     getFilesystem() {
-        return this.http.get<any>('assets/demo/data/filesystem.json')
+        //return this.http.get<any>('assets/demo/data/filesystem.json')
+        return this.http.get<any>('assets/demo/data/pedidos-solicitud.json')
             .toPromise()
             .then(res => res.data as TreeNode[]);
     }

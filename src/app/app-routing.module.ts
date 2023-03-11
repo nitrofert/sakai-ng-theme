@@ -2,15 +2,27 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
+import { LoginComponent } from './demo/components/auth/login/login.component';
+import { AuthGuard } from './demo/components/auth/guard/auth.guard';
+import { LoggedInGuard } from './demo/components/auth/guard/logged-in.guard';
+import { RoleAccesGuard } from './demo/components/auth/guard/rol-acces.guard';
 
 @NgModule({
     imports: [
         RouterModule.forRoot([
+            {path: '', component: LoginComponent,  canActivate:[LoggedInGuard] ,  },
             {
-                path: '', component: AppLayoutComponent,
+                
+                path:'portal', component: AppLayoutComponent, canActivate:[AuthGuard],
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                    { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
+                    { path: 'ordenes-de-cargue', loadChildren: () => import('./demo/components/ordenescargue/ordenescargue.module').then(m => m.OrdenescargueModule) },
+                    { path: 'solicitudes-de-cargue', loadChildren: () => import('./demo/components/solicitudescargue/solicitudescargue.module').then(m => m.SolicitudescargueModule) },
+                    { path: 'turnos', loadChildren: () => import('./demo/components/turnos/turnos.module').then(m => m.TurnosModule) },
+                    { path: 'vehiculos', loadChildren: () => import('./demo/components/vehiculos/vehiculos.module').then(m => m.VehiculosModule) },
+                    { path: 'conductores', loadChildren: () => import('./demo/components/conductores/conductores.module').then(m => m.ConductoresModule) },
+                    { path: 'transportadoras', loadChildren: () => import('./demo/components/transportadoras/transportadoras.module').then(m => m.TransportadorasModule) },
+                    { path: 'uikit', canActivate:[RoleAccesGuard], data:{expectedRole:'ADMIN'}, loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
                     { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
                     { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
                     { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
@@ -18,7 +30,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
-            { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
+            //{ path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'notfound', component: NotfoundComponent },
             { path: '**', redirectTo: '/notfound' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })

@@ -1,0 +1,88 @@
+<p-toast></p-toast>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <p-inputMask [(ngModel)]="nit" 
+                                     id="nit" 
+                                     mask="9999999999"
+                                     [maxlength]="11"
+                                     [ngClass]="{'ng-invalid ng-dirty' : envioLineaTransportadora && nit==''}">
+                        </p-inputMask>
+                        <!--<input pInputText 
+                               id="nit" 
+                               type="text"
+                               maxlength="11"
+                               mask="9999999999"
+                               [(ngModel)]="nit" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaTransportadora && nit==''}"/>-->
+                        <label for="nit"><h6>Número identicficación</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="nombre" 
+                               type="text" 
+                               [(ngModel)]="nombre"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaTransportadora && nombre==''}"/>
+                        <label for="nombre"><h6>Nombre completo</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="numerocelular" 
+                               type="email" 
+                               [(ngModel)]="email"/>
+                        <label for="email"><h6>Email</h6></label>
+                    </span>
+                </div>
+                
+                <div class="field col-12">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="nombre_contacto" 
+                               type="text" 
+                               [(ngModel)]="nombre_contacto" />
+                        <label for="nombre_contacto"><h6>Nombre contacto</h6></label>
+                    </span>
+                </div>
+
+
+                <div class="field col-12 md:col-6  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="telefono_contacto" 
+                               type="text" 
+                               [(ngModel)]="telefono_contacto" />
+                        <label for="telefono_contacto"><h6>Número télefonico contacto</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                        id="email_contacto" 
+                        type="email" 
+                        [(ngModel)]="email_contacto"/>
+                 <label for="email_contacto"><h6>Email contacto</h6></label>
+                    </span>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>
