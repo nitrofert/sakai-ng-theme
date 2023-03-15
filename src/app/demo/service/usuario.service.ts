@@ -32,4 +32,22 @@ import { UrlApiService } from "./url-api.service";
         const url:string = `${this.api_url}/api/usuarios/clientes`;
         return  this.http.get<any>(url);
     }
+
+    getMenuUsuario():Observable<any>{
+        const url:string = `${this.api_url}/api/menu/by-usuario`;
+        return  this.http.get<any>(url);
+    }
+
+    getPermisosModulo(modulo:string):Observable<any> {
+        modulo = modulo.replace(/\//g, '-')
+        const url:string = `${this.api_url}/api/usuarios/permisos-modulo/${modulo}`;
+        return  this.http.get<any>(url);
+    }
+
+    getListadoUsuarios():Observable<any> {
+       
+        const url:string = `${this.api_url}/api/usuarios`;
+        return  this.http.get<any>(url);
+    }
+
 }

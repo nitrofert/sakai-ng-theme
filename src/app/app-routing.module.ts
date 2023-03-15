@@ -16,6 +16,7 @@ import { RoleAccesGuard } from './demo/components/auth/guard/rol-acces.guard';
                 path:'portal', component: AppLayoutComponent, canActivate:[AuthGuard],
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+                    { path: 'admin',  loadChildren: () => import('./demo/components/admin/admin.module').then(m => m.AdminModule) },
                     { path: 'ordenes-de-cargue', loadChildren: () => import('./demo/components/ordenescargue/ordenescargue.module').then(m => m.OrdenescargueModule) },
                     { path: 'solicitudes-de-cargue', loadChildren: () => import('./demo/components/solicitudescargue/solicitudescargue.module').then(m => m.SolicitudescargueModule) },
                     { path: 'turnos', loadChildren: () => import('./demo/components/turnos/turnos.module').then(m => m.TurnosModule) },

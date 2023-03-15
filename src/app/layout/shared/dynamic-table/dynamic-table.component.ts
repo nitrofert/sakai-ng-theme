@@ -25,11 +25,21 @@ export class DynamicTableComponent implements OnInit {
   @Input() viewCheckAllItem:boolean = false;
   @Input() showBtnNew:boolean = false;
   @Input() toolTipShowBtnNew:string = "Nuevo";
+  @Input() showBtnEdit:boolean = false;
+  @Input() toolTipShowBtnEdit:string = "Editar";
+  @Input() showBtnExp:boolean = false;
+  @Input() toolTipShowBtnExp:string = "Exportar";
+  @Input() showBtnDelete:boolean = false;
+  @Input() toolTipShowBtnDelete:string = "Anular";
+  
   @Input() permisosUsuarioPagina!:any[];
   @Input() showSelectedItems:boolean = false;
 
   @Output() onNewAccion: EventEmitter<any> = new EventEmitter();
   @Output() onSelectedItems: EventEmitter<any> = new EventEmitter();
+  @Output() onEditAccion: EventEmitter<any> = new EventEmitter();
+  @Output() onDeleteAccion: EventEmitter<any> = new EventEmitter();
+  @Output() onChangeState: EventEmitter<any> = new EventEmitter();
 
   loading:boolean = false;
   selectedItem:any[] = [];
@@ -75,6 +85,20 @@ export class DynamicTableComponent implements OnInit {
   newAccion(){
     this.onNewAccion.emit(true);
   }
+
+  editAccion(){
+   //console.log(this.selectedItem, this.selectedItem.length);
+    this.onEditAccion.emit(this.selectedItem[0].id);
+  }
+
+  deleteAccion(){
+    this.onDeleteAccion.emit(this.selectedItem);
+  }
+
+  changeState(key:any, valor:any,id:any){
+    this.onChangeState.emit({key,valor,id});
+  }
+  
 
   emitSelectedItems(){
     this.onSelectedItems.emit(this.selectedItem);

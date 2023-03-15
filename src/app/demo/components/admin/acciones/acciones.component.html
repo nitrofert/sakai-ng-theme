@@ -1,0 +1,23 @@
+<p-toast></p-toast>
+<app-breadcrumb></app-breadcrumb>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <app-dynamic-table [dataTable]="dataTable" 
+                               [headersTable]="headersTable"
+                               dataKey="id" 
+                               [rows]="10" 
+                               [paginator]="true"
+                               [selectionMode]="'multiple'"
+                               [showBtnNew]="showBtnNew"
+                               [showBtnEdit]="showBtnEdit"
+                               [showBtnExp]="showBtnExp"
+                               [showBtnDelete]="showBtnDelete"
+                               nameExport="acciones"
+                               (onNewAccion)="nuevaAccion($event)"
+                               (onEditAccion)="editAccion($event)"
+                               (onDeleteAccion)="deleteAccion($event)">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>    

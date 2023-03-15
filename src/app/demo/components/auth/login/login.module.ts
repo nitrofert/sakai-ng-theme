@@ -7,7 +7,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
-import { PrimengModule } from 'src/app/layout/primeng.module';
+import { PrimengModule } from 'src/app/layout/shared/primeng/primeng.module';
 
 @NgModule({
     imports: [

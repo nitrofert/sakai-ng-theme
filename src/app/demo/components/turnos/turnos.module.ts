@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { ApplicationPipesModule } from '../../pipes/pipes.module';
 import { TurnosRoutingModule } from './turnos-routing.module';
-import { PrimengModule } from 'src/app/layout/primeng.module';
+import { PrimengModule } from 'src/app/layout/shared/primeng/primeng.module';
 import { BreadCrumbModule } from 'src/app/layout/shared/breadcrumb/app.breadcrumb.module';
 
 import { DialogService } from 'primeng/dynamicdialog';

@@ -5,7 +5,7 @@ import { NuevaSolicitudComponent } from './nueva-solicitud/nueva-solicitud.compo
 import { SolicitudescargueRoutingModule } from './solicitudescargue-routing.module';
 import { BreadCrumbModule } from '../../../layout/shared/breadcrumb/app.breadcrumb.module';
 import { DynamicTableModule } from '../../../layout/shared/dynamic-table/dynamic-table.module';
-import { PrimengModule } from '../../../layout/primeng.module';
+import { PrimengModule } from '../../../layout/shared/primeng/primeng.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlmacenesService } from '../../service/almacenes.service';
 import { PedidosService } from '../../service/pedidos.service';

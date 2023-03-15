@@ -1,0 +1,89 @@
+<p-toast></p-toast>
+<app-breadcrumb></app-breadcrumb>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="p-fluid p-formgrid grid">
+                
+                            <div class="field col-12 mt-3">
+                                <span class="p-float-label">
+                                    <p-dropdown [options]="opcionPermisos" 
+                                    [(ngModel)]="opcionPermiso" 
+                                    optionLabel="name"
+                                    (onChange)="seleccionarOpcion(opcionPermiso)"></p-dropdown>
+                                    <label for="opcionPermiso"><h6>Seleccionar permisos x </h6></label>
+                                </span>
+                            </div>
+                        
+                            <div *ngIf="opcionPermiso.code==='rol'" class="field col-12 ">
+                                <span class="p-float-label">
+                                   
+                                    <p-autoComplete id="tipo" 
+                                                    [(ngModel)]="rolSeleccionado" 
+                                                    [suggestions]="rolesFiltrados" 
+                                                    (completeMethod)="filtrarRoles($event)" 
+                                                    field="label" 
+                                                    [dropdown]="true"
+                                                    (onSelect)="seleccionarRol(rolSeleccionado)"
+                                                    [disabled]="rolDisabled">
+            
+                                                    <ng-template let-value pTemplate="selectedItem">
+                                                        <span style="font-size:18px">{{value}}</span>
+                                                    </ng-template>
+            
+                                                   
+                                    </p-autoComplete>
+                                    <label for="rolSeleccionado"><h6>Seleccionar rol</h6></label>
+                                </span>
+                            </div>
+
+                            <div *ngIf="opcionPermiso.code==='usuario'" class="field col-12 ">
+                                <span class="p-float-label">
+                                   
+                                    <p-autoComplete id="tipo" 
+                                                    [(ngModel)]="usuarioSeleccionado" 
+                                                    [suggestions]="usuariosFiltrados" 
+                                                    (completeMethod)="filtrarUsuarios($event)" 
+                                                    field="label" 
+                                                    [dropdown]="true"
+                                                    (onSelect)="seleccionarUsuario(usuarioSeleccionado)"
+                                                    [disabled]="rolDisabled">
+            
+                                                    <ng-template let-value pTemplate="selectedItem">
+                                                        <span style="font-size:18px">{{value}}</span>
+                                                    </ng-template>
+            
+                                                   
+                                    </p-autoComplete>
+                                    <label for="usuarioSeleccionado"><h6>Seleccionar usuario</h6></label>
+                                </span>
+                            </div>
+
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <app-dynamic-table  *ngIf="opcionPermiso.code!=''"
+                                [dataTable]="dataTable" 
+                                [headersTable]="headersTable"
+                                dataKey="id" 
+                                [rows]="10" 
+                                [paginator]="true"
+                                [selectionMode]="'multiple'"
+                                [showBtnNew]="showBtnNew"
+                                [showBtnEdit]="showBtnEdit"
+                                [showBtnExp]="showBtnExp"
+                                [showBtnDelete]="showBtnDelete"
+                                nameExport="permisos"
+                                (onNewAccion)="nuevaAccion($event)"
+                                (onEditAccion)="editAccion($event)"
+                                (onDeleteAccion)="deleteAccion($event)"
+                                (onChangeState)="changeState($event)">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>    

@@ -1,0 +1,110 @@
+<p-toast></p-toast>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                
+                <div class="field col-12  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="title" 
+                               type="text"
+                               [(ngModel)]="title" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaMenu && title==''}"/>
+                        <label for="title"><h6>Título</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 ">
+                    <span class="p-float-label">
+                        <textarea pInputTextarea
+                                  id="description"
+                                  [(ngModel)]="description">
+                        </textarea>
+                        
+                        <label for="description"><h6>Descripción</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="url" 
+                               type="text" 
+                               [(ngModel)]="url"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaMenu && url==''}" />
+                        <label for="url"><h6>URL</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="icon" 
+                               type="text" 
+                                
+                               [(ngModel)]="icon" />
+                        <label for="icon"><h6>Icono</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-dropdown [options]="hierarchys" 
+                                    [(ngModel)]="hierarchy" 
+                                    optionLabel="name"
+                                    (onChange)="seleccionarJerarquia(hierarchy)"
+                                    [ngClass]="{'ng-invalid ng-dirty' : envioLineaMenu && hierarchy.code==''}"></p-dropdown>
+
+
+                        <label for="hierarchy"><h6>Jerarquia</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <!--<p-dropdown [options]="opcionesPadres" 
+                                    [(ngModel)]="opcionPadre" 
+                                    optionLabel="title"
+                                    [disabled]="hierarchy.code=='P'">
+                        </p-dropdown>-->
+                        <p-autoComplete id="tipo" 
+                                        [(ngModel)]="opcionPadre" 
+                                        [suggestions]="opcionesPadresFiltrados" 
+                                        (completeMethod)="filtrarOpcionPadre($event)" 
+                                        field="title" 
+                                        [dropdown]="true"
+                                        (onSelect)="seleccionarOpcionPadre(opcionPadre)"
+                                        [disabled]="hierarchyDisabled">
+
+                                        <ng-template let-value pTemplate="selectedItem">
+                                            <span style="font-size:18px">{{value}}</span>
+                                        </ng-template>
+
+                                       
+                        </p-autoComplete>
+                        <label for="opcionPadre"><h6>Menu padre</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 ">
+                    <span class="p-float-label">
+                        <p-dropdown [options]="opcionesVisible" 
+                                    [(ngModel)]="visible" 
+                                    optionLabel="name"
+                                    [ngClass]="{'ng-invalid ng-dirty' : envioLineaMenu && visible.length==0}"></p-dropdown>
+                        <label for="visible"><h6>Visible?</h6></label>
+                    </span>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button *ngIf="config.data.id===0" type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button *ngIf="config.data.id!= 0" type="button" (click)="editar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>

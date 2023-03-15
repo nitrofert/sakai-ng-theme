@@ -1,0 +1,42 @@
+<p-toast></p-toast>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                
+                <div class="field col-12  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="accion" 
+                               type="text"
+                               [(ngModel)]="accion" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaForm && accion==''}"/>
+                        <label for="accion"><h6>Acción</h6></label>
+                    </span>
+                </div>
+                
+                <div class="field col-12 ">
+                    <span class="p-float-label">
+                        <textarea pInputTextarea
+                                  id="descripcion"
+                                  [(ngModel)]="descripcion">
+                        </textarea>
+                        
+                        <label for="descripcion"><h6>Descripción</h6></label>
+                    </span>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button *ngIf="config.data.id===0" type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button *ngIf="config.data.id!= 0" type="button" (click)="editar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,8 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
-import { LayoutService } from './service/app.layout.service';
+import { UsuarioService } from 'src/app/demo/service/usuario.service';
+import { LayoutService } from '../../service/app.layout.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-menu',
@@ -10,10 +12,13 @@ export class AppMenuComponent implements OnInit {
 
     model: any[] = [];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(public layoutService: LayoutService,
+                private usuarioService:UsuarioService) { }
 
-    ngOnInit() {
-        this.model = [
+   async ngOnInit() {
+
+        this.model = await this.getMenuUsuario();
+        /*this.model = [
             
             {
                 label: 'Inicio',
@@ -49,7 +54,7 @@ export class AppMenuComponent implements OnInit {
                     
                 ]
             },
-            /*{
+            {
                 label: 'UI Components',
                 items: [
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/portal/uikit/formlayout'] },
@@ -188,8 +193,8 @@ export class AppMenuComponent implements OnInit {
                         label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
                     }
                 ]
-            }*/
-        ];
+            }
+        ];*/
         
         /*this.model = [
             {
@@ -341,5 +346,45 @@ export class AppMenuComponent implements OnInit {
         ];*/
 
         
+    }
+
+    async getMenuUsuario():Promise<any>{
+       const menuUsuario$ = this.usuarioService.getMenuUsuario();
+       const menuUsuario = await lastValueFrom(menuUsuario$);
+       //console.log(menuUsuario);
+
+       let model:any[] =[{
+            label: 'Inicio',
+            items: [
+                { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/portal'] }
+            ]}
+        ] 
+        
+
+        let menuPadres = menuUsuario.filter((menu: { hierarchy: string; }) => menu.hierarchy==='P');
+        let menuHijos = menuUsuario.filter((menu: { hierarchy: string; }) => menu.hierarchy==='H');
+
+        for(let menuPadre of menuPadres){
+            let label=menuPadre.title;
+            let itemsMenu = [];    
+            for(let menuHijo of menuHijos){
+                if(menuHijo.iddad === menuPadre.id){
+                    itemsMenu.push({
+                        label: menuHijo.title,
+                        icon: menuHijo.icon,
+                        routerLink: [menuHijo.url]
+                    })
+                }
+            }
+
+            model.push({
+                label,
+                items:itemsMenu
+            });
+
+        }
+
+        //console.log(model);
+        return model;
     }
 }

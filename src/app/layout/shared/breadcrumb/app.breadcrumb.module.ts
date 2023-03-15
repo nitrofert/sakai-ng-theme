@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { PrimengModule } from '../../primeng.module';
+import { PrimengModule } from '../primeng/primeng.module';
 import { AppBreadcrumbComponent } from './app.breadcrumb.component';
 
 

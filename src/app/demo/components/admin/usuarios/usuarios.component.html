@@ -1,0 +1,18 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <app-dynamic-table [dataTable]="dataTable" 
+                               [headersTable]="headersTable"
+                               dataKey="id" 
+                               [rows]="10" 
+                               [paginator]="true"
+                               [selectionMode]="'single'"
+                               [showBtnNew]="true"
+                               nameExport="usuarios"
+                               [permisosUsuarioPagina]="permisosUsuarioPagina"
+                               (onNewAccion)="nuevoUsuario($event)">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>    
