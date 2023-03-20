@@ -1,1 +1,136 @@
-<p>form-usuario works!</p>
+<p-toast></p-toast>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                
+                <div class="field col-12  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="nombrecompleto" 
+                               type="text"
+                               [(ngModel)]="nombrecompleto" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && nombrecompleto==''}"/>
+                        <label for="nombrecompleto"><h6>Nombre completo</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="email" 
+                               type="email" 
+                                
+                               [(ngModel)]="email"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && email==''}" />
+                        <label for="email"><h6>Email</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="numerotelefonico" 
+                               type="text" 
+                                
+                               [(ngModel)]="numerotelefonico"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && numerotelefonico==''}" />
+                        <label for="numerotelefonico"><h6>Número télefono</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12   ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="username" 
+                               type="text" 
+                               [(ngModel)]="username"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && username==''}" />
+                        <label for="username"><h6>Nombre de usuario</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-password [(ngModel)]="password" 
+                                    [toggleMask]="true"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password=='' && config.data.id==0) || (password!=password2) }">
+                        </p-password>
+                        <!--<input pInputText 
+                               id="password" 
+                               type="password" 
+                                
+                               [(ngModel)]="password" 
+                               [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password=='' && config.data.id==0) || (password!=password2) }"/>-->
+                        <label for="password"><h6>Password</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-password [(ngModel)]="password2" 
+                                    [toggleMask]="true"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password2=='' && config.data.id==0) || (password!=password2) }">
+                        </p-password>
+                        <!--<input pInputText 
+                               id="password2" 
+                               type="password" 
+                                
+                               [(ngModel)]="password2"
+                               [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password2=='' && config.data.id==0) || (password!=password2) }" />-->
+                        <label for="password2"><h6>Reingresar password</h6></label>
+                    </span>
+                </div>
+                
+                <div class="field col-12 mt-3">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="!clientesSAP" height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete *ngIf="clientesSAP" id="roles" 
+                                        [(ngModel)]="rolesSeleccionados" 
+                                        [suggestions]="rolesFiltrados" 
+                                        (completeMethod)="filtrarRoles($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        [multiple]="true"
+                                        (onSelect)="seleccionaRrol(rolesSeleccionados)"
+                                        (onUnselect)="seleccionaRrol(rolesSeleccionados)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && rolesSeleccionados.length==0) }">
+                        </p-autoComplete>
+                        <label for="roles"><h6>Seleccione los roles</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 mt-3">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="!clientesSAP" height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete *ngIf="clientesSAP" id="cliente" 
+                                        [(ngModel)]="clientesSAPSeleccionados" 
+                                        [suggestions]="clientesSAPFiltrados" 
+                                        (completeMethod)="filtrarClientes($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        [multiple]="true"
+                                        (onSelect)="seleccionarCliente(clientesSAPSeleccionados)"
+                                        (onUnselect)="seleccionarCliente(clientesSAPSeleccionados)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && clientesSAPSeleccionados.length==0) }">
+                        </p-autoComplete>
+                        <label for="cliente"><h6>Seleccione un cliente</h6></label>
+                    </span>
+                </div>
+
+                
+                
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button *ngIf="config.data.id===0" type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button *ngIf="config.data.id!= 0" type="button" (click)="editar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>

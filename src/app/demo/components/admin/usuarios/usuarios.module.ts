@@ -8,6 +8,7 @@ import { PrimengModule } from 'src/app/layout/shared/primeng/primeng.module';
 import { BreadCrumbModule } from 'src/app/layout/shared/breadcrumb/app.breadcrumb.module';
 import { UsuariosRoutingModule } from './usuarios-routing.module';
 import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-table.module';
+import { DialogService } from 'primeng/dynamicdialog';
 
 
 
@@ -25,6 +26,7 @@ import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-
     FormsModule,
     ApplicationPipesModule,
     DynamicTableModule
-  ]
+  ],
+  providers:[DialogService]
 })
 export class UsuariosModule { }

@@ -21,6 +21,11 @@ import { UrlApiService } from "./url-api.service";
         return this.http.get<any>(url);
     }
 
+    getInfoUsuarioByID(idusuario:number):Observable<any>{
+        const url:string = `${this.api_url}/api/usuarios/${idusuario}`;
+        return this.http.get<any>(url);
+    }
+
     getRolesUsuario():Observable<any>{
         const url:string = `${this.api_url}/api/usuarios/roles`;
         return  this.http.get<any>(url);
@@ -48,6 +53,17 @@ import { UrlApiService } from "./url-api.service";
        
         const url:string = `${this.api_url}/api/usuarios`;
         return  this.http.get<any>(url);
+    }
+    create(form:any):Observable<any> {
+       
+        const url:string = `${this.api_url}/api/usuarios`;
+        return  this.http.post<any>(url,form);
+    }
+
+    update(form:any,idusuario:number):Observable<any> {
+       
+        const url:string = `${this.api_url}/api/usuarios/${idusuario}`;
+        return  this.http.patch<any>(url,form);
     }
 
 }
