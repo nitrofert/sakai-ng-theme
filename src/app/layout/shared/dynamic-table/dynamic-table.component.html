@@ -108,6 +108,16 @@
 								<div *ngIf="headersTable[0][key].type==='text'">
 									{{ itemData[key] }} 
 								</div>
+
+								<div *ngIf="headersTable[0][key].type==='date'">
+									{{ itemData[key] | date }} 
+								</div>
+
+								<div *ngIf="headersTable[0][key].type==='number'">
+									<span *ngIf="headersTable[0][key].currency && headersTable[0][key].side=='left'">{{headersTable[0][key].currency}}</span>
+									{{ itemData[key] | number }} 
+									<span *ngIf="headersTable[0][key].currency && headersTable[0][key].side=='rigth'">{{headersTable[0][key].currency}}</span>
+								</div>
 								<div *ngIf="headersTable[0][key].type==='boolean'">
 									<p-inputSwitch 
 													[(ngModel)]="itemData[key]"

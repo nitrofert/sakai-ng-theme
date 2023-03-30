@@ -15,6 +15,8 @@ import { OrdenesCargueService } from '../../service/ordenes-cargue.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TipoVehiculosService } from '../../service/tipo-vehiculo.service';
 import { TransportadorasService } from '../../service/transportadoras.service';
+import { PermisosFunction } from 'src/app/layout/shared/functions/permisos.functions';
+import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
 
 
 
@@ -39,7 +41,9 @@ import { TransportadorasService } from '../../service/transportadoras.service';
               OrdenesCargueService,
               DialogService,
               TipoVehiculosService,
-              TransportadorasService
+              TransportadorasService,
+              PermisosFunction,
+              SolicitudTurnoService
    ]
 })
 export class SolicitudescargueModule { }

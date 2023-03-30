@@ -87,7 +87,7 @@
                                                 (onSelect)="seleccionarAlmacen(almacenSeleccionado)"
                                                 (ngModelChange)="cambioAlmacen()">
                                 </p-autoComplete>
-                                <label for="cliente"><h6>Seleccione un almacen para retirar</h6></label>
+                                <label for="cliente"><h6>Seleccione una loacación para retirar</h6></label>
                             </span>
                         </div>
                         <div class="field col-12">
@@ -125,7 +125,7 @@
                                             pTooltip="Grabar soliitud" tooltipPosition="bottom" placeholder="Bottom"  
                                             class="p-button-outlined mb-2 mr-2 p-button-primary p-button-sm" 
                                             icon="pi pi-save"
-                                            [disabled]="detalleSolictudCargue.length==0"
+                                            [disabled]="this.vehiculosEnSolicitud.length ==0"
                                             (click)="grabarSolicitud()">
                                     </button>
                                 </div>
@@ -467,7 +467,30 @@
                                        [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && sitioentrega==''}"> 
                                 <label for="email"><h6>Sitio de entrega</h6></label>
                             </span>
-                    </div>
+                        </div>
+
+                        <div class="field col-12 ">
+                            <span class="p-float-label">
+                                <input type="text" 
+                                       inputId="municipioentrega" 
+                                       [(ngModel)]="municipioentrega" 
+                                       pInputText 
+                                       
+                                       [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && municipioentrega==''}"> 
+                                <label for="email"><h6>Municipio de entrega</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-12 ">
+                            <span class="p-float-label">
+                                <input type="text" 
+                                       inputId="observacion" 
+                                       [(ngModel)]="observacion" 
+                                       pInputText> 
+                                <label for="email"><h6>Observación</h6></label>
+                            </span>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -479,3 +502,31 @@
 
 </p-dialog>
 <!-- Fin Dialog form cargue vehiculos - pedidos-->
+
+<!-- Dialog loading -->
+<p-dialog header="Cargando" 
+          [(visible)]="displayModal" 
+          [modal]="true" 
+          [style]="{width: '50vw'}" 
+          [draggable]="false" 
+          [resizable]="false"
+          (onHide)="goToSolicitudes()">
+    <p class="m-0">
+
+    </p>
+
+    <div *ngIf="loadingCargue" class="field col flex justify-content-center align-items-center">
+                    
+        <!--<p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>-->
+        <!--<p-progressSpinner></p-progressSpinner>-->
+        <img src="assets/layout/images/Rhombus.gif" alt="">
+    </div>
+    <div *ngIf="completeCargue" class="field col flex justify-content-center align-items-center animation-duration-1000 animation-ease-out">
+        <div class="text-center">
+            <span>{{ messageComplete }}</span>
+            <span>Esta ventana se cerrara automaticamente en unos segundos, si esto no ocurre puede cerrarla manualmente.</span>
+        </div>
+    </div>
+
+</p-dialog>
+<!--Fin Dialog loading-->

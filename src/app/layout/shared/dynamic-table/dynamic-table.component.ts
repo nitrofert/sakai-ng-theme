@@ -73,8 +73,9 @@ export class DynamicTableComponent implements OnInit {
 
     if(changes['showSelectedItems']!=undefined){
       if(changes['showSelectedItems'].currentValue ==true){
-        //console.log('emit items selected');
-        this.onSelectedItems.emit(this.selectedItem);
+        //console.log('emit items selected or table', this.dataTable);
+        //this.onSelectedItems.emit(this.selectedItem);
+        this.onSelectedItems.emit(this.dataTable);
       }else{
         this.selectedItem = [];
       }

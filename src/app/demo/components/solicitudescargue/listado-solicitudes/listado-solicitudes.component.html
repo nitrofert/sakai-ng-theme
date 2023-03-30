@@ -7,10 +7,14 @@
                                dataKey="id" 
                                [rows]="10" 
                                [paginator]="true"
-                               [selectionMode]="'single'"
-                               [showBtnNew]="true"
+                               [selectionMode]="'multiple'"
+                               [showBtnNew]="showBtnNew"
+                               [showBtnEdit]="showBtnEdit"
+                               [showBtnExp]="showBtnExp"
+                               [showBtnDelete]="showBtnDelete"
                                nameExport="solicitude_de_cargue"
-                               [permisosUsuarioPagina]="permisosUsuarioPagina"
+                               (onEditAccion)="editSolicitud($event)"
+                               (onDeleteAccion)="deleteSoliciturd($event)"
                                (onNewAccion)="nuevaSolicitud($event)">
             </app-dynamic-table>
         </div>

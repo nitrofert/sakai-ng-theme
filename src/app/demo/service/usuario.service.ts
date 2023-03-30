@@ -44,7 +44,7 @@ import { UrlApiService } from "./url-api.service";
     }
 
     getPermisosModulo(modulo:string):Observable<any> {
-        modulo = modulo.replace(/\//g, '-')
+        modulo = modulo.replace(/\//g, '_')
         const url:string = `${this.api_url}/api/usuarios/permisos-modulo/${modulo}`;
         return  this.http.get<any>(url);
     }

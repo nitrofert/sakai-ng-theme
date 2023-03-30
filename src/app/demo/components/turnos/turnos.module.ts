@@ -13,6 +13,9 @@ import { OrdenesCargueService } from '../../service/ordenes-cargue.service';
 
 import { FormTurnoComponent } from './form-turno/form-turno.component';
 import { CalendarioTurnosComponent } from './calendario-turnos/calendario-turnos.component';
+import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
+import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-table.module';
+import { PedidosService } from '../../service/pedidos.service';
 
 
 
@@ -29,8 +32,9 @@ import { CalendarioTurnosComponent } from './calendario-turnos/calendario-turnos
     ReactiveFormsModule,
     FormsModule,
     FullCalendarModule,
-    ApplicationPipesModule
+    ApplicationPipesModule,
+    DynamicTableModule
   ],
-  providers:[AlmacenesService, DialogService,OrdenesCargueService]
+  providers:[AlmacenesService, DialogService,OrdenesCargueService, SolicitudTurnoService, PedidosService]
 })
 export class TurnosModule { }

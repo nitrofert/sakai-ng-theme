@@ -2,11 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { TreeNode } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { UrlApiService } from './url-api.service';
 
 @Injectable()
 export class PedidosService {
 
-    constructor(private http: HttpClient) { }
+    private api_url:string = "";
+
+    constructor(private http: HttpClient,
+        private urlApiService:UrlApiService) { 
+            this.api_url = this.urlApiService.getUrlAPI();
+        }
 
     
     getPedidos() {
@@ -14,6 +21,11 @@ export class PedidosService {
             .toPromise()
             .then(res => res.data as any[])
             .then(data => data);
+    }
+
+    getSaldosPedidos():Observable<any> {
+        const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos?compania=NITROFERT_PRD`;
+        return this.http.get<any>(url);
     }
 
     async getPedidosPorCliente(clientesSeleccionados: any, condicion_tpt:string){
@@ -40,27 +52,13 @@ export class PedidosService {
         return pedidosClientes;
     }
 
+    getCantidadesComprometidas(pedidonum:string,itemcode:string, bodega:string,idPedido:number):Observable<number> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas`;
+        return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido}});
+    }
+
    
 
-    /*async getPedidosClientePorAlmacen(clientesSeleccionados: any, almacen:string){
-
-        let pedidosClientesPorAlmacen:any[]=[];
-        for(let cliente of clientesSeleccionados){
-            let pedidosPorCliente = await this.getPedidosPorCliente(cliente.code);
-            console.log(pedidosPorCliente);
-            for(let pedido of pedidosPorCliente){
-                let pedidosClientePorAlmacen = pedidosPorCliente.filter(pedido => pedido.cardcode == cliente.code && pedido.locacion == almacen);
-                for(let pedidoClientePorAlmacen of pedidosClientePorAlmacen){
-                    pedidosClientesPorAlmacen.push(pedidoClientePorAlmacen)
-                }
-            }
-        }
-        
-        //let pedidosClientePorAlmacen = pedidosPorCliente.filter(pedido => pedido.cardcode == cardcode && pedido.codigo_almacen == almacen);
-        
-        console.log(pedidosClientesPorAlmacen);
-        return pedidosClientesPorAlmacen;
-    }*/
 
    async getVehiculosPedido() {
         //return this.http.get<any>('assets/demo/data/filesystem.json')

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import {AccordionModule} from 'primeng/accordion';
-
+import { AnimateModule } from 'primeng/animate';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { BadgeModule } from 'primeng/badge'
 import {CardModule} from 'primeng/card';
@@ -52,6 +52,7 @@ import {InputMaskModule} from 'primeng/inputmask';
 @NgModule({
   exports:[
     AccordionModule,
+    AnimateModule,
     AutoCompleteModule,
     BadgeModule,
     ButtonModule,
