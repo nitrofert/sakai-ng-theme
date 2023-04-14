@@ -47,7 +47,10 @@ export class SolicitudTurnoService {
     }
 
 
-
+    updateInfoTruno(id:number,data:any):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/turno/${id}`;
+        return this.http.patch<any>(url,data);
+    }
     
 
    

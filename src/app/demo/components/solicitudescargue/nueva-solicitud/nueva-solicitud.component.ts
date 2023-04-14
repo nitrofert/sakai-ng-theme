@@ -500,9 +500,11 @@ cambioAlmacen(){
 
 async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
   //this.pedidosAlmacenCliente = await this.pedidosService.getPedidosClientePorAlmacen(this.clienteSeleccionado, almacen);
-  this.pedidosAlmacenCliente = await this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
+  let pedidosAlmacenCliente = await this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
   ///////console.log(this.pedidosAlmacenCliente);
-  this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
+  let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
+
+  this.pedidosAlmacenCliente = pedidosAlmacenClienteCalcudada;
 
   ////console.log(this.pedidosAlmacenCliente);
   
@@ -510,11 +512,14 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
 }
 
 async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
-  let cantidadComprometida=0;
+  
   for(let pedido of pedidos){
-    ////console.log(pedido); 
-    cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
+   //console.log(pedido);
+    let cantidadComprometida=0; 
+    cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
+    cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
     pedido.comprometida = cantidadComprometida;
+    //pedido.pendiente 
   }
 
   return pedidos;
@@ -528,6 +533,22 @@ async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:stri
   return cantidadComprometida;
 
 
+}
+
+async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
+  //console.log(pedido, itemcode, bodega);
+    let cantidadComprometida =0;
+    for(let vehiculo of this.vehiculosEnSolicitud){
+        for(let lineaPedido of vehiculo.pedidos){
+         ////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
+            if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
+              
+              cantidadComprometida+=lineaPedido.cantidad;
+            }
+        }
+    }
+
+    return cantidadComprometida;
 }
 
 configTablePedidosAlmacenCliente(){
@@ -851,8 +872,15 @@ async seleccionarPedidosAlmacenCliente(event:any){
       for(let pedido of pedidosSeleccionados){
         
         totalCarga+=parseFloat(pedido.cargada);
+
+       //console.log(pedido.cargada,pedido.pendiente, pedido.disponible);
+
+        if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
+          this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
+          error = true;
+        }
         
-        if(parseFloat(pedido.cargada)> pedido.pendiente ){
+        if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
           this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
           error = true;
         }
@@ -1102,7 +1130,7 @@ grabarSolicitud(){
     }else{
       let pedidosVehiculo:any[] = [];
       for(let pedido of vehiculo.pedidos){
-        ////console.log(pedido);
+       //console.log(pedido);
         pedidosVehiculo.push({
           pedidonum:pedido.pedido,
           itemcode:pedido.itemcode,
@@ -1116,7 +1144,7 @@ grabarSolicitud(){
         ////console.log(pedidosVehiculo);
       }
 
-      console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
+     //console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
 
       detalle_solicitud.push({
         fechacita:vehiculo.fechacargue,
@@ -1142,7 +1170,7 @@ grabarSolicitud(){
         clientes: clientesSolicitud,
         detalle_solicitud
       }
-      console.log(newSolicitud);
+     console.log(newSolicitud);
 
       this.solicitudTurnoService.create(newSolicitud)
           .subscribe({

@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="grid">
 	<div class="col-12">
 		<div class="card">
@@ -24,13 +25,23 @@
                 </div>
                 <div class="field col-12 md:col-6 ">
                     <span class="p-float-label">
-                        <p-calendar inputId="fechacargue" [showIcon]="true" [(ngModel)]="fechacargue" [minDate]="hoy"></p-calendar>
+                        <p-calendar inputId="fechacargue" 
+                                    [showIcon]="true" 
+                                    [(ngModel)]="fechacargue" 
+                                    [minDate]="hoy"
+                                    [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !fechacargue}">
+                        </p-calendar>
                         <label for="fechacargue"><h6>Fecha estimada del cargue</h6></label>
                     </span>
                 </div>
                 <div class="field col-12 md:col-6 ">
                     <span class="p-float-label">
-                        <p-calendar [(ngModel)]="horacargue"  [timeOnly]="true" [hourFormat]="'12'" inputId="timeonly"></p-calendar>
+                        <p-calendar [(ngModel)]="horacargue"  
+                                    [timeOnly]="true" 
+                                    [hourFormat]="'12'" 
+                                    inputId="timeonly"
+                                    [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !horacargue}">
+                        </p-calendar>
                         <label for="horacargue"><h6>Hora estimada del cargue</h6></label>
                     </span>
                     
@@ -43,8 +54,8 @@
                                         (completeMethod)="filtrarEstado($event)" 
                                         field="label" 
                                         [dropdown]="true"
-                                        [disabled]="!estadoSeleccionado.code"
-                                        (onSelect)="seleccionarEstado(estadoSeleccionado)">
+                                        (onSelect)="seleccionarEstado(estadoSeleccionado)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !estadoSeleccionado}">
                         </p-autoComplete>
                         <label for="cliente"><h6>Seleccione estado</h6></label>
                     </span>
@@ -154,8 +165,37 @@
 <div class="grid">
 	<div class="col-12">
         <div class="flex justify-content-end">
-            <button type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button *ngIf="estadoSeleccionado.code!='Cancelado'" type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
             <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cancelar" class="p-button-secondary ml-3"></button>
         </div>
     </div>
 </div>
+
+
+<!-- Dialog loading -->
+<p-dialog header="Cargando" 
+          [(visible)]="displayModal" 
+          [modal]="true" 
+          [style]="{width: '50vw'}" 
+          [draggable]="false" 
+          [resizable]="false"
+          >
+    <p class="m-0">
+
+    </p>
+
+    <div *ngIf="loadingCargue" class="field col flex justify-content-center align-items-center">
+                    
+        <!--<p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>-->
+        <!--<p-progressSpinner></p-progressSpinner>-->
+        <img src="assets/layout/images/Rhombus.gif" alt="">
+    </div>
+    <div *ngIf="completeCargue" class="field col flex justify-content-center align-items-center animation-duration-1000 animation-ease-out">
+        <div class="text-center">
+            <span>{{ messageComplete }}</span>
+            <span>Esta ventana se cerrara automaticamente en unos segundos, si esto no ocurre puede cerrarla manualmente.</span>
+        </div>
+    </div>
+
+</p-dialog>
+<!--Fin Dialog loading-->

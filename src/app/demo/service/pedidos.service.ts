@@ -31,7 +31,7 @@ export class PedidosService {
     async getPedidosPorCliente(clientesSeleccionados: any, condicion_tpt:string){
         let pedidos = await this.getPedidos();
         let pedidosClientes:any[] = [];
-        console.log(typeof clientesSeleccionados, Object.prototype.toString.call(clientesSeleccionados));
+        //console.log(typeof clientesSeleccionados, Object.prototype.toString.call(clientesSeleccionados));
         let pedidosPorCliente!:any[];
         if(Object.prototype.toString.call(clientesSeleccionados) === '[object Array]'){
             for(let cliente of clientesSeleccionados){
@@ -48,7 +48,7 @@ export class PedidosService {
         }
         
 
-        console.log(pedidosClientes);
+        //console.log(pedidosClientes);
         return pedidosClientes;
     }
 
@@ -56,6 +56,18 @@ export class PedidosService {
         const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas`;
         return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido}});
     }
+
+    getCantidadesComprometidasItemBodega(itemcode:string, bodega:string,idPedido:number):Observable<number> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas-item-bodega`;
+        return this.http.get<number>(url,{params:{itemcode,bodega,idPedido}});
+    }
+
+    getInventarioItenBodega():Observable<any> {
+        const url:string = `${this.api_url}/api/sb1xe/inventario?compania=NITROFERT_PRD`;
+        return this.http.get<number>(url);
+    }
+
+
 
    
 

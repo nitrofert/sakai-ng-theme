@@ -66,7 +66,7 @@ export class CalendarioTurnosComponent implements OnInit {
         right: '  timeGridWeek,timeGridDay'
       },
       editable: false,
-      selectable: true,
+      selectable: false,
       selectMirror: true,
       dayMaxEvents: true,
       //select: this.handleDateSelect.bind(this),
@@ -85,7 +85,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   
   getEvents(){
-    this.ordenesdecargue = [{
+    /*this.ordenesdecargue = [{
         id:'1',
         title:JSON.stringify({placa:'HNQ123',cliente:'MAGDA ROCIO RUIZ MOLANO'}),
         date: new Date('2023-03-03 10:00:00'),
@@ -124,13 +124,13 @@ export class CalendarioTurnosComponent implements OnInit {
         backgroundColor:'yellow',
         editable:false,
         
-    }]
+    }]*/
 
     let events:any[] = [];
     for(let turno of this.turnosLocalidad){
-      console.log(turno.fechacita);
-      console.log(turno.horacita);
-      console.log(`${turno.fechacita}${turno.horacita.substring(10)}`);
+      //console.log((turno.fechacita);
+      //console.log((turno.horacita);
+      //console.log((`${turno.fechacita}${turno.horacita.substring(10)}`);
 
       events.push({
         id:`${turno.id}`,
@@ -144,7 +144,7 @@ export class CalendarioTurnosComponent implements OnInit {
       })
     }
 
-    console.log(events);
+    //console.log((events);
 
     this.ordenesdecargue = events;
 
@@ -209,7 +209,7 @@ export class CalendarioTurnosComponent implements OnInit {
              
               }
               this.almacenes = almacenesTMP;
-              //console.log(almacenesTMP);
+              ////console.log((almacenesTMP);
               this.getLocalidades(this.almacenes);
             },
             error:(err)=>{
@@ -223,7 +223,7 @@ export class CalendarioTurnosComponent implements OnInit {
     
     let localidadesAlmacenes: any[] = [];
     for(let almacen of almacenes){
-      //console.log(almacen);
+      ////console.log((almacen);
       if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.Location).length===0){
         //TODO: Buscar datos del almacen en array de almacenes
         let data = {
@@ -234,7 +234,7 @@ export class CalendarioTurnosComponent implements OnInit {
         localidadesAlmacenes.push(data);
       }
     }
-    this.localidades = localidadesAlmacenes;
+    this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.code <b.code ? -1 : 1});
   }
 
   seleccionarLocalidad(localidad:any){
@@ -266,7 +266,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad)
         .subscribe({
               next:(turnosLocalidad)=>{
-                  console.log(turnosLocalidad);
+                  //console.log((turnosLocalidad);
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                     this.displayModal = false;
@@ -293,7 +293,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    ////console.log(arrayFiltrar);
+    //////console.log((arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -334,7 +334,7 @@ export class CalendarioTurnosComponent implements OnInit {
     let objectEvent = JSON.parse(clickInfo.event.title);
     let orden = clickInfo.event.id;
 
-    console.log(clickInfo)
+    //console.log((clickInfo)
 
     
     const ref = this.dialogService.open(FormTurnoComponent, {
@@ -349,8 +349,9 @@ export class CalendarioTurnosComponent implements OnInit {
     });
 
     ref.onClose.subscribe(() => {
+      this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       this.getCalendar();
-      console.log("Refresh calendar");
+      //console.log(("Refresh calendar");
     });
 
 
@@ -362,11 +363,11 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   handleEventsDragStop(event:any){
-    console.log(event);
+    //console.log((event);
   }
 
   createEventId(){
-    return String(this.eventGuid++);
+    //return String(this.eventGuid++);
   }
     
 }
