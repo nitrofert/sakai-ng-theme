@@ -22,7 +22,7 @@ import { UrlApiService } from "./url-api.service";
     }
 
 
-    getAccionByID(id:number):Observable<any>{
+    getRolByID(id:number):Observable<any>{
         const url:string = `${this.api_url}/api/roles/${id}`;
         return this.http.get<any>(url);
     }

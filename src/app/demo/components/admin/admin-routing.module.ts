@@ -9,6 +9,7 @@ import { MenuComponent } from './menu/menu.component';
         { path: 'acciones', loadChildren: () => import('./acciones/acciones.module').then(m => m.AccionesModule) },
         { path: 'permisos', loadChildren: () => import('./permisos/permisos.module').then(m => m.PermisosModule) },
         { path: 'usuarios', loadChildren: () => import('./usuarios/usuarios.module').then(m => m.UsuariosModule) },
+        { path: 'roles', loadChildren: () => import('./roles/roles.module').then(m => m.RolesModule) },
     ])],
     exports: [RouterModule]
 })
