@@ -32,7 +32,7 @@ export class FormVehiculoComponent implements  OnInit {
   pesovacio:number = 0;
   pesomax:number = 0;
   volumen:number = 0;
-
+  updateMode:boolean = false;
 
   constructor(
     public ref: DynamicDialogRef, 
@@ -50,6 +50,10 @@ export class FormVehiculoComponent implements  OnInit {
       console.log(this.config.data.id);
       this.getTipoVehiculos();
       this.getConductores();
+      if(this.config.data.id!=0){
+        this.getInfoVehiculo(this.config.data.id);
+        this.updateMode = true;
+      }
     }
 
     getConductores(){
@@ -62,7 +66,7 @@ export class FormVehiculoComponent implements  OnInit {
                       conductor.name = conductor.nombre;
                       conductor.label = conductor.cedula+' - '+conductor.nombre;
                     }
-                    console.log(conductores);
+                   //console.log(conductores);
                     this.conductores = conductores;
                 },
                 error: (err)=>{
@@ -70,6 +74,25 @@ export class FormVehiculoComponent implements  OnInit {
                 }
             });
     }
+
+    getInfoVehiculo(id:any){
+      this.vehiculosService.getVehiculoById(id)
+          .subscribe({
+              next:(infoVehiculo)=>{
+                  console.log(infoVehiculo);
+                  this.placa = infoVehiculo.placa;
+                  this.capacidad = infoVehiculo.capacidad;
+                  this.pesovacio = infoVehiculo.pesovacio;
+                  this.pesomax = infoVehiculo.pesomax;
+                  this.volumen = infoVehiculo.volumen;
+                  this.tipoSeleccionado = this.tipoVehiculos.find(tipo => tipo.code === infoVehiculo.tipo_vehiculo.id);
+                 
+              },
+              error:(err)=>{
+                console.error(err);
+              }
+          });
+  }
 
     getTipoVehiculos(){
       this.tipoVehiculosService.getTipoVehiculos()
@@ -82,7 +105,7 @@ export class FormVehiculoComponent implements  OnInit {
                   tipoVehiculo.name = tipoVehiculo.tipo;
                   tipoVehiculo.label = tipoVehiculo.tipo;
                 }
-                console.log(tipoVehiculos);
+               // console.log(tipoVehiculos);
                 this.tipoVehiculos = tipoVehiculos;
               },
               error: (err)=>{
@@ -202,20 +225,61 @@ export class FormVehiculoComponent implements  OnInit {
           volumen:this.volumen,
           //conductor:this.conductorSeleccionado.id
         }
-        this.vehiculosService.create(nuevoVehiculo)
-            .subscribe({
-                next: (vehiculo)=>{
-                  this.messageService.add({severity:'success', summary:'información', detail:`El vehículo ${vehiculo.placa} fue registrado correctamente`});
-                },
-                error:(err)=>{
-                  console.error(err);
-                  this.messageService.add({severity:'error', summary:'Error:'+err.error.statusCode, detail:err.error.message});
-                }
-            });
+
+        if(this.updateMode){
+          //Actualiza información del vehículo seleccionado
+          this.vehiculosService.update(nuevoVehiculo,this.config.data.id)
+          .subscribe({
+              next: (vehiculo)=>{
+                this.messageService.add({severity:'success', summary:'información', detail:`El vehículo ${vehiculo.placa} fue actualizado correctamente`});
+              },
+              error:(err)=>{
+                console.error(err);
+                this.messageService.add({severity:'error', summary:'Error:'+err.error.statusCode, detail:err.error.message});
+              }
+          });
+        }else{
+          //Registrar vehiculo
+          this.vehiculosService.create(nuevoVehiculo)
+          .subscribe({
+              next: (vehiculo)=>{
+                this.messageService.add({severity:'success', summary:'información', detail:`El vehículo ${vehiculo.placa} fue registrado correctamente`});
+              },
+              error:(err)=>{
+                console.error(err);
+                this.messageService.add({severity:'error', summary:'Error:'+err.error.statusCode, detail:err.error.message});
+              }
+          });
+        }
+       
       }
     }
   
     cancelar(){
-      this.ref.close();
+      let infoVehiculo = {
+        placa:this.placa,
+        capacidad:this.capacidad,
+        pesovacio:this.pesovacio,
+        pesomax:this.pesomax,
+        volumen:this.volumen,
+        tipo_vehiculo:this.tipoSeleccionado,
+        update:this.updateMode
+      }
+      this.ref.close(infoVehiculo);
     }
+
+    keyPress(event:any){
+      console.log(event);
+      
+      var key =  event.keyCode;
+      let teclasFuncionales:any[] =[8,46,9,13];
+
+      //Numeros y letras
+      if((parseInt(key)>=48 && parseInt(key)<=57 && !event.shiftKey) || (parseInt(key)>=65 && parseInt(key)<=90) || (parseInt(key)>=96 && parseInt(key)<=105) || teclasFuncionales.includes(key)){
+        
+      }else{
+        console.log(key);
+        event.preventDefault();
+      }
+  }
 }

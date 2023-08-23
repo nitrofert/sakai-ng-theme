@@ -102,6 +102,35 @@
                 <div class="field col-12 mt-3">
                     <span class="p-float-label">
                         <p-skeleton *ngIf="!clientesSAP" height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-multiSelect *ngIf="clientesSAP" 
+                                        id="cliente"
+                                        [options]="clientesSAP" 
+                                        [(ngModel)]="clientesSAPSeleccionados" 
+                                      
+                                        optionLabel="name" 
+                                        selectedItemsLabel="{0} clientes seleccionados">
+                        </p-multiSelect>
+                        <!--<p-listbox *ngIf="clientesSAP" 
+                                    id="cliente"
+                                    [options]="clientesSAP" 
+                                    [(ngModel)]="clientesSAPSeleccionados" 
+                                    [metaKeySelection]="false" 
+                                    [checkbox]="true" 
+                                    [filter]="true" 
+                                    [multiple]="true" 
+                                    optionLabel="label" 
+                                    [listStyle]="{'max-height':'250px'}" 
+                                    
+                                    [style]="{'width':'100%'}">
+
+                                    <ng-template let-cliente pTemplate="item">
+                                        <div class="country-item">
+                                           
+                                            <div>{{cliente.label}}</div>
+                                        </div>
+                                    </ng-template>
+                        </p-listbox>-->
+                        <!---
                         <p-autoComplete *ngIf="clientesSAP" id="cliente" 
                                         [(ngModel)]="clientesSAPSeleccionados" 
                                         [suggestions]="clientesSAPFiltrados" 
@@ -110,9 +139,8 @@
                                         [dropdown]="true"
                                         [multiple]="true"
                                         (onSelect)="seleccionarCliente(clientesSAPSeleccionados)"
-                                        (onUnselect)="seleccionarCliente(clientesSAPSeleccionados)"
-                                        [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && clientesSAPSeleccionados.length==0) }">
-                        </p-autoComplete>
+                                        (onUnselect)="seleccionarCliente(clientesSAPSeleccionados)">
+                        </p-autoComplete>-->
                         <label for="cliente"><h6>Seleccione un cliente</h6></label>
                     </span>
                 </div>
@@ -128,6 +156,7 @@
 <div class="grid">
 	<div class="col-12">
         <div class="flex justify-content-end">
+            
             <button *ngIf="config.data.id===0" type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
             <button *ngIf="config.data.id!= 0" type="button" (click)="editar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
             <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>

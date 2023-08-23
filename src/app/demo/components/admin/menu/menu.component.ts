@@ -21,13 +21,15 @@ export class MenuComponent implements  OnInit{
                                     label:'Id menú', 
                                     type:'text',
                                     sizeCol:'6rem',
-                                    align:'center'
+                                    align:'center',
+                                    field:'id'
                                   }, 
                               'title': {
                                     label:'Título',
                                     type:'text', 
                                     sizeCol:'6rem', 
-                                    align:'center'
+                                    align:'center',
+                                    field:'title'
                                   }, 
                               'description': {
                                         label:'Descripción',
@@ -39,26 +41,30 @@ export class MenuComponent implements  OnInit{
                                 label:'Nivel',
                                 type:'number', 
                                 sizeCol:'6rem', 
-                                align:'center'
+                                align:'center',
+                                field:'ordernum'
                               },
                               'hierarchy':{
                                 label:'Jerarquia',
                                 type:'text', 
                                 sizeCol:'6rem', 
-                                align:'center'
+                                align:'center',
+                                field:'hierarchy'
                               },         
                               'estado': {
                                 
                                   label:'Estado',
                                   type:'text', 
                                   sizeCol:'6rem', 
-                                  align:'center'
+                                  align:'center',
+                                  field:'estado'
                               },
                               'visible': {
                                     label:'Visible',
                                     type:'text', 
                                     sizeCol:'6rem', 
-                                    align:'center'
+                                    align:'center',
+                                    field:'visible'
                                }           
                           }
                         ];

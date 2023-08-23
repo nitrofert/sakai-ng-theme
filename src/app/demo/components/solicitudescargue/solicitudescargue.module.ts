@@ -17,6 +17,8 @@ import { TipoVehiculosService } from '../../service/tipo-vehiculo.service';
 import { TransportadorasService } from '../../service/transportadoras.service';
 import { PermisosFunction } from 'src/app/layout/shared/functions/permisos.functions';
 import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
+import { FunctionsService } from '../../service/functions.service';
+import { NovedadesService } from '../../service/novedades.service';
 
 
 
@@ -43,7 +45,9 @@ import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
               TipoVehiculosService,
               TransportadorasService,
               PermisosFunction,
-              SolicitudTurnoService
+              SolicitudTurnoService,
+              FunctionsService,
+              NovedadesService,
    ]
 })
 export class SolicitudescargueModule { }

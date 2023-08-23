@@ -1,79 +1,86 @@
 <p-toast></p-toast>
-<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
-    <div class="flex flex-column align-items-center justify-content-center">
-        <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="Sakai logo" class="mb-5 w-6rem flex-shrink-0">                
-        <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
-            <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
-                <div class="text-center mb-5">
-                    <img *ngIf="wellcomeMessage!=''" src="assets/demo/images/login/avatar.png" alt="Image" height="50" class="mb-3">
-                    <div class="text-900 text-3xl font-medium mb-3">{{wellcomeMessage}}</div>
-                    <span class="text-600 font-medium">Sign in to continue</span>
-                </div>
-
-                <div>
-                    <label for="email1" class="block text-900 text-xl font-medium mb-2">Nombre de usuario</label>
-                    <input id="email1"
-                            type="text" 
-                            [(ngModel)]="username" 
-                            placeholder="Ingrese el nombre de usuario o email" 
-                            pInputText 
-                            class="w-full md:w-30rem mb-5" 
-                            style="padding:1rem"
-                            [disabled]="verifycodeStatus"
-                            [ngClass]="{'ng-invalid ng-dirty' : submit && !username}">
-
-                    <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
-                    <p-password id="password1" 
-                                [(ngModel)]="password" 
-                                placeholder="Ingrese el password" 
-                                [toggleMask]="true" 
-                                styleClass="mb-5"
-                                [disabled]="verifycodeStatus" 
-                                inputStyleClass="w-full p-3 md:w-30rem"
-                                [ngClass]="{'ng-invalid ng-dirty' : submit && !password}">
-                    </p-password>
-                    <div *ngIf="loading" class="w-full flex justify-content-center">
-                        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+<div style="background-image: url(assets/demo/images/login/fondo_cadena_valor2.jpg);  background-size: cover;" class="container">
+    <div class=" flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+        <div class="flex flex-column align-items-center justify-content-center">
+            <div style="border-radius:53px" class="w-full surface-card py-3 px-2 sm:px-2 flex align-items-center justify-content-center">
+                <!--<img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="Sakai logo" class="mb-5 w-6rem flex-shrink-0">-->
+                <img src="https://nitrofert.com.co/wp-content/uploads/2022/09/NITROFERT.png" width="200px">
+            </div>
+            
+            <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+                <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+                    <div class="text-center mb-5">
+                        <img *ngIf="wellcomeMessage!=''" src="assets/demo/images/login/avatar.png" alt="Image" height="50" class="mb-3">
+                        <div class="text-900 text-3xl font-medium mb-3">{{wellcomeMessage}}</div>
+                        <span class="text-600 font-medium">Sign in to continue</span>
                     </div>
-                    <div *ngIf="verifycodeStatus" class="w-full">
-                        <label for="virifycode" class="block text-900 font-medium text-xl mb-2">Código de verificación</label>
-                        <p-inputMask mask="999-999-999" 
-                                     id="virifycode" 
-                                     [(ngModel)]="verifycode" 
-                                     placeholder="999-999-999"
-                                     [ngClass]="{'ng-invalid ng-dirty' : submit && verifycode===0}"
-                                     styleClass="w-full text-center text-4xl">
-                        </p-inputMask>
-                    </div>
-                    
-                    <div class="flex align-items-center justify-content-between mt-3 mb-5 gap-5">
-                        <div class="flex align-items-center">
-                            <!--<p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
-                            <label for="rememberme1">Remember me</label>-->
-                            <a *ngIf="verifycodeStatus" class="font-medium no-underline ml-2 text-right cursor-pointer" 
-                            style="color: var(--primary-color)" (click)="verifycodeStatus=false">Inicio de sesion</a>
+    
+                    <div>
+                        <label for="email1" class="block text-900 text-xl font-medium mb-2">Nombre de usuario</label>
+                        <input id="email1"
+                                type="text" 
+                                [(ngModel)]="username" 
+                                placeholder="Ingrese el nombre de usuario o email" 
+                                pInputText 
+                                class="w-full md:w-30rem mb-5" 
+                                style="padding:1rem"
+                                [disabled]="verifycodeStatus"
+                                [ngClass]="{'ng-invalid ng-dirty' : submit && !username}">
+    
+                        <label for="password1" class="block text-900 font-medium text-xl mb-2">Contraseña</label>
+                        <p-password id="password1" 
+                                    [(ngModel)]="password" 
+                                    placeholder="Ingrese su contraseña" 
+                                    [toggleMask]="true" 
+                                    styleClass="mb-5"
+                                    [disabled]="verifycodeStatus" 
+                                    inputStyleClass="w-full p-3 md:w-30rem"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submit && !password}">
+                        </p-password>
+                        <div *ngIf="loading" class="w-full flex justify-content-center">
+                            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
                         </div>
-                        <a *ngIf="!verifycodeStatus" 
-                            class="font-medium no-underline ml-2 text-right cursor-pointer" 
-                            style="color: var(--primary-color)"
-                            routerLink="/auth/forgot-password">
-                            Olvido su password?
-                        </a>
-                        <a *ngIf="verifycodeStatus" class="font-medium no-underline ml-2 text-right cursor-pointer" 
-                            style="color: var(--primary-color)" (click)="login()">Reenviar código de verificación</a>
+                        <div *ngIf="verifycodeStatus" class="w-full">
+                            <label for="virifycode" class="block text-900 font-medium text-xl mb-2">Código de verificación</label>
+                            <p-inputMask mask="999-999-999" 
+                                         id="virifycode" 
+                                         [(ngModel)]="verifycode" 
+                                         placeholder="999-999-999"
+                                         [ngClass]="{'ng-invalid ng-dirty' : submit && verifycode===0}"
+                                         styleClass="w-full text-center text-4xl">
+                            </p-inputMask>
+                        </div>
+                        
+                        <div class="flex align-items-center justify-content-between mt-3 mb-5 gap-5">
+                            <div class="flex align-items-center">
+                                <!--<p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
+                                <label for="rememberme1">Remember me</label>-->
+                                <a *ngIf="verifycodeStatus" class="font-medium no-underline ml-2 text-right cursor-pointer" 
+                                style="color: var(--primary-color)" (click)="verifycodeStatus=false">Inicio de sesion</a>
+                            </div>
+                            <a *ngIf="!verifycodeStatus" 
+                                class="font-medium no-underline ml-2 text-right cursor-pointer" 
+                                style="color: var(--primary-color)"
+                                routerLink="/auth/forgot-password">
+                                Olvido su contraseña?
+                            </a>
+                            <a *ngIf="verifycodeStatus" class="font-medium no-underline ml-2 text-right cursor-pointer" 
+                                style="color: var(--primary-color)" (click)="login()">Reenviar código de verificación</a>
+                        </div>
+                        <button *ngIf="!verifycodeStatus"
+                                pButton 
+                                pRipple label="Iniciar sesión" 
+                                class="w-full p-3 text-xl" 
+                                (click)="login()"></button>
+                        <button *ngIf="verifycodeStatus" 
+                                pButton 
+                                pRipple label="Verificar codigo" 
+                                class="w-full p-3 text-xl" 
+                                (click)="verifyCode()"></button>
                     </div>
-                    <button *ngIf="!verifycodeStatus"
-                            pButton 
-                            pRipple label="Iniciar sesión" 
-                            class="w-full p-3 text-xl" 
-                            (click)="login()"></button>
-                    <button *ngIf="verifycodeStatus" 
-                            pButton 
-                            pRipple label="Verificar codigo" 
-                            class="w-full p-3 text-xl" 
-                            (click)="verifyCode()"></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+

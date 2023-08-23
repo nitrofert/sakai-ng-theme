@@ -1,0 +1,130 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 mt-3">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locacionesSAP.length==0" height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="almacen"
+                                        *ngIf="locacionesSAP.length>0" 
+                                        [(ngModel)]="locacionSeleccionada" 
+                                        [suggestions]="locacionesFiltrados" 
+                                        (completeMethod)="filtrarLocacion($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (!locacionSeleccionada || locacionSeleccionada.length == 0) && submitLocacion }"
+                                        (onSelect)="seleccionarLocacion(locacionSeleccionada)"
+                                        (ngModelChange)="cambioLocacion()">
+                        </p-autoComplete>
+                        <label *ngIf="locacionesSAP.length==0" for="cliente"><h6>Cargando loacaciones ...</h6></label>
+                        <label *ngIf="locacionesSAP.length>0 "for="cliente"><h6>Seleccione una locación para registrar</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="numerocelular" 
+                               type="email" 
+                               [ngClass]="{'ng-invalid ng-dirty' :  !email_bodega  && submitLocacion }"
+                               [(ngModel)]="email_bodega"/>
+                        <label for="email"><h6>Email locación</h6></label>
+                    </span>
+                </div>
+                
+                <div class="field col-12  "> 
+                    <div class="card">
+                        <app-dynamic-table [dataTable]="dataTable" 
+                            [headersTable]="headersTable"
+                            dataKey="id" 
+                            [rows]="10" 
+                            [paginator]="true"
+                            [selectionMode]="'multiple'"
+                            [showBtnNew]="showBtnNew"
+                            [showBtnEdit]="showBtnEdit"
+                            [showBtnExp]="showBtnExp"
+                            [showBtnDelete]="showBtnDelete"
+                            nameExport="solicitude_de_cargue"
+                            (onEditAccion)="editHorario($event)"
+                            (onDeleteAccion)="deleteHorario($event)"
+                            (onNewAccion)="nuevoHorario($event)">
+                        </app-dynamic-table>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+    <div class="col-12">
+        <div class="flex justify-content-end">
+            <button type="button" (click)="grabarLocacion()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cerrar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Dialog nuevo horario -->
+<p-dialog [header]="tituloFormHorario" 
+          [(visible)]="formHorarios" 
+          [modal]="true" 
+          [style]="{width: '60vw'}" 
+          [draggable]="false" 
+          [resizable]="false">
+
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12  mt-3">
+                                <span class="p-float-label">
+                                    <p-multiSelect [options]="diasAtencion" 
+                                                    [(ngModel)]="diasSeleccionados" 
+                                                    defaultLabel="Seleccione los dias de atencion" 
+                                                    optionLabel="fullname" 
+                                                    display="chip"
+                                                    [ngClass]="{'ng-invalid ng-dirty' :  diasSeleccionados.length==0 && submitHorario }">
+                                    </p-multiSelect>
+                                    <label for="fechaaccion"><h6>Seleccione los dias de atención</h6></label>
+                                </span>
+                            </div>
+                            <div class="field col-12 md:col-6  mt-3">
+                                <span class="p-float-label">
+                                    <p-calendar [(ngModel)]="horainicio"  
+                                                [timeOnly]="true" 
+                                                [hourFormat]="'12'" 
+                                                inputId="timeonly"
+                                                [ngClass]="{'ng-invalid ng-dirty' :  horainicio>= horafin && submitHorario }">
+                                    </p-calendar>
+                                    <label for="horainicio"><h6>Hora inicio</h6></label>
+                                </span>
+                                
+                            </div>
+                            <div class="field col-12 md:col-6  mt-3">
+                                <span class="p-float-label">
+                                    <p-calendar [(ngModel)]="horafin"  
+                                                [timeOnly]="true" 
+                                                [hourFormat]="'12'" 
+                                                inputId="timeonly"
+                                                [ngClass]="{'ng-invalid ng-dirty' :  horainicio>= horafin && submitHorario }">
+                                    </p-calendar>
+                                    <label for="horaaccion"><h6>Hora fin</h6></label>
+                                </span>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <ng-template pTemplate="footer">
+                <p-button icon="pi pi-check" (click)="grabarHorario()" label="Grabar horario" styleClass="p-button-text"></p-button>
+            </ng-template>
+
+</p-dialog>
+<!--Fin Dialog loading-->

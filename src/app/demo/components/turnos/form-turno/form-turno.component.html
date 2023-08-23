@@ -1,4 +1,5 @@
 <p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
 <div class="grid">
 	<div class="col-12">
 		<div class="card">
@@ -23,82 +24,143 @@
                         <label for="localidad"><h6>Localidad</h6></label>
                     </span>
                 </div>
-                <div class="field col-12 md:col-6 ">
-                    <span class="p-float-label">
-                        <p-calendar inputId="fechacargue" 
-                                    [showIcon]="true" 
-                                    [(ngModel)]="fechacargue" 
-                                    [minDate]="hoy"
-                                    [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !fechacargue}">
-                        </p-calendar>
-                        <label for="fechacargue"><h6>Fecha estimada del cargue</h6></label>
-                    </span>
-                </div>
-                <div class="field col-12 md:col-6 ">
-                    <span class="p-float-label">
-                        <p-calendar [(ngModel)]="horacargue"  
-                                    [timeOnly]="true" 
-                                    [hourFormat]="'12'" 
-                                    inputId="timeonly"
-                                    [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !horacargue}">
-                        </p-calendar>
-                        <label for="horacargue"><h6>Hora estimada del cargue</h6></label>
-                    </span>
-                    
-                </div>
+                
+
                 <div class="field col-12">
                     <span class="p-float-label">
-                        <p-autoComplete id="almacen" 
-                                        [(ngModel)]="estadoSeleccionado" 
-                                        [suggestions]="estadosFiltrados" 
-                                        (completeMethod)="filtrarEstado($event)" 
-                                        field="label" 
-                                        [dropdown]="true"
-                                        (onSelect)="seleccionarEstado(estadoSeleccionado)"
-                                        [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !estadoSeleccionado}">
-                        </p-autoComplete>
-                        <label for="cliente"><h6>Seleccione estado</h6></label>
-                    </span>
-                </div>
-                <div class="field col-12 md:col-4">
-                    <span class="p-float-label">
                         <input pInputText 
-                               id="placa" 
+                               *ngIf="!updateModulo || updatePesoBruto"
+                               id="transportadora" 
                                type="text" 
                                disabled 
-                               [value]="placa" />
-                        <label for="placa"><h6>Placa</h6></label>
+                               [value]="transportadora" />
+                        <p-autoComplete id="transportadora" 
+                                        [(ngModel)]="transportadoraSeleccionada"
+                                        *ngIf="updateModulo && !updatePesoBruto"
+                                        
+                                        [suggestions]="transportadorasFiltrados" 
+                                        (completeMethod)="filtrarTransportadora($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        (onSelect)="seleccionarTransportadora(transportadoraSeleccionada)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && (transportadoraSeleccionada.length==0 || transportadoraSeleccionada.id==0)}">
+
+                                        <ng-template let-value pTemplate="selectedItem">
+                                            <span style="font-size:18px">{{value}}</span>
+                                        </ng-template>
+
+                                       
+                        </p-autoComplete>
+                        <label for="vhiculo"><h6>Transportadora</h6></label>
                     </span>
                 </div>
-                <div class="field col-12 md:col-4">
+
+                <p-divider align="left" class="field col-12">
+                    <div class="inline-flex align-items-center">
+                        <i class="pi pi-truck mr-2"></i>
+                        <b>Vehículo</b>
+                    </div>
+                </p-divider>
+             
+                <div class="field col-12 md:col-3">
+                    
+                        
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   *ngIf="!updateModulo || updatePesoBruto"
+                                   id="placa" 
+                                   type="text" 
+                                   disabled 
+                                   [value]="placa" />
+                            <p-autoComplete id="vhiculo"
+                                   *ngIf="updateModulo && !updatePesoBruto" 
+                                   [(ngModel)]="vehiculoSeleccionado" 
+                                   [suggestions]="vehiculosFiltrados" 
+                                   (completeMethod)="filtrarVehiculo($event)" 
+                                   field="label" 
+                                   [dropdown]="true"
+                                   
+                                   (onSelect)="seleccionarVehiculo(vehiculoSeleccionado)"
+                                   [ngClass]="{'ng-invalid ng-dirty' :  grabarCambios && (vehiculoSeleccionado.length==0 || vehiculoSeleccionado.id==0)}">
+                            </p-autoComplete>
+                            <label for="placa"><h6>Placa</h6></label>
+                        </span>
+                        
+                    
+                    
+                </div>
+                <div class="field col-12 md:col-3">
                     <span class="p-float-label">
                         <input pInputText 
                                id="tipo" 
                                type="text" 
                                disabled 
                                [value]="tipo" />
-                        <label for="tipo"><h6>Tipo vehículo</h6></label>
+                        <label for="tipo"><h6>Tipo</h6></label>
                     </span>
                 </div>
-                <div class="field col-12 md:col-4">
-                    <span class="p-float-label">
-                        <input pInputText 
-                               id="cantidad" 
+                <div class="field col-12 md:col-3">
+                    
+                        <div class="p-inputgroup">
+                            <span class="p-float-label">
+                                <input pInputText 
+                               id="capacidad" 
                                type="text" 
                                disabled 
-                               [value]="cantidad" />
-                        <label for="cantidad"><h6>Cantidad cargada</h6></label>
-                    </span>
+                               [value]="capacidadvh"
+                               [ngClass]="{'ng-invalid ng-dirty' :  (capacidadvh < cantidad)}" />
+                               
+                               <label for="capacidad"><h6>Capacidad</h6></label>
+                            </span>
+                            <span class="p-inputgroup-addon">TON</span>
+                        </div>
+                        
+                        
+                    
                 </div>
+                <div class="field col-12 md:col-3">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="pesomax" 
+                                   type="text" 
+                                   disabled 
+                                   [value]="pesomax"
+                                   [ngClass]="{'ng-invalid ng-dirty' :  (pesomax < (cantidad+peso_bruto))}" />
+                            <label for="pesomax"><h6>Peso Neto permitido</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">TON</span>
+                    </div>
+                    
+                </div>
+
+
+                <p-divider align="left" class="field col-12">
+                    <div class="inline-flex align-items-center">
+                        <i class="pi pi-user mr-2"></i>
+                        <b>Conductor</b>
+                    </div>
+                </p-divider>
 
                 <div class="field col-12 md:col-3">
                     <span class="p-float-label">
-                        <input pInputText 
+                        <input pInputText
+                               *ngIf="!updateModulo || updatePesoBruto"  
                                id="conductor" 
                                type="text" 
                                disabled 
                                [value]="conductor" />
-                        <label for="conductor"><h6>Conductor</h6></label>
+                        <p-autoComplete id="conductor" 
+                               [(ngModel)]="conductorSeleccionado" 
+                               *ngIf="updateModulo && !updatePesoBruto" 
+                               [suggestions]="conductoresFiltrados" 
+                               (completeMethod)="filtrarConductor($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               (onSelect)="seleccionarConductor(conductorSeleccionado)"
+                               [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && (conductorSeleccionado.length==0 || conductorSeleccionado.id==0)}">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Nombre</h6></label>
                     </span>
                 </div>
 
@@ -124,6 +186,8 @@
                     </span>
                 </div>
 
+                
+
                 <div class="field col-12 md:col-3">
                     <span class="p-float-label">
                         <input pInputText 
@@ -135,11 +199,126 @@
                     </span>
                 </div>
 
+                <p-divider align="left" class="field col-12">
+                    <div class="inline-flex align-items-center">
+                        <i class="pi pi-info-circle mr-2"></i>
+                        <b>Información cargue</b>
+                    </div>
+                </p-divider>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-calendar inputId="fechacargue" 
+                                    [showIcon]="true" 
+                                    [(ngModel)]="fechacargue" 
+                                    [minDate]="hoy"
+                                    [disabled]="!updateModulo"
+                                    (onSelect)="seleccionarFechaCita()"
+                                    [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !fechacargue}">
+                        </p-calendar>
+                        <label for="fechacargue"><h6>Fecha estimada del cargue</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-calendar [(ngModel)]="horacargue"  
+                                    [timeOnly]="true" 
+                                    [hourFormat]="'12'" 
+                                    inputId="timeonly"
+                                    [disabled]="!updateModulo"
+                                    (ngModelChange)="cambioHoraCita()"
+                                    [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !horacargue}">
+                        </p-calendar>
+                        <label for="horacargue"><h6>Hora estimada del cargue</h6></label>
+                    </span>
+                    
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="peso_bruto" 
+                                   type="number" 
+                                   [disabled]="!(updateModulo && updatePesoBruto && estado == estadosTurno.ARRIBO)?true:false "
+                                   
+                                   (keydown.enter)="presionarEnterPesoBruto($event,peso_bruto)"
+                                   (blur)="cambioPesoBruto($event,peso_bruto)"
+                                  
+                                   [(ngModel)]="peso_bruto"
+                                   [ngClass]="{'ng-invalid ng-dirty' :  ((cantidad+peso_bruto) > pesomax)}"/>
+                            <label for="peso_bruto"><h6>Peso bruto vehículo</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">TON</span>
+                    </div>
+                    
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="cantidad" 
+                                   type="text" 
+                                   disabled 
+                                   [value]="cantidad"
+                                   [ngClass]="{'ng-invalid ng-dirty' :  (capacidadvh < cantidad)}" />
+                            <label for="cantidad"><h6>Cantidad cargada</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">TON</span>
+                    </div>
+                    
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="peso_neto" 
+                                   type="text" 
+                                   disabled 
+                                   [value]="peso_bruto+cantidad"
+                                   [ngClass]="{'ng-invalid ng-dirty' :  (pesomax < (peso_bruto+cantidad))}"/>
+                            <label for="peso_neto"><h6>Peso Neto vehículo</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">TON</span>
+                    </div>
+                    
+                </div>
+
+                <div class="field col-9">
+                    <span class="p-float-label">
+                        <!--<p-autoComplete id="almacen" 
+                                        [(ngModel)]="estadoSeleccionado" 
+                                        [suggestions]="estadosFiltrados" 
+                                        (completeMethod)="filtrarEstado($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        (onSelect)="seleccionarEstado(estadoSeleccionado)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : grabarCambios && !estadoSeleccionado}">
+                        </p-autoComplete>-->
+
+                        <input pInputText 
+                        id="estado" 
+                        type="text"
+                        
+                        disabled 
+                        [value]="estado" />
+                        <label for="cliente"><h6>Estado actual</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-3">
+                    <button  type="button" (click)="historialTurno()" pButton icon="pi pi-history" label="Ver historial" ></button>
+                </div>
+
+                
+
             </div>
         </div>
     </div>
 </div>
-
+<!--Tabla detalle pedidos -->
 <div class="grid">
 	<div class="col-12">
 		<div class="card">
@@ -152,6 +331,7 @@
                              [paginator]="true"
                              [selectionMode]="'multiple'"
                              [viewCheckselectedItem] ="true"
+                             [loading]="loadingCargue"
                              nameExport="pedidos_turno"
                              [showBtnNew]="false">
                 </app-dynamic-table>
@@ -161,15 +341,119 @@
         </div>
     </div>
 </div>
+<!--Fin tabla detalle pedidos-->
 
+<!--Botones acciones -->
 <div class="grid">
 	<div class="col-12">
         <div class="flex justify-content-end">
-            <button *ngIf="estadoSeleccionado.code!='Cancelado'" type="button" (click)="grabar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
-            <button type="button" (click)="cancelar()" pButton icon="pi pi-times" label="Cancelar" class="p-button-secondary ml-3"></button>
+            <!--<div style="position: relative;" class="speeddial-linear-demo speeddial-tooltip-demo">
+                <p-speedDial [model]="arrayBtnTurnos" className="speeddial-left" showIcon="pi pi-bars" pTooltip="Acciones" direction="left"></p-speedDial>
+            </div>-->
+            
+            <p-splitButton *ngIf="arrayBtnTurnos"  label="Acciones" icon="pi pi-bars" [model]="arrayBtnTurnos" class="pr-3"></p-splitButton>
+            <!--<button *ngIf="updateModulo" type="button" (click)="grabar()" pButton icon="pi pi-save" label="Actualizar cambios" ></button>-->
+            <button type="button" (click)="cerrar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
         </div>
     </div>
 </div>
+<!--Fin botones acciones-->
+
+
+
+<!-- Dialog cambio estado -->
+<p-dialog [header]="tituloEstado" 
+          [(visible)]="formEstadoTurno" 
+          [modal]="true" 
+          [style]="{width: '50vw'}" 
+          [draggable]="false" 
+          [resizable]="false"
+          [maximizable]="true">
+
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-6  mt-3">
+                                <span class="p-float-label">
+                                    <p-calendar inputId="fechaaccion" [showIcon]="true" [(ngModel)]="fechaaccion" [minDate]="hoy"></p-calendar>
+                                    <label for="fechaaccion"><h6>Fecha acción</h6></label>
+                                </span>
+                            </div>
+                            <div class="field col-12 md:col-6  mt-3">
+                                <span class="p-float-label">
+                                    <p-calendar [(ngModel)]="horaaccion"  [timeOnly]="true" [hourFormat]="'12'" inputId="timeonly"></p-calendar>
+                                    <label for="horaaccion"><h6>Hora acción</h6></label>
+                                </span>
+                                
+                            </div>
+                            <div *ngIf="novedad" class="field col-12 ">
+                                <span class="p-float-label">
+                                   
+
+                                        <p-multiSelect [options]="novedades" 
+                                                       [(ngModel)]="novedadesSeleccionadas" 
+                                                       defaultLabel="Seleccione una novedad" 
+                                                       optionLabel="name" 
+                                                       [ngClass]="{'ng-invalid ng-dirty' :  (accion == 'pausar' || accion == 'cancelar') && novedadesSeleccionadas.length == 0 }"
+                                                       display="chip">
+                                        </p-multiSelect>
+                                        <label for="comentario"><h6>Novedad</h6></label>
+                                </span>
+                            </div>
+
+                            <div class="field col-12 ">
+                                <span class="p-float-label">
+                                    <!--<input type="text" 
+                                           inputId="comentario" 
+                                           [(ngModel)]="comentario" 
+                                           pInputText>-->
+                                        <textarea rows="5" 
+                                                  class="w-full" 
+                                                  pInputTextarea 
+                                                  [autoResize]="true"
+                                                  inputId="comentario" 
+                                                  [(ngModel)]="comentario">
+                                                  
+                                        </textarea> 
+
+                                        
+                                        <label for="comentario"><h6>Comentario</h6></label>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <ng-template pTemplate="footer">
+                <p-button icon="pi pi-check" (click)="cambiarEstadoTurno()" label="Cambiar estado" styleClass="p-button-text"></p-button>
+            </ng-template>
+
+</p-dialog>
+<!--Fin Dialog loading-->
+
+
+<!-- Dialog historial -->
+<p-dialog [header]="'Historial turno'" 
+          [(visible)]="formHistorialTurno" 
+          [modal]="true" 
+          [style]="{width: '50vw'}" 
+          [draggable]="false" 
+          [resizable]="false"
+          [maximizable]="true">
+
+          <div class="grid">
+            <div class="col-12">
+                <div class="card">
+                    
+                </div>
+            </div>
+        </div>
+
+
+</p-dialog>
 
 
 <!-- Dialog loading -->

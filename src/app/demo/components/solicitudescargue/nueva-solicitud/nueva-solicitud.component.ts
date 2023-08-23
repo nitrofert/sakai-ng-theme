@@ -17,6 +17,11 @@ import { Router } from '@angular/router';
 import { PermisosFunction } from 'src/app/layout/shared/functions/permisos.functions';
 import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.service';
 import { lastValueFrom } from 'rxjs';
+import { FunctionsService } from 'src/app/demo/service/functions.service';
+import { WsMysqlService } from 'src/app/demo/service/wsmysql.service';
+import { ClientesService } from 'src/app/demo/service/clientes.service';
+import { TipoRol } from '../../admin/roles/roles.enum';
+import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
 
 @Component({
 selector: 'app-nueva-solicitud',
@@ -119,6 +124,28 @@ loadingCargue:boolean = false;
 completeCargue:boolean = false;
 completeTimer:boolean = false;
 messageComplete:string = "";
+tiposRol:any = TipoRol;
+
+locaciones:any[] = [];
+diasNoAtencion:any[] = [];
+today:Date = new Date();
+
+
+
+invalidDates:any[] =[];
+
+horainicio:Date = new Date(new Date().setHours(0,0,0));
+horafin:Date = new Date(new Date().setHours(23,59,0));
+horariosLocacion:any[] = [];
+horariosSeleccionados:any[] = [];
+
+
+pesobruto:number = 0;
+pesoneto:number = 0;
+
+domain:string = window.location.hostname;
+
+
 
 constructor(private pedidosService: PedidosService,
             private almacenesService: AlmacenesService,
@@ -133,17 +160,22 @@ constructor(private pedidosService: PedidosService,
             public dialogService: DialogService,
             private router:Router,
             public usuariosService:UsuarioService,
-            
+            public functionsService:FunctionsService,
+            private wsMysqlService:WsMysqlService,
+            private clientesService:ClientesService
             ){
               
                
             }
 
 async  ngOnInit(){
+
+
   this.getPermisosModulo();
   //this.getPermisosModulo2();
   this.getClientes();
   this.getAlmacenes(); 
+  this.getLocaciones();
   //this.getPedidos();
   this.getVehiculos();
   this.getConductores();
@@ -167,7 +199,7 @@ async  ngOnInit(){
     { field: 'cantidadcrg', header: 'Toneladas cargadas' }
   ];
 
-
+ 
   
 
 }
@@ -177,10 +209,11 @@ async  ngOnInit(){
 getPermisosModulo(){
   
   const modulo = this.router.url;
+  
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-            //////console.log(permisos);
+            ////console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -190,13 +223,26 @@ getPermisosModulo(){
             }
             this.permisosModulo = permisos;
             this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-            //////console.log(this.multiplesClientes);
+            ////////////////console.log(this.multiplesClientes);
+
+           
             /*
             this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
             this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
             this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
             this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
             */
+            if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='RETIRA').valor){
+              this.condicion_tpt="RETIRA";
+            }
+
+            if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor){
+              this.condicion_tpt="TRANSP";
+            }
+
+            ////console.log(this.condicion_tpt);
+            
+
           },
           error:(err)=>{
               console.error(err);
@@ -206,23 +252,36 @@ getPermisosModulo(){
 }
 
 async getClientes(){
-this.clientes = [
-  { name: 'C.I.TECNICAS BALTIME DE COLOMBIA S.A.', code: 'CN890918965' , label:'CN890918965 - C.I.TECNICAS BALTIME DE COLOMBIA S.A.'},
-  { name: 'COOPERATIVA DE PRODUCTOS LACTEOS NARIÑO LTDA', code: 'CN891201294', label:'CN891201294 - COOPERATIVA DE PRODUCTOS LACTEOS NARIÑO LTDA'},
-  { name: 'AGRICO DISTRIBUIDORA Y CONSTRUCTORA SAS', code: 'CN901584196', label:'CN901584196 - AGRICO DISTRIBUIDORA Y CONSTRUCTORA SAS' }
-];
+this.clientes = [];
 this.usuariosService.getInfoUsuario()
     .subscribe({
-        next: (infoUsuario)=>{
-          let clientesUsuario:any = infoUsuario.clientes;
-          //////console.log(clientesUsuario);
+        next: async (infoUsuario)=>{
+          //////////console.log(infoUsuario);
+          let clientesUsuario!:any;
+
+          if(await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.TRANSPORTASOCIEDAD) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.ADMIN)){
+            //Listar todos los clientes
+            clientesUsuario = await this.clientesService.infoClientes();
+
+          }else{
+            //Mostrar clientes asociados al usuario
+            clientesUsuario = infoUsuario.clientes;
+            //////console.log(clientesUsuario[0].CardCode,await this.usuariosService.infoUsuarioByCardCode(clientesUsuario[0].CardCode));
+          }
+
+          //////console.log('clientesUsuario',clientesUsuario);
+
           for(let clienteUsuario of clientesUsuario){
             clienteUsuario.code = clienteUsuario.CardCode;
             clienteUsuario.name =  clienteUsuario.CardName;
             clienteUsuario.label = clienteUsuario.CardCode+' - '+clienteUsuario.CardName;
           }
           this.clientes = clientesUsuario;
+
+          ////////console.log(this.clientes);
           this.getSaldosPedidos();
+          
+          
         },
         error: (err)=>{
           console.error(err);
@@ -230,14 +289,30 @@ this.usuariosService.getInfoUsuario()
     });
 }
 
+async getLocaciones(){
+  this.almacenesService.getLocaciones()
+      .subscribe({
+          next:(locaciones)=>{
+              //////console.log('locaciones',locaciones);
+              this.locaciones = locaciones;
+          },
+          error:(err)=>{
+            console.error(err);
+          }
+      });
+}
+
 getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
           next:(saldosPedidos)=>{
-           //////console.log(saldosPedidos[0]);
+           //////console.log(saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
-              if(this.clientes.find(cliente =>cliente.CardCode === saldosPedidos[indexPedido].CardCode)){
+            //////////console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
+              if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
+
+                
                 pedidosClientes.push({
                   cantidad:saldosPedidos[indexPedido].Quantity,
                   cantidad_suministrada:saldosPedidos[indexPedido].DelivrdQty,
@@ -261,12 +336,15 @@ getSaldosPedidos(){
                   duedate:saldosPedidos[indexPedido].DocDueDate,
                   estado_doc:saldosPedidos[indexPedido].ESTADO,
                   estado_linea:'',
+                  linenum:saldosPedidos[indexPedido].LineNum,
                   funcionario_ventas:'',
                   impuesto:'',
                   itemcode:saldosPedidos[indexPedido].ItemCode,
                   itemname:saldosPedidos[indexPedido].Dscription,
                   iva:'',
-                  locacion:saldosPedidos[indexPedido].Location,
+                  //locacion:saldosPedidos[indexPedido].Location,
+                  locacioncode: saldosPedidos[indexPedido].locacion_codigo2,
+                  locacion:saldosPedidos[indexPedido].locacion2,
                   localidad:'',
                   moneda:'',
                   nit:'',
@@ -283,15 +361,20 @@ getSaldosPedidos(){
                   total_documento:saldosPedidos[indexPedido].LineTotal,
                   total_impuesto:0,
                   total_linea_siniva:0,
-                  vicepresidencia:''
+                  vicepresidencia:'',
+                  email_vendedor:saldosPedidos[indexPedido].Email
                   
                 })
+
+                
               }
 
            }
 
-           //////console.log(pedidosClientes[0]);
+           ////////////////console.log(pedidosClientes[0]);
+           //console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
            this.pedidos = pedidosClientes;
+           //////console.log(this.pedidos);
           },
           error:(err)=>{
             console.error(err);
@@ -302,7 +385,7 @@ getSaldosPedidos(){
 getPedidos(){
 this.pedidosService.getPedidos().then(pedidos => {
   this.pedidos = pedidos;
-  //////console.log(this.pedidos[0]);
+  ////////////////console.log(this.pedidos[0]);
 });
 }
 
@@ -321,8 +404,8 @@ getAlmacenes(){
               almacenesTMP.push(linea);
            
             }
-            this.almacenes = almacenesTMP;
-            ////console.log(almacenesTMP);
+            this.almacenes = almacenesTMP.filter(almacen=>almacen.CorreoNoti !=null && almacen.CorreoNoti!='');
+            //////console.log(this.almacenes);
             
           },
           error:(err)=>{
@@ -340,10 +423,10 @@ getVehiculos(){
             for(let vehiculo of vehiculos){
               vehiculo.code = vehiculo.placa;
               vehiculo.name = vehiculo.placa;
-              vehiculo.label = vehiculo.placa;
+              vehiculo.label = vehiculo.placa+' ('+vehiculo.tipo_vehiculo.capacidad+' TON)';
               vehiculo.clase = vehiculo.tipo_vehiculo;
             }
-            //////console.log(conductores);
+            ////////////////console.log(conductores);
             this.vehiculos = vehiculos;
         },
         error: (err)=>{
@@ -363,7 +446,7 @@ getTransportadoras(){
             transportadora.name = transportadora.nombre;
             transportadora.label = transportadora.nit+' - '+transportadora.nombre;
           }
-          //////console.log(conductores);
+          ////////////////console.log(conductores);
           this.transportadoras = transportadoras;
       },
       error: (err)=>{
@@ -382,7 +465,7 @@ getConductores(){
                 conductor.name = conductor.nombre;
                 conductor.label = conductor.cedula+' - '+conductor.nombre;
               }
-              //////console.log(conductores);
+              ////////////////console.log(conductores);
               this.conductores = conductores;
           },
           error: (err)=>{
@@ -400,15 +483,15 @@ filtrarCliente2(event: any) {
   this.clientesFiltrados2 = this.filter(event,this.clienteSeleccionado);
 }
 
-  seleccionarCliente2(clienteSeleccionado2:any){
-      ////console.log(clienteSeleccionado2, this.almacenSeleccionado)
+seleccionarCliente2(clienteSeleccionado2:any){
+      //////////////console.log(clienteSeleccionado2, this.almacenSeleccionado)
       this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code, clienteSeleccionado2.code)
-  }   
+}   
 
 seleccionarCliente(clienteSeleccionado:any){
-  ////console.log(clienteSeleccionado);
+  ////////////console.log(clienteSeleccionado);
   //this.getPedidosPorCliente(clienteSeleccionado.code);
-  /*////console.log(this.almacenSeleccionado);
+  /*//////////////console.log(this.almacenSeleccionado);
   if(!this.almacenSeleccionado || this.almacenSeleccionado.length ==0){
     this.getPedidosPorCliente(clienteSeleccionado);
   }else{
@@ -431,7 +514,7 @@ seleccionarCliente(clienteSeleccionado:any){
           this.getPedidosPorCliente(clienteSeleccionado);
           this.almacenSeleccionado = [];
           this.generarTreeTable();
-          //////console.log(this.tablaPedidosAlmacenCliente);
+          ////////////////console.log(this.tablaPedidosAlmacenCliente);
 
       },
       reject: async (type: any) => {
@@ -446,7 +529,7 @@ seleccionarCliente(clienteSeleccionado:any){
               break;
           }
           this.clienteSeleccionado.pop();
-          ////console.log(this.clienteSeleccionado);
+          //////////////console.log(this.clienteSeleccionado);
           this.getPedidosPorCliente(clienteSeleccionado);
       }
   });
@@ -455,8 +538,8 @@ seleccionarCliente(clienteSeleccionado:any){
 
 async getPedidosPorCliente(clientesSeleccionados:any){
     
-    this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt);
-    //////console.log(this.pedidosCliente);
+    this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
+    ////console.log('pedidosCliente',this.pedidosCliente);
     this.getAlmacenesEnPedidos();
 }
 
@@ -464,23 +547,28 @@ getAlmacenesEnPedidos(){
     let almacenesPedidosCliente: any[] = [];
     for(let pedido of this.pedidosCliente){
       
-      if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.name == pedido.locacion).length===0){
+      if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode).length===0){
         //TODO: Buscar datos del almacen en array de almacenes
         
-        if(this.almacenes.filter(almacen => almacen.Location == pedido.locacion).length>0){
-          let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.Location == pedido.locacion)[0];
-          ////console.log(informacionAlmacen);
-          informacionAlmacen.label = informacionAlmacen.Location+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
+        //if(this.almacenes.filter(almacen => almacen.Location == pedido.locacion).length>0){
+        if(this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode).length>0){
+          //let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.Location == pedido.locacion)[0];
+          let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode)[0];
+          //////////////console.log(informacionAlmacen);
+          //informacionAlmacen.label = informacionAlmacen.Location+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
+          informacionAlmacen.label = informacionAlmacen.locacion2+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
           //almacenesPedidosCliente.push(informacionAlmacen);
           almacenesPedidosCliente.push({
-            code:informacionAlmacen.Location,
-            name:informacionAlmacen.Location,
-            label: informacionAlmacen.label
+            code:informacionAlmacen.locacion_codigo2,
+            name:informacionAlmacen.locacion2,
+            label: informacionAlmacen.label,
+            email: informacionAlmacen.CorreoNoti
           });
         }
       }
     }
     this.almacenesPedidosCliente = almacenesPedidosCliente;
+    //////console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
 
 }
 
@@ -488,9 +576,49 @@ filtrarAlmacen(event:any){
 this.almacenesFiltrados = this.filter(event,this.almacenesPedidosCliente);
 }
 
-seleccionarAlmacen(almacenSeleccionado:any){
- //////console.log(almacenSeleccionado);
+async seleccionarAlmacen(almacenSeleccionado:any){
+  //////console.log(almacenSeleccionado);
   //this.getPedidosClientePorAlmacen(almacenSeleccionado.code);
+ 
+  if(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code).length>0){
+    //////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
+    //////console.log(this.horainicio, this.horafin);
+    this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
+    this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion;
+
+    ////console.log('horariosLocacion',this.horariosLocacion);
+    await this.seleccionarFechaCita();
+  }else{
+    //Establecer horarios locacion
+    this.diasNoAtencion = [];
+    this.horariosLocacion = [];
+    this.horariosSeleccionados =[];
+  }
+
+}
+
+async obtenerDiasNoAtencion(horarios:any[]):Promise<any[]>{
+  let diasNoAtencion:any[] = this.functionsService.dias;
+    
+    for(let horario of horarios){
+      let diasNot:any[] = [];
+      let diasAtencionLocacion:any[] = horario.dias_atencion.split(',');
+      //////console.log(diasAtencionLocacion);
+      for(let dia of diasNoAtencion){
+        //////console.log(diasAtencionLocacion.includes(dia.fullname));
+
+        if(!diasAtencionLocacion.includes(dia.fullname)){
+            diasNot.push(dia);
+        }
+        //////console.log(dia.fullname,JSON.stringify(diasNot));
+      }
+      
+      diasNoAtencion = diasNot;
+    }
+
+   // ////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
+
+  return diasNoAtencion.map((dia)=>{ return dia.id});
 }
 
 cambioAlmacen(){
@@ -498,15 +626,80 @@ cambioAlmacen(){
   this.generarTreeTable();
 }
 
+async seleccionarFechaCita():Promise<void>{
+  
+  let diasSemana = this.functionsService.dias;
+  let diaSeleccionado = diasSemana.find(diaSemana => diaSemana.id === this.fechacargue.getUTCDay());
+  let horariosSeleccionados = this.horariosLocacion.filter(horario=>horario.dias_atencion.includes(diaSeleccionado.fullname));
+  //let horarioSeleccionados:any[] = [];
+  this.horariosSeleccionados = horariosSeleccionados;
+
+  /*for(let horario of this.horariosLocacion){
+    ////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+  }*/
+  ////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+  await this.cambioHoraCita();
+}
+
+async cambioHoraCita():Promise<void>{
+  ////console.log(this.horacargue.toLocaleTimeString());
+  /*for(let horario of this.horariosSeleccionados){
+    ////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    ////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    ////console.log(new Date(this.horacargue));
+
+    let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
+    let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
+    let horacargue = new Date(this.horacargue);
+
+    if(horainicio<= horacargue && horafin >= horacargue){
+      ////console.log('hora valida en horario id '+horario.id);
+    }else{
+      ////console.log('hora invalida en horario id '+horario.id);
+    }
+  }*/
+  //////console.log(this.horariosSeleccionados.filter(horario=>new Date(horario.horainicio)< new Date(this.horacargue) && new Date(horario.horafin)> new Date(this.horacargue)));
+
+  if(await this.validarHoraCargue()){
+    ////console.log('hora valida en horario ');
+  }else{
+    ////console.log('hora invalida en horario');
+  }
+}
+
+async validarHoraCargue():Promise<boolean>{
+  let horarioValido:boolean = true;
+
+  for(let horario of this.horariosSeleccionados){
+    ////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    ////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    ////console.log(new Date(this.horacargue));
+
+    let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
+    let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
+    let horacargue = new Date(this.horacargue);
+
+    if(horainicio<= horacargue && horafin >= horacargue){
+      ////console.log('hora valida en horario id '+horario.id);
+    }else{
+      ////console.log('hora invalida en horario id '+horario.id);
+      horarioValido = false;
+    }
+  }
+
+  return horarioValido;
+}
+
 async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
   //this.pedidosAlmacenCliente = await this.pedidosService.getPedidosClientePorAlmacen(this.clienteSeleccionado, almacen);
-  let pedidosAlmacenCliente = await this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
-  ///////console.log(this.pedidosAlmacenCliente);
+  //let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
+  let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacioncode === almacen && pedido.cardcode === cliente)
+  ////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
   let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
 
   this.pedidosAlmacenCliente = pedidosAlmacenClienteCalcudada;
 
-  ////console.log(this.pedidosAlmacenCliente);
+  //console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
   
   this.configTablePedidosAlmacenCliente();
 }
@@ -514,7 +707,7 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
 async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
   for(let pedido of pedidos){
-   //console.log(pedido);
+   ////////////console.log(pedido);
     let cantidadComprometida=0; 
     cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
     cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
@@ -536,11 +729,11 @@ async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:stri
 }
 
 async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
-  //console.log(pedido, itemcode, bodega);
+  ////////////console.log(pedido, itemcode, bodega);
     let cantidadComprometida =0;
     for(let vehiculo of this.vehiculosEnSolicitud){
         for(let lineaPedido of vehiculo.pedidos){
-         ////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
+         //////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
             if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
               
               cantidadComprometida+=lineaPedido.cantidad;
@@ -560,7 +753,7 @@ configTablePedidosAlmacenCliente(){
     data: dataTable
   }
 
-  //////console.log(this.tablaPedidosAlmacenCliente);
+  ////////////////console.log(this.tablaPedidosAlmacenCliente);
 
 }
 
@@ -587,7 +780,7 @@ filtrarVehiculo(event:any){
   this.vehiculosFiltrados.unshift({
     id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
   });
-  //////console.log(this.vehiculosFiltrados);
+  ////////////////console.log(this.vehiculosFiltrados);
 }
 
 filtrarConductor(event:any){
@@ -615,6 +808,7 @@ filtrarTransportadora(event:any){
 }
 
 seleccionarTransportadora(transportadoraSeleccionada:any){
+  ////////console.log(transportadoraSeleccionada)
   if(transportadoraSeleccionada.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevaTransportadora();
@@ -623,16 +817,19 @@ seleccionarTransportadora(transportadoraSeleccionada:any){
 }
 
 async seleccionarVehiculo(vehiculoSeleccionado:any){
-
+  console.log(vehiculoSeleccionado)
   if(vehiculoSeleccionado.id == 0){
       //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
       this.nuevoVehiculo();
   }else{
-      ////console.log(vehiculoSeleccionado)
+      //////////////console.log(vehiculoSeleccionado)
       this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
       //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
       let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
-      //////console.log(this.capacidadVehiculo,capacidaVh);
+
+      this.pesobruto = vehiculoSeleccionado.pesovacio;
+      this.pesoneto = vehiculoSeleccionado.pesomax;
+      ////////////////console.log(this.capacidadVehiculo,capacidaVh);
       this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
       
 
@@ -644,61 +841,93 @@ async seleccionarVehiculo(vehiculoSeleccionado:any){
 }
 
 nuevaTransportadora(){
+  
   const ref = this.dialogService.open(FormTransportadoraComponent, {
     data: {
-        id: parseInt('1')
+        id: parseInt(this.transportadoraSeleccionada.id)
     },
-    header: `Nueva transportadora` ,
+    header: this.transportadoraSeleccionada.id==0?`Nueva transportadora`:`Editar transportadora` ,
     width: '70%',
     height:'auto',
     contentStyle: {"overflow": "auto"},
     maximizable:true, 
   });
 
-  ref.onClose.subscribe(() => {
+  ref.onClose.subscribe((infoTransportadora) => {
     this.getTransportadoras();
-    //////console.log("Refresh calendar");
+    ////////console.log(infoTransportadora)
+    
+    if(infoTransportadora.update){
+      this.transportadoraSeleccionada.code = infoTransportadora.nit;
+      this.transportadoraSeleccionada.nit = infoTransportadora.nit;
+      this.transportadoraSeleccionada.nombre = infoTransportadora.nombre;
+      this.transportadoraSeleccionada.name = infoTransportadora.nombre;
+      this.transportadoraSeleccionada.label  = infoTransportadora.nit+' - '+infoTransportadora.nombre;
+
+      ////////console.log(this.transportadoraSeleccionada)
+    }
+    ////////////////console.log("Refresh calendar");
   });
 }
 
 nuevoVehiculo(){
   const ref = this.dialogService.open(FormVehiculoComponent, {
     data: {
-        id: parseInt('1')
+        id: parseInt(this.vehiculoSeleccionado.id)
     },
-    header: `Nuevo Vehículo` ,
+    header: this.vehiculoSeleccionado.id==0?`Nuevo Vehículo`:`Editar vehículo ${this.vehiculoSeleccionado.code}` ,
     width: '70%',
     height:'auto',
     contentStyle: {"overflow": "auto"},
     maximizable:true, 
   });
 
-  ref.onClose.subscribe(() => {
+  ref.onClose.subscribe(async (infoVehiculo) => {
     this.getVehiculos();
-    //////console.log("Refresh calendar");
+    ////////console.log(infoVehiculo)
+    if(infoVehiculo.update){
+      this.capacidadVehiculo = infoVehiculo.capacidad;
+      let capacidaVh = await this.cacluarCapacidadDisponibleVH(infoVehiculo.placa); 
+      this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
+      this.vehiculoSeleccionado.code = infoVehiculo.placa;
+      this.vehiculoSeleccionado.placa = infoVehiculo.placa;
+      this.vehiculoSeleccionado.capacidad = infoVehiculo.capacidad;
+      this.vehiculoSeleccionado.label = infoVehiculo.placa;
+    }
+    ////////////////console.log("Refresh calendar");
   });
 }
 
 nuevoConductor(){
   const ref = this.dialogService.open(FormConductorComponent, {
     data: {
-        id: parseInt('1')
+        id: parseInt(this.conductorSeleccionado.id)
     },
-    header: `Nuevo Conductor` ,
+    header: this.conductorSeleccionado.id==0?`Nuevo Conductor`:`Editar conductor` ,
     width: '70%',
     height:'auto',
     contentStyle: {"overflow": "auto"},
     maximizable:true, 
   });
 
-  ref.onClose.subscribe(() => {
+  ref.onClose.subscribe((infoConductor) => {
     this.getConductores();
-    //////console.log("Refresh calendar");
+    ////////console.log(infoConductor)
+    if(infoConductor.update){
+      this.conductorSeleccionado.code = infoConductor.cedula;
+      this.conductorSeleccionado.cedula = infoConductor.cedula;
+      this.conductorSeleccionado.name = infoConductor.nombre;
+      this.conductorSeleccionado.nombre = infoConductor.nombre;
+      this.conductorSeleccionado.label = infoConductor.cedula+' - '+infoConductor.nombre;
+      this.conductorSeleccionado.numerotelefono = infoConductor.numerotelefono;
+      this.conductorSeleccionado.numerocelular = infoConductor.numerocelular;
+      this.conductorSeleccionado.email = infoConductor.email;
+    }
   });
 }
 
 seleccionarConductor(conductorSeleccionado:any){
-  ////console.log(conductorSeleccionado)
+  ////////console.log(conductorSeleccionado)
   if(conductorSeleccionado.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevoConductor();
@@ -707,13 +936,15 @@ seleccionarConductor(conductorSeleccionado:any){
 
 async adicionVehiculoSolicitud(){
   this.envioLineaCarguePedido =true;
-  ////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
+  //////////////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
   if(Object.keys(this.vehiculoSeleccionado).length ==0 || 
      Object.keys(this.conductorSeleccionado).length ==0 ||
      Object.keys(this.transportadoraSeleccionada).length ==0 ||
      this.sitioentrega=="" ||
      this.municipioentrega==""){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
+  }else if(!(await this.validarHoraCargue())){
+    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
   }else{
 
     
@@ -759,7 +990,7 @@ generarTreeTable(){
   
 
   for(let solicitud of this.vehiculosEnSolicitud){
-    //////console.log(solicitud);
+    ////////////////console.log(solicitud);
     let fechacargue = new Date(solicitud.fechacargue);
     let horacargue = new Date(solicitud.horacargue);
     let data = {
@@ -797,12 +1028,12 @@ generarTreeTable(){
   }
   
   this.vehiculosPedidos = datatabletree2.data as TreeNode[];
-////////console.log(this.vehiculosPedidos);
+//////////////////console.log(this.vehiculosPedidos);
   
 }
 
 async adicionarItemPedido(placa:string){
-  ////////console.log(placa);
+  //////////////////console.log(placa);
   let vehiculo = await this.vehiculos.find(vehiculo =>vehiculo.code === placa);
   this.vehiculoSeleccionado = vehiculo;
   let clienteSeleccionado:any;
@@ -811,7 +1042,7 @@ async adicionarItemPedido(placa:string){
   }else{
     clienteSeleccionado = this.clienteSeleccionado;
   }
-  ////console.log(this.clienteSeleccionado[0])
+  //////////////console.log(this.clienteSeleccionado[0])
   this.clienteSeleccionado2 = await clienteSeleccionado;
 
   await this.seleccionarVehiculo(this.vehiculoSeleccionado);
@@ -824,12 +1055,12 @@ async adicionarItemPedido(placa:string){
   this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code,clienteSeleccionado.code);
 
   /*let pedidosVehiculo = await this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa).pedidos;
-  //////console.log(pedidosVehiculo);
+  ////////////////console.log(pedidosVehiculo);
   //Modificar pedidos del cliente x almacen adicionando las cantidades cargadas de los pedidos asociadas al vehiculo 
 
   for(let pedidoVehiculo of pedidosVehiculo){
     let index = this.tablaPedidosAlmacenCliente.data.findIndex((pedido: {itemcode: any; docnum: any; }) => pedido.docnum == pedidoVehiculo.pedido && pedido.itemcode == pedidoVehiculo.itemcode);
-    //////console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
+    ////////////////console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
     this.tablaPedidosAlmacenCliente.data[index].cargada = pedidoVehiculo.cantidad;
   }*/
   
@@ -839,7 +1070,7 @@ async adicionarItemPedido(placa:string){
 async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
   let capacidadDisponibleVH = 0;
   let vehiculo:any = this.vehiculosEnSolicitud.filter(pedido =>pedido.placa == placa);
-  //////console.log(vehiculo.length);
+  ////////////////console.log(vehiculo.length);
   if(vehiculo.length >0){
     capacidadDisponibleVH =vehiculo[0].cantidad
   }
@@ -847,7 +1078,7 @@ async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
   /*for(let pedido of pedidosVehiculo){
     capacidadDisponibleVH+=pedido.cantidad;
   }*/
-  //////console.log(capacidadDisponibleVH);
+  ////////////////console.log(capacidadDisponibleVH);
   return capacidadDisponibleVH;
 }
 
@@ -860,41 +1091,59 @@ confirmarSeleccionPedidosAlmacenCliente(){
 
 async seleccionarPedidosAlmacenCliente(event:any){
  
-  //console.log(this.clienteSeleccionado2);
+  ////////////console.log(this.clienteSeleccionado2);
 
   const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-  //console.log(pedidosSeleccionados);
+  ////////////console.log(pedidosSeleccionados);
 
   if(pedidosSeleccionados.length > 0){
       
       let totalCarga = 0;
       let error:boolean = false;
       for(let pedido of pedidosSeleccionados){
-        
-        totalCarga+=parseFloat(pedido.cargada);
 
-       //console.log(pedido.cargada,pedido.pendiente, pedido.disponible);
+        //TODO Validar solo las lineas diferentes a flete   
 
-        if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
-          this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
-          error = true;
-        }
-        
-        if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
-          this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
-          error = true;
-        }
+        if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+            totalCarga+=parseFloat(pedido.cargada);
 
-        if(parseFloat(pedido.cargada)> this.capacidadDisponibleVehiculo ){
-          this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado`});
-          error = true;
+            ////console.log(pedido);
+   
+            if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
+              error = true;
+            }
+           
+            if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
+              error = true;
+            }
+   
+            if(parseFloat(pedido.cargada)> this.capacidadDisponibleVehiculo ){
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado`});
+              error = true;
+            }
+
+            if(parseFloat(pedido.cargada)+this.pesobruto> this.pesoneto ){
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} mas el peso bruto supera la capacidad máxima del vehículo seleccionado`});
+              error = true;
+            }
         }
+              
       }
 
       if(!error && totalCarga> this.capacidadDisponibleVehiculo){
           this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
           error = true;
       }
+
+      // TODO:: Si es transporta sociedad validar si exite linea de flete en seleccion
+      /*if(!error && this.condicion_tpt=="TRANSP" && pedidosSeleccionados.filter((pedidoSeleccionado: { itemcode: string; }) =>pedidoSeleccionado.itemcode.toLowerCase().startsWith('sf')).length ===0){
+        this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
+        error = true;
+
+      }*/
+
 
 
       if(!error){
@@ -906,9 +1155,14 @@ async seleccionarPedidosAlmacenCliente(event:any){
           
           for(let pedido of pedidosSeleccionados){
 
+            ////console.log('pedido seleccionado',pedido);
+
             if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode)!=undefined){
-              let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode);
-              pdidosVehiculo[indexPedido].cantidad += parseFloat(pedido.cargada);
+              if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+                let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode);
+                pdidosVehiculo[indexPedido].cantidad += parseFloat(pedido.cargada);
+              }
+              
             }else{
                   pdidosVehiculo.push({
     
@@ -929,6 +1183,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
           this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
           this.dialogPedidosCliente = false;
           this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
+          //console.log(this.vehiculosEnSolicitud);
           this.configTablePedidosAlmacenCliente();
           this.generarTreeTable();
       }
@@ -960,7 +1215,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
       let cantidadCargada =0;
       for(let pedido of pedidosSeleccionados){
 
-        //////console.log(pdidosVehiculo,pedido);
+        ////////////////console.log(pdidosVehiculo,pedido);
         if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode)!=undefined){
           let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode);
           pdidosVehiculo[indexPedido].cantidad = pedido.cargada;
@@ -979,7 +1234,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
       }
 
       
-      ////////console.log(index);
+      //////////////////console.log(index);
       this.vehiculosEnSolicitud[index].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
       this.vehiculosEnSolicitud[index].pedidos = pdidosVehiculo;
       this.dialogPedidosCliente = false;
@@ -998,20 +1253,23 @@ async cantidadCargaVehiculo(placa:string):Promise<number>{
   let cantidadCargada =0;
   let vehiculo = this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa);
   for(let pedidoVehiculo of vehiculo.pedidos){
-    cantidadCargada+=eval(pedidoVehiculo.cantidad);
+    //////console.log(pedidoVehiculo)
+    if(!pedidoVehiculo.itemcode.toLowerCase().startsWith("sf")){
+      cantidadCargada+=eval(pedidoVehiculo.cantidad);
+    }
   }
   return cantidadCargada;
 }
 
 async validarCantidadesCargadas(pedidos:any):Promise<number>{
   let cantidadCargada =0;
-  ////console.log(pedidos);
+  //////////////console.log(pedidos);
   for(let pedido of pedidos){
     
     cantidadCargada+=eval(pedido.cargada);
     
   }
-  //////console.log(cantidadCargada);
+  ////////////////console.log(cantidadCargada);
   return  cantidadCargada;
 }
 
@@ -1031,40 +1289,40 @@ async validarCantidadesCargadasPorPedido(pedidos:any):Promise<boolean>{
 
 
 quitarVehiculo(placa:string){
-  //////console.log(placa);
+  ////////////////console.log(placa);
   this.confirmRemoveVehiculo(placa);
 }
 
 quitarRegistro(placa:string,pedido:string,item:string){
-  //////console.log(placa,item);
+  ////////////////console.log(placa,item);
   this.confirmRemovePedidoItem(placa,pedido,item);
 }
 
 confirmRemoveVehiculo(placa:string) {
   this.confirmationService.confirm({
-      message: 'Esta seguro de proceder con la eliminación del vehículo '+placa+', recuerde que los pedidos y productos asociados, tmabien seran elimnados de la lista?',
-      header: 'Confirmatción',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
-          this.vehiculosEnSolicitud.splice(index,1);
-          this.messageService.add({severity:'info', summary:'Confirmado', detail:'El vhículo '+placa+' fue eliminado de la lista'});
-          //////console.log(this.vehiculosEnSolicitud);
-          this.generarTreeTable();
-          //////console.log(this.tablaPedidosAlmacenCliente);
+    message: 'Esta seguro de proceder con la eliminación del vehículo '+placa+', recuerde que los pedidos y productos asociados, tmabien seran elimnados de la lista?',
+    header: 'Confirmación',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+        let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
+        this.vehiculosEnSolicitud.splice(index,1);
+        this.messageService.add({severity:'info', summary:'Confirmado', detail:'El vhículo '+placa+' fue eliminado de la lista'});
+        ////////////////console.log(this.vehiculosEnSolicitud);
+        this.generarTreeTable();
+        ////////////////console.log(this.tablaPedidosAlmacenCliente);
 
-      },
-      reject: (type: any) => {
-          switch(type) {
-              case ConfirmEventType.REJECT:
-                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
-              break;
-              case ConfirmEventType.CANCEL:
-                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
-              break;
-          }
-      }
-  });
+    },
+    reject: (type: any) => {
+        switch(type) {
+            case ConfirmEventType.REJECT:
+                //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+            break;
+            case ConfirmEventType.CANCEL:
+                //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+            break;
+        }
+    }
+});
 }
 
 confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
@@ -1077,13 +1335,13 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
           let pedidos = this.vehiculosEnSolicitud[index].pedidos;
           
           let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
-          ////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
+          //////////////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
           this.vehiculosEnSolicitud[index].cantidad =this.vehiculosEnSolicitud[index].cantidad-eval(this.vehiculosEnSolicitud[index].pedidos[indexPedido].cantidad);
           this.vehiculosEnSolicitud[index].pedidos.splice(indexPedido,1);
           this.messageService.add({severity:'info', summary:'Confirmado', detail:'El item '+item+' fue eliminado de la lista'});
-          //////console.log(this.vehiculosEnSolicitud);
+          ////////////////console.log(this.vehiculosEnSolicitud);
           this.generarTreeTable();
-          //////console.log(this.tablaPedidosAlmacenCliente);
+          ////////////////console.log(this.tablaPedidosAlmacenCliente);
 
       },
       reject: (type: any) => {
@@ -1109,7 +1367,7 @@ setTimer(){
 
 grabarSolicitud(){
 
-  //////console.log(this.vehiculosEnSolicitud);
+  ////////////////console.log(this.vehiculosEnSolicitud);
   this.displayModal = true;
   this.loadingCargue = true;
   this.completeCargue=false;
@@ -1127,10 +1385,24 @@ grabarSolicitud(){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado pedidos`});
       error = true;
       this.displayModal = false;
+    }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
+      error = true;
+      this.displayModal = false;
+    }else /*if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length >1 && this.condicion_tpt=='TRANSP'){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} solo se le puede asignar un solo item de flete`});
+      error = true;
+      this.displayModal = false;
+    }else */if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
+      error = true;
+      this.displayModal = false;
     }else{
       let pedidosVehiculo:any[] = [];
       for(let pedido of vehiculo.pedidos){
-       //console.log(pedido);
+       ////////////console.log(pedido);
+        let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
+
         pedidosVehiculo.push({
           pedidonum:pedido.pedido,
           itemcode:pedido.itemcode,
@@ -1139,12 +1411,13 @@ grabarSolicitud(){
           bodega: pedido.bodega,
           CardCode: pedido.CardCode,
           CardName: pedido.CardName,
+          email_vendedor: email_vendedor
         });
 
-        ////console.log(pedidosVehiculo);
+        //////////////console.log(pedidosVehiculo);
       }
 
-     //console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
+     ////////////console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
 
       detalle_solicitud.push({
         fechacita:vehiculo.fechacargue,
@@ -1152,6 +1425,7 @@ grabarSolicitud(){
         lugarentrega:vehiculo.sitioentrega,
         municipioentrega:vehiculo.municipioentrega,
         observacion:vehiculo.observacion,
+        condiciontpt: this.condicion_tpt,
         transportadora:this.transportadoras.find(transportadora => transportadora.code === vehiculo.transportadora).id,
         vehiculo:this.vehiculos.find(vehiculoo => vehiculoo.code === vehiculo.placa).id,
         conductor:this.conductores.find(conductor=>conductor.code === vehiculo.conductor).id,
@@ -1170,12 +1444,12 @@ grabarSolicitud(){
         clientes: clientesSolicitud,
         detalle_solicitud
       }
-     console.log(newSolicitud);
-
+     //console.log(newSolicitud);
+      
       this.solicitudTurnoService.create(newSolicitud)
           .subscribe({
-                next:(result)=>{
-                  ////console.log(result);
+                next:async (result)=>{
+                 
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
                     this.displayModal = false;
@@ -1184,6 +1458,18 @@ grabarSolicitud(){
                   }
                   this.completeCargue = true;
                   this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
+                  
+                  ////console.log('Registro Solicitud',result);
+                  this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
+                      .subscribe({
+                            next:async (solicitud)=>{
+                              await this.configEmails(solicitud);
+                            },
+                            error:(err)=>{
+                              console.error(err);
+                            }
+                  });
+
                   
                   
                 },
@@ -1210,7 +1496,7 @@ toggle(index: number) {
 
 filter(event: any, arrayFiltrar:any[]) {
 
-////////console.log(arrayFiltrar);
+//////////////////console.log(arrayFiltrar);
 const filtered: any[] = [];
 const query = event.query;
 for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -1219,7 +1505,8 @@ for (let i = 0; i < arrayFiltrar.length; i++) {
         filtered.push(linea);
     }
 }
-return filtered;
+
+return filtered.slice(0,10);
 }
 
 configHeadersPedidos(){
@@ -1278,6 +1565,499 @@ configDataTablePedidos(arregloPedido:any){
     return dataTable;
 }
 
+async emailsClientes(solicitud:any):Promise<void> {
+
+  let turnosCliente:any[] = []; 
+  solicitud.detalle_solicitud_turnos.forEach((turno: {
+    conductor: any;
+    vehiculo: any;
+    transportadora: any; detalle_solicitud_turnos_pedido: any[]; id: number; estado: any; fechacita: any; horacita: any; locacion: any; lugarentrega: any; municipioentrega: any; observacion: any; 
+})=>{
+    
+    turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
+      ////console.log(turno.id, pedido.CardCode);
+        let email_cliente = solicitud.clientes.find((cliente: { CardCode: any; })=>cliente.CardCode === pedido.CardCode).EmailAddress;
+        if(turnosCliente.filter(cliente=>cliente.codigo===pedido.CardCode).length === 0){
+
+            let turnoCliente:any;
+
+            turnoCliente ={
+              id:turno.id,
+              estado:turno.estado,
+              fechacita:new Date(turno.fechacita).toLocaleDateString(),
+              horacita:new Date(turno.horacita).toLocaleTimeString(),
+              locacion:turno.locacion,
+              lugarentrega:turno.lugarentrega,
+              municipioentrega:turno.municipioentrega,
+              observacion:turno.observacion,
+              detalle_solicitud_turnos_pedido:[pedido],
+              toneladas_turno: !pedido.itemcode.toLowerCase().startsWith("sf")?pedido.cantidad:0,
+              transportadora:turno.transportadora,
+              vehiculo:turno.vehiculo,
+              conductor:turno.conductor,
+            }
+
+            turnosCliente.push({
+              codigo:pedido.CardCode,
+              nombre:pedido.CardName,
+              email:email_cliente,
+              tipo:'cliente',
+
+              turnos:[turnoCliente]
+            });
+        }else{
+            
+            let indexCliente = turnosCliente.findIndex(cliente=>cliente.codigo === pedido.CardCode);
+            ////console.log(turnosCliente[indexCliente]);
+
+            if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
+              let turnoCliente:any;
+              turnoCliente ={
+                id:turno.id,
+                estado:turno.estado,
+                fechacita:new Date(turno.fechacita).toLocaleDateString(),
+                horacita:new Date(turno.horacita).toLocaleTimeString(),
+                locacion:turno.locacion,
+                lugarentrega:turno.lugarentrega,
+                municipioentrega:turno.municipioentrega,
+                observacion:turno.observacion,
+                detalle_solicitud_turnos_pedido:[pedido],
+                toneladas_turno: !pedido.itemcode.toLowerCase().startsWith("sf")?pedido.cantidad:0,
+                transportadora:turno.transportadora,
+                vehiculo:turno.vehiculo,
+                conductor:turno.conductor,
+              }
+              
+              turnosCliente[indexCliente].turnos.push(turnoCliente);
+            }else{
+              let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
+              ////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+              turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
+              if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+                turnosCliente[indexCliente].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
+              }
+              
+            }
+            
+        }
+    })
+    
+  });
+
+
+
+  //console.log(turnosCliente);
+
+  turnosCliente.forEach(async (cliente)=>{
+    console.log('email cliente', cliente.email);
+    if(cliente.email!='' && cliente.email!=null){
+
+      let clienteTurno:any = solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === cliente.code);
+      clienteTurno.turnos = cliente.turnos;
+      let objectMail = {
+        to:'ralbor@nitrofert.com.co',
+        //to:this.domain=='localhost'?'ralbor@nitrofert.com.co':cliente.email,
+        subject:`Solicitud de cargue # ${solicitud.id}`,
+        template:'./notificacion_solicitud',
+        context:{
+                    name:cliente.nombre,
+                    solicitud_num:solicitud.id,
+                    fechasolicitud: new Date(solicitud.createdAt).toLocaleDateString(),
+                    locacion:this.almacenSeleccionado.label,
+                    totalvehiculos:cliente.turnos.length,
+                    totaltoneladas:(await this.functionsService.sumColArray(cliente.turnos,[{toneladas_turno:0}]))[0].toneladas_turno,
+                    cliente:clienteTurno
+        }         
+      };
+      console.log('objectMail Cliente',objectMail);
+      console.log(await this.functionsService.sendMail(objectMail));
+    }
+  });
+}
+
+async emailsVendedores(solicitud:any): Promise<void>{
+
+  let turnosVendedor:any[] = []; 
+  solicitud.detalle_solicitud_turnos.forEach((turno: {
+    conductor: any;
+    vehiculo: any;
+    transportadora: any; detalle_solicitud_turnos_pedido: any[]; id: number; estado: any; fechacita: any; horacita: any; locacion: any; lugarentrega: any; municipioentrega: any; observacion: any; 
+})=>{
+    
+    turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
+      ////console.log(turno.id, pedido.CardCode);
+        if(turnosVendedor.filter(vendedor=>vendedor.codigo===pedido.email_vendedor).length === 0){
+
+            let turnoVendedor:any;
+            
+
+            turnoVendedor ={
+              id:turno.id,
+              estado:turno.estado,
+              fechacita:new Date(turno.fechacita).toLocaleDateString(),
+              horacita:new Date(turno.horacita).toLocaleTimeString(),
+              locacion:turno.locacion,
+              lugarentrega:turno.lugarentrega,
+              municipioentrega:turno.municipioentrega,
+              observacion:turno.observacion,
+              detalle_solicitud_turnos_pedido:[pedido],
+              toneladas_turno: !pedido.itemcode.toLowerCase().startsWith("sf")?pedido.cantidad:0,
+              transportadora:turno.transportadora,
+              vehiculo:turno.vehiculo,
+              conductor:turno.conductor,
+            }
+
+            turnosVendedor.push({
+              codigo:pedido.email_vendedor,
+              nombre:pedido.email_vendedor,
+              email:pedido.email_vendedor,
+              tipo:'vendedor',
+              turnos:[turnoVendedor]
+            });
+        }else{
+            
+            let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.codigo === pedido.email_vendedor);
+            ////console.log(turnosCliente[indexCliente]);
+
+            if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
+              let turnoVendedor:any;
+              turnoVendedor ={
+                id:turno.id,
+                estado:turno.estado,
+                fechacita:new Date(turno.fechacita).toLocaleDateString(),
+                horacita:new Date(turno.horacita).toLocaleTimeString(),
+                locacion:turno.locacion,
+                lugarentrega:turno.lugarentrega,
+                municipioentrega:turno.municipioentrega,
+                observacion:turno.observacion,
+                detalle_solicitud_turnos_pedido:[pedido],
+                toneladas_turno: !pedido.itemcode.toLowerCase().startsWith("sf")?pedido.cantidad:0,
+                transportadora:turno.transportadora,
+                vehiculo:turno.vehiculo,
+                conductor:turno.conductor,
+              }
+              
+              turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
+            }else{
+              let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
+              ////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+              turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
+              if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+                turnosVendedor[indexVendedor].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
+              }
+            }
+            
+        }
+    })
+    
+  });
+
+  //console.log(turnosVendedor);
+
+  turnosVendedor.forEach(async (vendedor)=>{
+    if(vendedor.email!='' && vendedor.email!=null){
+      let objectMail = {
+        to:this.domain=='localhost'?'ralbor@nitrofert.com.co':vendedor.email,
+        //to:'ralbor@nitrofert.com.co',
+        subject:`Solicitud de cargue # ${solicitud.id}`,
+        template:'./notificacion_solicitud2',
+        context:{
+                    name:vendedor.nombre,
+                    solicitud_num:solicitud.id,
+                    fechasolicitud: new Date(solicitud.createdAt).toLocaleDateString(),
+                    locacion:this.almacenSeleccionado.label,
+                    totalvehiculos:vendedor.turnos.length,
+                    totaltoneladas:(await this.functionsService.sumColArray(vendedor.turnos,[{toneladas_turno:0}]))[0].toneladas_turno,
+                    turnos:vendedor.turnos
+                    //cliente:solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === vendedor.code)
+        }         
+      };
+      console.log('objectMail vendedor',objectMail);
+      console.log(await this.functionsService.sendMail(objectMail));
+    }
+  });
+}
+
+
+async emailBodegaEstado(solicitud:any): Promise<void>{
+
+  let emailBodega!:string;
+  let locacion:any = this.almacenSeleccionado.label;
+
+  let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLICITADO,locacion}))
+                    .map((email: { email_responsable: any; }) => {return email.email_responsable});
+
+  console.log('emailsTurno',emailsTurno.join());
+
+  if(emailsTurno.join()!=''){
+    emailBodega = emailsTurno.join();
+  }
+
+
+  if(emailBodega){
+    let totaltoneladas =0;
+
+    solicitud.detalle_solicitud_turnos.forEach((turno:any)=>{
+      turno.fechacita =new Date(turno.fechacita).toLocaleDateString(),
+      turno.horacita= new Date(turno.horacita).toLocaleTimeString(),
+      turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
+        if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+          totaltoneladas+= parseFloat(pedido.cantidad);
+        }
+        
+      });
+    });
+
+    let objectMail = {
+      
+      to:this.domain=='localhost'?'ralbor@nitrofert.com.co':emailBodega,
+      //to:'ralbor@nitrofert.com.co',
+      subject:`Solicitud de cargue # ${solicitud.id}`,
+      template:'./notificacion_solicitud2',
+      context:{
+                  name:emailBodega,
+                  solicitud_num:solicitud.id,
+                  fechasolicitud: new Date(solicitud.createdAt).toLocaleDateString(),
+                  locacion,
+                  totalvehiculos:solicitud.detalle_solicitud_turnos.length,
+                  totaltoneladas,
+                  turnos:solicitud.detalle_solicitud_turnos
+                  
+      }         
+    };
+    console.log('objectMail Bodega',objectMail);
+    console.log(await this.functionsService.sendMail(objectMail));
+
+  }
+
+
+}
+
+async emailTransp(solicitud:any): Promise<void>{
+
+  let totaltoneladas =0;
+
+  solicitud.detalle_solicitud_turnos.forEach((turno:any)=>{
+    turno.fechacita =new Date(turno.fechacita).toLocaleDateString(),
+    turno.horacita= new Date(turno.horacita).toLocaleTimeString(),
+    turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
+      if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+        totaltoneladas+= parseFloat(pedido.cantidad);
+      }
+      
+    });
+  });
+
+  let objectMail = {
+    //to:'ralbor@nitrofert.com.co',
+    to:this.domain=='localhost'?'ralbor@nitrofert.com.co':'turnostransporte@nitrofert.com.co',
+    subject:`Solicitud de cargue # ${solicitud.id}`,
+    template:'./notificacion_solicitud2',
+    context:{
+                name:'Transporta Sociedades',
+                solicitud_num:solicitud.id,
+                fechasolicitud: new Date(solicitud.createdAt).toLocaleDateString(),
+                locacion:this.almacenSeleccionado.label,
+                totalvehiculos:solicitud.detalle_solicitud_turnos.length,
+                totaltoneladas,
+                turnos:solicitud.detalle_solicitud_turnos
+                
+    }         
+  };
+  console.log('objectMail trasporta sociedad',objectMail);
+  console.log(await this.functionsService.sendMail(objectMail));
+}
+
+async emailCreador(solicitud:any): Promise<void>{
+  
+  let infoUsuario = await this.usuariosService.infoUsuario();
+
+
+  
+  let totaltoneladas =0;
+
+  solicitud.detalle_solicitud_turnos.forEach((turno:any)=>{
+    turno.fechacita =new Date(turno.fechacita).toLocaleDateString(),
+    turno.horacita= new Date(turno.horacita).toLocaleTimeString(),
+    turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
+      if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+        totaltoneladas+= parseFloat(pedido.cantidad);
+      }
+      
+    });
+  });
+
+  let objectMail = {
+    to:infoUsuario.email,
+    //to:usuarioCreador.email,
+    subject:`Solicitud de cargue # ${solicitud.id}`,
+    template:'./notificacion_solicitud2',
+    context:{
+                name:infoUsuario.nombrecompleto,
+                solicitud_num:solicitud.id,
+                fechasolicitud: new Date(solicitud.createdAt).toLocaleDateString(),
+                locacion:this.almacenSeleccionado.label,
+                totalvehiculos:solicitud.detalle_solicitud_turnos.length,
+                totaltoneladas,
+                turnos:solicitud.detalle_solicitud_turnos
+                
+    }         
+  };
+  console.log('objectMail usuario creador',objectMail);
+  console.log(await this.functionsService.sendMail(objectMail));
+}
+
+async configEmails(dataSolicitud:any): Promise<void>{
+    
+    //console.log(JSON.stringify(dataSolicitud));
+    console.log(dataSolicitud);
+
+    await this.emailsClientes(dataSolicitud);
+    await this.emailsVendedores(dataSolicitud);
+    await this.emailBodegaEstado(dataSolicitud);
+    if(this.condicion_tpt==="TRANSP"){
+      await this.emailTransp(dataSolicitud);
+    }
+    await this.emailCreador(dataSolicitud);
+    /*
+    let clientesSolicitud:any[] = dataSolicitud.clientes;
+    let turnosSolicitud:any[] = dataSolicitud.detalle_solicitud_turnos;
+    let idSolicitud:number = dataSolicitud.id;
+    let locacion:any = this.almacenSeleccionado.label;
+    let emailBodega:string = 'ralbor@nitrofert.com.co'
+    //let emailBodega:string = this.almacenSeleccionado.email;
+    let objectMail:any;
+    let usuarioCreador:any = await this.usuariosService.infoUsuario();
+    //////console.log(usuarioCreador);
+    let totalvehiculos:number =0;
+    let totaltoneladas:number = 0;
+
+    // Envio de email a los clientes asociados al turno
+    
+  //Configuracion y envio de correo para los clientes en la solicitud
+    for(let cliente of clientesSolicitud){
+      let turnosCliente:any[] = [];
+      totalvehiculos =0;
+      totaltoneladas = 0;
+        for(let turnoSolicitud of turnosSolicitud){
+            let pedidosTurnoCliente:any[] = [];
+            
+            for(let pedidoCliente of turnoSolicitud.detalle_solicitud_turnos_pedido){
+                if(pedidoCliente.CardCode === cliente.CardCode){
+                  pedidosTurnoCliente.push(pedidoCliente);
+                  if(!pedidoCliente.itemcode.toLowerCase().startsWith("sf")){
+                    totaltoneladas+=pedidoCliente.cantidad;
+                  }
+                  
+                }
+            }
+            if(pedidosTurnoCliente.length >0){
+              
+              turnosCliente.push({
+               
+                estado:turnoSolicitud.estado,
+                fechacita:new Date(turnoSolicitud.fechacita).toLocaleDateString(),
+                horacita:new Date(turnoSolicitud.horacita).toLocaleTimeString(),
+                id:turnoSolicitud.id,
+                locacion:turnoSolicitud.locacion,
+                lugarentrega:turnoSolicitud.lugarentrega,
+                municipioentrega:turnoSolicitud.municipioentrega,
+                observacion:turnoSolicitud.observacion,
+                transportadora:turnoSolicitud.transportadora,
+                vehiculo:turnoSolicitud.vehiculo,
+                conductor:turnoSolicitud.conductor,
+                detalle_solicitud_turnos_pedido:pedidosTurnoCliente
+              });
+              totalvehiculos++;
+            }
+
+        } 
+        cliente.turnos =  turnosCliente;
+        cliente.telefono =0;
+
+          
+        
+        if(cliente.EmailAddress==null || cliente.EmailAddress==undefined){
+          //Obtenert email del cliente del usuario segun el cardcode 
+          let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(cliente.CardCode);
+          //////console.log('usuarioCliente',usuarioCliente);
+          if(usuarioCliente!=false){
+            cliente.EmailAddress = usuarioCliente.email;
+            ////console.log('usuarioCliente.email',usuarioCliente.email);
+          }
+          
+        }
+        
+        
+        //Enviar Correo al cliente
+        if(cliente.EmailAddress!=null || cliente.EmailAddress!=undefined){
+
+          objectMail = {
+              //to:cliente.EmailAddress,
+              to:usuarioCreador.email,
+              subject:`Solicitud de cargue # ${dataSolicitud.id}`,
+              template:'./notificacion_solicitud',
+              context:{
+                          name:cliente.CardName,
+                          solicitud_num:dataSolicitud.id,
+                          fechasolicitud: new Date(dataSolicitud.createdAt).toLocaleDateString(),
+                          locacion,
+                          totalvehiculos,
+                          totaltoneladas,
+                          cliente
+              }         
+            };
+            ////console.log('objectMail Cliente',objectMail);
+            ////console.log(await this.functionsService.sendMail(objectMail));
+        }
+
+        // Configuracion de email para jefe de zona o vendedor
+        
+    }
+
+   
+
+    if(emailBodega){
+
+      totaltoneladas =0;
+
+      turnosSolicitud.forEach((turno:any)=>{
+        turno.fechacita =new Date(turno.fechacita).toLocaleDateString(),
+        turno.horacita= new Date(turno.horacita).toLocaleTimeString(),
+        turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
+          if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+            totaltoneladas+= parseFloat(pedido.cantidad);
+          }
+          
+        });
+      });
+
+
+      objectMail = {
+        //to:cliente.EmailAddress,
+        to:emailBodega,
+        subject:`Solicitud de cargue # ${dataSolicitud.id}`,
+        template:'./notificacion_solicitud2',
+        context:{
+                    name:emailBodega,
+                    solicitud_num:dataSolicitud.id,
+                    fechasolicitud: new Date(dataSolicitud.createdAt).toLocaleDateString(),
+                    locacion,
+                    totalvehiculos:turnosSolicitud.length,
+                    totaltoneladas,
+                    turnos:turnosSolicitud
+                    
+        }         
+      };
+      ////console.log('objectMail Bodega',objectMail);
+      ////console.log(await this.functionsService.sendMail(objectMail));
+    }
+    */
+
+
+
+}
+
 
 /****** Deprecated */
 
@@ -1290,12 +2070,12 @@ configTablaPedidosEnSolicitud(){
       data: dataTable
   }
   
-    //////console.log(this.tablaPedidosEnSolicitud);
+    ////////////////console.log(this.tablaPedidosEnSolicitud);
   
 }
 
 adicionarPedido(event:any){
-  //////console.log(event);
+  ////////////////console.log(event);
   if(this.tablaPedidosAlmacenCliente.data.length>0){
     this.dialogPedidosCliente = event;
   }else{
@@ -1326,7 +2106,7 @@ configComboSeleccionPedido(){
 
 
 seleccionarPedido(pedidoSeleccionado:any){
-  //////console.log(pedidoSeleccionado);
+  ////////////////console.log(pedidoSeleccionado);
 }
 
 filtrarPedido(event:any){
@@ -1367,13 +2147,13 @@ filtrarPedido(event:any){
         almacen:this.almacenSeleccionado.code,
     });
     this.envioLineaCarguePedido =false;
-    //////console.log(this.detalleSolictudCargue);
+    ////////////////console.log(this.detalleSolictudCargue);
     this.dialogCargueVehiculoPedido= false;
     this.resetearForm();
     
     this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
     this.pedidosEnSolicitud = await this.calcularCantidadesComprometidas(this.pedidosEnSolicitud);
-    //////console.log(this.pedidosAlmacenCliente, this.pedidosEnSolicitud);
+    ////////////////console.log(this.pedidosAlmacenCliente, this.pedidosEnSolicitud);
 
     this.configTablaPedidosEnSolicitud();
     this.configTablePedidosAlmacenCliente();

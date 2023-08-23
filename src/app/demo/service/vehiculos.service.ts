@@ -41,7 +41,26 @@ export class VehiculosService {
         const url:string = `${this.api_url}/api/vehiculos`;
         return this.http.post<any>(url, nuevoVehiculo);
         //return this.http.post<any>(url, nuevoVehiculo, requestOptions);
+    }
 
+    getVehiculoById(id:any):Observable<any>{
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+         
+      
+        const url:string = `${this.api_url}/api/vehiculos/${id}`;
+        return this.http.get<any>(url);
+        //return this.http.get<any>(url, requestOptions);
+
+    }
+
+    update(infoVehiculo:any,id:any):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/vehiculos/${id}`;
+        return this.http.patch<any>(url, infoVehiculo);
+        //return this.http.post<any>(url, nuevoVehiculo, requestOptions);
     }
 
     

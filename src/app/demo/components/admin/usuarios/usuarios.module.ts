@@ -27,6 +27,7 @@ import { DialogService } from 'primeng/dynamicdialog';
     ApplicationPipesModule,
     DynamicTableModule
   ],
-  providers:[DialogService]
+  providers:[DialogService],
+  
 })
 export class UsuariosModule { }

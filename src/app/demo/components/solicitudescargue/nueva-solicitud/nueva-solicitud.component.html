@@ -12,7 +12,9 @@
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 mt-3">
                             <span class="p-float-label">
-                                <p-autoComplete id="cliente" 
+                                <p-skeleton *ngIf="clientes.length==0 || pedidos.length==0" height="2rem" styleClass="mb-2"></p-skeleton>
+                                <p-autoComplete id="cliente"
+                                                *ngIf="clientes.length>0 && pedidos.length>0" 
                                                 [(ngModel)]="clienteSeleccionado" 
                                                 [suggestions]="clientesFiltrados" 
                                                 (completeMethod)="filtrarCliente($event)" 
@@ -22,7 +24,8 @@
                                                 (onSelect)="seleccionarCliente(clienteSeleccionado)"
                                                 (onUnselect)="seleccionarCliente(clienteSeleccionado)">
                                 </p-autoComplete>
-                                <label for="cliente"><h6>Seleccione un cliente</h6></label>
+                                <label *ngIf="clientes.length==0  || pedidos.length==0" for="cliente"><h6>Cargando clientes y pedidos ...</h6></label>
+                                <label *ngIf="clientes.length>0 && pedidos.length>0" for="cliente"><h6>Seleccione un cliente</h6></label>
                             </span>
                         </div>
                         <!--
@@ -77,7 +80,9 @@
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 mt-3">
                             <span class="p-float-label">
-                                <p-autoComplete id="almacen" 
+                                <p-skeleton *ngIf="pedidos.length==0" height="2rem" styleClass="mb-2"></p-skeleton>
+                                <p-autoComplete id="almacen"
+                                                *ngIf="pedidos.length>0" 
                                                 [(ngModel)]="almacenSeleccionado" 
                                                 [suggestions]="almacenesFiltrados" 
                                                 (completeMethod)="filtrarAlmacen($event)" 
@@ -87,7 +92,8 @@
                                                 (onSelect)="seleccionarAlmacen(almacenSeleccionado)"
                                                 (ngModelChange)="cambioAlmacen()">
                                 </p-autoComplete>
-                                <label for="cliente"><h6>Seleccione una loacación para retirar</h6></label>
+                                <label *ngIf="pedidos.length==0" for="cliente"><h6>Cargando loacaciones ...</h6></label>
+                                <label *ngIf="pedidos.length>0 "for="cliente"><h6>Seleccione una loacación para retirar</h6></label>
                             </span>
                         </div>
                         <div class="field col-12">
@@ -116,6 +122,7 @@
                                             pTooltip="Adicionar vehículo" tooltipPosition="bottom" placeholder="Bottom"  
                                             class="p-button-outlined mb-2 mr-2 p-button-success p-button-sm" 
                                             icon="pi pi-plus"
+                                            label="Turno vehículo"
                                             (click)="adicionarVehiculo()">
                                     </button>
                                     
@@ -125,6 +132,7 @@
                                             pTooltip="Grabar soliitud" tooltipPosition="bottom" placeholder="Bottom"  
                                             class="p-button-outlined mb-2 mr-2 p-button-primary p-button-sm" 
                                             icon="pi pi-save"
+                                            label="Grabar solicitud"
                                             [disabled]="this.vehiculosEnSolicitud.length ==0"
                                             (click)="grabarSolicitud()">
                                     </button>
@@ -136,7 +144,7 @@
                                 <th *ngFor="let col of columns" style="width: 6rem">
                                     {{col.header}}
                                 </th>
-                                <th style="width: 1rem">
+                                <th style="width:4rem">
 
                                 </th>
                             </tr>
@@ -159,21 +167,21 @@
                                             [pTooltip]="'Adicionar item pedido a vehículo '+rowData[columns[0].field]" tooltipPosition="bottom" placeholder="Bottom"  
                                             class="p-button-outlined mb-2 mr-2 p-button-success p-button-sm" 
                                             icon="pi pi-list"
-                                            
+                                            label="Adicionar items"
                                             (click)="adicionarItemPedido(rowData[columns[0].field])">
                                         </button>
                                         <button *ngIf="rowNode.parent==null" pButton
                                             [pTooltip]="'Quitar vehículo '+rowData[columns[0].field]" tooltipPosition="bottom" placeholder="Bottom"  
                                             class="p-button-outlined mb-2 mr-2 p-button-danger p-button-sm" 
                                             icon="pi pi-trash"
-                                            
+                                            label="Quitar vehículo"
                                             (click)="quitarVehiculo(rowData[columns[0].field])">
                                         </button>
                                         <button *ngIf="rowNode.parent!=null" pButton
                                             [pTooltip]="'Quitar pedido-item: '+rowData[columns[1].field]+' '+rowData[columns[2].field]" tooltipPosition="bottom" placeholder="Bottom"  
                                             class="p-button-outlined mb-2 mr-2 p-button-danger p-button-sm" 
                                             icon="pi pi-trash"
-                                            
+                                            label="Quitar item"
                                             (click)="quitarRegistro(rowData[columns[0].field],rowData[columns[1].field],rowData[columns[2].field])">
                                         </button>
                                     </div>
@@ -204,7 +212,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="p-fluid p-formgrid grid">
-                        <div class="field col-12">
+                        <div class="field col-12 md:col-6 ">
                             <span class="p-float-label">
                                 <p-autoComplete id="vhiculo" 
                                                 [(ngModel)]="vehiculoSeleccionado" 
@@ -219,14 +227,14 @@
                                 <label for="vhiculo"><h6>Vehículo</h6></label>
                             </span>
                         </div>
-                        <div class="field col-12 md:col-4 ">
+                        <div class="field col-12 md:col-6 ">
                             <span class="p-float-label">
                                 <input pInputText id="clase" type="text" disabled [value]="!vehiculoSeleccionado.clase?'':vehiculoSeleccionado.clase.tipo" [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado.length==0}" />
-                                <label for="clase"><h6>Clase vehículo</h6></label>
+                                <label for="clase"><h6>Tipo</h6></label>
                             </span>
                         </div>
                         
-                        <div class="field col-12 md:col-4  ">
+                        <div class="field col-12 md:col-3  ">
                             <div class="p-inputgroup">
                                 <span class="p-inputgroup-addon">
                                     TON
@@ -238,12 +246,12 @@
                                            pInputText 
                                            [(ngModel)]="capacidadVehiculo" 
                                            [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado.length==0}"> 
-                                    <label for="capacidadvh"><h6>Capacidad vehículo</h6></label>
+                                    <label for="capacidadvh"><h6>Capacidad</h6></label>
                                 </span>
                             </div>
                         </div>
 
-                        <div class="field col-12 md:col-4 ">
+                        <div class="field col-12 md:col-3 ">
                             <div class="p-inputgroup">
                                 <span class="p-inputgroup-addon">
                                     TON
@@ -255,7 +263,41 @@
                                            pInputText 
                                            [(ngModel)]="capacidadDisponibleVehiculo" 
                                            [ngClass]="{'ng-invalid ng-dirty' : (envioLineaCarguePedido && vehiculoSeleccionado.length==0) || (envioLineaCarguePedido && cantidadCargue>capacidadDisponibleVehiculo)}"> 
-                                    <label for="cpadisponiblevh"><h6>Capacidad disponible</h6></label>
+                                    <label for="cpadisponiblevh"><h6>Disponible</h6></label>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="field col-12 md:col-3 ">
+                            <div class="p-inputgroup">
+                                <span class="p-inputgroup-addon">
+                                    TON
+                                </span>
+                                <span class="p-float-label">
+                                    <input type="number" 
+                                           inputId="pesovacio" 
+                                           disabled 
+                                           pInputText 
+                                           [(ngModel)]="pesobruto" 
+                                           [ngClass]="{'ng-invalid ng-dirty' : (envioLineaCarguePedido && vehiculoSeleccionado.length==0) || (envioLineaCarguePedido && (cantidadCargue+pesobruto)>pesoneto)}"> 
+                                    <label for="pesovacio"><h6>Peso bruto</h6></label>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="field col-12 md:col-3 ">
+                            <div class="p-inputgroup">
+                                <span class="p-inputgroup-addon">
+                                    TON
+                                </span>
+                                <span class="p-float-label">
+                                    <input type="number" 
+                                           inputId="pesoneto" 
+                                           disabled 
+                                           pInputText 
+                                           [(ngModel)]="pesoneto" 
+                                           [ngClass]="{'ng-invalid ng-dirty' : (envioLineaCarguePedido && vehiculoSeleccionado.length==0) || (envioLineaCarguePedido && (cantidadCargue+pesobruto)>pesoneto)}"> 
+                                    <label for="pesoneto"><h6>Peso neto</h6></label>
                                 </span>
                             </div>
                         </div>
@@ -315,18 +357,28 @@
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 md:col-6  mt-3">
                             <span class="p-float-label">
-                                <p-calendar inputId="fechacargue" [showIcon]="true" [(ngModel)]="fechacargue" [minDate]="hoy"></p-calendar>
+                                <p-calendar inputId="fechacargue" 
+                                            [showIcon]="true" 
+                                            [(ngModel)]="fechacargue" 
+                                            [disabledDays]="diasNoAtencion" 
+                                            [minDate]="hoy"
+                                            (onSelect)="seleccionarFechaCita()"></p-calendar>
                                 <label for="fechacargue"><h6>Fecha estimada del cargue</h6></label>
                             </span>
                         </div>
                         <div class="field col-12 md:col-6  mt-3">
                             <span class="p-float-label">
-                                <p-calendar [(ngModel)]="horacargue"  [timeOnly]="true" [hourFormat]="'12'" inputId="timeonly"></p-calendar>
+                                <p-calendar [(ngModel)]="horacargue"  
+                                            [timeOnly]="true" 
+                                            [hourFormat]="'12'" 
+                                            [disabledDates]="invalidDates" 
+                                            inputId="timeonly"
+                                            (ngModelChange)="cambioHoraCita()"></p-calendar>
                                 <label for="horacargue"><h6>Hora estimada del cargue</h6></label>
                             </span>
                             
                         </div>
-                        <div class="field col-12">
+                        <div class="field col-11">
                             <span class="p-float-label">
                                 <p-autoComplete id="transportadora" 
                                                 [(ngModel)]="transportadoraSeleccionada" 
@@ -346,7 +398,14 @@
                                 <label for="vhiculo"><h6>Seleccione una tranportadora</h6></label>
                             </span>
                         </div>
-                        <div class="field col-12">
+                        <div class="field col-1">
+                            <p-button icon="pi pi-pencil" 
+                                      [disabled]="transportadoraSeleccionada.length==0 || transportadoraSeleccionada.id==0" 
+                                      pTooltip="Editar transportadora" 
+                                      tooltipPosition="top" 
+                                      (onClick)="nuevaTransportadora()"></p-button>
+                        </div>
+                        <div class="field col-11">
                             <span class="p-float-label">
                                 <p-autoComplete id="vhiculo" 
                                                 [(ngModel)]="vehiculoSeleccionado" 
@@ -365,6 +424,13 @@
                                 </p-autoComplete>
                                 <label for="vhiculo"><h6>Seleccione un vehículo</h6></label>
                             </span>
+                        </div>
+                        <div class="field col-1">
+                            <p-button icon="pi pi-pencil" 
+                                      [disabled]="vehiculoSeleccionado.length==0 || vehiculoSeleccionado.id==0" 
+                                      pTooltip="Editar vehículo" 
+                                      tooltipPosition="top" 
+                                      (onClick)="nuevoVehiculo()"></p-button>
                         </div>
                         <div class="field col-12 md:col-4 ">
                             <span class="p-float-label">
@@ -409,7 +475,7 @@
                             </div>
                         </div>
 
-                        <div class="field col-12">
+                        <div class="field col-11">
                             <span class="p-float-label">
                                 <p-autoComplete id="conductor" 
                                                 [(ngModel)]="conductorSeleccionado" 
@@ -422,6 +488,13 @@
                                 </p-autoComplete>
                                 <label for="conductor"><h6>Seleccione un conductor</h6></label>
                             </span>
+                        </div>
+                        <div class="field col-1">
+                            <p-button icon="pi pi-pencil" 
+                                      [disabled]="conductorSeleccionado.length==0 || conductorSeleccionado.id==0" 
+                                      pTooltip="Editar conductor" 
+                                      tooltipPosition="top" 
+                                      (onClick)="nuevoConductor()"></p-button>
                         </div>
                         
                         <div class="field col-12 md:col-4 ">

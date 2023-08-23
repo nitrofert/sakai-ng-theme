@@ -1,0 +1,106 @@
+<app-breadcrumb></app-breadcrumb>
+<p-toast></p-toast>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                
+                <div class="field col-12  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="nombrecompleto" 
+                               type="text"
+                               [(ngModel)]="nombrecompleto" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && nombrecompleto==''}"/>
+                        <label for="nombrecompleto"><h6>Nombre completo</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="email" 
+                               type="email" 
+                                
+                               [(ngModel)]="email"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && email==''}" />
+                        <label for="email"><h6>Email</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="numerotelefonico" 
+                               type="text" 
+                                
+                               [(ngModel)]="numerotelefonico"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && numerotelefonico==''}" />
+                        <label for="numerotelefonico"><h6>Número télefono</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12   ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="username" 
+                               type="text" 
+                               [(ngModel)]="username"
+                               [disabled]="true"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && username==''}" />
+                        <label for="username"><h6>Nombre de usuario</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-password [(ngModel)]="password" 
+                                    [toggleMask]="true"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password!=password2) }">
+                        </p-password>
+                        <!--<input pInputText 
+                               id="password" 
+                               type="password" 
+                                
+                               [(ngModel)]="password" 
+                               [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password=='' && config.data.id==0) || (password!=password2) }"/>-->
+                        <label for="password"><h6>Contraseña</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-password [(ngModel)]="password2" 
+                                    [toggleMask]="true"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password!=password2) }">
+                        </p-password>
+                        <!--<input pInputText 
+                               id="password2" 
+                               type="password" 
+                                
+                               [(ngModel)]="password2"
+                               [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && password2=='' && config.data.id==0) || (password!=password2) }" />-->
+                        <label for="password2"><h6>Reingresar Contraseña</h6></label>
+                    </span>
+                </div>
+                
+                
+
+              
+
+                
+                
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid">
+	<div class="col-12">
+        <div class="flex justify-content-end">
+            <button type="button" (click)="editar()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            
+        </div>
+    </div>
+</div>
+

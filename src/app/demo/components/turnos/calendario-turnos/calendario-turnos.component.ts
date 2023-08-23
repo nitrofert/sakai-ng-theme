@@ -9,6 +9,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.service';
 import { FormTurnoComponent } from '../form-turno/form-turno.component';
+import { EstadosDealleSolicitud } from '../estados-turno.enum';
 
 @Component({
   selector: 'app-calendario-turnos',
@@ -38,6 +39,11 @@ export class CalendarioTurnosComponent implements OnInit {
 
   turnosLocalidad:any[]=[];
 
+  estadosTurno:any = EstadosDealleSolicitud;
+  estadosTurno2:any;
+
+  documentStyle = getComputedStyle(document.documentElement);
+
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -51,7 +57,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAlmacenes();
-    
+    this.estadosTurno2  = this.solicitudTurnoService.estadosTurno;
   }
 
   getCalendar(){
@@ -85,56 +91,17 @@ export class CalendarioTurnosComponent implements OnInit {
 
   
   getEvents(){
-    /*this.ordenesdecargue = [{
-        id:'1',
-        title:JSON.stringify({placa:'HNQ123',cliente:'MAGDA ROCIO RUIZ MOLANO'}),
-        date: new Date('2023-03-03 10:00:00'),
-        allDay: false,
-        textColor:'white',
-        backgroundColor:'red',
-        editable:false,
-        
-    },
-    {
-      id:'2',
-      title:JSON.stringify({placa:'SBL318',cliente:'C.I.TECNICAS BALTIME DE COLOMBIA S.A.'}),
-        date: new Date('2023-03-02 10:00:00'),
-        allDay: false,
-        textColor:'black',
-        backgroundColor:'pink',
-        editable:false,
-        
-    },
-    {
-      id:'3',
-      title:JSON.stringify({placa:'SBL318',cliente:'C.I.TECNICAS BALTIME DE COLOMBIA S.A.'}),
-        date: new Date('2023-02-28 12:00:00'),
-        allDay: false,
-        textColor:'white',
-        backgroundColor:'green',
-        editable:false,
-        
-    },
-    {
-      id:'4',
-      title:JSON.stringify({placa:'SBL318',cliente:'C.I.TECNICAS BALTIME DE COLOMBIA S.A.'}),
-        date: new Date('2023-03-02 12:00:00'),
-        allDay: false,
-        textColor:'white',
-        backgroundColor:'yellow',
-        editable:false,
-        
-    }]*/
+    
 
     let events:any[] = [];
     for(let turno of this.turnosLocalidad){
-      //console.log((turno.fechacita);
-      //console.log((turno.horacita);
-      //console.log((`${turno.fechacita}${turno.horacita.substring(10)}`);
-
+     //console.log(turno);
       events.push({
         id:`${turno.id}`,
-        title:JSON.stringify({placa:turno.vehiculo.placa,cliente:turno.detalle_solicitud_turnos_pedido[0].CardName}),
+        title:JSON.stringify({placa:turno.vehiculo.placa,
+                              cliente:turno.detalle_solicitud_turnos_pedido[0].CardName,
+                              estado:turno.estado
+                            }),
           date: new Date(`${turno.fechacita}${turno.horacita.substring(10)}`),
           allDay: false,
           textColor:this.setTextColor(turno.estado),
@@ -144,7 +111,7 @@ export class CalendarioTurnosComponent implements OnInit {
       })
     }
 
-    //console.log((events);
+    //////console.log((events);
 
     this.ordenesdecargue = events;
 
@@ -154,43 +121,96 @@ export class CalendarioTurnosComponent implements OnInit {
   setBackgroundColor(estado: string){
     let backgroundColor = "";
     switch (estado) {
-      case 'Pendiente':
-        backgroundColor='red'
+      case this.estadosTurno.SOLICITADO:
+
+        backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.SOLICITADO).backgroundColor;
         break;
-      case 'Autorizado':
-        backgroundColor='pink'
+
+      case this.estadosTurno.PAUSADO:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PAUSADO).backgroundColor;
+      break;
+
+      case this.estadosTurno.AUTORIZADO:
+        backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.AUTORIZADO).backgroundColor;
         break;
-      case 'Arribo a cargue':
-        backgroundColor='yellow'
+      case this.estadosTurno.ARRIBO:
+        backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.ARRIBO).backgroundColor;
         break;
       
-      case 'Fin cargue':
-        backgroundColor='green'
+      case this.estadosTurno.PESADO:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PESADO).backgroundColor;
         break;
+      
+        case this.estadosTurno.CARGANDO:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGANDO).backgroundColor;
+        break;
+
+        case this.estadosTurno.PESADOF:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PESADOF).backgroundColor;
+        break;
+
+        case this.estadosTurno.CARGADO:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGADO).backgroundColor;
+        break;
+      
+      case this.estadosTurno.DESPACHADO:
+        backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESPACHADO).backgroundColor;
+        break;
+
+        case this.estadosTurno.CANCELADO:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CANCELADO).backgroundColor;
+          break;
     
     }
-    return backgroundColor;
+    return this.documentStyle.getPropertyValue(`--${backgroundColor}`);;
   }
 
   setTextColor(estado: string){
-    let backgroundColor = "";
+    let textColor = "";
     switch (estado) {
-      case 'Pendiente':
-        backgroundColor='white'
+      case this.estadosTurno.SOLICITADO:
+
+      textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.SOLICITADO).textColor;
         break;
-      case 'Autorizado':
-        backgroundColor='black'
+
+      case this.estadosTurno.PAUSADO:
+        textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PAUSADO).textColor;
+      break;
+
+      case this.estadosTurno.AUTORIZADO:
+        textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.AUTORIZADO).textColor;
         break;
-      case 'Arribo a cargue':
-        backgroundColor='black'
+      case this.estadosTurno.ARRIBO:
+        textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.ARRIBO).textColor;
         break;
       
-      case 'Fin cargue':
-        backgroundColor='white'
+      case this.estadosTurno.PESADO:
+        textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PESADO).textColor;
         break;
+      
+        case this.estadosTurno.CARGANDO:
+          textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGANDO).textColor;
+        break;
+
+        case this.estadosTurno.PESADOF:
+          textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PESADOF).textColor;
+        break;
+
+        case this.estadosTurno.CARGADO:
+          textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGADO).textColor;
+        break;
+      
+      case this.estadosTurno.DESPACHADO:
+        textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESPACHADO).textColor;
+        break;
+
+        case this.estadosTurno.CANCELADO:
+          textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CANCELADO).textColor;
+          break;
+      
     
     }
-    return backgroundColor;
+    return this.documentStyle.getPropertyValue(`--${textColor}`);
   }
 
 
@@ -209,7 +229,7 @@ export class CalendarioTurnosComponent implements OnInit {
              
               }
               this.almacenes = almacenesTMP;
-              ////console.log((almacenesTMP);
+             
               this.getLocalidades(this.almacenes);
             },
             error:(err)=>{
@@ -223,23 +243,30 @@ export class CalendarioTurnosComponent implements OnInit {
     
     let localidadesAlmacenes: any[] = [];
     for(let almacen of almacenes){
-      ////console.log((almacen);
-      if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.Location).length===0){
+     
+      //if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.Location).length===0){
+      if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.locacion_codigo2).length===0){
+      
         //TODO: Buscar datos del almacen en array de almacenes
-        let data = {
-                      code:almacen.Location, 
-                      name:almacen.Location,
-                      label:almacen.Location
-                   }
-        localidadesAlmacenes.push(data);
+       
+        if(almacen.CorreoNoti!= null){
+          let data = {
+            code:almacen.locacion_codigo2, 
+            name:almacen.locacion2,
+            label:almacen.locacion2
+          }
+          localidadesAlmacenes.push(data);
+        }
+        
       }
     }
-    this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.code <b.code ? -1 : 1});
+    this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
   }
 
   seleccionarLocalidad(localidad:any){
 
     this.getTurnosPorLocalidad(localidad.code)
+   //////console.log(localidad);
     
     //this.getCalendar();
     //this.showCalendar = true;
@@ -266,7 +293,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad)
         .subscribe({
               next:(turnosLocalidad)=>{
-                  //console.log((turnosLocalidad);
+                  ////console.log(turnosLocalidad);
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                     this.displayModal = false;
@@ -293,7 +320,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////console.log((arrayFiltrar);
+    //////////console.log((arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -334,7 +361,7 @@ export class CalendarioTurnosComponent implements OnInit {
     let objectEvent = JSON.parse(clickInfo.event.title);
     let orden = clickInfo.event.id;
 
-    //console.log((clickInfo)
+    //////console.log((clickInfo)
 
     
     const ref = this.dialogService.open(FormTurnoComponent, {
@@ -351,7 +378,7 @@ export class CalendarioTurnosComponent implements OnInit {
     ref.onClose.subscribe(() => {
       this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       this.getCalendar();
-      //console.log(("Refresh calendar");
+      //////console.log(("Refresh calendar");
     });
 
 
@@ -363,7 +390,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   handleEventsDragStop(event:any){
-    //console.log((event);
+    //////console.log((event);
   }
 
   createEventId(){

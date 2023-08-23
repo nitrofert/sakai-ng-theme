@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 
+
 @Injectable({
     providedIn: 'root'
   })
@@ -12,6 +13,9 @@ export class UrlApiService {
     //env:string = 'dev';
     env:string = environment.env;
     url_api:string =environment.url_backend;
+    companySAP:string = environment.companySAP;
+    companyMySQL:string = environment.companyMySQL;
+    
     headers:any;
     constructor() {}
 

@@ -84,7 +84,18 @@
                     </span>
                 </div>
 
-                <div class="field col-12 ">
+                <div *ngIf="config.data.id!=0" class="field col ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="nivel" 
+                               type="number"
+                               [(ngModel)]="nivel" 
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaMenu && (nivel==0 || !nivel)}"/>
+                        <label for="title"><h6>Nível</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col ">
                     <span class="p-float-label">
                         <p-dropdown [options]="opcionesVisible" 
                                     [(ngModel)]="visible" 

@@ -12,7 +12,7 @@
                                [(ngModel)]="placa"
                                class="uppercase"
                                maxlength="10"
-                               onkeydown="return /[a-z-0-9]/i.test(event.key)" 
+                               (keydown)="keyPress($event)"
                                [ngClass]="{'ng-invalid ng-dirty' : envioLineaVehiculo && placa==''}"/>
                         <label for="placa"><h6>Número de placas</h6></label>
                     </span>

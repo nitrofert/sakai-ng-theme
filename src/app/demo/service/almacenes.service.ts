@@ -23,9 +23,25 @@ export class AlmacenesService {
     }
 
     getAlmacenes():Observable<any> {
-        const url:string = `${this.api_url}/api/sb1xe/almacenes-mt?compania=NITROFERT_PRD`;
+        const url:string = `${this.api_url}/api/sb1xe/almacenes-mt?compania=${this.urlApiService.companySAP}`;
         return this.http.get<any>(url);
     }
+
+
+    getLocaciones():Observable<any>{
+         
+        const url:string = `${this.api_url}/api/locaciones`;
+        return this.http.get<any>(url);
+
+    }
+
+    setLocacion(data:any):Observable<any>{
+         
+        const url:string = `${this.api_url}/api/locaciones`;
+        return this.http.post<any>(url,data);
+
+    }
+
 
    
     

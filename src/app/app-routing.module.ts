@@ -23,6 +23,9 @@ import { RoleAccesGuard } from './demo/components/auth/guard/rol-acces.guard';
                     { path: 'vehiculos', loadChildren: () => import('./demo/components/vehiculos/vehiculos.module').then(m => m.VehiculosModule) },
                     { path: 'conductores', loadChildren: () => import('./demo/components/conductores/conductores.module').then(m => m.ConductoresModule) },
                     { path: 'transportadoras', loadChildren: () => import('./demo/components/transportadoras/transportadoras.module').then(m => m.TransportadorasModule) },
+                    { path: 'reportes', loadChildren: () => import('./demo/components/reportes/reportes.module').then(m => m.ReportesModule) },
+                    { path: 'locaciones', loadChildren: () => import('./demo/components/locaciones/locaciones.module').then(m => m.LocacionesModule) },
+
                     { path: 'uikit', canActivate:[RoleAccesGuard], data:{expectedRole:'ADMIN'}, loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
                     { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
                     { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },

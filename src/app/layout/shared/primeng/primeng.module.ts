@@ -17,6 +17,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
+import {ListboxModule} from 'primeng/listbox';
 import { MenuModule } from 'primeng/menu';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { RippleModule } from 'primeng/ripple';
@@ -36,6 +37,7 @@ import { SelectButtonModule } from 'primeng/selectbutton'
 import {SkeletonModule} from 'primeng/skeleton';
 import { SliderModule } from 'primeng/slider';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import {SpeedDialModule} from 'primeng/speeddial';
 import { StyleClassModule } from 'primeng/styleclass';
 import { TableModule } from 'primeng/table';
 import {TabMenuModule} from 'primeng/tabmenu';
@@ -74,7 +76,7 @@ import {InputMaskModule} from 'primeng/inputmask';
     InputMaskModule,
     InputTextareaModule,
     InputTextModule,
-
+    ListboxModule,
     MenuModule,
     MessageModule,
     MessagesModule,
@@ -91,6 +93,7 @@ import {InputMaskModule} from 'primeng/inputmask';
     SkeletonModule,
     SliderModule,
     SplitButtonModule,
+    SpeedDialModule,
     StyleClassModule,
     TableModule,
     TabMenuModule,

@@ -16,6 +16,11 @@ import { CalendarioTurnosComponent } from './calendario-turnos/calendario-turnos
 import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
 import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-table.module';
 import { PedidosService } from '../../service/pedidos.service';
+import { VehiculosService } from '../../service/vehiculos.service';
+import { ConductoresService } from '../../service/conductores.service';
+import { TransportadorasService } from '../../service/transportadoras.service';
+import { TipoVehiculosService } from '../../service/tipo-vehiculo.service';
+import { NovedadesService } from '../../service/novedades.service';
 
 
 
@@ -33,8 +38,18 @@ import { PedidosService } from '../../service/pedidos.service';
     FormsModule,
     FullCalendarModule,
     ApplicationPipesModule,
-    DynamicTableModule
+    DynamicTableModule,
+    
   ],
-  providers:[AlmacenesService, DialogService,OrdenesCargueService, SolicitudTurnoService, PedidosService]
+  providers:[AlmacenesService, 
+             DialogService,
+             OrdenesCargueService, 
+             SolicitudTurnoService, 
+             PedidosService, 
+             VehiculosService,
+             TipoVehiculosService, 
+             ConductoresService,
+             TransportadorasService,
+             NovedadesService]
 })
 export class TurnosModule { }

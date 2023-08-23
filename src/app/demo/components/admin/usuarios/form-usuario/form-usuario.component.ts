@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { lastValueFrom } from 'rxjs';
+import { ClientesService } from 'src/app/demo/service/clientes.service';
 import { RolesService } from 'src/app/demo/service/roles.service';
 import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
@@ -11,7 +12,43 @@ import { UsuarioService } from 'src/app/demo/service/usuario.service';
   selector: 'app-form-usuario',
   providers:[ConfirmationService,MessageService],
   templateUrl: './form-usuario.component.html',
-  styleUrls: ['./form-usuario.component.scss']
+  styleUrls: ['./form-usuario.component.scss'],
+  styles:[`
+  
+    :host ::ng-deep .p-multiselect {
+    min-width: 15rem;
+    width: 18rem;
+  }
+
+  :host ::ng-deep .multiselect-custom {
+    .p-multiselect-label {
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+    }
+
+    .country-item-value {
+        padding: .25rem .5rem;
+        border-radius: 3px;
+        display: inline-flex;
+        margin-right: .5rem;
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+
+        img.flag {
+            width: 17px;
+        }
+    }
+
+    .country-placeholder {
+        padding: 0.25rem;
+    }
+}
+:host ::ng-deep {
+    @media screen and (max-width: 640px) {
+        .p-multiselect {
+            width: 100%;
+        }
+    }}`]
 })
 export class FormUsuarioComponent implements  OnInit {
 
@@ -39,7 +76,8 @@ export class FormUsuarioComponent implements  OnInit {
     private messageService: MessageService,
     private usuariosService:UsuarioService,
     private rolService: RolesService,
-    private sb1SLService:SB1SLService
+    private sb1SLService:SB1SLService,
+    private clientesService:ClientesService,
     ){}
 
   async ngOnInit() {
@@ -92,9 +130,9 @@ export class FormUsuarioComponent implements  OnInit {
         });
   }
 
-  getClientes(){
+  async getClientes(){
     console.log('clientes');
-    this.sb1SLService.getClientesSAP()
+    /*this.sb1SLService.getClientesSAP()
         .subscribe({
             next: async (clientesSAP)=>{
 
@@ -111,17 +149,26 @@ export class FormUsuarioComponent implements  OnInit {
               this.clientesSAP = clientesSAP.value;
               console.log( this.clientesSAP);
 
-              /*for(let rol of roles){
-                  rol.code = rol.id;
-                  rol.name = rol.nombre;
-                  rol.label = rol.nombre;
-              }*/
+              //for(let rol of roles){
+              //    rol.code = rol.id;
+              //    rol.name = rol.nombre;
+              //    rol.label = rol.nombre;
+              //}
               //this.clientesSAP = roles;
             },
             error:(err)=>{
                 console.error(err);
             }
+        });*/
+    
+        let clientes =  await this.clientesService.infoClientes();
+        clientes.forEach((cliente: { code: any; CardCode: string; name: any; CardName: string; label: string; })=>{
+          cliente.code =  cliente.CardCode;
+          cliente.name =  cliente.CardName;
+          cliente.label = cliente.CardCode+' - '+cliente.CardName;
         });
+
+        this.clientesSAP = clientes;
   }
 
   filtrarRoles(event:any){
@@ -134,7 +181,18 @@ export class FormUsuarioComponent implements  OnInit {
   }
 
   filtrarClientes(event:any){
-    this.clientesSAPFiltrados = this.filter(event,this.clientesSAP);
+    //this.clientesSAPFiltrados = this.filter(event,this.clientesSAP);
+
+    let clientesFiltrados= this.filter(event,this.clientesSAP);
+    let clientesFiltrados2:any[] = [];
+    for(let clienteFiltrado of clientesFiltrados){
+      if(!this.clientesSAPSeleccionados.find(clienteSeleccionado=>clienteSeleccionado.CardCode === clienteFiltrado.CardCode)){
+         clientesFiltrados2.push(clienteFiltrado);
+      }
+    }
+                                
+    
+    this.clientesSAPFiltrados = clientesFiltrados2;
     
   }
   seleccionarCliente(clientesSAPSeleccionados:any){
@@ -148,7 +206,9 @@ export class FormUsuarioComponent implements  OnInit {
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
         const linea = arrayFiltrar[i];
+        //console.log(linea)
         if (linea.label.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+          
             filtered.push(linea);
         }
     }
@@ -159,7 +219,7 @@ export class FormUsuarioComponent implements  OnInit {
 
    grabar(){
     this.envioLineaUsuario= true;
-    if(this.username=='' || this.password=='' || this.email=='' || this.nombrecompleto=='' || this.numerotelefonico=='' || this.clientesSAPSeleccionados.length===0 || this.rolesSeleccionados.length===0){
+    if(this.username=='' || this.password=='' || this.email=='' || this.nombrecompleto=='' || this.numerotelefonico=='' || this.rolesSeleccionados.length===0){
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else if(this.password!= this.password2){
@@ -193,7 +253,7 @@ export class FormUsuarioComponent implements  OnInit {
 
   editar(){
     this.envioLineaUsuario= true;
-    if(this.username=='' ||  this.email=='' || this.nombrecompleto=='' || this.numerotelefonico=='' || this.clientesSAPSeleccionados.length===0 || this.rolesSeleccionados.length===0 ){
+    if(this.username=='' ||  this.email=='' || this.nombrecompleto=='' || this.numerotelefonico==''  || this.rolesSeleccionados.length===0 ){
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else if(this.password!= this.password2){

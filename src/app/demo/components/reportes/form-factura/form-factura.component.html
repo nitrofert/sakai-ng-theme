@@ -1,0 +1,90 @@
+<p-toast></p-toast>
+<div class="grid" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+	<div class="col-12">
+        <p-divider></p-divider>
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 md:col-4  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="PEDIDO" 
+                               type="text" 
+                               [(ngModel)]="PEDIDO"
+                               readonly/>
+                        <label for="PEDIDO"><h6>No. Pedido de Venta</h6></label>
+                    </span>
+                </div>
+                <div class="field col-12 md:col-4  mt-3">
+                    <span class="p-float-label">
+                        <!--<input pInputText 
+                               id="DocDate" 
+                               type="date" 
+                               [(ngModel)]="DocDate"
+                               readonly/>-->
+                        <p-calendar inputId="DocDate" [showIcon]="true" [(ngModel)]="DocDate" [readonlyInput]="true"></p-calendar>
+                        <label for="DocDate"><h6>Fecha Documento</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-4  mt-3">
+                    <span class="p-float-label">
+                        <!--<input pInputText 
+                               id="DocDueDate" 
+                               type="date" 
+                               [(ngModel)]="DocDueDate"
+                               readonly/>-->
+
+
+                        <p-calendar inputId="DocDueDate" [showIcon]="true" [(ngModel)]="DocDueDate" [readonlyInput]="true" ></p-calendar>
+                        <label for="DocDueDate"><h6>Fecha Vencimiento</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-4  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="PymntGroup" 
+                               type="text" 
+                               [(ngModel)]="PymntGroup"
+                               readonly/>
+                        <label for="PymntGroup"><h6>Condición de pago</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-4  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="PAGADA" 
+                               type="text" 
+                               [(ngModel)]="PAGADA"
+                               readonly/>
+                        <label for="PAGADA"><h6>¿Documento Pago?</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12   mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="Comments" 
+                               type="text" 
+                               [(ngModel)]="Comments"
+                               readonly/>
+                        <label for="Comments"><h6>Comentarios</h6></label>
+                    </span>
+                </div>
+
+                
+            </div>
+        </div>
+        <p-divider></p-divider>
+        <div class="card">
+            <app-dynamic-table [dataTable]="dataTable" 
+                               [headersTable]="headersTable"
+                               dataKey="ItemCode" 
+                               [rows]="10" 
+                               [paginator]="true"
+                               [selectionMode]="'multiple'">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>

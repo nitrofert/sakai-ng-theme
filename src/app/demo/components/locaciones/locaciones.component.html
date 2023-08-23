@@ -1,0 +1,22 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <app-dynamic-table [dataTable]="dataTable" 
+                               [headersTable]="headersTable"
+                               dataKey="id" 
+                               [rows]="10" 
+                               [paginator]="true"
+                               [selectionMode]="'multiple'"
+                               [showBtnNew]="showBtnNew"
+                               [showBtnEdit]="showBtnEdit"
+                               [showBtnExp]="showBtnExp"
+                               [showBtnDelete]="showBtnDelete"
+                               nameExport="solicitude_de_cargue"
+                               (onEditAccion)="editlocacion($event)"
+                               (onDeleteAccion)="deleteLocacion($event)"
+                               (onNewAccion)="nuevaLocacion($event)">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>

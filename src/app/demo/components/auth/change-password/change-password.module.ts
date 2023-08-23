@@ -17,5 +17,6 @@ import { ChangePasswordComponent } from './change-password.component';
     PrimengModule
   ],
   declarations: [ChangePasswordComponent ],
+  exports:[ChangePasswordComponent]
 })
 export class ChangePasswordModule { }

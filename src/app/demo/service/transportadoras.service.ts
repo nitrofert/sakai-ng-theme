@@ -34,6 +34,24 @@ export class TransportadorasService {
 
     }
 
+    getTransportadoraById(id:any):Observable<any> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/transportadoras/${id}`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url);
+    }
+
+    update(infoTransportadora:any,id:any):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+        const url:string = `${this.api_url}/api/transportadoras/${id}`;
+        //return this.http.post<any>(url, nuevaTransportadora, requestOptions);
+        return this.http.patch<any>(url, infoTransportadora);
+
+    }
+
     
 
    

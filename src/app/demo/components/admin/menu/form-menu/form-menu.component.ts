@@ -22,6 +22,7 @@ export class FormMenuComponent implements  OnInit {
   opcionesVisible:any[] = [{code: 1, name:'SI'}, {code:0, name:'NO'}];
   visible:any= [];
   envioLineaMenu:boolean = false;
+  nivel:number = 0;
 
 
 
@@ -55,6 +56,7 @@ export class FormMenuComponent implements  OnInit {
     this.icon = menu.icon;
     this.hierarchy = this.hierarchys.find(item => item.code===menu.hierarchy);
     this.visible = this.opcionesVisible.find(item => item.code === menu.visible);
+    this.nivel = menu.ordernum;
     this.opcionPadre = [];
     if(menu.hierarchy==='H'){
         const opcionesMenu$ = this.menuService.getListadoMenu();
@@ -128,7 +130,7 @@ export class FormMenuComponent implements  OnInit {
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else{
       //console.log(this.hierarchy,this.visible, this.opcionPadre);
-        let nuevoMenu ={
+        let nuevoMenu:any ={
           title:this.title,
           description:this.description,
           url:this.url,
@@ -138,6 +140,7 @@ export class FormMenuComponent implements  OnInit {
           iddad:this.hierarchy.code==='P'?0:this.opcionPadre.id
         }
 
+       
         this.menuService.create(nuevoMenu)
             .subscribe({
                 next: (menu)=>{
@@ -155,7 +158,7 @@ export class FormMenuComponent implements  OnInit {
 
   editar(){
     this.envioLineaMenu= true;
-    if(this.title=='' || this.url=='' || this.hierarchy.code=='' ){
+    if(this.title=='' || this.url=='' || this.hierarchy.code=='' || this.nivel==0 || !this.nivel ){
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else{
@@ -167,14 +170,16 @@ export class FormMenuComponent implements  OnInit {
           icon:this.icon,
           hierarchy:this.hierarchy.code,
           visible:this.visible.code,
-          iddad:this.hierarchy.code==='P'?0:this.opcionPadre.id
+          iddad:this.hierarchy.code==='P'?0:this.opcionPadre.id,
+          ordernum:this.nivel
         }
 
         this.menuService.update(nuevoMenu,this.config.data.id)
             .subscribe({
                 next: (menu)=>{
                   //console.log(menu);
-                  this.messageService.add({severity:'success', summary:'información', detail:`La opción ${menu.title} fue actualizada correctamente al menú`});
+                  this.messageService.add({severity:'success', summary:'información', detail:`La opción ${this.title} fue actualizada correctamente al menú`});
+                  //this.ref.close();
                 },
                 error:(err)=> {
                     console.error(err);

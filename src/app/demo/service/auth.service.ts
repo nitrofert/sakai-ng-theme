@@ -71,6 +71,11 @@ import { UrlApiService } from "./url-api.service";
     return this.http.patch<any>(url,dataChange);
    }
 
+
+   logOut(){
+    localStorage.removeItem('token');
+   }
+
   
    
 

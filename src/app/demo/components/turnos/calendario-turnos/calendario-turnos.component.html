@@ -8,7 +8,9 @@
             <div class="p-fluid p-formgrid grid">
                 <div class="field col-12 mt-3">
                     <span class="p-float-label">
-                        <p-autoComplete id="almacen" 
+                        <p-skeleton *ngIf="almacenes.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="almacen"
+                                        *ngIf="almacenes.length>0 " 
                                         [(ngModel)]="localidadSeleccionada" 
                                         [suggestions]="localidadesFiltradas" 
                                         (completeMethod)="filtrarLocalidad($event)" 
@@ -33,6 +35,9 @@
         <div>
             Placa: {{ arg.event.title | objecrString:'placa'   }}
         </div>
+        <!--<div>
+            Placa: {{ arg.event.title | objecrString:'estado'   }}
+        </div>-->
         
         
       </ng-template>

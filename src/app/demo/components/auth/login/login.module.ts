@@ -13,12 +13,8 @@ import { PrimengModule } from 'src/app/layout/shared/primeng/primeng.module';
     imports: [
         CommonModule,
         LoginRoutingModule,
-        //ButtonModule,
-        //CheckboxModule,
-        //InputTextModule,
-        FormsModule,
+       FormsModule,
         ReactiveFormsModule,
-        //PasswordModule,
         PrimengModule,
 
     ],

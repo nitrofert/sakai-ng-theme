@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { UrlApiService } from "./url-api.service";
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +10,7 @@ import { UrlApiService } from "./url-api.service";
   export class UsuarioService  {
     
     private api_url:string = "";
+
 
     constructor(private http: HttpClient,
                 private urlApiService:UrlApiService,
@@ -21,9 +23,27 @@ import { UrlApiService } from "./url-api.service";
         return this.http.get<any>(url);
     }
 
+    async infoUsuario():Promise<any>{
+        const infousuario$ = this.getInfoUsuario();
+        const infousuario = await lastValueFrom(infousuario$);
+        return infousuario;
+    }
+    
+
     getInfoUsuarioByID(idusuario:number):Observable<any>{
         const url:string = `${this.api_url}/api/usuarios/${idusuario}`;
         return this.http.get<any>(url);
+    }
+
+    getUsuarioByCardCode(CardCode:string):Observable<any>{
+        const url:string = `${this.api_url}/api/usuarios/by-card-code/${CardCode} `;
+        return  this.http.get<any>(url);
+    }
+
+    async infoUsuarioByCardCode(CardCode:string):Promise<any>{
+        const infousuario$ = this.getUsuarioByCardCode(CardCode);
+        const infousuario = await lastValueFrom(infousuario$);
+        return infousuario;
     }
 
     getRolesUsuario():Observable<any>{
@@ -44,26 +64,46 @@ import { UrlApiService } from "./url-api.service";
     }
 
     getPermisosModulo(modulo:string):Observable<any> {
+        //console.log(modulo);
         modulo = modulo.replace(/\//g, '_')
         const url:string = `${this.api_url}/api/usuarios/permisos-modulo/${modulo}`;
         return  this.http.get<any>(url);
     }
 
     getListadoUsuarios():Observable<any> {
-       
         const url:string = `${this.api_url}/api/usuarios`;
         return  this.http.get<any>(url);
     }
     create(form:any):Observable<any> {
-       
         const url:string = `${this.api_url}/api/usuarios`;
         return  this.http.post<any>(url,form);
     }
 
     update(form:any,idusuario:number):Observable<any> {
-       
         const url:string = `${this.api_url}/api/usuarios/${idusuario}`;
         return  this.http.patch<any>(url,form);
     }
 
+
+
+
+    async aceptoPoliticaDatos(infousuario:any):Promise<boolean>{
+        let acepto:boolean = false;
+        //const infousuario = await this.infoUsuario();
+        //const infousuario = this.info_usuario;
+        if(infousuario.aceptopoliticadatos=='Y'){
+            acepto = true;
+        }
+        return acepto;
+    }
+
+    async actualizoPassword(infousuario:any):Promise<boolean>{
+        let actualizo:boolean = false;
+        //const infousuario = await this.infoUsuario();
+        //const infousuario = this.info_usuario;
+        if(infousuario.cambiopassword=='Y'){
+            actualizo = true;
+        }
+        return actualizo;
+    }
 }

@@ -37,6 +37,20 @@ export class ConductoresService {
 
     }
 
+    getConductorById(id:any):Observable<any>{
+
+        const url:string = `${this.api_url}/api/conductores/${id}`;
+        return this.http.get<any>(url);
+
+    }
+
+    update(nuevoConductor:any,id:any):Observable<any>{
+      
+        const url:string = `${this.api_url}/api/conductores/${id}`;
+        return this.http.patch<any>(url, nuevoConductor);
+
+    }
+
     
 
     

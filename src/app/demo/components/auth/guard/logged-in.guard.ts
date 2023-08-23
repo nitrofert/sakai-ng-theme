@@ -11,7 +11,8 @@ import { AuthService } from "src/app/demo/service/auth.service";
                 private router: Router){}
     
     canActivate(): boolean {
-  
+
+          console.log(this.authService.isAuth());
         
           if(this.authService.isAuth()){
 
@@ -22,8 +23,9 @@ import { AuthService } from "src/app/demo/service/auth.service";
                             return false;
                         },
                         error: (err)=>{
+                            console.error(err);
                             localStorage.removeItem('token');
-                            this.router.navigate(['/']);
+                            //this.router.navigate(['/']);
                             return false;
                         }
                 })

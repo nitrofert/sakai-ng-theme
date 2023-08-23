@@ -1,0 +1,285 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<app-breadcrumb></app-breadcrumb>
+
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <p-table #dt1 
+					 [value]="facturasClienteAgrupada" 
+					 [dataKey]="dataKey" 
+					 [rows]="rows" 
+					 [rowsPerPageOptions]="!rowsPerPageOptions?[rows]:rowsPerPageOptions"
+					 [loading]="loading" 
+					 [rowHover]="true" 
+					 [styleClass]="'p-datatable-gridlines p-datatable-sm border-1 '" 
+					 [paginator]="paginator"
+					 [globalFilterFields]="globalFilterFields" 
+					 [selectionMode]="selectionMode" 
+					 [(selection)]="selectedItem" 
+					 responsiveLayout="scroll">
+
+                     <ng-template pTemplate="caption">
+
+                        <div class="py-2">
+                            <div *ngIf="info_usuario && info_usuario.clientes.length==1" class="font-medium">{{ info_usuario.clientes[0].CardName }} - {{ info_usuario.clientes[0].FederalTaxID }}</div>
+                            <div *ngIf="info_usuario && info_usuario.clientes.length>1" >
+                                <!--<span class="p-float-label">-->
+                                    <p-autoComplete id="clientes" 
+                                                    [(ngModel)]="clienteSeleccionado" 
+                                                    [suggestions]="clientesFiltrados" 
+                                                    (completeMethod)="filtrarCliente($event)" 
+                                                    field="label" 
+                                                    [dropdown]="true"
+                                                    (onSelect)="seleccionarCliente(clienteSeleccionado)"
+                                                    styleClass="w-full">
+                                    </p-autoComplete>
+                                    <!--<label for="conductor"><h6>Seleccione un conductor</h6></label>-->
+                                <!--</span>-->
+                            </div>
+                        </div>
+
+                        <div class="py-2 " >
+                            <p-calendar inputId="DocDate" 
+                                        [showIcon]="true" 
+                                        [(ngModel)]="rangoFechas" 
+                                        selectionMode="range" 
+                                        [numberOfMonths]="3"
+                                        [maxDate]="hoy"
+                                        dateFormat="dd/mm/yy" 
+                                        (onSelect)="cambioFecha()"
+                                        #dateFilter
+                                        styleClass="p-calendar-sm p-inputtext-sm flex flex-grow-1">
+                            </p-calendar>
+                            
+                        </div>
+
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                                
+                                <button pButton 
+                                        pTooltip="Limpiar" tooltipPosition="bottom" placeholder="Bottom"  
+                                        class="p-button-outlined mb-2 mr-2 p-button-sm" 
+                                        icon="pi pi-filter-slash"
+                                        (click)="clear(dt1)">
+                                </button>
+    
+                                <button pButton
+                                        *ngIf="showBtnNew" 
+                                        [pTooltip]="toolTipShowBtnNew" tooltipPosition="bottom" placeholder="Bottom"  
+                                        class="p-button-outlined mb-2 mr-2 p-button-success p-button-sm" 
+                                        icon="pi pi-plus"
+                                        
+                                        (click)="newAccion()">
+                                </button>
+    
+                                <button pButton
+                                        *ngIf="showBtnEdit" 
+                                        [pTooltip]="toolTipShowBtnEdit" tooltipPosition="bottom" placeholder="Bottom"  
+                                        class="p-button-outlined mb-2 mr-2 p-button-warning p-button-sm" 
+                                        icon="pi pi-pencil"
+                                        [disabled]="selectedItem.length !=1 "
+                                        (click)="editAccion()">
+                                </button>
+    
+                                <button pButton
+                                        *ngIf="!showBtnEdit && showBtnView" 
+                                        [pTooltip]="toolTipShowBtnView" tooltipPosition="bottom" placeholder="Bottom"  
+                                        class="p-button-outlined mb-2 mr-2 p-button-warning p-button-sm" 
+                                        icon="pi pi-search"
+                                        [disabled]="selectedItem.length !=1 "
+                                        (click)="viewAccion()">
+                                </button>
+    
+    
+                                <button pButton
+                                        *ngIf="showBtnDelete" 
+                                        [pTooltip]="toolTipShowBtnDelete" tooltipPosition="bottom" placeholder="Bottom"  
+                                        class="p-button-outlined mb-2 mr-2 p-button-danger p-button-sm" 
+                                        icon="pi pi-trash"
+                                        [disabled]="selectedItem.length ==0 "
+                                        (click)="deleteAccion()">
+                                </button>
+                                
+                                <button pButton
+                                        *ngIf="showBtnExp" 
+                                        pTooltip="Exportar a excel" tooltipPosition="bottom" placeholder="Bottom"   
+                                        class="p-button-outlined mb-2 mr-2 p-button-success p-button-sm" 
+                                        icon="pi pi-file-excel" 
+                                        (click)="exportExcel()">
+                                </button>
+
+                                
+
+                                
+    
+                                <button pButton *ngIf="titleTable" pRipple type="button" [label]="titleTable" class="p-button-text p-button-secondary"></button>
+                            
+                            </div>
+                            <div>
+                                <span class="p-input-icon-left mb-2">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText type="text" #filterTable (input)="onGlobalFilter(dt1, $event)" placeholder="Buscar por palabra clave" class="w-min p-inputtext-sm"/>
+                                </span>
+                            </div>
+                            
+    
+                        </div>
+                        
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th *ngIf="viewCheckselectedItem || viewCheckAllItem" style="width: 3rem">
+                                <p-tableHeaderCheckbox *ngIf="viewCheckAllItem"></p-tableHeaderCheckbox>
+                            </th>
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    No. Factura
+                                    <p-columnFilter type="text" field="DocNum" display="menu" placeholder="Buscar por No. Factura"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    No. Pedido cliente
+                                    <p-columnFilter type="text" field="NumAtCard" display="menu" placeholder="Buscar por No. Pedido cliente"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    No. Pedido venta
+                                    <p-columnFilter type="text" field="PEDIDO" display="menu" placeholder="Buscar por No. Pedido venta"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    Fecha
+                                    <p-columnFilter type="date" field="DocDate" display="menu" placeholder="Buscar por fecha Factura"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    Fecha vencimiento
+                                    <p-columnFilter type="date" field="DocDueDate" display="menu" placeholder="Buscar por fecha vencimiento Factura"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    Dias de vencimento
+                                    <p-columnFilter type="text" field="diasvencimiento" display="menu" placeholder="Buscar por comentario"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    Condición de pago
+                                    <p-columnFilter type="text" field="PymntGroup" display="menu" placeholder="Buscar por condición de pago"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    ¿Pagada?
+                                    <p-columnFilter type="text" field="PAGADA" display="menu" placeholder="Buscar por estado pago"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    Total factura
+                                    <!--<p-columnFilter type="text" field="DocTotal" display="menu" placeholder="Buscar por comentario"></p-columnFilter>-->
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+                                    Pagado a la fecha
+                                    <!--<p-columnFilter type="text" field="DocTotal" display="menu" placeholder="Buscar por comentario"></p-columnFilter>-->
+                                </div>
+                            </th>
+
+
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
+
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-line>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="line"></p-tableCheckbox>
+                            </td>
+                            <td>
+                                {{line.DocNum}}
+                            </td>
+                            <td>
+                                {{line.NumAtCard}}
+                            </td>
+                            <td>
+                                {{line.PEDIDO}}
+                            </td>
+                            <td>
+                                {{line.DocDate | date: 'shortDate'}}
+                            </td>
+                            <td>
+                                {{ (line.LIQUITECH=='NO'?line.DocDueDate:line.FECHANEGOLIQUITECH) | date: 'shortDate'}}
+                            </td>
+
+                            <td>
+                                {{line.diasvencimiento}}
+                            </td>
+
+                            <td>
+                                {{line.PymntGroup}}
+                            </td>
+
+                            
+
+                            <td>
+                                {{line.PAGADA}}
+                            </td>
+                            
+
+                            <td>
+                                {{line.DocTotal | currency:'$'}}
+                            </td>
+
+                            <td>
+                                {{ (line.LIQUITECH=='NO'?line.PAGADOAFECHA:(line.DocTotal-line.SALDOLIQUITECH)) | currency:'$'}}
+                                
+                            </td>
+
+                            <td>
+                                <div class="flex  align-items-center">
+                                    <a *ngIf="line.LIQUITECH!='NO'" href="https://portal.liquitech.co/nitrocredit" target="_blank"><img src="https://nitrofert.com.co/wp-content/uploads/2023/07/NITROCRE.png" alt="" height="15px"></a>
+                                    <a *ngIf="line.LIQUITECH=='NO'" href="javascript();"><img src="https://nitrofert.com.co/wp-content/uploads/2022/09/NITROFERT.png" alt="" height="15px"></a>
+                                </div>
+                                
+                            </td>
+
+                            
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [colSpan]="columnsTable"  class="text-center">No se econtraron registros.</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td [colSpan]="columnsTable" class="text-center">Cargando registros. Por favor espere</td>
+                        </tr>
+                    </ng-template>
+
+            </p-table>
+        </div>
+    </div>
+</div>    

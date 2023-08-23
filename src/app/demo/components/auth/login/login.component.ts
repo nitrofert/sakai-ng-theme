@@ -16,6 +16,7 @@ import { DialogService } from 'primeng/dynamicdialog';
             margin-right: 1rem;
             color: var(--primary-color) !important;
         }
+        
     `]
 })
 export class LoginComponent {
@@ -96,7 +97,7 @@ export class LoginComponent {
 
                         if(data.token){
                             this.usuario = data.usuario;
-                            console.log(this.usuario);
+                            //console.log(this.usuario);
                             //TODO: Registrar token
                             localStorage.setItem('token', data.token);
                             this.messageService.add({severity:'success', summary: `Notificación`, detail: `Bienvenid@ ${this.usuario.nombrecompleto}`});    

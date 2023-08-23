@@ -9,7 +9,8 @@
                         <input pInputText 
                                id="cedula" 
                                type="text"
-                               [(ngModel)]="cedula" 
+                               [(ngModel)]="cedula"
+                               (keydown)="keyPress($event)"
                                [ngClass]="{'ng-invalid ng-dirty' : envioLineaConductor && cedula==''}"/>
                         <label for="cedula"><h6>Número identicficación</h6></label>
                     </span>

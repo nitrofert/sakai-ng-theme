@@ -24,18 +24,20 @@ export class PedidosService {
     }
 
     getSaldosPedidos():Observable<any> {
-        const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos?compania=NITROFERT_PRD`;
+        const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos?compania=${this.urlApiService.companySAP}`;
         return this.http.get<any>(url);
     }
 
-    async getPedidosPorCliente(clientesSeleccionados: any, condicion_tpt:string){
-        let pedidos = await this.getPedidos();
+    async getPedidosPorCliente(clientesSeleccionados: any, condicion_tpt:string, pedidos:any[]){
+        //let pedidos = await this.getPedidos();
+
+        ////console.log(pedidos);
         let pedidosClientes:any[] = [];
-        //console.log(typeof clientesSeleccionados, Object.prototype.toString.call(clientesSeleccionados));
+        ////console.log(typeof clientesSeleccionados, Object.prototype.toString.call(clientesSeleccionados));
         let pedidosPorCliente!:any[];
         if(Object.prototype.toString.call(clientesSeleccionados) === '[object Array]'){
             for(let cliente of clientesSeleccionados){
-            
+                //console.log(pedidos.filter(pedido => pedido.cardcode === cliente.code),condicion_tpt);
                 pedidosPorCliente = pedidos.filter(pedido => pedido.cardcode === cliente.code && pedido.condicion_tpt === condicion_tpt);
                 for(let pedido of pedidosPorCliente){
                     pedidosClientes.push(pedido)
@@ -44,7 +46,7 @@ export class PedidosService {
         }else{
 
             pedidosClientes = pedidos.filter(pedido => pedido.cardcode === clientesSeleccionados.code && pedido.condicion_tpt === condicion_tpt);
-            
+            //console.log(pedidos.filter(pedido => pedido.cardcode === clientesSeleccionados.code));
         }
         
 
@@ -63,14 +65,9 @@ export class PedidosService {
     }
 
     getInventarioItenBodega():Observable<any> {
-        const url:string = `${this.api_url}/api/sb1xe/inventario?compania=NITROFERT_PRD`;
+        const url:string = `${this.api_url}/api/sb1xe/inventario?compania=${this.urlApiService.companySAP}`;
         return this.http.get<number>(url);
     }
-
-
-
-   
-
 
    async getVehiculosPedido() {
         //return this.http.get<any>('assets/demo/data/filesystem.json')

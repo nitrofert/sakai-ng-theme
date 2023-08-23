@@ -74,7 +74,7 @@ export class ChangePasswordComponent implements OnInit {
                       
                           this.loading = false;
                           this.messageService.add({severity:'success', summary: `Notificación:`, detail: `Se ha realizado correctamente el cambio del password usuario ${this.usuario}.`});     
-                          this.router.navigate(['/login']);
+                          this.router.navigate(['/']);
                       
                   },
                   error: (err)=>{

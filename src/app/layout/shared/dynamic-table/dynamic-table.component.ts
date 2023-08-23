@@ -28,20 +28,23 @@ export class DynamicTableComponent implements OnInit {
   @Input() showBtnEdit:boolean = false;
   @Input() toolTipShowBtnEdit:string = "Editar";
   @Input() showBtnExp:boolean = false;
+  @Input() showBtnView:boolean = false;
   @Input() toolTipShowBtnExp:string = "Exportar";
   @Input() showBtnDelete:boolean = false;
   @Input() toolTipShowBtnDelete:string = "Anular";
   
   @Input() permisosUsuarioPagina!:any[];
   @Input() showSelectedItems:boolean = false;
+  @Input() loading:boolean = false;
 
   @Output() onNewAccion: EventEmitter<any> = new EventEmitter();
   @Output() onSelectedItems: EventEmitter<any> = new EventEmitter();
   @Output() onEditAccion: EventEmitter<any> = new EventEmitter();
   @Output() onDeleteAccion: EventEmitter<any> = new EventEmitter();
   @Output() onChangeState: EventEmitter<any> = new EventEmitter();
+  @Output() onViewAccion: EventEmitter<any> = new EventEmitter();
 
-  loading:boolean = false;
+  //loading:boolean = this.showLoading;
   selectedItem:any[] = [];
   columnsTable!:number;
   globalFilterFields!:string[];
@@ -54,26 +57,27 @@ export class DynamicTableComponent implements OnInit {
 
   ngOnInit(): void {
    
+    //console.log(this.loading);
 
    this.columnsTable = Object.keys(this.headersTable[0]).length+1;
 
-    //console.log(this.columnsTable);
+    ////console.log(this.columnsTable);
     let tmpKeysHeader:any[]=[];
     for(let key in this.headersTable[0]){
       
       tmpKeysHeader.push(key);
     }
     this.globalFilterFields = tmpKeysHeader;
-    //console.log( this.globalFilterFields);
+    ////console.log( this.globalFilterFields);
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    //console.log(changes['showSelectedItems']==undefined ? 'undefined sdsaj' : changes['showSelectedItems']);
+    ////console.log(changes['showSelectedItems']==undefined ? 'undefined sdsaj' : changes['showSelectedItems']);
 
     if(changes['showSelectedItems']!=undefined){
       if(changes['showSelectedItems'].currentValue ==true){
-        //console.log('emit items selected or table', this.dataTable);
+        ////console.log('emit items selected or table', this.dataTable);
         //this.onSelectedItems.emit(this.selectedItem);
         this.onSelectedItems.emit(this.dataTable);
       }else{
@@ -88,8 +92,12 @@ export class DynamicTableComponent implements OnInit {
   }
 
   editAccion(){
-   //console.log(this.selectedItem, this.selectedItem.length);
+   ////console.log(this.selectedItem, this.selectedItem.length);
     this.onEditAccion.emit(this.selectedItem[0].id);
+  }
+
+  viewAccion(){
+    this.onViewAccion.emit(this.selectedItem[0].id);
   }
 
   deleteAccion(){
@@ -108,10 +116,10 @@ export class DynamicTableComponent implements OnInit {
   selectLine(filaSeleccionada:any,valor:any, itemData:any){
    
     let fila = `selectRow${filaSeleccionada}`;
-    console.log(fila, valor);
+    //console.log(fila, valor);
     /*let checkbox: HTMLElement;
     checkbox= document.getElementById(`selectRow${filaSeleccionada}`)!;
-    console.log(checkbox.closest("tr"));
+    //console.log(checkbox.closest("tr"));
     let tr: any = checkbox.closest("tr");
     tr.pSelectableRow = itemData;
     if(valor == 0 || valor ==''){
