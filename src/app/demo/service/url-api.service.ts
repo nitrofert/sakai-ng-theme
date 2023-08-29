@@ -13,6 +13,7 @@ export class UrlApiService {
     //env:string = 'dev';
     env:string = environment.env;
     url_api:string =environment.url_backend;
+    
     companySAP:string = environment.companySAP;
     companyMySQL:string = environment.companyMySQL;
     
@@ -20,7 +21,7 @@ export class UrlApiService {
     constructor() {}
 
     getUrlAPI():string{
-        //console.log('url api:',this.url_api);
+        console.log('url api:',this.url_api);
         return this.url_api;
     }
 
