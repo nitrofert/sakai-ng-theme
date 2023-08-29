@@ -21,7 +21,7 @@ export class UrlApiService {
     constructor() {}
 
     getUrlAPI():string{
-        console.log('url api:',this.url_api);
+        console.log('url api2:',this.url_api);
         return this.url_api;
     }
 
