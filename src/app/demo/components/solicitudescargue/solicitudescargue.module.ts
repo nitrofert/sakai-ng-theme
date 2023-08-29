@@ -19,13 +19,15 @@ import { PermisosFunction } from 'src/app/layout/shared/functions/permisos.funct
 import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
 import { FunctionsService } from '../../service/functions.service';
 import { NovedadesService } from '../../service/novedades.service';
+import { ListaHistorialTurnoComponent } from './lista-historial-turno/lista-historial-turno.component';
 
 
 
 @NgModule({
   declarations: [
     ListadoSolicitudesComponent,
-    NuevaSolicitudComponent
+    NuevaSolicitudComponent,
+    ListaHistorialTurnoComponent
   ],
   imports: [
     CommonModule,

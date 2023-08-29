@@ -18,10 +18,11 @@ import { TipoRol } from '../../admin/roles/roles.enum';
 import { EstadosDealleSolicitud } from '../estados-turno.enum';
 import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { NovedadesService } from 'src/app/demo/service/novedades.service';
+import { ListaHistorialTurnoComponent } from '../../solicitudescargue/lista-historial-turno/lista-historial-turno.component';
 
 @Component({
   selector: 'app-form-turno',
-  providers:[ConfirmationService,MessageService],
+  providers:[ConfirmationService,MessageService], 
   templateUrl: './form-turno.component.html',
   styleUrls: ['./form-turno.component.scss'],
   /*styles:[`:host ::ng-deep {
@@ -764,6 +765,18 @@ async validarHoraCargue():Promise<boolean>{
                     this.horariosLocacion = [];
                     this.horariosSeleccionados =[];
                   }
+
+                  let historial!:any;
+
+                  if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+                      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+                  }else{
+                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+                      if(historial.length>0){
+                        this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+                      }
+                  }
                 
 
                   ////console.log(this.estado);
@@ -1175,7 +1188,25 @@ async validarHoraCargue():Promise<boolean>{
   
   
   historialTurno(){
-    this.formHistorialTurno= true;
+    //this.formHistorialTurno= true;
+
+    const ref = this.dialogService.open(ListaHistorialTurnoComponent, {
+      data: {
+          id: (this.turnoId)
+      },
+      header: `Historial Orden de cargue: ${this.turnoId}` ,
+      width: '70%',
+      height:'auto',
+      contentStyle: {"overflow": "auto"},
+      maximizable:true, 
+    });
+
+    ref.onClose.subscribe(() => {
+      //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+      //this.getCalendar();
+      //////console.log(("Refresh calendar");
+    });
+
 
   }
 

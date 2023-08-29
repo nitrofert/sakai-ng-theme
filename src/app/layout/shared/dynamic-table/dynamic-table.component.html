@@ -136,6 +136,12 @@
 									</p-inputSwitch>
 								</div>
 
+								<div *ngIf="headersTable[0][key].type==='list'">
+									<ul>
+										<li *ngFor="let novedad of itemData[key]">{{novedad}}</li>
+									</ul>
+								</div>
+
 							</div>
 							
 

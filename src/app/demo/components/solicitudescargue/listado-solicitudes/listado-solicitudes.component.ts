@@ -11,6 +11,7 @@ import * as FileSaver from 'file-saver';
 import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
 import { Calendar } from 'primeng/calendar';
 import { DetalleSolicitudTurno } from '../interface/solicitud.interface';
+import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
 
 @Component({
   selector: 'app-listado-solicitudes',
@@ -135,7 +136,8 @@ export class ListadoSolicitudesComponent  implements  OnInit{
               private  messageService: MessageService,
               private usuariosService:UsuarioService,
               private solicitudTurnoService:SolicitudTurnoService,
-              public functionsService:FunctionsService){}
+              public functionsService:FunctionsService,
+              private sB1SLService:SB1SLService){}
               
 
 
@@ -152,7 +154,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////console.log(permisos);
+              //////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -168,7 +170,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
               
               this.infoUsuario = await this.usuariosService.infoUsuario();
-              //////console.log(this.infoUsuario);
+              ////////console.log(this.infoUsuario);
               this.getSolicitudesTurno();
 
             },
@@ -185,12 +187,12 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.solicitudTurnoService.getSolicitudesTurno()
         .subscribe({
               next: (solicitudesTurnos)=>{
-                 //////console.log(solicitudesTurnos);
+                 ////////console.log(solicitudesTurnos);
                   let solicitudes:any[] = [];
 
                   for(let solicitud of solicitudesTurnos){
                      
-                    //////console.log(solicitud);
+                    ////////console.log(solicitud);
                     let cantidadCarga =0;
                     let cantidadPedidos = 0;
                     let cantidadVehiculos =0;
@@ -212,7 +214,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                     })
                   }
 
-                  ////////console.log(solicitudes);
+                  //////////console.log(solicitudes);
                   this.dataTable = solicitudes;
               },
               error:(err)=>{
@@ -223,7 +225,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.solicitudTurnoService.getSolicitudesTurnoExtendido()
     .subscribe({
       next: async (solicitudesTurnos)=>{
-         console.log(solicitudesTurnos);
+         //console.log(solicitudesTurnos);
          /*let solicitudesTMP = solicitudesTurnos.raw.map((solicitud: {
            detalle_solicitudes_turnos_fechacita: Date; 
            solicitudes_turno_created_at: Date;
@@ -310,7 +312,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
         await this.configPieChart(dataPieChart);
         await this.configBarSatckChart(dataBarStackChart);
 
-         ////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+         //////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
          this.solicitudesExtendida = solicitudesTurnos.raw;
          this.loading = false;
       },
@@ -318,134 +320,21 @@ export class ListadoSolicitudesComponent  implements  OnInit{
         console.error(err);
       }
     });
-    /*
-    this.solicitudTurnoService.getSolicitudesTurnoById(94)
+
+    /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
         .subscribe({
             next:(solicitud)=>{
               console.log(solicitud);
 
-              ////console.log(JSON.stringify(solicitud));
-              let turnosCliente:any[] = []; 
-              solicitud.detalle_solicitud_turnos.forEach((turno)=>{
-                
-                turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-                  //console.log(turno.id, pedido.CardCode);
-                    if(turnosCliente.filter(cliente=>cliente.CardCode===pedido.CardCode).length === 0){
+             
 
-                        let turnoCliente:DetalleSolicitudTurno;
-
-                        turnoCliente ={
-                          id:turno.id,
-                          estado:turno.estado,
-                          fechacita:turno.fechacita,
-                          horacita:turno.horacita,
-                          locacion:turno.locacion,
-                          lugarentrega:turno.lugarentrega,
-                          municipioentrega:turno.municipioentrega,
-                          observacion:turno.observacion,
-                          detalle_solicitud_turnos_pedido:[pedido]
-                        }
-
-                        turnosCliente.push({
-                          CardCode:pedido.CardCode,
-                          turnos:[turnoCliente]
-                        });
-                    }else{
-                        
-                        let indexCliente = turnosCliente.findIndex(cliente=>cliente.CardCode === pedido.CardCode);
-                        //console.log(turnosCliente[indexCliente]);
-
-                        if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
-                          let turnoCliente:DetalleSolicitudTurno;
-                          turnoCliente ={
-                            id:turno.id,
-                            estado:turno.estado,
-                            fechacita:turno.fechacita,
-                            horacita:turno.horacita,
-                            locacion:turno.locacion,
-                            lugarentrega:turno.lugarentrega,
-                            municipioentrega:turno.municipioentrega,
-                            observacion:turno.observacion,
-                            detalle_solicitud_turnos_pedido:[pedido]
-                          }
-                          
-                          turnosCliente[indexCliente].turnos.push(turnoCliente);
-                        }else{
-                          let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
-                          //console.log(turnosCliente[indexCliente].turnos[indexTurno]);
-                          turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
-                        }
-                        
-                    }
-                })
-                
-              });
-
-              console.log(turnosCliente);
-
-              let turnosVendedor:any[] = []; 
-              solicitud.detalle_solicitud_turnos.forEach((turno: { detalle_solicitud_turnos_pedido: any[]; id: number; estado: any; fechacita: any; horacita: any; locacion: any; lugarentrega: any; municipioentrega: any; observacion: any; })=>{
-                
-                turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-                  //console.log(turno.id, pedido.CardCode);
-                    if(turnosVendedor.filter(vendedor=>vendedor.email_vendedor===pedido.email_vendedor).length === 0){
-
-                        let turnoVendedor:any;
-
-                        turnoVendedor ={
-                          id:turno.id,
-                          estado:turno.estado,
-                          fechacita:turno.fechacita,
-                          horacita:turno.horacita,
-                          locacion:turno.locacion,
-                          lugarentrega:turno.lugarentrega,
-                          municipioentrega:turno.municipioentrega,
-                          observacion:turno.observacion,
-                          detalle_solicitud_turnos_pedido:[pedido]
-                        }
-
-                        turnosVendedor.push({
-                          email_vendedor:pedido.email_vendedor,
-                          turnos:[turnoVendedor]
-                        });
-                    }else{
-                        
-                        let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.email_vendedor === pedido.email_vendedor);
-                        //console.log(turnosCliente[indexCliente]);
-
-                        if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
-                          let turnoVendedor:any;
-                          turnoVendedor ={
-                            id:turno.id,
-                            estado:turno.estado,
-                            fechacita:turno.fechacita,
-                            horacita:turno.horacita,
-                            locacion:turno.locacion,
-                            lugarentrega:turno.lugarentrega,
-                            municipioentrega:turno.municipioentrega,
-                            observacion:turno.observacion,
-                            detalle_solicitud_turnos_pedido:[pedido]
-                          }
-                          
-                          turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
-                        }else{
-                          let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
-                          //console.log(turnosCliente[indexCliente].turnos[indexTurno]);
-                          turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
-                        }
-                        
-                    }
-                })
-                
-              });
-
-              console.log(turnosVendedor);
+              
             },
             error:(error)=>{
                 console.error(error);
             }
-    });
-    */
+    });*/
+    
   }
 
 
@@ -455,7 +344,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
 
 
-    ////console.log(totalToneladas);
+    //////console.log(totalToneladas);
 
     this.pieChart = {
       labels: dataPieChart.map((item: { name: any; })=>item.name),
@@ -491,7 +380,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
       item.data = [item.data];
     })
 
-    ////console.log('ordenado',dataBarStackChartOrder);
+    //////console.log('ordenado',dataBarStackChartOrder);
     
     this.barStackChart = {
         labels:['Estados'],
@@ -582,7 +471,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
 
   nuevaSolicitud(event: any){
-    ////////console.log(event);
+    //////////console.log(event);
     this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
   }
 
@@ -633,10 +522,10 @@ export class ListadoSolicitudesComponent  implements  OnInit{
    if(index>0){
     index+=1;
    }
-   ////console.log(index);
+   //////console.log(index);
 
    filtro[index].value = value;*/
-   ////console.log(field,value, filtro,other,other2 );
+   //////console.log(field,value, filtro,other,other2 );
    //table.filter(value,field,filtro[0].matchMode);
  
   }

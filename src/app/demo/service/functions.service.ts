@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UrlApiService } from './url-api.service';
-
+import { Buffer } from 'buffer';
 
 
 @Injectable({
@@ -197,6 +197,18 @@ async filter(event: any, arrayFiltrar:any[], limit?:number):Promise<any[]>{
     }
     
     return filtered.slice(0,limite);
+}
+
+bufferToString(buffer:any):string{
+  let result:string="";
+
+  let json = JSON.stringify(buffer);
+  let bufferOriginal = Buffer.from(JSON.parse(json).data);
+  ///console.log(bufferOriginal.toString('utf8'));
+  result = bufferOriginal.toString('utf8')
+
+  return result;
+
 }
 
 

@@ -37,6 +37,7 @@ export interface DetalleSolicitudTurno {
 }
 
 export interface DetalleSolicitudTurnosPedido {
+    
     id:        number;
     pedidonum: string;
     itemcode:  string;
@@ -45,6 +46,7 @@ export interface DetalleSolicitudTurnosPedido {
     CardCode:  string;
     CardName:  string;
     cantidad:  number;
+    linea: number;
 }
 
 // Converts JSON strings to/from your types

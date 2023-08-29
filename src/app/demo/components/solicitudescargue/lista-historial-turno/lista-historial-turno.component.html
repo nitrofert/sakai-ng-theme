@@ -1,0 +1,23 @@
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div class="p-fluid p-formgrid grid">
+
+                <app-dynamic-table [dataTable]="historialTurno.data" 
+                             [headersTable]="historialTurno.header"
+                             dataKey="index" 
+                             [rows]="10" 
+                             [paginator]="true"
+                             [selectionMode]="'multiple'"
+                             [viewCheckselectedItem] ="true"
+                             [loading]="loadingCargue"
+                             nameExport="estados_turno"
+                             [showBtnNew]="false"
+                             class="w-full">
+                </app-dynamic-table>
+
+
+            </div>
+        </div>
+    </div>
+</div>

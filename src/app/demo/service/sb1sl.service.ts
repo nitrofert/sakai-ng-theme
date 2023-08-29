@@ -25,4 +25,10 @@ import { UrlApiService } from "./url-api.service";
     }
 
 
+    bloqueoPedidos(data:any):Observable<any>{
+        const url:string = `${this.api_url}/api/sb1sl/bloqueo-pedidos`;
+        return this.http.post<any>(url,data);
+    }
+
+
 }
