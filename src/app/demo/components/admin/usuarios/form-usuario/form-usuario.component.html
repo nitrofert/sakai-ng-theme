@@ -101,6 +101,24 @@
 
                 <div class="field col-12 mt-3">
                     <span class="p-float-label">
+                        <p-skeleton *ngIf="!locaciones" height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete *ngIf="locaciones" id="roles" 
+                                        [(ngModel)]="locacionesSeleccionados" 
+                                        [suggestions]="locacionesFiltrados" 
+                                        (completeMethod)="filtrarLocacion($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        [multiple]="true"
+                                        (onSelect)="seleccionaLocacion(locacionesSeleccionados)"
+                                        (onUnselect)="seleccionaLocacion(locacionesSeleccionados)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (envioLineaUsuario && locacionesSeleccionados.length==0) }">
+                        </p-autoComplete>
+                        <label for="roles"><h6>Seleccione las locaciones</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 mt-3">
+                    <span class="p-float-label">
                         <p-skeleton *ngIf="!clientesSAP" height="2rem" styleClass="mb-2"></p-skeleton>
                         <p-multiSelect *ngIf="clientesSAP" 
                                         id="cliente"

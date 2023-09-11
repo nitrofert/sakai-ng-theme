@@ -63,9 +63,10 @@
     </p-dialog>
 <!------------------------------------------------------------->
     
-    <div *ngIf="dashboardCliente" class="grid">
+    <div *ngIf="showDashBoardCliente" class="grid">
 
         <div class="col-12">
+            
             <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
                 <div>
                     <div *ngIf="info_usuario && info_usuario.clientes.length==1" class="font-medium">{{ info_usuario.clientes[0].CardName }} - {{ info_usuario.clientes[0].FederalTaxID }}</div>
@@ -87,8 +88,8 @@
                 
             </div>
         </div>
-
-        <div class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -104,7 +105,8 @@
             </div>
         </div>
 
-        <div class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -120,7 +122,8 @@
             </div>
         </div>
 
-        <div class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -136,7 +139,8 @@
             </div>
         </div>
         
-        <div class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -151,7 +155,8 @@
             </div>
         </div>
 
-        <div class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -165,7 +170,8 @@
                
             </div>
         </div>
-        <div class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -195,8 +201,9 @@
                 <span class="text-500">responded</span>
             </div>
         </div>-->
-
-        <div class="col-12 xl:col-6">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12 xl:col-6"  height="20rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12 xl:col-6">
+        
             <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
                 <h5>Cartera por emisor</h5>
                 <p-chart type="pie" [data]="chartData" ></p-chart>
@@ -261,7 +268,8 @@
             </div>-->
         </div>
 
-        <div class="col-12 xl:col-6">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12 xl:col-6"  height="20rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12 xl:col-6">
             <div class="card">
                 <h5>Facturas por pagar</h5>
                 <p-table [value]="facturasPorPagarAgrupada" [paginator]="true" [rows]="5" responsiveLayout="scroll">

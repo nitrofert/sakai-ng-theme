@@ -4,7 +4,7 @@
 	<div class="col-12">
 		<div class="card">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-12 mt-3">
+                <div *ngIf="!editLocacion" class="field col-12 mt-3">
                     <span class="p-float-label">
                         <p-skeleton *ngIf="locacionesSAP.length==0" height="2rem" styleClass="mb-2"></p-skeleton>
                         <p-autoComplete id="almacen"
@@ -12,7 +12,8 @@
                                         [(ngModel)]="locacionSeleccionada" 
                                         [suggestions]="locacionesFiltrados" 
                                         (completeMethod)="filtrarLocacion($event)" 
-                                        field="label" 
+                                        field="label"
+                                        [disabled]="editLocacion" 
                                         [dropdown]="true"
                                         [ngClass]="{'ng-invalid ng-dirty' : (!locacionSeleccionada || locacionSeleccionada.length == 0) && submitLocacion }"
                                         (onSelect)="seleccionarLocacion(locacionSeleccionada)"
@@ -22,6 +23,19 @@
                         <label *ngIf="locacionesSAP.length>0 "for="cliente"><h6>Seleccione una locación para registrar</h6></label>
                     </span>
                 </div>
+
+                <div *ngIf="editLocacion" class="field col-12  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="locacion" 
+                               type="text" 
+                               
+                               [(ngModel)]="locacion"/>
+                        <label for="email"><h6>Locación</h6></label>
+                    </span>
+                </div>
+
+
                 <div class="field col-12  ">
                     <span class="p-float-label">
                         <input pInputText 
@@ -30,6 +44,29 @@
                                [ngClass]="{'ng-invalid ng-dirty' :  !email_bodega  && submitLocacion }"
                                [(ngModel)]="email_bodega"/>
                         <label for="email"><h6>Email locación</h6></label>
+                    </span>
+                </div>
+                
+
+                <div class="field col-12  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="direccion" 
+                               type="text" 
+                               
+                               [(ngModel)]="direccion"/>
+                        <label for="email"><h6>Dirección locación</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="ubicacion" 
+                               type="text" 
+                               
+                               [(ngModel)]="ubicacion"/>
+                        <label for="email"><h6>Ubicación locación</h6></label>
                     </span>
                 </div>
                 

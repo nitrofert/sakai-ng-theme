@@ -8,6 +8,7 @@ import { CalendarModule } from 'primeng/calendar';
 import {CaptchaModule} from 'primeng/captcha';
 import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ChipModule } from 'primeng/chip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
@@ -64,6 +65,7 @@ import {InputMaskModule} from 'primeng/inputmask';
     CaptchaModule,
     ChartModule,
     CheckboxModule,
+    ChipModule,
     ConfirmDialogModule,
     DialogModule,
     DynamicDialogModule,

@@ -10,6 +10,8 @@ import { SB1XEService } from '../../service/sb1xe.service';
 import { FunctionsService } from '../../service/functions.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { FormFacturaComponent } from '../reportes/form-factura/form-factura.component';
+import { Router } from '@angular/router';
+import { ClientesService } from '../../service/clientes.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -54,6 +56,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     facturasPorPagarAgrupada:any[] = [];
     facturasPorPagar:any[] = [];
 
+    permisosModulo!:any[]; 
+
+    showDashBoardCliente:boolean = false;
+    loadingDashBoardCliente:boolean = false;
+
 
     constructor(private productService: ProductService, 
                 private usuarioService: UsuarioService,
@@ -61,7 +68,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 public layoutService: LayoutService,
                 private sb1XEService:SB1XEService,
                 private functionsService:FunctionsService,
-                public dialogService: DialogService) {
+                public dialogService: DialogService,
+                private router:Router,
+                private clientesService:ClientesService) {
             
             this.subscription = this.layoutService.configUpdate$.subscribe(() => {
             this.initChart();
@@ -71,21 +80,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         
-        this.productService.getProductsSmall().then(data => this.products = data);
+        this.getInfoUsuario();
 
-        this.items = [
-            { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-            { label: 'Remove', icon: 'pi pi-fw pi-minus' }
-        ];
-
-
-        //Obtener info usuario
-        this.info_usuario = await this.usuarioService.infoUsuario();
-
-        console.log(this.info_usuario);
-        this.modalCambioPasswordPoliticaDatos();
-
-        if(this.info_usuario.roles.length>0 && this.info_usuario.roles.filter((rol: { nombre: string; }) =>rol.nombre ==='CLIENTE').length>0){
+        /*if(this.info_usuario.roles.length>0 && this.info_usuario.roles.filter((rol: { nombre: string; }) =>rol.nombre ==='CLIENTE').length>0){
             this.dashboardCliente = true;
             
             let clientes:any =[];
@@ -100,16 +97,68 @@ export class DashboardComponent implements OnInit, OnDestroy {
             let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
             this.setDashboardCliente(saldosClienteSeleccionado);
 
-            
+        }*/
 
-           
-            
+        
+       
+    }
+
+    async getInfoUsuario(){
+         //Obtener info usuario
+         this.info_usuario = await this.usuarioService.infoUsuario();
+         this.modalCambioPasswordPoliticaDatos();
+         await this.configMainDashboard();
+    }
+
+    async configMainDashboard():Promise<void>{
+        
+        if(await this.usuarioService.permisoModuloAccion('/dashboard-cliente','leer')){
+            /**
+             * Config dashboard cliente
+             */
+            await this.configDashboardCliente();
+        }
+    }
+
+    async configDashboardCliente():Promise<void>{
+        let clientes:any[];
+        /**
+         * Buscar permiso de multiples clientes
+         */
+
+        if(await this.usuarioService.permisoModuloAccion('/dashboard-cliente','Seleccionar multiples clientes')){
+            /**
+             * Obtener array de clientes
+             */
+            clientes= await this.clientesService.infoClientes();
+        }else{
+            /**
+             * Obtener clientes asociados a usuario
+             */
+            clientes = this.info_usuario.clientes;
+        }
+        /**
+         * Si existen clientes configurar dropdoen de clientes y mostrar dashboard de cliente
+         */
+
+        if(clientes.length > 0){
+            for(let cliente of clientes){
+                //cliente.code = cliente.CardCode;
+                //cliente.name =  cliente.CardName;
+                cliente.label =  `${cliente.CardName} - ${cliente.FederalTaxID}`;
+            }
+            this.clientes = clientes;
+            this.clienteSeleccionado = this.clientes[0];
+            let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
+            this.setDashboardCliente(saldosClienteSeleccionado);
+            this.showDashBoardCliente = true;
         }
 
 
     }
 
     async setDashboardCliente(saldosClienteSeleccionado:any){
+        this.loadingDashBoardCliente = false;
         console.log('saldosClienteSeleccionado',saldosClienteSeleccionado);
 
         let cupo:number =parseFloat(saldosClienteSeleccionado[0].CUPO);
@@ -166,7 +215,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
        this.facturasPorPagarAgrupada = facturasPorPagarAgrupada;
 
-       
+       this.loadingDashBoardCliente = true;
     }
 
     verFactura(factura:any){
@@ -191,6 +240,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
     }
 
+
+
    async modalCambioPasswordPoliticaDatos(){
         
     
@@ -211,7 +262,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.modalCambioPassYPolitica = true;
         }
     }
-
 
     async changePasswordPolitica(){
         this.loading = true;
@@ -245,6 +295,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     }
 
+   
+
     filtrarCliente(event:any){
         let clientesAfiltrar:any = this.clientes;
         /*for(let cliente of this.clientes){
@@ -256,6 +308,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     async seleccionarCliente(clienteSeleccionado:any){
+        this.loadingDashBoardCliente = false;
         console.log(clienteSeleccionado);
         let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
         this.setDashboardCliente(saldosClienteSeleccionado);

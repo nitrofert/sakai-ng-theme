@@ -43,6 +43,13 @@ export class AlmacenesService {
     }
 
 
+    getLocacionByCode(code:any):Observable<any>{
+         
+        const url:string = `${this.api_url}/api/locaciones/${code}`;
+        return this.http.get<any>(url);
+
+    }
+
    
     
 }

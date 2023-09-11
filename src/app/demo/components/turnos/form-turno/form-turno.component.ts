@@ -137,6 +137,9 @@ export class FormTurnoComponent implements  OnInit {
 
   cliente:string = '';
   localidad:string = '';
+  nombreLocalidad:string = '';
+  direccionLocalidad:string = '';
+  ubicacionLocalidad:string = '';
   fechacargue!:Date;
   horacargue!:Date;
   transportadora:string = '';
@@ -148,6 +151,7 @@ export class FormTurnoComponent implements  OnInit {
   celular:string = '';
   email:string = '';
   estado:string ='';
+  remision:string = '';
 
   arrayBtnTurnos!: MenuItem[];
   btnAprobar: MenuItem =   {label: 'Aprobar', icon: 'pi pi-check', command: () => { this.aprobarTurno();}};
@@ -158,7 +162,8 @@ export class FormTurnoComponent implements  OnInit {
   btnPeso: MenuItem =   {label: 'Pesar', icon: 'pi pi-compass', command: () => { this.pesarTurno();}};
   btnCargue: MenuItem =   {label: 'Cargar', icon: 'pi pi-upload', command: () => { this.inicioCargueTurno();}};
   btnFinCargue: MenuItem =   {label: 'Fin cargue', icon: 'pi pi-box', command: () => { this.finalizarCargueTurno();}};
-  btnDespachar: MenuItem =   {label: 'Despachar', icon: 'pi pi-sign-out', command: () => { this.despacharTurno();}};
+  btnPesoFinal: MenuItem =   {label: 'Pesaje final', icon: 'pi pi-compass', command: () => { this.pesarTurno2();}};
+  btnDespachar: MenuItem =   {label: 'Remisionar', icon: 'pi pi-sign-out', command: () => { this.despacharTurno();}};
   
 
   /*btnAprobar: MenuItem =   {tooltip: 'Aprobar', tooltipPosition: 'top', icon: 'pi pi-check', command: () => { this.aprobarTurno();}};
@@ -233,6 +238,7 @@ estadosTurno:any = EstadosDealleSolicitud;
 rolesUsuario:any[]=[];
 
 updatePesoBruto:boolean = false;
+updateRemision:boolean = false;
 
 locaciones:any[] = [];
 diasNoAtencion:any[] = [];
@@ -280,7 +286,7 @@ domain:string = window.location.hostname;
     this.getPermisosModulo();
 
 
-    ////////////////console.log(this.config.data.id);
+    //////////////////////console.log(this.config.data.id);
     this.configTablePedidosAlmacenCliente();
     //this.getTurno(this.turnoId);
     this.getLocaciones();
@@ -291,11 +297,11 @@ domain:string = window.location.hostname;
   getPermisosModulo(){
   
     const modulo = this.router.url;
-    //////console.log(modulo);
+    ////////////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////console.log(permisos);
+              //////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -305,7 +311,7 @@ domain:string = window.location.hostname;
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////console.log(this.multiplesClientes);
+              //////////////////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -315,15 +321,16 @@ domain:string = window.location.hostname;
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              //////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
               await this.getVehiculos();
               await this.getConductores();
               await this.getTransportadoras();
               
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
              this.updatePesoBruto = await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.BASCULA);
-             ////console.log(this.updateModulo ,this.updatePesoBruto); 
-             ////console.log(!(this.updateModulo && this.updatePesoBruto)?true:false); 
+             this.updateRemision = await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.REMISION);
+             //////////console.log(this.updateModulo ,this.updatePesoBruto); 
+             //////////console.log(!(this.updateModulo && this.updatePesoBruto)?true:false); 
              /*if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor){
               this.condicion_tpt="TRANSP";
             }*/
@@ -347,7 +354,7 @@ domain:string = window.location.hostname;
                     novedad.label = novedad.novedad;
                   });
 
-                  console.log(novedades);
+                  //////console.log(novedades);
                   this.novedades = novedades;
               },
               error:(err)=>{
@@ -361,14 +368,14 @@ domain:string = window.location.hostname;
     /*this.vehiculosService.getVehiculos()
         .subscribe({
           next: (vehiculos)=>{
-              ////////////////console.log(vehiculos);
+              //////////////////////console.log(vehiculos);
               for(let vehiculo of vehiculos){
                 vehiculo.code = vehiculo.placa;
                 vehiculo.name = vehiculo.placa;
                 vehiculo.label = vehiculo.placa;
                 vehiculo.clase = vehiculo.tipo_vehiculo;
               }
-              ////////////////console.log(conductores);
+              //////////////////////console.log(conductores);
               this.vehiculos = vehiculos;
           },
           error: (err)=>{
@@ -385,7 +392,7 @@ domain:string = window.location.hostname;
       vehiculo.label = vehiculo.placa;
       vehiculo.clase = vehiculo.tipo_vehiculo;
     }
-    //console.log('vehiculos',vehiculos);
+    ////////console.log('vehiculos',vehiculos);
     this.vehiculos = vehiculos;
 
   }
@@ -400,7 +407,7 @@ domain:string = window.location.hostname;
               transportadora.name = transportadora.nombre;
               transportadora.label = transportadora.nit+' - '+transportadora.nombre;
             }
-            ////////////////console.log(conductores);
+            //////////////////////console.log(conductores);
             this.transportadoras = transportadoras;
         },
         error: (err)=>{
@@ -415,7 +422,7 @@ domain:string = window.location.hostname;
       transportadora.name = transportadora.nombre;
       transportadora.label = transportadora.nit+' - '+transportadora.nombre;
     }
-    //console.log(transportadoras);
+    ////////console.log(transportadoras);
     this.transportadoras = transportadoras;
   }
   
@@ -429,7 +436,7 @@ domain:string = window.location.hostname;
                   conductor.name = conductor.nombre;
                   conductor.label = conductor.cedula+' - '+conductor.nombre;
                 }
-                ////////////////console.log(conductores);
+                //////////////////////console.log(conductores);
                 this.conductores = conductores;
             },
             error: (err)=>{
@@ -443,7 +450,7 @@ domain:string = window.location.hostname;
         conductor.name = conductor.nombre;
         conductor.label = conductor.cedula+' - '+conductor.nombre;
       }
-      //console.log(conductores);
+      ////////console.log(conductores);
       this.conductores = conductores;
   }
 
@@ -451,7 +458,7 @@ domain:string = window.location.hostname;
     this.almacenesService.getLocaciones()
         .subscribe({
             next:(locaciones)=>{
-                ////console.log('locaciones',locaciones);
+                //////////console.log('locaciones',locaciones);
                 this.locaciones = locaciones;
             },
             error:(err)=>{
@@ -466,20 +473,20 @@ domain:string = window.location.hostname;
       for(let horario of horarios){
         let diasNot:any[] = [];
         let diasAtencionLocacion:any[] = horario.dias_atencion.split(',');
-        ////console.log(diasAtencionLocacion);
+        //////////console.log(diasAtencionLocacion);
         for(let dia of diasNoAtencion){
-          ////console.log(diasAtencionLocacion.includes(dia.fullname));
+          //////////console.log(diasAtencionLocacion.includes(dia.fullname));
   
           if(!diasAtencionLocacion.includes(dia.fullname)){
               diasNot.push(dia);
           }
-          ////console.log(dia.fullname,JSON.stringify(diasNot));
+          //////////console.log(dia.fullname,JSON.stringify(diasNot));
         }
         
         diasNoAtencion = diasNot;
       }
   
-     // //console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
+     // ////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
   
     return diasNoAtencion.map((dia)=>{ return dia.id});
   }
@@ -493,18 +500,18 @@ domain:string = window.location.hostname;
     this.horariosSeleccionados = horariosSeleccionados;
   
     /*for(let horario of this.horariosLocacion){
-      //console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+      ////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
     }*/
-    //console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+    ////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
     await this.cambioHoraCita();
   }
   
   async cambioHoraCita():Promise<void>{
-    //console.log(this.horacargue.toLocaleTimeString());
+    ////////console.log(this.horacargue.toLocaleTimeString());
     if(await this.validarHoraCargue()){
-      //console.log('hora valida en horario ');
+      ////////console.log('hora valida en horario ');
     }else{
-      //console.log('hora invalida en horario');
+      ////////console.log('hora invalida en horario');
     }
   }
 
@@ -513,21 +520,21 @@ async validarHoraCargue():Promise<boolean>{
   let horarioValido:boolean = true;
 
   for(let horario of this.horariosSeleccionados){
-    //console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    //console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    ////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    ////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
     
-    //console.log(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]));
+    ////////console.log(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]));
 
-    //console.log(new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))));
+    ////////console.log(new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))));
 
     let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
     let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
     let horacargue = new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
 
     if(horainicio<= horacargue && horafin >= horacargue){
-      //console.log('hora valida en horario id '+horario.id);
+      ////////console.log('hora valida en horario id '+horario.id);
     }else{
-      //console.log('hora invalida en horario id '+horario.id);
+      ////////console.log('hora invalida en horario id '+horario.id);
       horarioValido = false;
     }
   }
@@ -549,7 +556,7 @@ async validarHoraCargue():Promise<boolean>{
     this.vehiculosFiltrados.unshift({
       id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
     });
-    ////////////////console.log(this.vehiculosFiltrados);
+    //////////////////////console.log(this.vehiculosFiltrados);
   }
   
   filtrarConductor(event:any){
@@ -589,13 +596,13 @@ async validarHoraCargue():Promise<boolean>{
   
   async seleccionarVehiculo(vehiculoSeleccionado:any){
 
-    //////console.log(vehiculoSeleccionado);
+    ////////////console.log(vehiculoSeleccionado);
   
     if(vehiculoSeleccionado.id == 0){
         //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
         this.nuevoVehiculo();
     }else{
-        //////console.log(vehiculoSeleccionado)
+        ////////////console.log(vehiculoSeleccionado)
         if(vehiculoSeleccionado.tipo_vehiculo.capacidad < this.cantidad ){
           //error cantidad a cargar mayor a la capacidad del vehiculo
           this.messageService.add({severity:'error', summary: '!Error¡', detail:`La cantidad a cargar es mayor a la capacidad del vehículo`});
@@ -620,18 +627,18 @@ async validarHoraCargue():Promise<boolean>{
 
   /*async asignarVehiculo(code:string):Promise<any>{
     let vehiculoSeleccionado:any =this.vehiculos.find(vehiculo=>vehiculo.code == code);
-    ////console.log(this.vehiculos,vehiculoSeleccionado,code);
+    //////////console.log(this.vehiculos,vehiculoSeleccionado,code);
 
     return vehiculoSeleccionado;
   }*/
 
   seleccionarConductor(conductorSeleccionado:any){
-    //console.log(conductorSeleccionado)
+    ////////console.log(conductorSeleccionado)
     if(conductorSeleccionado.id == 0){
       //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
       this.nuevoConductor();
     }else{
-      //////////console.log(conductorSeleccionado);
+      ////////////////console.log(conductorSeleccionado);
 
       this.telefono = conductorSeleccionado.numerotelefono;
       this.celular = conductorSeleccionado.numerocelular;
@@ -654,7 +661,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getTransportadoras();
-      ////////////////console.log("Refresh calendar");
+      //////////////////////console.log("Refresh calendar");
     });
   }
   
@@ -672,7 +679,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getVehiculos();
-      ////////////////console.log("Refresh calendar");
+      //////////////////////console.log("Refresh calendar");
     });
   }
   
@@ -690,7 +697,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getConductores();
-      ////////////////console.log("Refresh calendar");
+      //////////////////////console.log("Refresh calendar");
     });
   }
 
@@ -701,21 +708,22 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                  console.log('turno',turno);
+                  //////console.log('turno',turno);
                   this.turno = turno;
                   this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
                   this.localidad = turno.locacion;
+                  this.nombreLocalidad = turno.locacion;
                   this.fechacargue = new Date(turno.fechacita);
                   let hora = 60 * 60000;
 
                   let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
                   this.fechacargue = fechacargue;
                   
-                  //console.log(fechacargue.toLocaleDateString());
-                  //console.log(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }));
-                  //console.log(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2]));
-                  //console.log(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
-                  //console.log(new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))))
+                  ////////console.log(fechacargue.toLocaleDateString());
+                  ////////console.log(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }));
+                  ////////console.log(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2]));
+                  ////////console.log(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+                  ////////console.log(new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))))
                   let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
                   //this.horacargue = new Date(turno.horacita);
                   this.horacargue = horacargue;
@@ -725,39 +733,45 @@ async validarHoraCargue():Promise<boolean>{
                   this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
                   this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
                   //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
-                  ////console.log(this.vehiculoSeleccionado);
+                  //////////console.log(this.vehiculoSeleccionado);
                   this.pesomax = this.vehiculoSeleccionado.pesomax;
                   this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
                  
                   
                   this.capacidadvh = this.vehiculoSeleccionado.capacidad;
                   this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
-                  ////////console.log('transportadoras',this.transportadoras);
+                  //////////////console.log('transportadoras',this.transportadoras);
                   //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
                   this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
                   this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
                   this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
                   //his.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
-                  ////////////console.log(this.estadoSeleccionado);
+                  //////////////////console.log(this.estadoSeleccionado);
                   this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
                   this.telefono = turno.conductor.numerotelefono;
                   this.celular = turno.conductor.numerocelular;
                   this.email = turno.conductor.email;
-                  let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>pedido.itemcode.startsWith('SF')),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);
+                  ////console.log(this.pedidosTurno);
+                  let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF')),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);
                   this.cantidad = totalesTabla[0].cantidad;
                   this.peso_neto = this.peso_bruto+this.cantidad;
                   this.totalCarga = totalesTabla[0].cantidad;
                   this.displayModal = false;
                   this.loadingCargue = false;
                   this.estado = turno.estado;
+                  this.remision = turno.remision;
 
                   if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
-                    ////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
-                    ////console.log(this.horainicio, this.horafin);
+                    //////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
+                    //////////console.log(this.horainicio, this.horafin);
                     this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
                     this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
+
+                    this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
+                    this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
+                    this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
                 
-                    //console.log('horariosLocacion',this.horariosLocacion);
+                    //////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
                     await this.seleccionarFechaCita();
                   }else{
                     //Establecer horarios locacion
@@ -779,7 +793,7 @@ async validarHoraCargue():Promise<boolean>{
                   }
                 
 
-                  ////console.log(this.estado);
+                  //////////console.log(this.estado);
                   /*
                   let pedidosTurno:any[] = turno.detalle_solicitud_turnos_pedido;
                   let clientesTurno:any[] = [];
@@ -787,10 +801,10 @@ async validarHoraCargue():Promise<boolean>{
                     if(clientesTurno.filter(cliente=>cliente.CardCode === pedido.CardCode).length==0){
                       let EmailAddress = "";
                       let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(pedido.CardCode);
-                      ////console.log('usuarioCliente',usuarioCliente);
+                      //////////console.log('usuarioCliente',usuarioCliente);
                       if(usuarioCliente!=false){
                         EmailAddress = usuarioCliente.email;
-                        //console.log('usuarioCliente.email',usuarioCliente.email);
+                        ////////console.log('usuarioCliente.email',usuarioCliente.email);
                       }
                       
                       clientesTurno.push({
@@ -801,7 +815,7 @@ async validarHoraCargue():Promise<boolean>{
                     }
                   });
 
-                  //console.log('clientesTurno',clientesTurno);
+                  ////////console.log('clientesTurno',clientesTurno);
                   
                   let turno2:any = {
                     conductor:this.conductorSeleccionado,
@@ -819,7 +833,7 @@ async validarHoraCargue():Promise<boolean>{
                     detalle_solicitud_turnos_pedido:this.pedidosTurno
                   }
 
-                  //console.log('turno2',turno2);*/
+                  ////////console.log('turno2',turno2);*/
                   
                   this.configTablePedidosAlmacenCliente();
                   this.configSplitButton(this.estado,this.permisosModulo);
@@ -839,13 +853,13 @@ async validarHoraCargue():Promise<boolean>{
   async calcularDisponibilidadPedido(pedidosTurno:any):Promise<any[]>{
     
     for(let pedido of pedidosTurno){
-      //////////////console.log(pedido);
+      ////////////////////console.log(pedido);
       let cantidadComprometida = 0;
       cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id);
-      //////////console.log('cantidadComprometida',cantidadComprometida , new Date());
+      ////////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
-      //////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
+      ////////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
       pedido.disponible = (pedido.cantidadbodega-cantidadComprometida)<0?0:(pedido.cantidadbodega-cantidadComprometida);
       
     }
@@ -867,7 +881,7 @@ async validarHoraCargue():Promise<boolean>{
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     
-    ////////////////console.log(inventarioItemBodega);
+    //////////////////////console.log(inventarioItemBodega);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
     
 
@@ -875,13 +889,13 @@ async validarHoraCargue():Promise<boolean>{
                                                                                   WhsCode: string; 
                                                                                 }) => inventario.ItemCode == itemcode && 
                                                                                       inventario.WhsCode == bodega);
-    //////////////console.log(inventarioItemBodega);                                                                                  
+    ////////////////////console.log(inventarioItemBodega);                                                                                  
 
     let cantidadInventarioItenBodega:number = 0;
     
      inventarioItemBodega.forEach(function(a){cantidadInventarioItenBodega += parseFloat(a.OnHand);});
 
-    //////////////console.log(cantidadInventarioItenBodega);    
+    ////////////////////console.log(cantidadInventarioItenBodega);    
   
     return cantidadInventarioItenBodega;
   }
@@ -889,7 +903,7 @@ async validarHoraCargue():Promise<boolean>{
   async objectToArray(object:any): Promise<any>{
       let array:any[] = [];
 
-      //Object.keys(object).map((key) => { //////////////console.log(object[key])});
+      //Object.keys(object).map((key) => { ////////////////////console.log(object[key])});
       //array = Object.keys(object).map((key) => [Number(key), object[key]]);
 
       array = Object.keys(object).map((key) => object[key]);
@@ -913,7 +927,7 @@ async validarHoraCargue():Promise<boolean>{
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////////////////console.log(arrayFiltrar);
+    ////////////////////////console.log(arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -931,14 +945,14 @@ async validarHoraCargue():Promise<boolean>{
       }
       this.completeTimer = true;
   }
-
+/*
  async grabar(){
 
 
 
     this.grabarCambios =true;
 
-    ////////console.log(this.transportadoraSeleccionada, this.vehiculoSeleccionado, this.conductorSeleccionado);
+    //////////////console.log(this.transportadoraSeleccionada, this.vehiculoSeleccionado, this.conductorSeleccionado);
 
 
     if(await this.validarFormulario()){
@@ -965,7 +979,7 @@ async validarHoraCargue():Promise<boolean>{
             peso_vacio:this.peso_bruto
           }
 
-          //////////////console.log(data);
+          ////////////////////console.log(data);
           this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
           .subscribe({
                 next:(reuslt)=>{
@@ -1003,50 +1017,10 @@ async validarHoraCargue():Promise<boolean>{
       });
 
     }
-
-    
-
-    /*if(!this.fechacargue || !this.horacargue || !this.estado){
-      this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe deiligenciar los campos resaltados en rojo"});
-    }else{
-      this.displayModal = true;
-      this.loadingCargue = true;
-      this.completeCargue=false;
-      this.completeTimer = false;
-      setTimeout(()=>{this.setTimer()},2500);
-      const data:any = {
-        fechacita:new Date(this.fechacargue),
-        horacita:new Date(this.horacargue),
-        estado: this.estadoSeleccionado.code
-      }
-
-      //////////////console.log(data);
-      this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
-          .subscribe({
-                next:(reuslt)=>{
-                  if(this.completeTimer){
-                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
-                    this.displayModal = false;
-                    this.loadingCargue = false;
-                    
-                  }
-                  this.completeCargue = true;
-                  this.messageComplete = `Se completo correctamente el porceso de cargue de los turnos de la localidad.`;
-                 
-                },
-                error:(err)=> {
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                    console.error(err);
-                    this.displayModal = false;
-                    this.loadingCargue = false;
-                    
-                },
-          });
-    }*/
-
-   
     
   }
+
+  */
 
   cerrar(){
     this.ref.close();
@@ -1092,7 +1066,7 @@ async validarHoraCargue():Promise<boolean>{
   
   configDataTablePedidos(arregloPedido:any){
 
-      //////////////console.log(arregloPedido);
+      ////////////////////console.log(arregloPedido);
       let totalCarga:number=0;
       let dataTable:any[] = [];
       let index:number = 0;
@@ -1121,7 +1095,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   configSplitButton(estadoActual:string, permisosModulo:any){
-    //////////console.log(estadoActual,permisosModulo);
+    ////////////////console.log(estadoActual,permisosModulo);
 
     this.arrayBtnTurnos = [];
 
@@ -1163,8 +1137,14 @@ async validarHoraCargue():Promise<boolean>{
       break;
       
       case this.estadosTurno.CARGADO:
+        if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Pesaje final').valor){
+            this.arrayBtnTurnos.push(this.btnPesoFinal);
+        }
+      break;
+
+      case this.estadosTurno.PESADOF:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Despachar').valor){
-          this.arrayBtnTurnos.push(this.btnDespachar);
+            this.arrayBtnTurnos.push(this.btnDespachar);
         }
       break;
 
@@ -1204,7 +1184,7 @@ async validarHoraCargue():Promise<boolean>{
     ref.onClose.subscribe(() => {
       //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       //this.getCalendar();
-      //////console.log(("Refresh calendar");
+      ////////////console.log(("Refresh calendar");
     });
 
 
@@ -1263,11 +1243,19 @@ async validarHoraCargue():Promise<boolean>{
   }
   async finalizarCargueTurno(){
     if(await this.validarFormulario()){
-      this.accion = 'finalizar cargue'
+      this.accion = 'finalizar cargue de'
       this.formEstadoTurno = true;
       this.tituloEstado = "Finalizar cargue turno "+this.turnoId;
     }
   }
+  async pesarTurno2(){
+    if(await this.validarFormulario()){
+      this.accion = 'realizar pesaje final a'
+      this.formEstadoTurno = true;
+      this.tituloEstado = "Pesar turno "+this.turnoId;
+    }
+  }
+
   async despacharTurno(){
     if(await this.validarFormulario()){
       this.accion = 'despachar'
@@ -1298,7 +1286,7 @@ async validarHoraCargue():Promise<boolean>{
   
                   case 'pausar':
                     nuevoEstado = this.estadosTurno.PAUSADO;
-                    mensaje = `ha sido pausado debido a: ${this.comentario}`;
+                    mensaje = `ha sido pausado debido a ${this.novedadesSeleccionadas.length>1?'las sguientes novedades':'la siguiente novedad'}: ${this.novedadesSeleccionadas.map((novedad)=>{return novedad.label }).toString()}`;
                   break;
   
                   case 'activar':
@@ -1321,9 +1309,14 @@ async validarHoraCargue():Promise<boolean>{
                     mensaje = `ha iniciado el cargue`;
                   break;
   
-                  case 'finalizar cargue':
+                  case 'finalizar cargue de':
                     nuevoEstado = this.estadosTurno.CARGADO;
                     mensaje = `ha sido cargado`;
+                  break;
+
+                  case 'realizar pesaje final a':
+                    nuevoEstado = this.estadosTurno.PESADOF;
+                    mensaje = `ha sido pesado`;
                   break;
   
                   case 'despachar':
@@ -1364,13 +1357,14 @@ async validarHoraCargue():Promise<boolean>{
                 data.vehiculo = this.vehiculoSeleccionado.id;
                 data.conductor = this.conductorSeleccionado.id;
                 data.peso_vacio = this.peso_bruto;
+                data.peso_neto = this.peso_neto;
               
             }
 
             this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
               .subscribe({
                     next:async (turno)=>{
-                        console.log(turno);
+                        //console.log(turno);
                         if(this.updateModulo){
                           this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
                         }
@@ -1390,14 +1384,21 @@ async validarHoraCargue():Promise<boolean>{
                           horacita: new Date(this.horacargue).toLocaleTimeString(),
                           id:turno.id,
                           locacion:this.localidad,
+                          nombreLocacion:this.nombreLocalidad,
+                          direccionLocacion: this.direccionLocalidad,
+                          ubicacionLocacion:this.ubicacionLocalidad,
+                          horariosLocacion:this.horariosLocacion.length>0?this.horariosLocacion:null,
                           lugarentrega:'',
                           municipioentrega:'',
                           observacion:'',
                           peso_vacio:this.peso_bruto,
                           transportadora:this.transportadoraSeleccionada,
                           vehiculo:this.vehiculoSeleccionado,
-                          detalle_solicitud_turnos_pedido:this.pedidosTurno
+                          detalle_solicitud_turnos_pedido:this.pedidosTurno,
+                          novedades:this.novedadesSeleccionadas
                         }
+
+                        
                     
                         await this.configEmails(turnoMail,mensaje);
 
@@ -1411,140 +1412,7 @@ async validarHoraCargue():Promise<boolean>{
                     }
               });
 
-              /* 
-            if(this.updateModulo){
-                data = {
-                fechacita:new Date(this.fechacargue),
-                horacita:new Date(this.horacargue),
-                estado: this.estado,
-                transportadora:this.transportadoraSeleccionada.id,
-                vehiculo: this.vehiculoSeleccionado.id,
-                conductor:this.conductorSeleccionado.id,
-                peso_vacio:this.peso_bruto
-              }
-    
-              //console.log(data);
-              this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
-              .subscribe({
-                    next:(reuslt)=>{
-                      //if(this.completeTimer){
-                        this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${this.turnoId}.`});
-                        //this.displayModal = false;
-                        //this.loadingCargue = false;
-                        
-                      //}
-                      this.completeCargue = true;
-                      this.messageComplete = `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${this.turnoId}.`;
-  
-                      data = {
-                        estado:nuevoEstado,
-                        fechaaccion:this.fechaaccion,
-                        horaaccion:this.horaaccion,
-                        comentario:this.comentario
-                      }
-            
-                      this.solicitudTurnoService.updateEstadoTruno(this.turnoId,data)
-                      .subscribe({
-                            next:async (result)=>{
-                             //////////console.log(result);
-            
-                              this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
-                              this.displayModal = false;
-                              this.loadingCargue = false;
-                              this.formEstadoTurno = false;
-                              this.estado = result.estado
-            
-                              this.configSplitButton(this.estado,this.permisosModulo);
-  
-                              let turno:any = {
-                                conductor:this.conductorSeleccionado,
-                                estado:nuevoEstado,
-                                fechacita:new Date(this.fechacargue).toLocaleDateString(),
-                                horacita: new Date(this.horacargue).toLocaleTimeString(),
-                                id:this.turnoId,
-                                locacion:this.localidad,
-                                lugarentrega:'',
-                                municipioentrega:'',
-                                observacion:'',
-                                peso_vacio:this.peso_bruto,
-                                transportadora:this.transportadoraSeleccionada,
-                                vehiculo:this.vehiculoSeleccionado,
-                                detalle_solicitud_turnos_pedido:this.pedidosTurno
-                              }
-                          
-                              await this.configEmails(turno,mensaje);
-                          
-                             
-                            },
-                            error:(err)=> {
-                              this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                                console.error(err);
-                                this.displayModal = false;
-                                this.loadingCargue = false;
-                                
-                            },
-                      });
-  
-                    
-                    },
-                    error:(err)=> {
-                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                        console.error(err);
-                        this.displayModal = false;
-                        this.loadingCargue = false;
-                        
-                    },
-              });
-            }else{
-              data = {
-                estado:nuevoEstado,
-                fechaaccion:this.fechaaccion,
-                horaaccion:this.horaaccion,
-                comentario:this.comentario
-              }
-    
-              this.solicitudTurnoService.updateEstadoTruno(this.turnoId,data)
-              .subscribe({
-                    next:async (result)=>{
-                     //////////console.log(result);
-    
-                      this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
-                      this.displayModal = false;
-                      this.loadingCargue = false;
-                      this.formEstadoTurno = false;
-                      this.estado = result.estado
-    
-                      this.configSplitButton(this.estado,this.permisosModulo);
-  
-                      let turno:any = {
-                        conductor:this.conductorSeleccionado,
-                        estado:nuevoEstado,
-                        fechacita:new Date(this.fechacargue).toLocaleDateString(),
-                        horacita: new Date(this.horacargue).toLocaleTimeString(),
-                        id:this.turnoId,
-                        locacion:this.localidad,
-                        lugarentrega:'',
-                        municipioentrega:'',
-                        observacion:'',
-                        peso_vacio:this.peso_bruto,
-                        transportadora:this.transportadoraSeleccionada,
-                        vehiculo:this.vehiculoSeleccionado,
-                        detalle_solicitud_turnos_pedido:this.pedidosTurno
-                      }
-                  
-                      await this.configEmails(turno,mensaje);
-                    },
-                    error:(err)=> {
-                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                        console.error(err);
-                        this.displayModal = false;
-                        this.loadingCargue = false;
-                        
-                    },
-              });
-            }*/
-  
-            
+          
   
   
         },
@@ -1565,12 +1433,11 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   async emailsClientes(turno:any,mensaje:string):Promise<void> {
-    if(turno.estado === EstadosDealleSolicitud.PAUSADO || turno.estado === EstadosDealleSolicitud.DESPACHADO){
+    if(turno.estado === EstadosDealleSolicitud.AUTORIZADO || turno.estado === EstadosDealleSolicitud.PAUSADO || turno.estado === EstadosDealleSolicitud.DESPACHADO){
       let turnosCliente:any[] = []; 
-     
-        
-        turno.detalle_solicitud_turnos_pedido.forEach((pedido: { CardCode: any; itemcode: string; cantidad: any; CardName: any; })=>{
-          ////console.log(turno.id, pedido.CardCode);
+
+      turno.detalle_solicitud_turnos_pedido.forEach((pedido: { CardCode: any; itemcode: string; cantidad: any; CardName: any; })=>{
+          //////////console.log(turno.id, pedido.CardCode);
             let email_cliente = this.turno.solicitud.clientes.find((cliente: { CardCode: any; })=>cliente.CardCode === pedido.CardCode).EmailAddress;
             if(turnosCliente.filter(cliente=>cliente.codigo===pedido.CardCode).length === 0){
     
@@ -1582,6 +1449,10 @@ async validarHoraCargue():Promise<boolean>{
                   fechacita:new Date(turno.fechacita).toLocaleDateString(),
                   horacita:new Date(turno.horacita).toLocaleTimeString(),
                   locacion:turno.locacion,
+                  nombreLocacion:turno.nombreLocacion,
+                  direccionLocacion: turno.direccionLocacion,
+                  ubicacionLocacion:turno.ubicacionLocacion,
+                  horariosLocacion:turno.horariosLocacion,
                   lugarentrega:turno.lugarentrega,
                   municipioentrega:turno.municipioentrega,
                   observacion:turno.observacion,
@@ -1603,7 +1474,7 @@ async validarHoraCargue():Promise<boolean>{
             }else{
                 
                 let indexCliente = turnosCliente.findIndex(cliente=>cliente.codigo === pedido.CardCode);
-                ////console.log(turnosCliente[indexCliente]);
+                //////////console.log(turnosCliente[indexCliente]);
     
                 if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
                   let turnoCliente:any;
@@ -1613,6 +1484,10 @@ async validarHoraCargue():Promise<boolean>{
                     fechacita:new Date(turno.fechacita).toLocaleDateString(),
                     horacita:new Date(turno.horacita).toLocaleTimeString(),
                     locacion:turno.locacion,
+                    nombreLocacion:turno.nombreLocacion,
+                    direccionLocacion: turno.direccionLocacion,
+                    ubicacionLocacion:turno.ubicacionLocacion,
+                    horariosLocacion:turno.horariosLocacion,
                     lugarentrega:turno.lugarentrega,
                     municipioentrega:turno.municipioentrega,
                     observacion:turno.observacion,
@@ -1626,7 +1501,7 @@ async validarHoraCargue():Promise<boolean>{
                   turnosCliente[indexCliente].turnos.push(turnoCliente);
                 }else{
                   let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
-                  ////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                  //////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                   turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                   if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                     turnosCliente[indexCliente].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1638,8 +1513,8 @@ async validarHoraCargue():Promise<boolean>{
         });
 
         turnosCliente.forEach(async (cliente)=>{
-          console.log('email cliente', cliente.email);
-          if(cliente.email!='' && cliente.email!=null){
+          //////console.log('email cliente', cliente.email);
+          //if(cliente.email!='' && cliente.email!=null){
       
             cliente.turnos.forEach(async (turnoCliente: any)=>{
 
@@ -1656,12 +1531,12 @@ async validarHoraCargue():Promise<boolean>{
                             
                 }         
               };
-              console.log('objectMail Cliente',objectMail);
-              console.log(await this.functionsService.sendMail(objectMail));
+              //////console.log('objectMail Cliente',objectMail);
+              //////console.log(await this.functionsService.sendMail(objectMail));
 
             });
             
-          }
+          //}
         });
         
     }
@@ -1674,7 +1549,7 @@ async validarHoraCargue():Promise<boolean>{
    
       
       turno.detalle_solicitud_turnos_pedido.forEach((pedido: { email_vendedor: any; itemcode: string; cantidad: any; })=>{
-        ////console.log(turno.id, pedido.CardCode);
+        //////////console.log(turno.id, pedido.CardCode);
           if(turnosVendedor.filter(vendedor=>vendedor.codigo===pedido.email_vendedor).length === 0){
   
               let turnoVendedor:any;
@@ -1686,6 +1561,10 @@ async validarHoraCargue():Promise<boolean>{
                 fechacita:new Date(turno.fechacita).toLocaleDateString(),
                 horacita:new Date(turno.horacita).toLocaleTimeString(),
                 locacion:turno.locacion,
+                nombreLocacion:turno.nombreLocacion,
+                direccionLocaion: turno.direccionLocaion,
+                ubicacionLocaion:turno.ubicacionLocaion,
+                horariosLocacion:turno.horariosLocacion,
                 lugarentrega:turno.lugarentrega,
                 municipioentrega:turno.municipioentrega,
                 observacion:turno.observacion,
@@ -1706,7 +1585,7 @@ async validarHoraCargue():Promise<boolean>{
           }else{
               
               let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.codigo === pedido.email_vendedor);
-              ////console.log(turnosCliente[indexCliente]);
+              //////////console.log(turnosCliente[indexCliente]);
   
               if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
                 let turnoVendedor:any;
@@ -1716,6 +1595,10 @@ async validarHoraCargue():Promise<boolean>{
                   fechacita:new Date(turno.fechacita).toLocaleDateString(),
                   horacita:new Date(turno.horacita).toLocaleTimeString(),
                   locacion:turno.locacion,
+                  nombreLocacion:turno.nombreLocacion,
+                  direccionLocaion: turno.direccionLocaion,
+                  ubicacionLocaion:turno.ubicacionLocaion,
+                  horariosLocacion:turno.horariosLocacion,
                   lugarentrega:turno.lugarentrega,
                   municipioentrega:turno.municipioentrega,
                   observacion:turno.observacion,
@@ -1729,7 +1612,7 @@ async validarHoraCargue():Promise<boolean>{
                 turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
               }else{
                 let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
-                ////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                //////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                 turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                 if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                   turnosVendedor[indexVendedor].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1741,7 +1624,7 @@ async validarHoraCargue():Promise<boolean>{
       
     
   
-    //console.log(turnosVendedor);
+    ////////console.log(turnosVendedor);
   
     turnosVendedor.forEach(async (vendedor)=>{
       if(vendedor.email!='' && vendedor.email!=null){
@@ -1761,8 +1644,8 @@ async validarHoraCargue():Promise<boolean>{
                         
             }         
           };
-          console.log('objectMail vendedor',objectMail);
-          console.log(await this.functionsService.sendMail(objectMail));
+          //////console.log('objectMail vendedor',objectMail);
+          //////console.log(await this.functionsService.sendMail(objectMail));
 
         });
 
@@ -1780,7 +1663,7 @@ async validarHoraCargue():Promise<boolean>{
     let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:turno.estado,locacion}))
                       .map((email: { email_responsable: any; }) => {return email.email_responsable});
   
-    console.log('emailsTurno',emailsTurno.join());
+    //////console.log('emailsTurno',emailsTurno.join());
   
     if(emailsTurno.join()!=''){
       emailBodega = emailsTurno.join();
@@ -1803,8 +1686,8 @@ async validarHoraCargue():Promise<boolean>{
                     
         }         
       };
-      console.log('objectMail Bodega',objectMail);
-      console.log(await this.functionsService.sendMail(objectMail));
+      //////console.log('objectMail Bodega',objectMail);
+      //////console.log(await this.functionsService.sendMail(objectMail));
   
     }
   }
@@ -1823,8 +1706,8 @@ async validarHoraCargue():Promise<boolean>{
                   
       }         
     };
-    console.log('objectMail Transporta sociedada',objectMail);
-    console.log(await this.functionsService.sendMail(objectMail));
+    //////console.log('objectMail Transporta sociedada',objectMail);
+    //////console.log(await this.functionsService.sendMail(objectMail));
   }
 
   async emailCreador(turno:any,mensaje:string): Promise<void>{
@@ -1843,13 +1726,15 @@ async validarHoraCargue():Promise<boolean>{
                   
       }         
     };
-    console.log('objectMail usuario creado',objectMail);
-    console.log(await this.functionsService.sendMail(objectMail));
+    //////console.log('objectMail usuario creado',objectMail);
+    //////console.log(await this.functionsService.sendMail(objectMail));
 
   }
 
 
   async configEmails(dataTurno:any, mensaje:string): Promise<void>{
+
+    console.log(dataTurno,mensaje);
 
     await this.emailsClientes(dataTurno,mensaje);
     await this.emailsVendedores(dataTurno,mensaje);
@@ -1858,103 +1743,7 @@ async validarHoraCargue():Promise<boolean>{
       await this.emailTransp(dataTurno,mensaje);
     }
     await this.emailCreador(dataTurno,mensaje);
-    /*
-    //Obtener información del turno 
-    let turno:any = dataTurno;
-    //Obtener el detalle de pedidos asociados al turno
-    let pedidosTurno:any[] = turno.detalle_solicitud_turnos_pedido;
-    let clientesTurno:any[] = [];
-
-    let objectMail!:any;
-
-    // Envio de email a los clientes asociados al turno
-    //Recorrer el array de pedidos asociados al turno y obtener obtener la infción asociadas a cada cliente en pedidos del turno y enviar correo
-    pedidosTurno.forEach(async pedido=>{
-      if(clientesTurno.filter(cliente=>cliente.CardCode === pedido.CardCode).length==0){
-        let EmailAddress = "";
-        let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(pedido.CardCode);
-        ////console.log('usuarioCliente',usuarioCliente);
-        if(usuarioCliente!=false){
-          EmailAddress = usuarioCliente.email;
-          //console.log('usuarioCliente.email',usuarioCliente.email);
-          let newTurno:any = {
-            conductor:turno.conductor,
-            estado:turno.estado,
-            fechacita:turno.fechacita,
-            horacita: turno.horacita,
-            id:turno.id,
-            locacion:turno.locacion,
-            lugarentrega:turno.lugarentrega,
-            municipioentrega:turno.municipioentrega,
-            observacion:turno.observacion,
-            peso_vacio:turno.peso_vacio,
-            transportadora:turno.transportadora,
-            vehiculo:turno.vehiculo,
-            detalle_solicitud_turnos_pedido: turno.detalle_solicitud_turnos_pedido.filter((pedido_turno: { CardCode: any; })=>pedido_turno.CardCode === pedido.CardCode)
     
-          }
-
-          //Configuracion email para cliente
-  
-          objectMail = {
-            to:EmailAddress,
-            //to:usuarioCreador.email,
-            subject:`Turno de cargue # ${turno.id}`,
-            template:'./notificacion_cambio_turno',
-            context:{
-                        name:pedido.CardName,
-                        turno_num:turno.id,
-                        mensaje,
-                        turno:newTurno
-                        
-            }         
-          };
-          //console.log('objectMail',objectMail);
-          //console.log(await this.functionsService.sendMail(objectMail));
-
-          // Configuracion de email para jefe de zona o vendedor
-
-          // Obtener los pedidos asociados al jefe de zona o vendedor y sustituir la variable "detalle_solicitud_turnos_pedido" de "newTurno"
-          // newTurno.detalle_solicitud_turnos_pedido = turno.detalle_solicitud_turnos_pedido.filter((pedido_turno: { CodeJefeZona: any; })=>pedido_turno.CodeJefeZona === pedido.CodeJefeZona);
-          
-        }
-        
-        clientesTurno.push({
-            CardCode:pedido.CardCode,
-            CardName:pedido.CardName,
-            EmailAddress
-          });
-      }
-    });
-
-
-
-    
-
-    //Envio de correo para el siguiente actor en el flujo del proceso del turno segun el estado del mismo.
-
-    let emailBodega:string ="ralbor@nitrofert.com.co";
-    
-  
-
-    objectMail = {
-      to:emailBodega,
-      //to:usuarioCreador.email,
-      subject:`Turno de cargue # ${turno.id}`,
-      template:'./notificacion_cambio_turno',
-      context:{
-                  name:emailBodega,
-                  turno_num:turno.id,
-                  mensaje,
-                  turno
-                  
-      }         
-    };
-    //console.log('objectMail',objectMail);
-    //console.log(await this.functionsService.sendMail(objectMail));
-
-    //Email para lista de distribución TRANSPORTA SOCIEDAD
-    */
    
 
   }
@@ -1964,10 +1753,11 @@ async validarHoraCargue():Promise<boolean>{
     if(event.target.value ===''){
       event.target.value =0;
     }
-    ////console.log(peso, this.peso_bruto);
-    if(this.pesomax < (this.cantidad+this.peso_bruto)){
+    //////////console.log(peso, this.peso_bruto);
+    this.peso_neto = this.cantidad+parseFloat(event.target.value)
+    if(this.pesomax < (this.peso_neto)){
       //error cantidad a cargar mayor a la capacidad del vehiculo
-      this.messageService.add({severity:'error', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});
+      this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});
     }
 
   }
@@ -1979,22 +1769,50 @@ async validarHoraCargue():Promise<boolean>{
 
   }
 
+  async cambioPesoNeto(event:any, peso:number){
+
+    if(event.target.value ===''){
+      event.target.value =0;
+    }
+    //////console.log(peso, this.peso_bruto, parseFloat(event.target.value));
+    this.cantidad = parseFloat(event.target.value)-this.peso_bruto;
+    if(this.pesomax < (parseFloat(event.target.value))){
+      //error cantidad a cargar mayor a la capacidad del vehiculo
+      this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});
+    }
+    let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF')),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);
+    if(totalesTabla[0].cantidad < (parseFloat(event.target.value)-this.peso_bruto)){
+      this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso de la carga es mayor al peso total de los pedidos`});
+    }
+
+  }
+
+  presionarEnterPesoNeto(event:any, peso:number){
+    if (event.key === "Enter") {
+      this.cambioPesoNeto(event,peso);
+    }
+
+  }
+
   async validarFormulario():Promise<boolean> {
       let valido:boolean = false;
 
-      if(!this.fechacargue || !this.horacargue || this.transportadoraSeleccionada.id==0 || this.vehiculoSeleccionado.id==0 || this.conductorSeleccionado.id==0){
+      if(!this.fechacargue || !this.horacargue || this.transportadoraSeleccionada.id==0 || this.vehiculoSeleccionado.id==0 || this.conductorSeleccionado.id==0 || (!this.remision && this.estado === this.estadosTurno.PESADOF)){
         this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe deiligenciar los campos resaltados en rojo"});
       }else if(this.capacidadvh<this.cantidad){
-        this.messageService.add({severity:'error', summary: '!Error¡', detail:`La cantidad a cargar es mayor a la capacidad del vehículo`});
+        this.messageService.add({severity:'warn', summary: '!Error¡', detail:`La cantidad a cargar es mayor a la capacidad del vehículo`});
+        valido = true;
       }else if(this.pesomax<this.cantidad+this.peso_bruto){
-        this.messageService.add({severity:'error', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitid`});
+        this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});
+        valido = true;
       }else if(!(await this.validarHoraCargue())){
-        this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
+        this.messageService.add({severity:'warn', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
+        valido = true;
       }else{
         valido = true;
       }
 
-      ////console.log(valido);
+      //////////console.log(valido);
 
       return valido;
   }

@@ -9,6 +9,7 @@ import { BreadCrumbModule } from 'src/app/layout/shared/breadcrumb/app.breadcrum
 import { UsuariosRoutingModule } from './usuarios-routing.module';
 import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-table.module';
 import { DialogService } from 'primeng/dynamicdialog';
+import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 
 
 
@@ -27,7 +28,7 @@ import { DialogService } from 'primeng/dynamicdialog';
     ApplicationPipesModule,
     DynamicTableModule
   ],
-  providers:[DialogService],
+  providers:[DialogService,AlmacenesService],
   
 })
 export class UsuariosModule { }

@@ -15,11 +15,13 @@ import { UsuarioService } from 'src/app/demo/service/usuario.service';
 export class FormLocacionComponent implements  OnInit {
 
   locacionId!:number;
-
+  locacion:string = "";
   locacionesSAP:any[] = [];
   locacionesMySQL:any[] = [];
 
   email_bodega:string = '';
+  direccion:any = '';
+  ubicacion:string = '';
   horarios:any[] = [];
 
   locacionSeleccionada!:any;
@@ -44,10 +46,19 @@ export class FormLocacionComponent implements  OnInit {
   submitHorario:boolean = false;
   submitLocacion:boolean = false;
 
+  editLocacion:boolean = false;
+  editHorarios:boolean = false;
+  horarioSelecionado!:number;
+
   dataTable:any[] = [];
   headersTable:any[] = [
                           {
-                              
+                            'id':{ 
+                              label:'Id', 
+                              type:'text',
+                              sizeCol:'6rem',
+                              align:'center'
+                            }, 
                               'dias_atencion': {
                                     label:'Diás de atención',
                                     type:'text', 
@@ -91,6 +102,8 @@ ngOnInit() {
   console.log(this.horafin.toLocaleTimeString('en-US',{ hour12: false }));
   this.getLocacionesMySQL();
 
+ 
+
 }
 
 getLocacionesMySQL(){
@@ -99,6 +112,10 @@ getLocacionesMySQL(){
       next:(locaciones)=>{
           console.log('locacionesMySQL',locaciones);
           this.locacionesMySQL = locaciones;
+          if(this.locacionId!=0){
+            this.editLocacion = true;
+            this.getLocacionByCode(locaciones.find((locacion: { id: number; })=>locacion.id === this.locacionId).code);
+          }
           this.getLocacionesSAP();
       },
       error:(err)=>{
@@ -139,6 +156,24 @@ getLocacionesMySQL(){
 }); 
 }
 
+getLocacionByCode(code:any){
+  this.almacenesService.getLocacionByCode(code)
+      .subscribe({
+            next:(locacion)=>{
+              console.log(locacion);
+              this.locacion = locacion.locacion;
+              this.email_bodega = locacion.email;
+              this.direccion = locacion.direccion;
+              this.ubicacion = locacion.ubicacion;
+
+              this.dataTable = locacion.horarios_locacion;
+            },
+            error:(err)=>{
+              console.error(err);
+            }
+      });
+}
+
 async filtrarLocacion(event: any){
   
     this.locacionesFiltrados = await this.functionsService.filter(event,this.locacionesSAP);
@@ -155,8 +190,32 @@ cambioLocacion(){
 }
 
 editHorario(event:any){
+  console.log(event);
+  
+  
   this.tituloFormHorario ="Editar horario";
   this.formHorarios = true;
+  let indexHorario = this.dataTable.findIndex(horario=>horario.id === event);
+  this.horarioSelecionado = indexHorario;
+  let diasSeleccionados = this.dataTable[indexHorario].dias_atencion.split(",");
+  let dias:any = [];
+  for(let dia of this.diasAtencion){
+      if(diasSeleccionados.includes(dia.fullname)){
+          dias.push(dia);
+      }
+  }
+
+  let horaInicio = new Date();
+  horaInicio.setHours(this.dataTable[indexHorario].horainicio.split(":")[0],this.dataTable[indexHorario].horainicio.split(":")[1],this.dataTable[indexHorario].horainicio.split(":")[2]);
+  this.horainicio = horaInicio
+
+  let horaFin = new Date();
+  horaFin.setHours(this.dataTable[indexHorario].horafin.split(":")[0],this.dataTable[indexHorario].horafin.split(":")[1],this.dataTable[indexHorario].horafin.split(":")[2]);
+  this.horafin = horaFin;
+
+  this.diasSeleccionados = dias;
+  this.editHorarios = true
+
 }
 
 deleteHorario(event:any){
@@ -166,6 +225,7 @@ deleteHorario(event:any){
 nuevoHorario(event:any){
   this.tituloFormHorario ="Adicionar horario";
   this.formHorarios = true;
+  this.editHorarios = false;
 }
 
 grabarHorario(){
@@ -176,17 +236,28 @@ grabarHorario(){
   }else if((new Date(this.horainicio)) >= (new Date(this.horafin))){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  "La fecha de inicio de la atención no puede ser mayor o igual a la fecha  de finalización"});
   }else{
-      this.horarios.push({
-        dias_atencion:this.diasSeleccionados.map((dia)=>{ return dia.fullname}).join(','),
-        horainicio:this.horainicio.toLocaleTimeString('en-US',{ hour12: false }),
-        horafin:this.horafin.toLocaleTimeString('en-US',{ hour12: false })
-      });
-      
-      this.dataTable.push({
-        dias_atencion:this.diasSeleccionados.map((dia)=>{ return dia.fullname}).join(','),
-        horainicio:this.horainicio.toLocaleTimeString(),
-        horafin:this.horafin.toLocaleTimeString()
-      });
+
+      if(this.editHorarios){
+        
+      }else{
+
+        this.horarios.push({
+          dias_atencion:this.diasSeleccionados.map((dia)=>{ return dia.fullname}).join(','),
+          horainicio:this.horainicio.toLocaleTimeString('en-US',{ hour12: false }),
+          horafin:this.horafin.toLocaleTimeString('en-US',{ hour12: false })
+        });
+        
+        this.dataTable.push({
+          id:this.dataTable.length,
+          dias_atencion:this.diasSeleccionados.map((dia)=>{ return dia.fullname}).join(','),
+          horainicio:this.horainicio.toLocaleTimeString(),
+          horafin:this.horafin.toLocaleTimeString()
+        });
+
+      }
+
+
+     
 
       this.diasSeleccionados = [];
       this.formHorarios = false;
@@ -204,6 +275,8 @@ grabarLocacion(){
           code: this.locacionSeleccionada.code,
           locacion: this.locacionSeleccionada.name,
           email: this.email_bodega,
+          direccion:this.direccion,
+          ubicacion:this.ubicacion,
           horarios:this.horarios
         }
 

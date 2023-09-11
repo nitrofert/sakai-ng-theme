@@ -16,11 +16,12 @@
                 </div>
                 <div class="field col-12 md:col-6  mt-3">
                     <span class="p-float-label">
+                        
                         <input pInputText 
                                id="localidad" 
                                type="text" 
                                disabled 
-                               [value]="localidad" />
+                               [value]="nombreLocalidad" />
                         <label for="localidad"><h6>Localidad</h6></label>
                     </span>
                 </div>
@@ -259,11 +260,11 @@
                         <span class="p-float-label">
                             <input pInputText 
                                    id="cantidad" 
-                                   type="text" 
-                                   disabled 
+                                   type="number" 
+                                   disabled
                                    [value]="cantidad"
                                    [ngClass]="{'ng-invalid ng-dirty' :  (capacidadvh < cantidad)}" />
-                            <label for="cantidad"><h6>Cantidad cargada</h6></label>
+                            <label for="cantidad"><h6>Peso carga</h6></label>
                         </span>
                         <span class="p-inputgroup-addon">TON</span>
                     </div>
@@ -275,15 +276,34 @@
                         <span class="p-float-label">
                             <input pInputText 
                                    id="peso_neto" 
-                                   type="text" 
-                                   disabled 
-                                   [value]="peso_bruto+cantidad"
-                                   [ngClass]="{'ng-invalid ng-dirty' :  (pesomax < (peso_bruto+cantidad))}"/>
+                                   type="number" 
+                                   [disabled]="!(updateModulo && updatePesoBruto && estado == estadosTurno.CARGADO)?true:false " 
+
+                                   (keydown.enter)="presionarEnterPesoNeto($event,peso_neto)"
+                                   (blur)="cambioPesoNeto($event,peso_neto)"
+
+                                   [value]="peso_neto"
+                                   [ngClass]="{'ng-invalid ng-dirty' :  (pesomax < (peso_neto))}"/>
                             <label for="peso_neto"><h6>Peso Neto vehículo</h6></label>
                         </span>
                         <span class="p-inputgroup-addon">TON</span>
                     </div>
                     
+                </div>
+
+                <div class="field col-12">
+                    <span class="p-float-label">
+                       
+
+                        <input pInputText 
+                        id="remision" 
+                        type="text"
+                        
+                        [disabled]="!(updateModulo && updateRemision && estado == estadosTurno.PESADOF)?true:false "  
+                        [(ngModel)]="remision" 
+                        [ngClass]="{'ng-invalid ng-dirty' : !remision && estado == estadosTurno.PESADOF }"/>
+                        <label for="remision"><h6>Número remisión</h6></label>
+                    </span>
                 </div>
 
                 <div class="field col-9">

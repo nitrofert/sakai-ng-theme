@@ -155,7 +155,24 @@ export class LocacionesComponent implements  OnInit{
     return horariosStr.toLowerCase();
   }
 
-  editlocacion(event: any){}
+  editlocacion(event: any){
+    console.log(event);
+    const ref = this.dialogService.open(FormLocacionComponent, {
+      data: {
+          id: event
+      },
+      header: `Editar locación` ,
+      width: '70%',
+      height:'auto',
+      contentStyle: {"overflow": "auto"},
+      maximizable:true, 
+    });
+  
+    ref.onClose.subscribe(async (infoVehiculo) => {
+      this.getLocaciones();
+      
+    });
+  }
 
   deleteLocacion(event: any){}
 

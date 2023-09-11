@@ -295,7 +295,7 @@ async getLocaciones(){
   this.almacenesService.getLocaciones()
       .subscribe({
           next:(locaciones)=>{
-              //////////console.log('locaciones',locaciones);
+              console.log('locaciones',locaciones);
               this.locaciones = locaciones;
           },
           error:(err)=>{
@@ -374,7 +374,7 @@ getSaldosPedidos(){
            }
 
            ////////////////////console.log(pedidosClientes[0]);
-           ////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
+           console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
            this.pedidos = pedidosClientes;
            //////////console.log(this.pedidos);
           },
@@ -407,7 +407,7 @@ getAlmacenes(){
            
             }
             this.almacenes = almacenesTMP.filter(almacen=>almacen.CorreoNoti !=null && almacen.CorreoNoti!='');
-            //////////console.log(this.almacenes);
+            console.log('almacenes',this.almacenes);
             
           },
           error:(err)=>{
@@ -570,7 +570,7 @@ getAlmacenesEnPedidos(){
       }
     }
     this.almacenesPedidosCliente = almacenesPedidosCliente;
-    //////////console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
+    console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
 
 }
 
@@ -579,7 +579,7 @@ this.almacenesFiltrados = this.filter(event,this.almacenesPedidosCliente);
 }
 
 async seleccionarAlmacen(almacenSeleccionado:any){
-  //////////console.log(almacenSeleccionado);
+  console.log(almacenSeleccionado);
   //this.getPedidosClientePorAlmacen(almacenSeleccionado.code);
  
   if(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code).length>0){
@@ -1529,12 +1529,12 @@ async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
             U_NF_BODEGA: pedido.bodega
         }
 
-        console.log(lineaPedidoBloqueo);
+        //console.log(lineaPedidoBloqueo);
 
         this.sB1SLService.bloqueoPedidos(lineaPedidoBloqueo)
             .subscribe({
                 next:(result)=>{
-                  console.log(result);
+                  //console.log(result);
                 },
                 error:(err)=>{
                   console.error(err);
@@ -1712,14 +1712,16 @@ async emailsClientes(solicitud:any):Promise<void> {
 
 
 
-  //////console.log(turnosCliente);
+  console.log(turnosCliente);
 
   turnosCliente.forEach(async (cliente)=>{
-    ////console.log('email cliente', cliente.email);
-    if(cliente.email!='' && cliente.email!=null){
+   console.log('cliente', cliente);
+   // if(cliente.email!='' && cliente.email!=null){
 
-      let clienteTurno:any = solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === cliente.code);
-      clienteTurno.turnos = cliente.turnos;
+      let clienteTurno:any = solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === cliente.codigo);
+      console.log('solicitud.clientes',clienteTurno);
+
+      //clienteTurno.turnos = cliente.turnos;
       let objectMail = {
         to:'ralbor@nitrofert.com.co',
         //to:this.domain=='localhost'?'ralbor@nitrofert.com.co':cliente.email,
@@ -1730,14 +1732,25 @@ async emailsClientes(solicitud:any):Promise<void> {
                     solicitud_num:solicitud.id,
                     fechasolicitud: new Date(solicitud.createdAt).toLocaleDateString(),
                     locacion:this.almacenSeleccionado.label,
+                    direccion:this.locaciones.filter(locacion=>locacion.code === this.almacenSeleccionado.code).length>0?this.locaciones.filter(locacion=>locacion.code === this.almacenSeleccionado.code)[0].direccion==null?'':this.locaciones.filter(locacion=>locacion.code === this.almacenSeleccionado.code)[0].direccion:'',
+                    ubicacion:this.locaciones.filter(locacion=>locacion.code === this.almacenSeleccionado.code).length>0?this.locaciones.filter(locacion=>locacion.code === this.almacenSeleccionado.code)[0].ubicacion==null?'':this.locaciones.filter(locacion=>locacion.code === this.almacenSeleccionado.code)[0].ubicacion:'',
                     totalvehiculos:cliente.turnos.length,
                     totaltoneladas:(await this.functionsService.sumColArray(cliente.turnos,[{toneladas_turno:0}]))[0].toneladas_turno,
-                    cliente:clienteTurno
+                    cliente:{
+                      CardCode:clienteTurno.CardCode,
+                      CardName:clienteTurno.CardName,
+                      EmailAddress:clienteTurno.EmailAddress,
+                      FederalTaxID:clienteTurno.FederalTaxID,
+                      estado:clienteTurno.estado,
+                      id:clienteTurno.id,
+                      turnos:cliente.turnos,
+                      telefono:''
+                    }
         }         
       };
-      ////console.log('objectMail Cliente',objectMail);
-      ////console.log(await this.functionsService.sendMail(objectMail));
-    }
+      console.log('objectMail Cliente',objectMail);
+      console.log(await this.functionsService.sendMail(objectMail));
+  //  }
   });
 }
 
@@ -1838,8 +1851,8 @@ async emailsVendedores(solicitud:any): Promise<void>{
                     //cliente:solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === vendedor.code)
         }         
       };
-      ////console.log('objectMail vendedor',objectMail);
-      ////console.log(await this.functionsService.sendMail(objectMail));
+      console.log('objectMail vendedor',objectMail);
+      console.log(await this.functionsService.sendMail(objectMail));
     }
   });
 }
@@ -1864,8 +1877,10 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
     let totaltoneladas =0;
 
     solicitud.detalle_solicitud_turnos.forEach((turno:any)=>{
-      turno.fechacita =new Date(turno.fechacita).toLocaleDateString(),
-      turno.horacita= new Date(turno.horacita).toLocaleTimeString(),
+      let fechacita:any = new Date(turno.fechacita).toLocaleDateString(); 
+      let horacita:any = new Date(turno.horacita).toLocaleTimeString();
+      turno.fechacita = fechacita;
+      turno.horacita= horacita;
       turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
         if(!pedido.itemcode.toLowerCase().startsWith("sf")){
           totaltoneladas+= parseFloat(pedido.cantidad);
@@ -1891,8 +1906,8 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
                   
       }         
     };
-    ////console.log('objectMail Bodega',objectMail);
-    ////console.log(await this.functionsService.sendMail(objectMail));
+    console.log('objectMail Bodega',objectMail);
+    console.log(await this.functionsService.sendMail(objectMail));
 
   }
 
@@ -1904,8 +1919,10 @@ async emailTransp(solicitud:any): Promise<void>{
   let totaltoneladas =0;
 
   solicitud.detalle_solicitud_turnos.forEach((turno:any)=>{
-    turno.fechacita =new Date(turno.fechacita).toLocaleDateString(),
-    turno.horacita= new Date(turno.horacita).toLocaleTimeString(),
+    let fechacita:any = new Date(turno.fechacita).toLocaleDateString(); 
+    let horacita:any = new Date(turno.horacita).toLocaleTimeString();
+    turno.fechacita = fechacita;
+    turno.horacita= horacita;
     turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
       if(!pedido.itemcode.toLowerCase().startsWith("sf")){
         totaltoneladas+= parseFloat(pedido.cantidad);
@@ -1930,8 +1947,8 @@ async emailTransp(solicitud:any): Promise<void>{
                 
     }         
   };
-  ////console.log('objectMail trasporta sociedad',objectMail);
-  ////console.log(await this.functionsService.sendMail(objectMail));
+  console.log('objectMail trasporta sociedad',objectMail);
+  console.log(await this.functionsService.sendMail(objectMail));
 }
 
 async emailCreador(solicitud:any): Promise<void>{
@@ -1941,10 +1958,12 @@ async emailCreador(solicitud:any): Promise<void>{
 
   
   let totaltoneladas =0;
-
+  
   solicitud.detalle_solicitud_turnos.forEach((turno:any)=>{
-    turno.fechacita =new Date(turno.fechacita).toLocaleDateString(),
-    turno.horacita= new Date(turno.horacita).toLocaleTimeString(),
+    let fechacita:any = new Date(turno.fechacita).toLocaleDateString(); 
+    let horacita:any = new Date(turno.horacita).toLocaleTimeString();
+    turno.fechacita = fechacita;
+    turno.horacita= horacita;
     turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
       if(!pedido.itemcode.toLowerCase().startsWith("sf")){
         totaltoneladas+= parseFloat(pedido.cantidad);
@@ -1969,14 +1988,14 @@ async emailCreador(solicitud:any): Promise<void>{
                 
     }         
   };
-  ////console.log('objectMail usuario creador',objectMail);
-  ////console.log(await this.functionsService.sendMail(objectMail));
+  console.log('objectMail usuario creador',objectMail);
+  console.log(await this.functionsService.sendMail(objectMail));
 }
 
 async configEmails(dataSolicitud:any): Promise<void>{
     
     //////console.log(JSON.stringify(dataSolicitud));
-    ////console.log(dataSolicitud);
+    console.log(dataSolicitud);
 
     await this.emailsClientes(dataSolicitud);
     await this.emailsVendedores(dataSolicitud);

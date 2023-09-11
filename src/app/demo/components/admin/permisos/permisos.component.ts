@@ -298,32 +298,37 @@ export class PermisosComponent implements  OnInit{
               label:'Id', 
               type:'text',
               sizeCol:'6rem',
-              align:'center'
+              align:'center',
+              field:'id'
             },  
             'rol':{ 
                     label:'Rol', 
                     type:'text',
                     sizeCol:'6rem',
-                    align:'center'
+                    align:'center',
+                    field:'rol'
                   }, 
               'title': {
                     label:'Modulo',
                     type:'text', 
                     sizeCol:'6rem', 
-                    align:'center'
+                    align:'center',
+                    field:'title'
                   }, 
               'accion': {
                         label:'Acción',
                         type:'text', 
                         sizeCol:'6rem', 
-                        align:'justify'
+                        align:'justify',
+                        field:'accion'
                       },
               
               'valor':{
                 label:'¿Activo?',
                 type:'boolean', 
                 sizeCol:'6rem', 
-                align:'center'
+                align:'center',
+                field:'valor'
               }
           }
         ];
@@ -336,32 +341,37 @@ export class PermisosComponent implements  OnInit{
             label:'Id', 
             type:'text',
             sizeCol:'6rem',
-            align:'center'
+            align:'center',
+            field:'id'
           },  
           'nombre':{ 
                   label:'Usuario', 
                   type:'text',
                   sizeCol:'6rem',
-                  align:'center'
+                  align:'center',
+                  field:'nombre'
                 }, 
             'title': {
                   label:'Modulo',
                   type:'text', 
                   sizeCol:'6rem', 
-                  align:'center'
+                  align:'center',
+                  field:'title'
                 }, 
             'accion': {
                       label:'Acción',
                       type:'text', 
                       sizeCol:'6rem', 
-                      align:'justify'
+                      align:'justify',
+                      field:'accion'
                     },
             
             'valor':{
               label:'¿Activo?',
               type:'boolean', 
               sizeCol:'6rem', 
-              align:'center'
+              align:'center',
+              field:'valor'
             }
         }
       ];

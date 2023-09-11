@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { lastValueFrom } from 'rxjs';
+import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { ClientesService } from 'src/app/demo/service/clientes.service';
 import { RolesService } from 'src/app/demo/service/roles.service';
 import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
@@ -68,6 +69,11 @@ export class FormUsuarioComponent implements  OnInit {
   clientesSAPSeleccionados:any[] = [];
   clientesSAPFiltrados:any[] = [];
 
+  locaciones!:any[];
+  locacionesSeleccionados:any[] = [];
+  locacionesFiltrados:any[] = [];
+
+
   envioLineaUsuario:boolean = false;
 
   constructor(
@@ -78,6 +84,7 @@ export class FormUsuarioComponent implements  OnInit {
     private rolService: RolesService,
     private sb1SLService:SB1SLService,
     private clientesService:ClientesService,
+    private almacenesService:AlmacenesService,
     ){}
 
   async ngOnInit() {
@@ -85,6 +92,8 @@ export class FormUsuarioComponent implements  OnInit {
     
     this.getRoles();
     this.getClientes();
+    this.getLocaciones();
+
     if(this.config.data.id!=0){
       //Buscar información  del usuario seleccionado
       this.getInfoUsuario(this.config.data.id);
@@ -103,6 +112,11 @@ export class FormUsuarioComponent implements  OnInit {
     let rolesUsuario = await usuario.roles.map((rol: { code: any; id: any; name: any; nombre: any; label: any; })=>{ rol.code = rol.id; rol.name = rol.nombre; rol.label=rol.nombre; return rol})
     
     this.rolesSeleccionados = rolesUsuario;
+
+    let locacionesUsuario = await usuario.locaciones.map((locacion: { code: any; id: any; name: any; locacion: any; label: any; })=>{ locacion.code = locacion.id; locacion.name = locacion.locacion; locacion.label=locacion.locacion; return locacion})
+
+    this.locacionesSeleccionados = locacionesUsuario;
+
     console.log(usuario);
     let clientesUsuario = await usuario.clientes.map((cliente: { code: any; id: any; name: any; CardName: any; CardCode: any;label: any; })=>{ cliente.code = cliente.id; cliente.name = cliente.CardName; cliente.label=cliente.CardCode+' - '+cliente.CardName; return cliente})
     console.log(clientesUsuario);
@@ -171,10 +185,41 @@ export class FormUsuarioComponent implements  OnInit {
         this.clientesSAP = clientes;
   }
 
+  async getLocaciones(){
+    this.almacenesService.getLocaciones()
+        .subscribe({
+            next:async (locaciones)=>{
+                console.log(locaciones);
+                let dataLocaciones:any[] = [];
+                for(let locacion of locaciones){
+                  locacion.code = locacion.id,
+                  locacion.name = locacion.locacion,
+                  locacion.label = locacion.code+' - '+locacion.locacion 
+                }
+
+                this.locaciones = locaciones;
+                
+            },
+            error:(err)=>{
+              console.error(err);
+            }
+        });
+ }
+ 
   filtrarRoles(event:any){
     this.rolesFiltrados = this.filter(event,this.roles);
     
   }
+
+  filtrarLocacion(event:any){
+    this.locacionesFiltrados = this.filter(event,this.locaciones);
+    
+  }
+
+  seleccionaLocacion(opcionPadre:any){
+
+  }
+
 
   seleccionaRrol(opcionPadre:any){
 
@@ -233,7 +278,8 @@ export class FormUsuarioComponent implements  OnInit {
           nombrecompleto:this.nombrecompleto,
           numerotelefonico:this.numerotelefonico,
           roles:  this.rolesSeleccionados.map((rol)=>{return rol.code}),
-          clientes: this.clientesSAPSeleccionados.map((cliente)=>{ return {CardCode:cliente.CardCode,CardName:cliente.CardName,FederalTaxID:cliente.FederalTaxID,EmailAddress:cliente.EmailAddress}})
+          clientes: this.clientesSAPSeleccionados.map((cliente)=>{ return {CardCode:cliente.CardCode,CardName:cliente.CardName,FederalTaxID:cliente.FederalTaxID,EmailAddress:cliente.EmailAddress}}),
+          locaciones:this.locacionesSeleccionados.map((locacion)=>{ return locacion.id})
         }
         console.log(nuevoUsuario);
         this.usuariosService.create(nuevoUsuario)
@@ -266,7 +312,8 @@ export class FormUsuarioComponent implements  OnInit {
         nombrecompleto:this.nombrecompleto,
         numerotelefonico:this.numerotelefonico,
         roles:  this.rolesSeleccionados.map((rol)=>{return rol.code}),
-        clientes: this.clientesSAPSeleccionados.map((cliente)=>{ return {CardCode:cliente.CardCode,CardName:cliente.CardName,FederalTaxID:cliente.FederalTaxID,EmailAddress:cliente.EmailAddress}})
+        clientes: this.clientesSAPSeleccionados.map((cliente)=>{ return {CardCode:cliente.CardCode,CardName:cliente.CardName,FederalTaxID:cliente.FederalTaxID,EmailAddress:cliente.EmailAddress}}),
+        locaciones:this.locacionesSeleccionados.map((locacion)=>{ return locacion.id})
       }
 
       if(this.password!=''){

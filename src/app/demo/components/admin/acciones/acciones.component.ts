@@ -23,25 +23,29 @@ export class AccionesComponent implements  OnInit{
                                     label:'Id Acción', 
                                     type:'text',
                                     sizeCol:'6rem',
-                                    align:'center'
+                                    align:'center',
+                                    field:'id',
                                   }, 
                               'accion': {
                                     label:'Nombre',
                                     type:'text', 
                                     sizeCol:'6rem', 
-                                    align:'center'
+                                    align:'center',
+                                    field:'accion',
                                   }, 
                               'descripcion': {
                                         label:'Descripción',
                                         type:'text', 
                                         sizeCol:'6rem', 
-                                        align:'justify'
+                                        align:'justify',
+                                        field:'descripcion',
                                       }, 
                               'estado': {
                                                 label:'Estado',
                                                 type:'text', 
                                                 sizeCol:'6rem', 
-                                                align:'center'
+                                                align:'center',
+                                                field:'estado',
                                               }
                           }
                         ];

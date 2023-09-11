@@ -19,38 +19,44 @@ export class UsuariosComponent implements  OnInit{
                                     label:'Id', 
                                     type:'text',
                                     sizeCol:'6rem',
-                                    align:'center'
+                                    align:'center',
+                                    field:'id'
                                   }, 
                               'username': {
                                     label:'Usuario portal',
                                     type:'text', 
                                     sizeCol:'6rem', 
-                                    align:'center'
+                                    align:'center',
+                                    field:'username'
                                   }, 
                               'email': {
                                         label:'Email',
                                         type:'text', 
                                         sizeCol:'6rem', 
-                                        align:'justify'
+                                        align:'justify',
+                                        field:'email'
                                       },
                               
                               'nombrecompleto':{
                                 label:'Nombre usuario',
                                 type:'text', 
                                 sizeCol:'6rem', 
-                                align:'center'
+                                align:'center',
+                                field:'nombrecompleto'
                               },
                               'numerotelefonico':{
                                 label:'Número telefonico',
                                 type:'text', 
                                 sizeCol:'6rem', 
-                                align:'center'
+                                align:'center',
+                                field:'numerotelefonico'
                               },         
                               'estado': {
                                                 label:'Estado',
                                                 type:'text', 
                                                 sizeCol:'6rem', 
-                                                align:'center'
+                                                align:'center',
+                                                field:'estado'
                                               }
                           }
                         ];

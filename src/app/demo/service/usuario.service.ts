@@ -70,6 +70,27 @@ import { lastValueFrom } from 'rxjs';
         return  this.http.get<any>(url);
     }
 
+    async permisosModulo(modulo:string):Promise<any>{
+        const permisos$ = this.getPermisosModulo(modulo);
+        const permisos = await lastValueFrom(permisos$);
+        return permisos;
+    }
+
+    async permisoModuloAccion(modulo:string, accion:string):Promise<boolean>{
+  
+        //const modulo = this.router.url;
+        let permiso = false;
+        let permisosModulo = await this.permisosModulo(modulo);
+        console.log(permisosModulo);
+        console.log(permisosModulo.find((permisoModulo: { accion: string; })=>permisoModulo.accion === accion))
+        if(permisosModulo.find((permisoModulo: { accion: string; })=>permisoModulo.accion === accion) && permisosModulo.find((permisoModulo: { accion: string; })=>permisoModulo.accion === accion).valor){
+            permiso = true;
+        }
+        return permiso;
+      }
+
+
+
     getListadoUsuarios():Observable<any> {
         const url:string = `${this.api_url}/api/usuarios`;
         return  this.http.get<any>(url);

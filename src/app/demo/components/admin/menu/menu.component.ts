@@ -35,7 +35,8 @@ export class MenuComponent implements  OnInit{
                                         label:'Descripción',
                                         type:'text', 
                                         sizeCol:'6rem', 
-                                        align:'justify'
+                                        align:'justify',
+                                        field:'description',
                                       },
                               'ordernum':{
                                 label:'Nivel',

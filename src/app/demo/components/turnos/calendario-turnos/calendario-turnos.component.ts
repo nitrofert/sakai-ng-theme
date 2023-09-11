@@ -10,6 +10,10 @@ import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.service';
 import { FormTurnoComponent } from '../form-turno/form-turno.component';
 import { EstadosDealleSolicitud } from '../estados-turno.enum';
+import { UsuarioService } from 'src/app/demo/service/usuario.service';
+import { Router } from '@angular/router';
+
+import esLocale from '@fullcalendar/core/locales/es'
 
 @Component({
   selector: 'app-calendario-turnos',
@@ -43,6 +47,12 @@ export class CalendarioTurnosComponent implements OnInit {
   estadosTurno2:any;
 
   documentStyle = getComputedStyle(document.documentElement);
+  infousuario!:any;
+
+  
+
+  
+  permisosModulo!:any;
 
   constructor(
     private messageService: MessageService,
@@ -51,13 +61,56 @@ export class CalendarioTurnosComponent implements OnInit {
     private changeDetector: ChangeDetectorRef,
     private solicitudTurnoService:SolicitudTurnoService,
     public dialogService: DialogService,
+    public usuariosService:UsuarioService,
+    private router:Router,
 
     ){}
 
 
   ngOnInit(): void {
-    this.getAlmacenes();
+    this.getPermisosModulo();
+    
     this.estadosTurno2  = this.solicitudTurnoService.estadosTurno;
+  }
+
+  getPermisosModulo(){
+  
+    const modulo = this.router.url;
+    
+    this.usuariosService.getPermisosModulo(modulo)
+        .subscribe({
+            next: async (permisos)=>{
+              //////////console.log(permisos);
+              if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
+                this.router.navigate(['/auth/access']);
+              }
+  
+              if(permisos.find((permiso: { accion: string; })=>permiso.accion==='leer').valor===0){
+                this.router.navigate(['/auth/access']);
+              }
+              this.permisosModulo = permisos;
+              //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
+              //////////////////////console.log(this.multiplesClientes);
+  
+             
+              /*
+              this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
+              this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
+              this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
+              this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
+              */
+         
+              //////////console.log(this.condicion_tpt);
+              this.infousuario = await this.usuariosService.infoUsuario();
+              console.log(this.infousuario);
+              this.getAlmacenes();
+  
+            },
+            error:(err)=>{
+                console.error(err);
+            }
+        });
+        
   }
 
   getCalendar(){
@@ -65,11 +118,13 @@ export class CalendarioTurnosComponent implements OnInit {
     this.calendarOptions = {
       initialDate: new Date(),
       //plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+      locale:esLocale,
+      
       plugins: [timeGridPlugin, interactionPlugin],
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: '  timeGridWeek,timeGridDay'
+        right: 'timeGridWeek,timeGridDay'
       },
       editable: false,
       selectable: false,
@@ -95,7 +150,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
     let events:any[] = [];
     for(let turno of this.turnosLocalidad){
-     //console.log(turno);
+     ////console.log(turno);
       events.push({
         id:`${turno.id}`,
         title:JSON.stringify({placa:turno.vehiculo.placa,
@@ -111,7 +166,7 @@ export class CalendarioTurnosComponent implements OnInit {
       })
     }
 
-    //////console.log((events);
+    ////////console.log((events);
 
     this.ordenesdecargue = events;
 
@@ -213,6 +268,10 @@ export class CalendarioTurnosComponent implements OnInit {
     return this.documentStyle.getPropertyValue(`--${textColor}`);
   }
 
+  getLocaciones(){
+    //this.almacenesService.getLocacionesByUser();
+  }
+
 
   getAlmacenes(){
     this.almacenesService.getAlmacenes()
@@ -229,7 +288,7 @@ export class CalendarioTurnosComponent implements OnInit {
              
               }
               this.almacenes = almacenesTMP;
-             
+              console.log(this.almacenes);
               this.getLocalidades(this.almacenes);
             },
             error:(err)=>{
@@ -242,31 +301,59 @@ export class CalendarioTurnosComponent implements OnInit {
   getLocalidades(almacenes:any){
     
     let localidadesAlmacenes: any[] = [];
-    for(let almacen of almacenes){
-     
-      //if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.Location).length===0){
-      if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.locacion_codigo2).length===0){
+   
+    if(this.infousuario.locaciones.length ==0){
       
-        //TODO: Buscar datos del almacen en array de almacenes
-       
-        if(almacen.CorreoNoti!= null){
-          let data = {
-            code:almacen.locacion_codigo2, 
-            name:almacen.locacion2,
-            label:almacen.locacion2
-          }
-          localidadesAlmacenes.push(data);
-        }
+      for(let almacen of almacenes){
+     
+        //if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.Location).length===0){
+        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.locacion_codigo2).length===0){
         
+          //TODO: Buscar datos del almacen en array de almacenes
+         
+          if(almacen.CorreoNoti!= null){
+            let data = {
+              code:almacen.locacion_codigo2, 
+              name:almacen.locacion2,
+              label:almacen.locacion2
+            }
+            localidadesAlmacenes.push(data);
+          }
+          
+        }
+      }
+     
+    }else{
+      for(let almacen of this.infousuario.locaciones){
+        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.code).length===0){
+        
+          //TODO: Buscar datos del almacen en array de almacenes
+         
+          
+            let data = {
+              code:almacen.code, 
+              name:almacen.locacion,
+              label:almacen.code+' - '+almacen.locacion
+            }
+            localidadesAlmacenes.push(data);
+          
+          
+        }
       }
     }
+
     this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
+    console.log(this.localidades);
+    
+
+    
+    //console.log('localidades',this.localidades);
   }
 
   seleccionarLocalidad(localidad:any){
 
     this.getTurnosPorLocalidad(localidad.code)
-   //////console.log(localidad);
+   ////////console.log(localidad);
     
     //this.getCalendar();
     //this.showCalendar = true;
@@ -293,7 +380,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad)
         .subscribe({
               next:(turnosLocalidad)=>{
-                  ////console.log(turnosLocalidad);
+                  //////console.log(turnosLocalidad);
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                     this.displayModal = false;
@@ -320,7 +407,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////////console.log((arrayFiltrar);
+    ////////////console.log((arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -361,7 +448,7 @@ export class CalendarioTurnosComponent implements OnInit {
     let objectEvent = JSON.parse(clickInfo.event.title);
     let orden = clickInfo.event.id;
 
-    //////console.log((clickInfo)
+    ////////console.log((clickInfo)
 
     
     const ref = this.dialogService.open(FormTurnoComponent, {
@@ -378,7 +465,7 @@ export class CalendarioTurnosComponent implements OnInit {
     ref.onClose.subscribe(() => {
       this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       this.getCalendar();
-      //////console.log(("Refresh calendar");
+      ////////console.log(("Refresh calendar");
     });
 
 
@@ -390,7 +477,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   handleEventsDragStop(event:any){
-    //////console.log((event);
+    ////////console.log((event);
   }
 
   createEventId(){
