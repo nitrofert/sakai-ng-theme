@@ -45,13 +45,17 @@
 </div>
 <full-calendar *ngIf="showCalendar" [options]="calendarOptions">
     <ng-template #eventContent let-arg>
+        <div>
+           Truno : <strong>{{ arg.event.title | objecrString:'turnoid'   }}</strong> 
+           Placa : <strong>{{ arg.event.title | objecrString:'placa'   }}</strong> 
+        </div>
 
         <div>
             {{ (arg.event.title | objecrString:'cliente') | tooltips:20 }} 
         </div>
-        <div>
+        <!--<div>
             Placa: {{ arg.event.title | objecrString:'placa'   }}
-        </div>
+        </div>-->
         <!--<div>
             Placa: {{ arg.event.title | objecrString:'estado'   }}
         </div>-->

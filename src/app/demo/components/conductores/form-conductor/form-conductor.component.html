@@ -28,21 +28,30 @@
 
                 <div class="field col-12 md:col-6  ">
                     <span class="p-float-label">
-                        <input pInputText 
+                        <!--<input pInputText 
                                id="numerotelefonico" 
                                type="text" 
-                               [(ngModel)]="numerotelefonico" />
+                               [(ngModel)]="numerotelefonico" />-->
+                        <p-inputMask mask="999-999-9999" 
+                                     [(ngModel)]="numerotelefonico" 
+                                     placeholder="999-999-9999">
+                        </p-inputMask>
                         <label for="numerotelefonico"><h6>Número télefonico</h6></label>
                     </span>
                 </div>
                 <div class="field col-12 md:col-6 ">
                     <span class="p-float-label">
-                        <input pInputText 
+                        <!--<input pInputText 
                                id="numerocelular" 
                                type="text" 
                                 
                                [(ngModel)]="numerocelular" 
-                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaConductor && numerocelular==''}"/>
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaConductor && numerocelular==''}"/>-->
+                        <p-inputMask mask="999-999-9999" 
+                               [(ngModel)]="numerocelular" 
+                               placeholder="999-999-9999"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaConductor && numerocelular==''}">
+                        </p-inputMask>
                         <label for="numerocelular"><h6>Número celular</h6></label>
                     </span>
                 </div>

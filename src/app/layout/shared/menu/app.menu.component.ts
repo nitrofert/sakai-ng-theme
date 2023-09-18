@@ -366,24 +366,27 @@ export class AppMenuComponent implements OnInit {
 
         for(let menuPadre of menuPadres){
             let label=menuPadre.title;
-            let itemsMenu = [];    
-            for(let menuHijo of menuHijos){
-                if(menuHijo.iddad === menuPadre.id){
-                    if(menuHijo.visible){
-                        itemsMenu.push({
-                            label: menuHijo.title,
-                            icon: menuHijo.icon,
-                            routerLink: [menuHijo.url]
-                        })
+            let itemsMenu = [];
+            if(menuPadre.visible){
+                for(let menuHijo of menuHijos){
+                    if(menuHijo.iddad === menuPadre.id){
+                        if(menuHijo.visible){
+                            itemsMenu.push({
+                                label: menuHijo.title,
+                                icon: menuHijo.icon,
+                                routerLink: [menuHijo.url]
+                            })
+                        }
+                        
                     }
-                    
                 }
-            }
+                
+                model.push({
+                    label,
+                    items:itemsMenu
+                });
+            }    
             
-            model.push({
-                label,
-                items:itemsMenu
-            });
 
         }
 

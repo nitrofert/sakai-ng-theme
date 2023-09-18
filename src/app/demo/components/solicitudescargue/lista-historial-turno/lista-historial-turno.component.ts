@@ -36,6 +36,10 @@ export class ListaHistorialTurnoComponent implements OnInit {
   displayModal:boolean = false;
   loadingCargue:boolean =true;
 
+
+  estadosTurno2!:any;
+
+
   historialTurno:any = {
     header: [{
       'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
@@ -48,6 +52,8 @@ export class ListaHistorialTurnoComponent implements OnInit {
     }],
       data: []
   };
+
+  events!: any[];
 
   constructor( private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -62,7 +68,10 @@ export class ListaHistorialTurnoComponent implements OnInit {
 
 ngOnInit() {
   this.turnoId = this.config.data.id;
+  this.estadosTurno2  = this.solicitudTurnoService.estadosTurno;
   this.getTurno(this.turnoId);
+  
+  
 }
 
 getPermisosModulo(){
@@ -124,6 +133,9 @@ async getTurno(id: number){
       .subscribe({
             next:async (turno)=>{
                 console.log('turno',turno);
+
+               
+
                 this.turno = turno;
                 let historial = turno.detalle_solicitud_turnos_historial.map(  (linea: {
                   novedades: any;
@@ -139,7 +151,7 @@ async getTurno(id: number){
                     comentario =  this.functionsService.bufferToString(linea.comentario)           
                   }
                  
-
+                
                   return {
                     index:linea.id,
                     estado: linea.estado,
@@ -151,7 +163,9 @@ async getTurno(id: number){
                   }
                 });
 
-                console.log(historial);
+                
+
+                await this.setEventsTimeLine(historial);
 
                 this.historialTurno.data = historial;
                 this.loadingCargue = false;
@@ -166,6 +180,30 @@ async getTurno(id: number){
 
 }
 
+async setEventsTimeLine(data:any):Promise<void>{
 
+  console.log(data, this.estadosTurno2);
+
+  let events:any[] =[];
+  for(let event of data){
+    events.push({ status: event.estado, 
+                  date: `${(new Date(event.fecha)).toLocaleDateString()} ${(new Date(event.fecha+' '+event.hora)).toLocaleTimeString()}`,
+                  usuario:event.usuario,
+                  comentario:event.comentario,
+                  novedades:event.novedades, 
+                  icon: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).icon, 
+                  textColor: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).textColor, 
+                  backgroundColor:this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).backgroundColor,
+                  image: 'game-controller.jpg' })
+  }
+  /*this.events = [
+    { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
+    { status: 'Processing', date: '15/10/2020 14:00', icon: 'pi pi-cog', color: '#673AB7' },
+    { status: 'Shipped', date: '15/10/2020 16:15', icon: 'pi pi-shopping-cart', color: '#FF9800' },
+    { status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' }
+];*/
+
+  this.events = events;
+}
 
 }

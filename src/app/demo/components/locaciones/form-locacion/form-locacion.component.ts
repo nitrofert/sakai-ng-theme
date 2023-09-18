@@ -16,6 +16,7 @@ export class FormLocacionComponent implements  OnInit {
 
   locacionId!:number;
   locacion:string = "";
+  locacion2:string = "";
   locacionesSAP:any[] = [];
   locacionesMySQL:any[] = [];
 
@@ -274,6 +275,7 @@ grabarLocacion(){
         let data = {
           code: this.locacionSeleccionada.code,
           locacion: this.locacionSeleccionada.name,
+          locacion2: this.locacion2,
           email: this.email_bodega,
           direccion:this.direccion,
           ubicacion:this.ubicacion,

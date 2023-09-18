@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import {AccordionModule} from 'primeng/accordion';
 import { AnimateModule } from 'primeng/animate';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge'
 import {CardModule} from 'primeng/card';
 import { CalendarModule } from 'primeng/calendar';
@@ -43,6 +44,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { TableModule } from 'primeng/table';
 import {TabMenuModule} from 'primeng/tabmenu';
 import { TagModule } from 'primeng/tag';
+import { TimelineModule } from 'primeng/timeline';
 import { ToastModule } from 'primeng/toast';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import {TreeTableModule} from 'primeng/treetable';
@@ -57,6 +59,7 @@ import {InputMaskModule} from 'primeng/inputmask';
     AccordionModule,
     AnimateModule,
     AutoCompleteModule,
+    AvatarModule,
     BadgeModule,
     ButtonModule,
     BreadcrumbModule,
@@ -103,6 +106,7 @@ import {InputMaskModule} from 'primeng/inputmask';
     ToastModule,
     ToggleButtonModule,
     TooltipModule,
+    TimelineModule,
     TreeTableModule
   ]
 })

@@ -56,10 +56,14 @@
 
                 <div class="field col-12 md:col-6  ">
                     <span class="p-float-label">
-                        <input pInputText 
+                        <!--<input pInputText 
                                id="telefono_contacto" 
                                type="text" 
-                               [(ngModel)]="telefono_contacto" />
+                               [(ngModel)]="telefono_contacto" />-->
+                        <p-inputMask mask="999-999-9999" 
+                               [(ngModel)]="telefono_contacto" 
+                               placeholder="999-999-9999">
+                        </p-inputMask>
                         <label for="telefono_contacto"><h6>Número télefonico contacto</h6></label>
                     </span>
                 </div>

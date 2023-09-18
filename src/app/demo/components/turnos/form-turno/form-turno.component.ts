@@ -260,6 +260,9 @@ formHistorialTurno:boolean = false;
 
 domain:string = window.location.hostname;
 
+municipioentrega:string ="";
+sitioentrega:string = "";
+
 
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
@@ -354,7 +357,7 @@ domain:string = window.location.hostname;
                     novedad.label = novedad.novedad;
                   });
 
-                  //////console.log(novedades);
+                  console.log(novedades);
                   this.novedades = novedades;
               },
               error:(err)=>{
@@ -708,7 +711,7 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                  //////console.log('turno',turno);
+                  console.log('turno',turno);
                   this.turno = turno;
                   this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
                   this.localidad = turno.locacion;
@@ -760,6 +763,9 @@ async validarHoraCargue():Promise<boolean>{
                   this.loadingCargue = false;
                   this.estado = turno.estado;
                   this.remision = turno.remision;
+                  this.sitioentrega = turno.lugarentrega;
+                  this.municipioentrega = turno.municipioentrega;
+
 
                   if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
                     //////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
@@ -1218,6 +1224,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'cancelar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Cancelar turno "+this.turnoId;
+      this.novedad = true;
     
   }
   async ingresarTurno(){
@@ -1360,7 +1367,7 @@ async validarHoraCargue():Promise<boolean>{
                 data.peso_neto = this.peso_neto;
               
             }
-
+            console.log(data);
             this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
               .subscribe({
                     next:async (turno)=>{
@@ -1531,8 +1538,9 @@ async validarHoraCargue():Promise<boolean>{
                             
                 }         
               };
-              //////console.log('objectMail Cliente',objectMail);
-              //////console.log(await this.functionsService.sendMail(objectMail));
+              console.log('objectMail Cliente',objectMail);
+              //console.log(await this.functionsService.sendMail(objectMail));
+              await this.functionsService.sendMail(objectMail)
 
             });
             
@@ -1644,9 +1652,9 @@ async validarHoraCargue():Promise<boolean>{
                         
             }         
           };
-          //////console.log('objectMail vendedor',objectMail);
+          console.log('objectMail vendedor',objectMail);
           //////console.log(await this.functionsService.sendMail(objectMail));
-
+          await this.functionsService.sendMail(objectMail)
         });
 
 
@@ -1686,8 +1694,9 @@ async validarHoraCargue():Promise<boolean>{
                     
         }         
       };
-      //////console.log('objectMail Bodega',objectMail);
+      console.log('objectMail Bodega',objectMail);
       //////console.log(await this.functionsService.sendMail(objectMail));
+      await this.functionsService.sendMail(objectMail)
   
     }
   }
@@ -1708,6 +1717,7 @@ async validarHoraCargue():Promise<boolean>{
     };
     //////console.log('objectMail Transporta sociedada',objectMail);
     //////console.log(await this.functionsService.sendMail(objectMail));
+    await this.functionsService.sendMail(objectMail)
   }
 
   async emailCreador(turno:any,mensaje:string): Promise<void>{
@@ -1728,6 +1738,7 @@ async validarHoraCargue():Promise<boolean>{
     };
     //////console.log('objectMail usuario creado',objectMail);
     //////console.log(await this.functionsService.sendMail(objectMail));
+    await this.functionsService.sendMail(objectMail)
 
   }
 
@@ -1736,13 +1747,13 @@ async validarHoraCargue():Promise<boolean>{
 
     console.log(dataTurno,mensaje);
 
-    await this.emailsClientes(dataTurno,mensaje);
-    await this.emailsVendedores(dataTurno,mensaje);
-    await this.emailBodegaEstado(dataTurno,mensaje);
+    //await this.emailsClientes(dataTurno,mensaje);
+    //await this.emailsVendedores(dataTurno,mensaje);
+    //await this.emailBodegaEstado(dataTurno,mensaje);
     if(this.condicion_tpt==="TRANSP"){
-      await this.emailTransp(dataTurno,mensaje);
+      //await this.emailTransp(dataTurno,mensaje);
     }
-    await this.emailCreador(dataTurno,mensaje);
+    //await this.emailCreador(dataTurno,mensaje);
     
    
 

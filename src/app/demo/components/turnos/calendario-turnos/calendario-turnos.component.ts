@@ -155,7 +155,8 @@ export class CalendarioTurnosComponent implements OnInit {
         id:`${turno.id}`,
         title:JSON.stringify({placa:turno.vehiculo.placa,
                               cliente:turno.detalle_solicitud_turnos_pedido[0].CardName,
-                              estado:turno.estado
+                              estado:turno.estado,
+                              turnoid:turno.id
                             }),
           date: new Date(`${turno.fechacita}${turno.horacita.substring(10)}`),
           allDay: false,

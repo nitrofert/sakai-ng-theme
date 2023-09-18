@@ -1749,7 +1749,8 @@ async emailsClientes(solicitud:any):Promise<void> {
         }         
       };
       console.log('objectMail Cliente',objectMail);
-      console.log(await this.functionsService.sendMail(objectMail));
+      //console.log(await this.functionsService.sendMail(objectMail));
+      await this.functionsService.sendMail(objectMail)
   //  }
   });
 }
@@ -1852,7 +1853,8 @@ async emailsVendedores(solicitud:any): Promise<void>{
         }         
       };
       console.log('objectMail vendedor',objectMail);
-      console.log(await this.functionsService.sendMail(objectMail));
+      //console.log(await this.functionsService.sendMail(objectMail));
+      await this.functionsService.sendMail(objectMail)
     }
   });
 }
@@ -1907,7 +1909,8 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
       }         
     };
     console.log('objectMail Bodega',objectMail);
-    console.log(await this.functionsService.sendMail(objectMail));
+    //console.log(await this.functionsService.sendMail(objectMail));
+    await this.functionsService.sendMail(objectMail)
 
   }
 
@@ -1948,7 +1951,8 @@ async emailTransp(solicitud:any): Promise<void>{
     }         
   };
   console.log('objectMail trasporta sociedad',objectMail);
-  console.log(await this.functionsService.sendMail(objectMail));
+  //console.log(await this.functionsService.sendMail(objectMail));
+  await this.functionsService.sendMail(objectMail)
 }
 
 async emailCreador(solicitud:any): Promise<void>{
@@ -1989,7 +1993,9 @@ async emailCreador(solicitud:any): Promise<void>{
     }         
   };
   console.log('objectMail usuario creador',objectMail);
-  console.log(await this.functionsService.sendMail(objectMail));
+  //console.log(await this.functionsService.sendMail(objectMail));
+  await this.functionsService.sendMail(objectMail)
+
 }
 
 async configEmails(dataSolicitud:any): Promise<void>{

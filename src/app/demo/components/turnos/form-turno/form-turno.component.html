@@ -4,28 +4,29 @@
 	<div class="col-12">
 		<div class="card">
             <div class="p-fluid p-formgrid grid">
-                <div class="field col-12 md:col-6  mt-3">
+                <p-divider align="left" class="field col-12">
+                    <div class="inline-flex align-items-center">
+                        <i class="pi pi-building mr-2"></i>
+                        <b>Cliente</b>
+                    </div>
+                </p-divider>
+                <div class="field col-12">
                     <span class="p-float-label">
                         <input pInputText 
                                id="cliente" 
                                type="text" 
                                disabled 
                                [value]="cliente" />
-                        <label for="cliente"><h6>Cliente</h6></label>
+                        <label for="cliente"><h6>Nombre</h6></label>
                     </span>
                 </div>
-                <div class="field col-12 md:col-6  mt-3">
-                    <span class="p-float-label">
-                        
-                        <input pInputText 
-                               id="localidad" 
-                               type="text" 
-                               disabled 
-                               [value]="nombreLocalidad" />
-                        <label for="localidad"><h6>Localidad</h6></label>
-                    </span>
-                </div>
-                
+               
+                <p-divider align="left" class="field col-12">
+                    <div class="inline-flex align-items-center">
+                        <i class="pi pi-building mr-2"></i>
+                        <b>Empresa de transporte</b>
+                    </div>
+                </p-divider>
 
                 <div class="field col-12">
                     <span class="p-float-label">
@@ -52,7 +53,7 @@
 
                                        
                         </p-autoComplete>
-                        <label for="vhiculo"><h6>Transportadora</h6></label>
+                        <label for="vhiculo"><h6>Nombre</h6></label>
                     </span>
                 </div>
 
@@ -207,6 +208,18 @@
                     </div>
                 </p-divider>
 
+                <div class="field col-12">
+                    <span class="p-float-label">
+                        
+                        <input pInputText 
+                               id="localidad" 
+                               type="text" 
+                               disabled 
+                               [value]="nombreLocalidad" />
+                        <label for="localidad"><h6>Localidad</h6></label>
+                    </span>
+                </div>
+
                 <div class="field col-12 md:col-6 ">
                     <span class="p-float-label">
                         <p-calendar inputId="fechacargue" 
@@ -233,6 +246,28 @@
                         <label for="horacargue"><h6>Hora estimada del cargue</h6></label>
                     </span>
                     
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                                   id="sitioentrega" 
+                                   type="text" 
+                                   disabled
+                                   [value]="sitioentrega"/>
+                        <label for="sitioentrega"><h6>Sitio de entrega</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                                   id="municipioentrega" 
+                                   type="text" 
+                                   disabled
+                                   [value]="municipioentrega"/>
+                        <label for="municipioentrega"><h6>Municipio de entrega</h6></label>
+                    </span>
                 </div>
 
                 <div class="field col-12 md:col-4">

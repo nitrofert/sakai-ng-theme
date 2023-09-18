@@ -21,3 +21,34 @@
         </div>
     </div>
 </div>
+
+
+<div class="card">
+    <p-timeline [value]="events" align="alternate" styleClass="customized-timeline">
+        <ng-template pTemplate="marker" let-event>
+            <p-avatar [icon]="event.icon" styleClass="mr-2 custom-marker shadow-2" [style]="{'background-color': 'var(--'+event.backgroundColor+')', 'color': 'var(--'+event.textColor+')'}" shape="circle"></p-avatar>
+            <!--<span class="custom-marker shadow-2" [style.backgroundColor]="event.color">
+                <i [ngClass]="event.icon"></i>
+            </span>-->
+        </ng-template>
+        <ng-template pTemplate="content" let-event>
+            <p-card [header]="event.status" [subheader]="event.date" >
+                
+                <div *ngIf="event.novedades.length>0">
+                    <div class="font-medium text-700 line-height-1"> <span class="font-bold">Novedades</span></div>
+                    <ul class="list-none">
+                        <li *ngFor="let novedad of event.novedades" class="list-none">
+                            {{ novedad }}
+                        </li>
+                    </ul>
+                </div>
+                <div *ngIf="event.comentario" class="font-medium text-700 line-height-1"> <span class="font-bold">Comentario</span></div>
+                <p *ngIf="event.comentario">
+                    {{ event.comentario}}
+                </p>
+                <span> <span class="font-bold">Realizado por:</span> {{event.usuario}}</span>
+                
+            </p-card>
+        </ng-template>
+    </p-timeline>
+</div>
