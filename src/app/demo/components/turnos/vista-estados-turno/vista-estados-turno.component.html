@@ -1,0 +1,48 @@
+<!--<div  class="grid">-->
+    <div class="col-12">
+		<div class="card ">
+            <div class="grid">
+                <div class="col-12 flex justify-content-between align-items-center align-content-center flex-wrap">
+                    <p-calendar [(ngModel)]="fechaEstados" [showIcon]="true" dateFormat="DD, dd MM yy" ngClass="col-11" styleClass="col-11" (ngModelChange)="seleccionarFecha()"></p-calendar>
+                    
+                    <p-button icon="pi pi-window-maximize" styleClass="p-button-raised p-button-text "></p-button>
+                    
+                </div>
+                <div *ngFor="let estado of estadosTurno"  class="col-12  xl:col-4">
+                    <div class="card mb-1" [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')' }">
+                        <div class="flex justify-content-between mb-3">
+                            <div>
+                                <span class="block  font-medium mb-3">{{estado.name}}</span>
+                                <div class=" font-medium text-xl">{{ estado.total  }} <span>{{ estado.total | i18nPlural: turnosPlural}}</span></div>
+                            </div>
+                            <div class="flex align-items-center justify-content-center border-1 border-round" [style]="{'boder-color':'var(--'+estado.textColor+')'}" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                                <i [class]="estado.icon"></i>
+                            </div>
+                        </div>
+                        <!--<span class="text-green-500 font-medium">24 new </span>
+                        <span class="text-500">since last visit</span>-->
+                    </div>
+                    <div class="card mb-0" [style]="{'boder-color':'var(--'+estado.backgroundColor+')'}" >
+
+                        <div *ngIf="estado.turnos.length==0; then thenBlock else elseBlock"></div>
+                        <ng-template #thenBlock>
+                            <div class="text-center">No exiten turnos</div>
+                        </ng-template>
+                        <ng-template #elseBlock>
+                            <p-card *ngFor="let turno of estado.turnos" [header]="'Turno '+turno.id" [subheader]="turno.detalle_solicitud_turnos_pedido[0].CardName" class=" mb-2">
+                                <div class="mb-2"><span class="font-bold">Placa:</span> {{turno.vehiculo.placa}}</div>
+                                <div class="mb-2"><span class="font-bold">Conductor:</span> {{turno.conductor.nombre | titlecase}}</div>
+                                <div class="mb-2"><span class="font-bold">Transportadora:</span> {{turno.transportadora.nombre | titlecase}}</div>
+                                <div *ngIf="turno.remision" class="mb-2"><span class="font-bold">Remisión:</span> {{turno.remision }}</div>
+                                <ng-template pTemplate="footer">
+                                    Hora cita: {{ turno.horacita | date:'mediumTime' }}
+                                </ng-template>
+                            </p-card>
+                        </ng-template>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--</div>-->

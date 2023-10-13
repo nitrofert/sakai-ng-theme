@@ -9,6 +9,7 @@ import { SB1XEService } from 'src/app/demo/service/sb1xe.service';
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
 import { MenuService } from 'src/app/layout/shared/menu/app.menu.service';
 import { FormFacturaComponent } from '../form-factura/form-factura.component';
+import { ClientesService } from 'src/app/demo/service/clientes.service';
 
 @Component({
   selector: 'app-listado-facturas',
@@ -47,7 +48,7 @@ export class ListadoFacturasComponent  implements  OnInit{
   showBtnDelete:boolean = false;
   toolTipShowBtnDelete:string = "Anular";
   loading:boolean = true;
-  globalFilterFields:any[]= ['DocNum','NumAtCard','PEDIDO','DocDate','DocDueDate','Dias de vencimiento','PymntGroup','DocTotal'];
+  globalFilterFields:any[]= ['DocNum','NumAtCard','PEDIDO','TIPOFAC','DocDate','DocDueDate','Dias de vencimiento','PymntGroup','DocTotal','creditCompany'];
   selectedItem:any[] = []; 
   columnsTable:number=this.globalFilterFields.length+2; 
   hoy:Date = new Date();
@@ -58,6 +59,10 @@ export class ListadoFacturasComponent  implements  OnInit{
   clientesFiltrados:any[] = [];
   facturasCliente:any[] = [];
   facturasClienteAgrupada:any[] =[];
+
+  empresasCredito!:any[];
+
+
 
   rangoFechas:Date[] = [];
   @ViewChild('dateFilter') dateFilter!: any;
@@ -72,7 +77,8 @@ export class ListadoFacturasComponent  implements  OnInit{
               private usuariosService:UsuarioService,
               private usuarioService: UsuarioService,
               private sb1XEService:SB1XEService,
-              private functionsService:FunctionsService){}
+              private functionsService:FunctionsService,
+              private clientesService:ClientesService){}
 
 
   async ngOnInit() {
@@ -83,7 +89,10 @@ export class ListadoFacturasComponent  implements  OnInit{
     this.info_usuario = await this.usuarioService.infoUsuario();
     this.rangoFechas = [await this.functionsService.dateAdd(new Date(),-3,'months'),new Date() ];
     this.getClientesUsuario();
-    ////console.log(await this.functionsService.dateAdd(new Date(),3,'months'));
+    //////console.log(await this.functionsService.dateAdd(new Date(),3,'months'));
+
+    this.empresasCredito = [{name:'Nitrofert', image: 'https://nitrofert.com.co/wp-content/uploads/2022/09/NITROFERT.png'},
+                            {name:'Nitrocredit', image: 'https://nitrofert.com.co/wp-content/uploads/2023/07/NITROCRE.png'}];
 
     
   }
@@ -93,7 +102,7 @@ export class ListadoFacturasComponent  implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: (permisos)=>{
-             // //console.log(permisos);
+             // ////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -107,6 +116,8 @@ export class ListadoFacturasComponent  implements  OnInit{
               this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
               this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
               this.showBtnView = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='leer').valor;
+
+              
             },
             error:(err)=>{
                 console.error(err);
@@ -116,7 +127,7 @@ export class ListadoFacturasComponent  implements  OnInit{
 }
 
 async getClientesUsuario(){
-  if(this.info_usuario.clientes.length>0){
+  /*if(this.info_usuario.clientes.length>0){
     let clientes:any =[];
     for(let cliente of this.info_usuario.clientes){
       cliente.label = `${cliente.CardName} - ${cliente.FederalTaxID}`;
@@ -125,14 +136,47 @@ async getClientesUsuario(){
 
     this.clientes = clientes;
     this.clienteSeleccionado = this.clientes[0];
+    
 
     this.getFacturasCliente();
 
-  }
+  }*/
+
+  let clientes:any[];
+        /**
+         * Buscar permiso de multiples clientes
+         */
+
+        if(await this.usuarioService.permisoModuloAccion('/dashboard-cliente','Seleccionar multiples clientes')){
+            /**
+             * Obtener array de clientes
+             */
+            clientes= await this.clientesService.infoClientes();
+        }else{
+            /**
+             * Obtener clientes asociados a usuario
+             */
+            clientes = this.info_usuario.clientes;
+        }
+        /**
+         * Si existen clientes configurar dropdoen de clientes y mostrar dashboard de cliente
+         */
+
+        if(clientes.length > 0){
+            for(let cliente of clientes){
+                //cliente.code = cliente.CardCode;
+                //cliente.name =  cliente.CardName;
+                cliente.label =  `${cliente.CardName} - ${cliente.FederalTaxID}`;
+            }
+            this.clientes = clientes;
+            this.clienteSeleccionado = this.clientes[0];
+            this.getFacturasCliente();
+        }
+
 }
 
 async seleccionarCliente(clienteSeleccionado:any){
-  ////console.log(clienteSeleccionado);
+  //////console.log(clienteSeleccionado);
   //let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
   //this.setDashboardCliente(saldosClienteSeleccionado);
   this.loading = true;
@@ -150,16 +194,20 @@ async getFacturasCliente(){
 
   facturasCliente =(await this.functionsService.objectToArray(facturasCliente));
   this.facturasCliente = facturasCliente;
-  console.log('facturasCliente',facturasCliente);
+  //console.log('facturasCliente',facturasCliente);
 
   let facturasClienteAgrupada = await  this.functionsService.groupArray(facturasCliente,'DocNum');
 
-  ////console.log(facturasPorPagarAgrupada);
+  //////console.log(facturasPorPagarAgrupada);
 
-  ////console.log(Math.ceil(await this.functionsService.dateDif(new Date(), new Date('2023-06-15'), 'days')));
+  //////console.log(Math.ceil(await this.functionsService.dateDif(new Date(), new Date('2023-06-15'), 'days')));
 
   for(let linea of facturasClienteAgrupada){
-      linea.diasvencimiento = Math.ceil(await this.functionsService.dateDif(new Date(), new Date(linea.DocDueDate), 'days'));
+    //console.log(linea.DocDueDate);
+    //console.log(new Date(linea.DocDueDate));
+    linea.diasvencimiento = Math.ceil(await this.functionsService.dateDif(new Date(), new Date(linea.DocDueDate), 'days'));
+    linea.creditCompany = linea.LIQUITECH=='NO'?'Nitrofert':'Nitrocredit';
+    //console.log(linea.diasvencimiento);
   }
 
   console.log('facturasClienteAgrupada',facturasClienteAgrupada);
@@ -180,13 +228,13 @@ filtrarCliente(event:any){
       cliente.label = `${cliente.CardName} - ${cliente.FederalTaxID}`;
       clientesAfiltrar.push(cliente);
   }*/
-  this.clientesFiltrados = this.filter(event,clientesAfiltrar);
+  this.clientesFiltrados = this.filter2(event,clientesAfiltrar);
  
 }
 
-filter(event: any, arrayFiltrar:any[]) {
+filter2(event: any, arrayFiltrar:any[]) {
 
-  //////////console.log(arrayFiltrar);
+  ////////////console.log(arrayFiltrar);
   const filtered: any[] = [];
   const query = event.query;
   for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -198,20 +246,24 @@ filter(event: any, arrayFiltrar:any[]) {
   return filtered;
 }
 
+
+
+
+
 cambioFecha(){
   
 
   if (this.rangoFechas[1]) { // If second date is selected
     this.loading = true;
     this.dateFilter.hideOverlay();
-    //console.log(this.rangoFechas);
+    ////console.log(this.rangoFechas);
     this.getFacturasCliente();
     this.dateFilter.hideOverlay()
   };
 }
 
 verFactura(event:any){
-  //console.log(event);
+  ////console.log(event);
 }
 
 newAccion(){
@@ -223,9 +275,9 @@ editAccion(){
 }
 
 viewAccion(){
-  ////console.log(this.selectedItem);
+  //////console.log(this.selectedItem);
   let detalleFactura = this.facturasCliente.filter(factura => factura.DocNum === this.selectedItem[0].DocNum);
-  //console.log(this.rangoFechas);
+  ////console.log(this.rangoFechas);
 
   const ref = this.dialogService.open(FormFacturaComponent, {
     data: {
@@ -241,7 +293,7 @@ viewAccion(){
 
   ref.onClose.subscribe(() => {
     //this.getVehiculos();
-    ////////console.log("Refresh calendar");
+    //////////console.log("Refresh calendar");
   });
 }
 
@@ -249,11 +301,12 @@ deleteAccion(){}
 
 
 exportExcel() {
+  //console.log("ok")
   import("xlsx").then(xlsx => {
-      const worksheet = xlsx.utils.json_to_sheet(this.dataTable);
+      const worksheet = xlsx.utils.json_to_sheet(this.facturasClienteAgrupada);
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, `${this.nameExport}`);
+      this.saveAsExcelFile(excelBuffer, `facturas`);
   });
 }  
 

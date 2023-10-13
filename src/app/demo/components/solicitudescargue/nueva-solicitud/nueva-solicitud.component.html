@@ -316,6 +316,49 @@
                                 <label for="cliente"><h6>Seleccione un cliente</h6></label>
                             </span>
                         </div>
+
+                        <div class="field col-12 md:col-6 ">
+                            <span class="p-float-label">
+                                <!--<input type="text" 
+                                       inputId="municipioentrega" 
+                                       [(ngModel)]="municipioentrega" 
+                                       pInputText 
+                                       
+                                       [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && municipioentrega==''}">--> 
+                                       <p-autoComplete id="municipios" 
+                                                [(ngModel)]="municipioSeleccionado" 
+                                                [suggestions]="municipiosFiltrados" 
+                                                (completeMethod)="filtrarMunicipio($event)" 
+                                                field="label" 
+                                                [dropdown]="true"
+                                                (onSelect)="seleccionarMunicipio()"
+                                                [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && municipioSeleccionado.length==0}">
+
+                                                <ng-template let-value pTemplate="selectedItem">
+                                                    <span style="font-size:18px">{{value.label}}</span>
+                                                </ng-template>
+
+                                               
+                                </p-autoComplete>
+                                <label for="email"><h6>Municipio de entrega</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-12 md:col-6">
+                            
+                            <span class="p-float-label">
+                                
+                                    <input type="text" 
+                                       inputId="sitioentrega" 
+                                       [(ngModel)]="sitioentrega" 
+                                       pInputText 
+                                       maxlength="100"
+                                       [ngClass]="{'ng-invalid ng-dirty' : (envioLineaCarguePedido && sitioentrega=='') }">
+                                       
+                                
+                                <label for="sitioentrega"><h6>Sitio de entrega</h6></label>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -387,7 +430,7 @@
                                                 field="label" 
                                                 [dropdown]="true"
                                                 (onSelect)="seleccionarTransportadora(transportadoraSeleccionada)"
-                                                [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && transportadoraSeleccionada.length==0}">
+                                                [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && transportadoraSeleccionada.length==0}">
 
                                                 <ng-template let-value pTemplate="selectedItem">
                                                     <span style="font-size:18px">{{value}}</span>
@@ -414,7 +457,7 @@
                                                 field="label" 
                                                 [dropdown]="true"
                                                 (onSelect)="seleccionarVehiculo(vehiculoSeleccionado)"
-                                                [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado.length==0}">
+                                                [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && vehiculoSeleccionado.length==0}">
 
                                                 <ng-template let-value pTemplate="selectedItem">
                                                     <span style="font-size:18px">{{value}}</span>
@@ -434,7 +477,7 @@
                         </div>
                         <div class="field col-12 md:col-4 ">
                             <span class="p-float-label">
-                                <input pInputText id="clase" type="text" disabled [value]="!vehiculoSeleccionado.clase?'':vehiculoSeleccionado.clase.tipo" [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado.length==0}" />
+                                <input pInputText id="clase" type="text" disabled [value]="!vehiculoSeleccionado.clase?'':vehiculoSeleccionado.clase.tipo" [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && vehiculoSeleccionado.length==0}" />
                                 <label for="clase"><h6>Clase vehículo</h6></label>
                             </span>
                         </div>
@@ -448,7 +491,7 @@
                                            disabled 
                                            pInputText 
                                            [(ngModel)]="capacidadVehiculo" 
-                                           [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado.length==0}"> 
+                                           [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && vehiculoSeleccionado.length==0}"> 
                                     <label for="capacidadvh"><h6>Capacidad vehículo</h6></label>
                                 </span>
                                 <span class="p-inputgroup-addon">
@@ -466,7 +509,7 @@
                                            disabled 
                                            pInputText 
                                            [(ngModel)]="capacidadDisponibleVehiculo" 
-                                           [ngClass]="{'ng-invalid ng-dirty' : (envioLineaCarguePedido && vehiculoSeleccionado.length==0) || (envioLineaCarguePedido && cantidadCargue>capacidadDisponibleVehiculo)}"> 
+                                           [ngClass]="{'ng-invalid ng-dirty' : (envioAdicionVehiculo && vehiculoSeleccionado.length==0) || (envioAdicionVehiculo && cantidadCargue>capacidadDisponibleVehiculo)}"> 
                                     <label for="cpadisponiblevh"><h6>Capacidad disponible</h6></label>
                                 </span>
                                 <span class="p-inputgroup-addon">
@@ -484,7 +527,7 @@
                                                 field="label" 
                                                 [dropdown]="true"
                                                 (onSelect)="seleccionarConductor(conductorSeleccionado)"
-                                                [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && conductorSeleccionado.length==0}">
+                                                [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && conductorSeleccionado.length==0}">
                                 </p-autoComplete>
                                 <label for="conductor"><h6>Seleccione un conductor</h6></label>
                             </span>
@@ -530,29 +573,9 @@
                                 </span>
                         </div>
 
-                        <div class="field col-12 ">
-                            <span class="p-float-label">
-                                <input type="text" 
-                                       inputId="sitioentrega" 
-                                       [(ngModel)]="sitioentrega" 
-                                       pInputText 
-                                       
-                                       [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && sitioentrega==''}"> 
-                                <label for="email"><h6>Sitio de entrega</h6></label>
-                            </span>
-                        </div>
+                       
 
-                        <div class="field col-12 ">
-                            <span class="p-float-label">
-                                <input type="text" 
-                                       inputId="municipioentrega" 
-                                       [(ngModel)]="municipioentrega" 
-                                       pInputText 
-                                       
-                                       [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && municipioentrega==''}"> 
-                                <label for="email"><h6>Municipio de entrega</h6></label>
-                            </span>
-                        </div>
+                        
 
                         <div class="field col-12 ">
                             <span class="p-float-label">

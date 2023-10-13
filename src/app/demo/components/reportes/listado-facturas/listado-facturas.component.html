@@ -23,7 +23,7 @@
 
                         <div class="py-2">
                             <div *ngIf="info_usuario && info_usuario.clientes.length==1" class="font-medium">{{ info_usuario.clientes[0].CardName }} - {{ info_usuario.clientes[0].FederalTaxID }}</div>
-                            <div *ngIf="info_usuario && info_usuario.clientes.length>1" >
+                            <div *ngIf="(info_usuario && info_usuario.clientes.length>1) ||(info_usuario && info_usuario.clientes.length==0 && clientes.length>1 )" >
                                 <!--<span class="p-float-label">-->
                                     <p-autoComplete id="clientes" 
                                                     [(ngModel)]="clienteSeleccionado" 
@@ -148,6 +148,13 @@
 
                             <th>
                                 <div class="flex justify-content-between align-items-center">
+                                    Tipo
+                                    <p-columnFilter type="text" field="TIPOFAC" display="menu" placeholder="Buscar por tipo documento"></p-columnFilter>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div class="flex justify-content-between align-items-center">
                                     No. Pedido venta
                                     <p-columnFilter type="text" field="PEDIDO" display="menu" placeholder="Buscar por No. Pedido venta"></p-columnFilter>
                                 </div>
@@ -206,7 +213,24 @@
 
                             <th>
                                 <div class="flex justify-content-between align-items-center">
-
+                                    Empresa credito
+                                    <p-columnFilter field="creditCompany" matchMode="equals" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" >
+                                        <ng-template pTemplate="header">
+                                            <div class="px-3 pt-3 pb-0">
+                                                <span class="font-bold">Seleccionar empresa</span>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                            <p-dropdown [ngModel]="value" [options]="empresasCredito" placeholder="Cualquiera" (onChange)="filter($event.value)" optionValue="name" optionLabel="name">
+                                                <ng-template let-option pTemplate="item">
+                                                    <div class="inline-block vertical-align-middle">
+                                                        <img [alt]="option.label" src="{{ option.image }}" width="50" class="vertical-align-middle" />
+                                                       
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </ng-template>
+                                    </p-columnFilter>
                                 </div>
                             </th>
                         </tr>
@@ -224,13 +248,16 @@
                                 {{line.NumAtCard}}
                             </td>
                             <td>
+                                {{line.TIPOFAC}}
+                            </td>
+                            <td>
                                 {{line.PEDIDO}}
                             </td>
                             <td>
-                                {{line.DocDate | date: 'shortDate'}}
+                                {{line.DocDate | date: 'dd/MM/yyyy'}}
                             </td>
                             <td>
-                                {{ (line.LIQUITECH=='NO'?line.DocDueDate:line.FECHANEGOLIQUITECH) | date: 'shortDate'}}
+                                {{ (line.LIQUITECH=='NO'?line.DocDueDate:line.FECHANEGOLIQUITECH) | date: 'dd/MM/yyyy'}}
                             </td>
 
                             <td>

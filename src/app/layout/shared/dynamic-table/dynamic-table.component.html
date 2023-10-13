@@ -110,7 +110,7 @@
 						<td *ngIf="viewCheckselectedItem">
                             <p-tableCheckbox [value]="itemData" [id]="'selectRow'+itemData['index']" ></p-tableCheckbox>
                         </td>
-						<td *ngFor="let key of objectKeys(itemData)" [style]="'min-width: '+headersTable[0][key].sizeCol+'em;'" pEditableColumn>
+						<td *ngFor="let key of objectKeys(itemData)" [style]="'min-width: '+headersTable[0][key].sizeCol+';'" pEditableColumn>
 							
 
 							<div *ngIf="!headersTable[0][key].editable" [style]="'text-align:'+headersTable[0][key].align+';'">
@@ -151,13 +151,14 @@
 											[type]="headersTable[0][key].type" 
 											[(ngModel)]="itemData[key]" 
 											class="w-full" 
-											[style]="'min-width: '+headersTable[0][key].sizeCol+'em;'+'text-align:'+headersTable[0][key].align+';'"
+											[style]="'min-width: '+headersTable[0][key].sizeCol+';'+'text-align:'+headersTable[0][key].align+';'"
 											(change)="selectLine(itemData['index'], itemData[key],itemData)">
 								</ng-template>
 								<ng-template pTemplate="output">
 									<div [style]="'text-align:'+headersTable[0][key].align+';'">
 										{{ itemData[key] }} 
-		
+										<span *ngIf="headersTable[0][key].currency && headersTable[0][key].side=='rigth'">{{headersTable[0][key].currency}}</span>
+
 									</div>
 								</ng-template>
 							</p-cellEditor>

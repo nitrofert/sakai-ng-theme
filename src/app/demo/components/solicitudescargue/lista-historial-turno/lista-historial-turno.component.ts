@@ -143,23 +143,35 @@ async getTurno(id: number){
                   comentario: any;
                   hora_accion: any;
                   fecha_accion: any; id: any; estado: any; 
+                  //disponibilidad:any, fechadisponibilidad:any
 })=>{
                   let novedades =  linea.novedades.map((novedad: { novedad: any; })=>{return novedad.novedad});
                   let comentario ="";
+                  let disponibilidad ="";
+                  let fechadisponibilidad = "";
+
                   if(linea.comentario!=null){
                     
                     comentario =  this.functionsService.bufferToString(linea.comentario)           
                   }
+
+                  /*if(linea.disponibilidad!=null){
+                    
+                    disponibilidad =  linea.disponibilidad;
+                    fechadisponibilidad = linea.fechadisponibilidad;
+                  }*/
                  
                 
                   return {
                     index:linea.id,
                     estado: linea.estado,
                     fecha: linea.fecha_accion,
-                    hora:linea.hora_accion,
+                    hora:new Date(linea.fecha_accion+' '+linea.hora_accion).toLocaleTimeString("en-US", { hour12: true, timeZone:'America/Bogota' }),
                     usuario:linea.usuario.nombrecompleto,
                     comentario,
-                    novedades 
+                    novedades,
+                    //disponibilidad,
+                    //fechadisponibilidad
                   }
                 });
 
@@ -182,12 +194,16 @@ async getTurno(id: number){
 
 async setEventsTimeLine(data:any):Promise<void>{
 
-  console.log(data, this.estadosTurno2);
+  //console.log(data, this.estadosTurno2);
 
   let events:any[] =[];
   for(let event of data){
+    console.log(event);
+    //let dateEvent = new Date(new Date(event.fecha).getTime()+(60*60000*5));
+    let dateEventTime = new Date(event.fecha+' '+event.hora);
+    //console.log(event.fecha,dateEvent, dateEventTime);
     events.push({ status: event.estado, 
-                  date: `${(new Date(event.fecha)).toLocaleDateString()} ${(new Date(event.fecha+' '+event.hora)).toLocaleTimeString()}`,
+                  date: `${dateEventTime.toLocaleDateString()} ${dateEventTime.toLocaleTimeString("en-US", { hour12: true, timeZone:'America/Bogota' })}`,
                   usuario:event.usuario,
                   comentario:event.comentario,
                   novedades:event.novedades, 

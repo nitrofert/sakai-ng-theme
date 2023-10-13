@@ -26,43 +26,100 @@
         </div>
     </div>
 </div>
+
 <div *ngIf="showCalendar" class="grid">
 	<div class="col-12">
-		<div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-            <div class="p-fluid p-formgrid grid align-items-center justify-content-center">
-
-                <!--<p-tag *ngFor="let estado of estadosTurno2" [value]="estado.name" [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'4px' }"></p-tag>-->
-
-                <p-chip *ngFor="let estado of estadosTurno2" 
-                        [label]="estado.name" 
-                        [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'2px' }"
-                        [icon]="estado.icon">
-                </p-chip>
-
+		<div class="card">
+            <div *ngIf="showCalendar" class="grid">
+                <div class="col-12">
+                    <div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+                        <div class="p-fluid p-formgrid grid align-items-center justify-content-center">
+            
+                            <!--<p-tag *ngFor="let estado of estadosTurno2" [value]="estado.name" [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'4px' }"></p-tag>-->
+            
+                            <p-chip *ngFor="let estado of estadosTurno2" 
+                                    [label]="estado.name" 
+                                    [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'2px' }"
+                                    [icon]="estado.icon">
+                            </p-chip>
+            
+                        </div>
+                    </div>
+                </div>
             </div>
+            <full-calendar *ngIf="showCalendar" [options]="calendarOptions">
+                <ng-template #eventContent let-arg>
+                    <div>
+                       Turno : <strong>{{ arg.event.title | objecrString:'turnoid'   }}</strong> 
+                       Placa : <strong>{{ arg.event.title | objecrString:'placa'   }}</strong> 
+                    </div>
+            
+                    <div>
+                        {{ (arg.event.title | objecrString:'cliente') | tooltips:20 }} 
+                    </div>
+                    <!--<div>
+                        Placa: {{ arg.event.title | objecrString:'placa'   }}
+                    </div>-->
+                    <!--<div>
+                        Placa: {{ arg.event.title | objecrString:'estado'   }}
+                    </div>-->
+                    
+                    
+                  </ng-template>
+            </full-calendar>
         </div>
     </div>
 </div>
-<full-calendar *ngIf="showCalendar" [options]="calendarOptions">
-    <ng-template #eventContent let-arg>
-        <div>
-           Truno : <strong>{{ arg.event.title | objecrString:'turnoid'   }}</strong> 
-           Placa : <strong>{{ arg.event.title | objecrString:'placa'   }}</strong> 
-        </div>
 
-        <div>
-            {{ (arg.event.title | objecrString:'cliente') | tooltips:20 }} 
+<div *ngIf="showCalendar" class="grid">
+    <!--
+    <div class="col-12">
+		<div class="card ">
+            <div class="grid">
+                <div class="col-12 flex align-content-center align-items-end ">
+                    <h3>{{ hoy | titlecase}}</h3> 
+                    
+                </div>
+                <div *ngFor="let estado of estadosTurno2"  class="col-12  xl:col-3">
+                    <div class="card mb-1" [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')' }">
+                        <div class="flex justify-content-between mb-3">
+                            <div>
+                                <span class="block  font-medium mb-3">{{estado.name}}</span>
+                                <div class=" font-medium text-xl">{{ estado.total  }} <span>turnos</span></div>
+                            </div>
+                            <div class="flex align-items-center justify-content-center border-1 border-round" [style]="{'boder-color':'var(--'+estado.textColor+')'}" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                                <i [class]="estado.icon"></i>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="card mb-0" [style]="{'boder-color':'var(--'+estado.backgroundColor+')'}" >
+
+                        <div *ngIf="estado.turnos.length==0; then thenBlock else elseBlock"></div>
+                        <ng-template #thenBlock>
+                            <div class="text-center">No exiten turnos</div>
+                        </ng-template>
+                        <ng-template #elseBlock>
+                            <p-card *ngFor="let turno of estado.turnos" [header]="'Turno '+turno.id" [subheader]="turno.detalle_solicitud_turnos_pedido[0].CardName" class=" mb-2">
+                                <div class="mb-2"><span class="font-bold">Placa:</span> {{turno.vehiculo.placa}}</div>
+                                <div class="mb-2"><span class="font-bold">Conductor:</span> {{turno.conductor.nombre}}</div>
+                                <div class="mb-2"><span class="font-bold">Transportadora:</span> {{turno.transportadora.nombre}}</div>
+                                <ng-template pTemplate="footer">
+                                    Hora cita: {{ turno.horacita | date:'mediumTime' }}
+                                </ng-template>
+                            </p-card>
+                        </ng-template>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
-        <!--<div>
-            Placa: {{ arg.event.title | objecrString:'placa'   }}
-        </div>-->
-        <!--<div>
-            Placa: {{ arg.event.title | objecrString:'estado'   }}
-        </div>-->
-        
-        
-      </ng-template>
-</full-calendar>
+    </div>
+    -->
+
+    <app-vista-estados-turno [locacion]="localidadSeleccionada.code"></app-vista-estados-turno>
+</div>
+
 <!-- Dialog loading -->
 <p-dialog header="Cargando" 
           [(visible)]="displayModal" 
@@ -90,3 +147,5 @@
 
 </p-dialog>
 <!--Fin Dialog loading-->
+
+

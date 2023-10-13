@@ -13,28 +13,28 @@ import { Buffer } from 'buffer';
 export class FunctionsService {
 
  public meses:any[] = [
-    {id:1,fullname:'ENERO', shortName:'ENE'},
-    {id:2,fullname:'FEBRERO', shortName:'FEB'},
-    {id:3,fullname:'MARZO', shortName:'MAR'},
-    {id:4,fullname:'ABRIL', shortName:'ABR'},
-    {id:5,fullname:'MAYO', shortName:'MAY'},
-    {id:6,fullname:'JUNIO', shortName:'JUN'},
-    {id:7,fullname:'JULIO', shortName:'JUL'},
-    {id:8,fullname:'AGOSTO', shortName:'AGO'},
-    {id:9,fullname:'SEPTIEMBRE', shortName:'SEP'},
-    {id:10,fullname:'OCTUBRE', shortName:'OCT'},
-    {id:11,fullname:'NOVIEMBRE', shortName:'NOV'},
-    {id:12,fullname:'DICIEMBRE', shortName:'DIC'},
+    {id:1,fullname:'ENERO', shortName:'ENE', fullnameEN:'JANUARY', shortNameEN:'JAN'},
+    {id:2,fullname:'FEBRERO', shortName:'FEB',fullnameEN:'FEBRUARY', shortNameEN:'FEB'},
+    {id:3,fullname:'MARZO', shortName:'MAR',fullnameEN:'MARCH', shortNameEN:'MAR'},
+    {id:4,fullname:'ABRIL', shortName:'ABR',fullnameEN:'APRIL', shortNameEN:'APR'},
+    {id:5,fullname:'MAYO', shortName:'MAY',fullnameEN:'MAY', shortNameEN:'MAY'},
+    {id:6,fullname:'JUNIO', shortName:'JUN',fullnameEN:'JUNE', shortNameEN:'JUN'},
+    {id:7,fullname:'JULIO', shortName:'JUL',fullnameEN:'JULY', shortNameEN:'JUL'},
+    {id:8,fullname:'AGOSTO', shortName:'AGO',fullnameEN:'AUGUST', shortNameEN:'AUG'},
+    {id:9,fullname:'SEPTIEMBRE', shortName:'SEP',fullnameEN:'SEPTEMBER', shortNameEN:'SEP'},
+    {id:10,fullname:'OCTUBRE', shortName:'OCT',fullnameEN:'OCTOBER', shortNameEN:'OCT'},
+    {id:11,fullname:'NOVIEMBRE', shortName:'NOV',fullnameEN:'NOVEMBER', shortNameEN:'NOV'},
+    {id:12,fullname:'DICIEMBRE', shortName:'DIC',fullnameEN:'DECEMBER', shortNameEN:'DEC'},
  ];
 
  public dias:any[] = [
-    {id:1,fullname:'LUNES', shortName:'LUN'},
-    {id:2,fullname:'MARTES', shortName:'MAR'},
-    {id:3,fullname:'MIERCOLES', shortName:'MIE'},
-    {id:4,fullname:'JUEVES', shortName:'JUE'},
-    {id:5,fullname:'VIERNES', shortName:'VIE'},
-    {id:6,fullname:'SABADO', shortName:'SAB'},
-    {id:0,fullname:'DOMINGO', shortName:'DOM'}
+    {id:1,fullname:'LUNES', shortName:'LUN',fullnameEN:'MONDAY', shortNameEN:'MON'},
+    {id:2,fullname:'MARTES', shortName:'MAR',fullnameEN:'TUESDAY', shortNameEN:'TUE'},
+    {id:3,fullname:'MIERCOLES', shortName:'MIE',fullnameEN:'WEDNESDAY', shortNameEN:'WED'},
+    {id:4,fullname:'JUEVES', shortName:'JUE',fullnameEN:'THURSDAY', shortNameEN:'THU'},
+    {id:5,fullname:'VIERNES', shortName:'VIE',fullnameEN:'FRIDAY', shortNameEN:'FRI'},
+    {id:6,fullname:'SABADO', shortName:'SAB',fullnameEN:'SATURDAY', shortNameEN:'SAT'},
+    {id:0,fullname:'DOMINGO', shortName:'DOM',fullnameEN:'SUNDAY', shortNameEN:'SUN'}
  ];
 
  private api_url:string = "";
@@ -70,7 +70,8 @@ async groupArray(array:any[], field:any):Promise<any[]>{
 async dateDif(date1:Date, date2:Date, format:string = 'days'):Promise<any>{
     let dif:any=0;
 
-    dif = date2.getTime() - date1.getTime();
+    //dif = date2.getTime() - date1.getTime();
+    dif = date1.getTime() - date2.getTime();
 
     ////console.log(dif)
 
@@ -91,7 +92,7 @@ async dateDif(date1:Date, date2:Date, format:string = 'days'):Promise<any>{
             dif = dif/(1000*60*60*24);
     }
 
-    return dif;
+    return dif-1;
 
 }
 
@@ -211,7 +212,33 @@ bufferToString(buffer:any):string{
 
 }
 
+async formatDate(date:Date,format:string, lan:string='ES'): Promise<string>{
+  let dateFormat:string ='';
 
+  console.log(date.toLocaleDateString('en-us',{weekday:"long"})); 
+  console.log(date.toLocaleDateString('en-us',{month:"long"})); 
+
+
+  switch(format){
+    case 'DDDD, dd MMMMM YYYY':
+          let daylong = date.toLocaleDateString('en-us',{weekday:"long"});
+          let day = date.toLocaleDateString('en-us',{day:"2-digit"});
+          let monthlong = date.toLocaleDateString('en-us',{month:"long"});
+          let year = date.toLocaleDateString('en-us',{year:"numeric"});
+          if(lan === 'ES'){
+            dateFormat = `${this.dias.find(dia=>dia.fullnameEN===daylong.toUpperCase()).fullname.toLowerCase()}, ${day} - ${this.meses.find(mes=>mes.fullnameEN===monthlong.toUpperCase()).fullname.toLowerCase()} - ${year}`;
+          }
+          if(lan === 'EN'){
+            dateFormat = `${daylong}, ${monthlong}  ${day} ${year}`;
+          }
+
+          
+          
+    break;
+  }
+
+  return dateFormat;
+}
   
 
 }

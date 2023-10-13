@@ -21,13 +21,15 @@ import { ConductoresService } from '../../service/conductores.service';
 import { TransportadorasService } from '../../service/transportadoras.service';
 import { TipoVehiculosService } from '../../service/tipo-vehiculo.service';
 import { NovedadesService } from '../../service/novedades.service';
+import { VistaEstadosTurnoComponent } from './vista-estados-turno/vista-estados-turno.component';
 
 
 
 @NgModule({
   declarations: [
     CalendarioTurnosComponent,
-    FormTurnoComponent
+    FormTurnoComponent,
+    VistaEstadosTurnoComponent
   ],
   imports: [
     CommonModule,

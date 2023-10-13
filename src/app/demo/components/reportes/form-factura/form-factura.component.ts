@@ -17,6 +17,8 @@ export class FormFacturaComponent implements  OnInit {
   PAGADA:any = "";
   Comments:string ="";
 
+  TIPOFAC:string ="";
+
   dataTable:any[] = [];
   headersTable:any[] = [];
 
@@ -34,6 +36,7 @@ export class FormFacturaComponent implements  OnInit {
       this.PymntGroup = this.config.data.detalleFactura[0].PymntGroup;
       this.PAGADA = this.config.data.detalleFactura[0].PAGADA;
       this.Comments = this.config.data.detalleFactura[0].Comments;
+      this.TIPOFAC = this.config.data.detalleFactura[0].TIPOFAC;
       
       this.headersTable = [
         {

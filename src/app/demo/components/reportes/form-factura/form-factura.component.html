@@ -21,7 +21,7 @@
                                type="date" 
                                [(ngModel)]="DocDate"
                                readonly/>-->
-                        <p-calendar inputId="DocDate" [showIcon]="true" [(ngModel)]="DocDate" [readonlyInput]="true"></p-calendar>
+                        <p-calendar inputId="DocDate" [showIcon]="true" [(ngModel)]="DocDate" dateFormat="dd/mm/yy" [readonlyInput]="true"></p-calendar>
                         <label for="DocDate"><h6>Fecha Documento</h6></label>
                     </span>
                 </div>
@@ -35,8 +35,19 @@
                                readonly/>-->
 
 
-                        <p-calendar inputId="DocDueDate" [showIcon]="true" [(ngModel)]="DocDueDate" [readonlyInput]="true" ></p-calendar>
+                        <p-calendar inputId="DocDueDate" [showIcon]="true" [(ngModel)]="DocDueDate" dateFormat="dd/mm/yy" [readonlyInput]="true" ></p-calendar>
                         <label for="DocDueDate"><h6>Fecha Vencimiento</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-4  mt-3">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="TIPOFAC" 
+                               type="text" 
+                               [(ngModel)]="TIPOFAC"
+                               readonly/>
+                        <label for="TIPOFAC"><h6>Tipo documento</h6></label>
                     </span>
                 </div>
 

@@ -23,6 +23,7 @@ import { ClientesService } from 'src/app/demo/service/clientes.service';
 import { TipoRol } from '../../admin/roles/roles.enum';
 import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
 import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
+import { CiudadesService } from 'src/app/demo/service/ciudades.service';
 
 @Component({
 selector: 'app-nueva-solicitud',
@@ -146,6 +147,12 @@ pesoneto:number = 0;
 
 domain:string = window.location.hostname;
 
+municipios!:any[];
+municipioSeleccionado:any = [];
+municipiosFiltrados:any[] = [];
+
+
+envioAdicionVehiculo:boolean = false;
 
 
 constructor(private pedidosService: PedidosService,
@@ -164,7 +171,8 @@ constructor(private pedidosService: PedidosService,
             public functionsService:FunctionsService,
             private wsMysqlService:WsMysqlService,
             private clientesService:ClientesService,
-            private sB1SLService:SB1SLService
+            private sB1SLService:SB1SLService,
+            private ciudadesService:CiudadesService,
             ){
               
                
@@ -175,6 +183,7 @@ async  ngOnInit(){
 
   this.getPermisosModulo();
   //this.getPermisosModulo2();
+  this.getCiudades();
   this.getClientes();
   this.getAlmacenes(); 
   this.getLocaciones();
@@ -215,7 +224,7 @@ getPermisosModulo(){
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-            ////////console.log(permisos);
+            //////////console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -225,7 +234,7 @@ getPermisosModulo(){
             }
             this.permisosModulo = permisos;
             this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-            ////////////////////console.log(this.multiplesClientes);
+            //////////////////////console.log(this.multiplesClientes);
 
            
             /*
@@ -242,7 +251,7 @@ getPermisosModulo(){
               this.condicion_tpt="TRANSP";
             }
 
-            ////////console.log(this.condicion_tpt);
+            //////////console.log(this.condicion_tpt);
             
 
           },
@@ -258,7 +267,7 @@ this.clientes = [];
 this.usuariosService.getInfoUsuario()
     .subscribe({
         next: async (infoUsuario)=>{
-          //////////////console.log(infoUsuario);
+          ////////////////console.log(infoUsuario);
           let clientesUsuario!:any;
 
           if(await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.TRANSPORTASOCIEDAD) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.ADMIN)){
@@ -268,10 +277,10 @@ this.usuariosService.getInfoUsuario()
           }else{
             //Mostrar clientes asociados al usuario
             clientesUsuario = infoUsuario.clientes;
-            //////////console.log(clientesUsuario[0].CardCode,await this.usuariosService.infoUsuarioByCardCode(clientesUsuario[0].CardCode));
+            ////////////console.log(clientesUsuario[0].CardCode,await this.usuariosService.infoUsuarioByCardCode(clientesUsuario[0].CardCode));
           }
 
-          //////////console.log('clientesUsuario',clientesUsuario);
+          ////////////console.log('clientesUsuario',clientesUsuario);
 
           for(let clienteUsuario of clientesUsuario){
             clienteUsuario.code = clienteUsuario.CardCode;
@@ -280,7 +289,7 @@ this.usuariosService.getInfoUsuario()
           }
           this.clientes = clientesUsuario;
 
-          ////////////console.log(this.clientes);
+          //////////////console.log(this.clientes);
           this.getSaldosPedidos();
           
           
@@ -291,11 +300,29 @@ this.usuariosService.getInfoUsuario()
     });
 }
 
+async getCiudades(){
+    this.ciudadesService.getCiudades()
+        .subscribe({
+            next:(ciudades)=>{
+             //console.log(ciudades);
+              ciudades.map((ciudad:any)=>{
+                ciudad.label = `${ciudad.code} - ${ciudad.nombre}`;
+              });
+
+              this.municipios = ciudades;
+            },
+            error:(err)=>{
+              console.error(err);
+            }
+
+        });
+}
+
 async getLocaciones(){
   this.almacenesService.getLocaciones()
       .subscribe({
           next:(locaciones)=>{
-              console.log('locaciones',locaciones);
+              //console.log('locaciones',locaciones);
               this.locaciones = locaciones;
           },
           error:(err)=>{
@@ -308,10 +335,10 @@ getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
           next:(saldosPedidos)=>{
-           console.log('saldosPedidos',saldosPedidos);
+           //console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
-            //////////////console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
+            ////////////////console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
                 
@@ -373,10 +400,10 @@ getSaldosPedidos(){
 
            }
 
-           ////////////////////console.log(pedidosClientes[0]);
-           console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
+           //////////////////////console.log(pedidosClientes[0]);
+           //console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
            this.pedidos = pedidosClientes;
-           //////////console.log(this.pedidos);
+           ////////////console.log(this.pedidos);
           },
           error:(err)=>{
             console.error(err);
@@ -387,7 +414,7 @@ getSaldosPedidos(){
 getPedidos(){
 this.pedidosService.getPedidos().then(pedidos => {
   this.pedidos = pedidos;
-  ////////////////////console.log(this.pedidos[0]);
+  //////////////////////console.log(this.pedidos[0]);
 });
 }
 
@@ -407,7 +434,7 @@ getAlmacenes(){
            
             }
             this.almacenes = almacenesTMP.filter(almacen=>almacen.CorreoNoti !=null && almacen.CorreoNoti!='');
-            console.log('almacenes',this.almacenes);
+            //console.log('almacenes',this.almacenes);
             
           },
           error:(err)=>{
@@ -421,14 +448,14 @@ getVehiculos(){
   this.vehiculosService.getVehiculos()
       .subscribe({
         next: (vehiculos)=>{
-            //////////console.log(vehiculos);
+            ////////////console.log(vehiculos);
             for(let vehiculo of vehiculos){
               vehiculo.code = vehiculo.placa;
               vehiculo.name = vehiculo.placa;
               vehiculo.label = vehiculo.placa+' ('+vehiculo.tipo_vehiculo.capacidad+' TON)';
               vehiculo.clase = vehiculo.tipo_vehiculo;
             }
-            ////////////////////console.log(conductores);
+            //////////////////////console.log(conductores);
             this.vehiculos = vehiculos;
         },
         error: (err)=>{
@@ -448,7 +475,7 @@ getTransportadoras(){
             transportadora.name = transportadora.nombre;
             transportadora.label = transportadora.nit+' - '+transportadora.nombre;
           }
-          ////////////////////console.log(conductores);
+          //////////////////////console.log(conductores);
           this.transportadoras = transportadoras;
       },
       error: (err)=>{
@@ -467,7 +494,7 @@ getConductores(){
                 conductor.name = conductor.nombre;
                 conductor.label = conductor.cedula+' - '+conductor.nombre;
               }
-              ////////////////////console.log(conductores);
+              //////////////////////console.log(conductores);
               this.conductores = conductores;
           },
           error: (err)=>{
@@ -481,19 +508,12 @@ filtrarCliente(event: any) {
 this.clientesFiltrados = this.filter(event,this.clientes);
 }
 
-filtrarCliente2(event: any) {
-  this.clientesFiltrados2 = this.filter(event,this.clienteSeleccionado);
-}
 
-seleccionarCliente2(clienteSeleccionado2:any){
-      //////////////////console.log(clienteSeleccionado2, this.almacenSeleccionado)
-      this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code, clienteSeleccionado2.code)
-}   
 
 seleccionarCliente(clienteSeleccionado:any){
-  ////////////////console.log(clienteSeleccionado);
+  //////////////////console.log(clienteSeleccionado);
   //this.getPedidosPorCliente(clienteSeleccionado.code);
-  /*//////////////////console.log(this.almacenSeleccionado);
+  /*////////////////////console.log(this.almacenSeleccionado);
   if(!this.almacenSeleccionado || this.almacenSeleccionado.length ==0){
     this.getPedidosPorCliente(clienteSeleccionado);
   }else{
@@ -507,88 +527,108 @@ seleccionarCliente(clienteSeleccionado:any){
   this.toggle(1);
 }
 
- confirmAdicionCliente(clienteSeleccionado:any) {
-  this.confirmationService.confirm({
-      message: 'Esta agregando un nuevo cliente a la solicitud y tiene seleccionad una locación, por lo tanto se modificara la selección de las locaciones y se borraran los vhiculos y pedidos seleccionados previamente. ¿Desea continuar?',
-      header: 'Confirmatción',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          this.getPedidosPorCliente(clienteSeleccionado);
-          this.almacenSeleccionado = [];
-          this.generarTreeTable();
-          ////////////////////console.log(this.tablaPedidosAlmacenCliente);
-
-      },
-      reject: async (type: any) => {
-          switch(type) {
-              case ConfirmEventType.REJECT:
-                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
-                  
-              break;
-              case ConfirmEventType.CANCEL:
-                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
-                  
-              break;
-          }
-          this.clienteSeleccionado.pop();
-          //////////////////console.log(this.clienteSeleccionado);
-          this.getPedidosPorCliente(clienteSeleccionado);
-      }
-  });
-}
-
 
 async getPedidosPorCliente(clientesSeleccionados:any){
     
-    this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-    ////////console.log('pedidosCliente',this.pedidosCliente);
-    this.getAlmacenesEnPedidos();
+  this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
+  //////////console.log('pedidosCliente',this.pedidosCliente);
+  this.getAlmacenesEnPedidos();
 }
 
 getAlmacenesEnPedidos(){
-    let almacenesPedidosCliente: any[] = [];
-    for(let pedido of this.pedidosCliente){
+  let almacenesPedidosCliente: any[] = [];
+  for(let pedido of this.pedidosCliente){
+    
+    if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode).length===0){
+      //TODO: Buscar datos del almacen en array de almacenes
       
-      if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode).length===0){
-        //TODO: Buscar datos del almacen en array de almacenes
-        
-        //if(this.almacenes.filter(almacen => almacen.Location == pedido.locacion).length>0){
-        if(this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode).length>0){
-          //let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.Location == pedido.locacion)[0];
-          let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode)[0];
-          //////////////////console.log(informacionAlmacen);
-          //informacionAlmacen.label = informacionAlmacen.Location+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
-          informacionAlmacen.label = informacionAlmacen.locacion2+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
-          //almacenesPedidosCliente.push(informacionAlmacen);
-          almacenesPedidosCliente.push({
-            code:informacionAlmacen.locacion_codigo2,
-            name:informacionAlmacen.locacion2,
-            label: informacionAlmacen.label,
-            email: informacionAlmacen.CorreoNoti
-          });
-        }
+      //if(this.almacenes.filter(almacen => almacen.Location == pedido.locacion).length>0){
+      if(this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode).length>0){
+        //let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.Location == pedido.locacion)[0];
+        let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode)[0];
+        ////////////////////console.log(informacionAlmacen);
+        //informacionAlmacen.label = informacionAlmacen.Location+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
+        informacionAlmacen.label = informacionAlmacen.locacion2+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
+        //almacenesPedidosCliente.push(informacionAlmacen);
+        almacenesPedidosCliente.push({
+          code:informacionAlmacen.locacion_codigo2,
+          name:informacionAlmacen.locacion2,
+          label: informacionAlmacen.label,
+          email: informacionAlmacen.CorreoNoti
+        });
       }
     }
-    this.almacenesPedidosCliente = almacenesPedidosCliente;
-    console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
+  }
+  this.almacenesPedidosCliente = almacenesPedidosCliente;
+  //console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
 
 }
+
+
+generarTreeTable(){
+
+  let vehiculos :any[] = [];
+  console.log(this.condicion_tpt);
+
+  for(let solicitud of this.vehiculosEnSolicitud){
+    //////////////////////console.log(solicitud);
+    let fechacargue = new Date(solicitud.fechacargue);
+    let horacargue = new Date(solicitud.horacargue);
+    let data = {
+                    "data":{
+                          vehiculo:solicitud.placa,
+                          conductor:solicitud.conductor+' - '+solicitud.conductor_nombre,
+                          fechacargue:fechacargue.toLocaleDateString()+' '+horacargue.toLocaleTimeString(),
+                          cantidadcrg:solicitud.cantidad
+                    },
+                    "children":[]
+            }
+    if(solicitud.pedidos.length>0){
+      let children:any = [];
+      for(let pedido of solicitud.pedidos){
+        children.push(
+          {
+            "data":{
+                    vehiculo:`${pedido.municipioentrega} - ${pedido.lugarentrega}`,
+                    conductor:`${pedido.pedido} - ${pedido.cliente}`,
+                    fechacargue:pedido.itemcode+' - '+pedido.itemname,
+                    cantidadcrg:pedido.cantidad
+                }
+          }
+        );
+      }
+      data.children = children;
+    }
+    vehiculos.push(data);
+  }
+
+
+
+  let datatabletree2: any = {
+    "data":vehiculos
+  }
+  
+  this.vehiculosPedidos = datatabletree2.data as TreeNode[];
+////////////////////////console.log(this.vehiculosPedidos);
+  
+}
+
 
 filtrarAlmacen(event:any){
 this.almacenesFiltrados = this.filter(event,this.almacenesPedidosCliente);
 }
 
 async seleccionarAlmacen(almacenSeleccionado:any){
-  console.log(almacenSeleccionado);
+  //console.log(almacenSeleccionado);
   //this.getPedidosClientePorAlmacen(almacenSeleccionado.code);
  
   if(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code).length>0){
-    //////////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
-    //////////console.log(this.horainicio, this.horafin);
+    ////////////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
+    ////////////console.log(this.horainicio, this.horafin);
     this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
     this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion;
 
-    ////////console.log('horariosLocacion',this.horariosLocacion);
+    //////////console.log('horariosLocacion',this.horariosLocacion);
     await this.seleccionarFechaCita();
   }else{
     //Establecer horarios locacion
@@ -605,27 +645,22 @@ async obtenerDiasNoAtencion(horarios:any[]):Promise<any[]>{
     for(let horario of horarios){
       let diasNot:any[] = [];
       let diasAtencionLocacion:any[] = horario.dias_atencion.split(',');
-      //////////console.log(diasAtencionLocacion);
+      ////////////console.log(diasAtencionLocacion);
       for(let dia of diasNoAtencion){
-        //////////console.log(diasAtencionLocacion.includes(dia.fullname));
+        ////////////console.log(diasAtencionLocacion.includes(dia.fullname));
 
         if(!diasAtencionLocacion.includes(dia.fullname)){
             diasNot.push(dia);
         }
-        //////////console.log(dia.fullname,JSON.stringify(diasNot));
+        ////////////console.log(dia.fullname,JSON.stringify(diasNot));
       }
       
       diasNoAtencion = diasNot;
     }
 
-   // ////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
+   // //////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
 
   return diasNoAtencion.map((dia)=>{ return dia.id});
-}
-
-cambioAlmacen(){
-  this.vehiculosEnSolicitud = [];
-  this.generarTreeTable();
 }
 
 async seleccionarFechaCita():Promise<void>{
@@ -637,126 +672,41 @@ async seleccionarFechaCita():Promise<void>{
   this.horariosSeleccionados = horariosSeleccionados;
 
   /*for(let horario of this.horariosLocacion){
-    ////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+    //////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
   }*/
-  ////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+  //////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
   await this.cambioHoraCita();
 }
 
 async cambioHoraCita():Promise<void>{
-  ////////console.log(this.horacargue.toLocaleTimeString());
+  //////////console.log(this.horacargue.toLocaleTimeString());
   /*for(let horario of this.horariosSeleccionados){
-    ////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    ////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
-    ////////console.log(new Date(this.horacargue));
+    //////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    //////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    //////////console.log(new Date(this.horacargue));
 
     let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
     let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
     let horacargue = new Date(this.horacargue);
 
     if(horainicio<= horacargue && horafin >= horacargue){
-      ////////console.log('hora valida en horario id '+horario.id);
+      //////////console.log('hora valida en horario id '+horario.id);
     }else{
-      ////////console.log('hora invalida en horario id '+horario.id);
+      //////////console.log('hora invalida en horario id '+horario.id);
     }
   }*/
-  //////////console.log(this.horariosSeleccionados.filter(horario=>new Date(horario.horainicio)< new Date(this.horacargue) && new Date(horario.horafin)> new Date(this.horacargue)));
+  ////////////console.log(this.horariosSeleccionados.filter(horario=>new Date(horario.horainicio)< new Date(this.horacargue) && new Date(horario.horafin)> new Date(this.horacargue)));
 
   if(await this.validarHoraCargue()){
-    ////////console.log('hora valida en horario ');
+    //////////console.log('hora valida en horario ');
   }else{
-    ////////console.log('hora invalida en horario');
+    //////////console.log('hora invalida en horario');
   }
 }
 
-async validarHoraCargue():Promise<boolean>{
-  let horarioValido:boolean = true;
-
-  for(let horario of this.horariosSeleccionados){
-    ////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    ////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
-    ////////console.log(new Date(this.horacargue));
-
-    let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
-    let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
-    let horacargue = new Date(this.horacargue);
-
-    if(horainicio<= horacargue && horafin >= horacargue){
-      ////////console.log('hora valida en horario id '+horario.id);
-    }else{
-      ////////console.log('hora invalida en horario id '+horario.id);
-      horarioValido = false;
-    }
-  }
-
-  return horarioValido;
-}
-
-async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
-  //this.pedidosAlmacenCliente = await this.pedidosService.getPedidosClientePorAlmacen(this.clienteSeleccionado, almacen);
-  //let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
-  let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacioncode === almacen && pedido.cardcode === cliente)
-  ////////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
-  let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
-
-  this.pedidosAlmacenCliente = pedidosAlmacenClienteCalcudada;
-
-  console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
-  
-  this.configTablePedidosAlmacenCliente();
-}
-
-async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
-  
-  for(let pedido of pedidos){
-   ////////////////console.log(pedido);
-    let cantidadComprometida=0; 
-    cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
-    cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
-    pedido.comprometida = cantidadComprometida;
-    //pedido.pendiente 
-  }
-
-  return pedidos;
-}
-
-async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:string):Promise<number>{
-  
-  const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidas(pedido,itemcode,bodega,0);
-  const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
-
-  return cantidadComprometida;
-
-
-}
-
-async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
-  ////////////////console.log(pedido, itemcode, bodega);
-    let cantidadComprometida =0;
-    for(let vehiculo of this.vehiculosEnSolicitud){
-        for(let lineaPedido of vehiculo.pedidos){
-         //////////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
-            if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
-              
-              cantidadComprometida+=lineaPedido.cantidad;
-            }
-        }
-    }
-
-    return cantidadComprometida;
-}
-
-configTablePedidosAlmacenCliente(){
-  let headersTable:any= this.configHeadersPedidos();
-  let dataTable:any = this.configDataTablePedidos(this.pedidosAlmacenCliente);
-  
-  this.tablaPedidosAlmacenCliente = {
-    header: headersTable,
-    data: dataTable
-  }
-
-  ////////////////////console.log(this.tablaPedidosAlmacenCliente);
-
+cambioAlmacen(){
+  this.vehiculosEnSolicitud = [];
+  this.generarTreeTable();
 }
 
 adicionarVehiculo(){
@@ -768,6 +718,7 @@ adicionarVehiculo(){
     this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Primero debe seleccionar el almacen de donde realizará el retiro de los productos'});
   }
 }
+
 
 filtrarVehiculo(event:any){
   //TODO: quitar del listado de vehiculos los vehiculos que ya esten asociados a la solicitud en curso
@@ -782,7 +733,7 @@ filtrarVehiculo(event:any){
   this.vehiculosFiltrados.unshift({
     id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
   });
-  ////////////////////console.log(this.vehiculosFiltrados);
+  //////////////////////console.log(this.vehiculosFiltrados);
 }
 
 filtrarConductor(event:any){
@@ -810,7 +761,7 @@ filtrarTransportadora(event:any){
 }
 
 seleccionarTransportadora(transportadoraSeleccionada:any){
-  ////////////console.log(transportadoraSeleccionada)
+  //////////////console.log(transportadoraSeleccionada)
   if(transportadoraSeleccionada.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevaTransportadora();
@@ -819,19 +770,19 @@ seleccionarTransportadora(transportadoraSeleccionada:any){
 }
 
 async seleccionarVehiculo(vehiculoSeleccionado:any){
-  ////console.log(vehiculoSeleccionado)
+  //////console.log(vehiculoSeleccionado)
   if(vehiculoSeleccionado.id == 0){
       //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
       this.nuevoVehiculo();
   }else{
-      //////////////////console.log(vehiculoSeleccionado)
+      ////////////////////console.log(vehiculoSeleccionado)
       this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
       //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
       let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
 
       this.pesobruto = vehiculoSeleccionado.pesovacio;
       this.pesoneto = vehiculoSeleccionado.pesomax;
-      ////////////////////console.log(this.capacidadVehiculo,capacidaVh);
+      //////////////////////console.log(this.capacidadVehiculo,capacidaVh);
       this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
       
 
@@ -857,7 +808,7 @@ nuevaTransportadora(){
 
   ref.onClose.subscribe((infoTransportadora) => {
     this.getTransportadoras();
-    ////////////console.log(infoTransportadora)
+    //////////////console.log(infoTransportadora)
     
     if(infoTransportadora.update){
       this.transportadoraSeleccionada.code = infoTransportadora.nit;
@@ -866,9 +817,9 @@ nuevaTransportadora(){
       this.transportadoraSeleccionada.name = infoTransportadora.nombre;
       this.transportadoraSeleccionada.label  = infoTransportadora.nit+' - '+infoTransportadora.nombre;
 
-      ////////////console.log(this.transportadoraSeleccionada)
+      //////////////console.log(this.transportadoraSeleccionada)
     }
-    ////////////////////console.log("Refresh calendar");
+    //////////////////////console.log("Refresh calendar");
   });
 }
 
@@ -886,7 +837,7 @@ nuevoVehiculo(){
 
   ref.onClose.subscribe(async (infoVehiculo) => {
     this.getVehiculos();
-    ////////////console.log(infoVehiculo)
+    //////////////console.log(infoVehiculo)
     if(infoVehiculo.update){
       this.capacidadVehiculo = infoVehiculo.capacidad;
       let capacidaVh = await this.cacluarCapacidadDisponibleVH(infoVehiculo.placa); 
@@ -896,7 +847,7 @@ nuevoVehiculo(){
       this.vehiculoSeleccionado.capacidad = infoVehiculo.capacidad;
       this.vehiculoSeleccionado.label = infoVehiculo.placa;
     }
-    ////////////////////console.log("Refresh calendar");
+    //////////////////////console.log("Refresh calendar");
   });
 }
 
@@ -914,7 +865,7 @@ nuevoConductor(){
 
   ref.onClose.subscribe((infoConductor) => {
     this.getConductores();
-    ////////////console.log(infoConductor)
+    //////////////console.log(infoConductor)
     if(infoConductor.update){
       this.conductorSeleccionado.code = infoConductor.cedula;
       this.conductorSeleccionado.cedula = infoConductor.cedula;
@@ -929,7 +880,7 @@ nuevoConductor(){
 }
 
 seleccionarConductor(conductorSeleccionado:any){
-  ////////////console.log(conductorSeleccionado)
+  //////////////console.log(conductorSeleccionado)
   if(conductorSeleccionado.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevoConductor();
@@ -937,42 +888,65 @@ seleccionarConductor(conductorSeleccionado:any){
 }
 
 async adicionVehiculoSolicitud(){
-  this.envioLineaCarguePedido =true;
-  //////////////////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
+  //this.envioLineaCarguePedido =true;
+  this.envioAdicionVehiculo = true;
+  ////////////////////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
   if(Object.keys(this.vehiculoSeleccionado).length ==0 || 
      Object.keys(this.conductorSeleccionado).length ==0 ||
-     Object.keys(this.transportadoraSeleccionada).length ==0 ||
-     this.sitioentrega=="" ||
-     this.municipioentrega==""){
+     Object.keys(this.transportadoraSeleccionada).length ==0 //||
+     //this.sitioentrega=="" ||
+     //this.municipioentrega==""
+     ){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
   }else if(!(await this.validarHoraCargue())){
     this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
   }else{
 
+    this.confirmationService.confirm({
+      message: 'Por favor verifique que la información, fecha y hora estimada del cargue  son correctas',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          
+            this.vehiculosEnSolicitud.push({
+              fechacargue:this.fechacargue,
+              horacargue:this.horacargue,
+              //cliente: this.clienteSeleccionado.code,
+              estado: "pendiente",
+              placa:this.vehiculoSeleccionado.code,
+              capacidadvh:this.vehiculoSeleccionado.capacidad,
+              conductor:this.conductorSeleccionado.code,
+              conductor_nombre:this.conductorSeleccionado.name,
+              cantidad:0,
+              transportadora:this.transportadoraSeleccionada.code,
+              sitioentrega:this.sitioentrega,
+              municipioentrega:this.municipioentrega,
+              observacion:this.observacion,
+              pedidos:[]
+          });
+          //this.envioLineaCarguePedido =false;
+          this.envioAdicionVehiculo = false;
+          this.dialogCargueVehiculoPedido= false;
+          this.resetearForm();
+          //this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
+          //this.configTablePedidosAlmacenCliente();
+          this.generarTreeTable();
+      },
+      reject: (type: any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+              break;
+              case ConfirmEventType.CANCEL:
+                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+              break;
+          }
+      }
+    });
+
     
 
-    this.vehiculosEnSolicitud.push({
-        fechacargue:this.fechacargue,
-        horacargue:this.horacargue,
-        //cliente: this.clienteSeleccionado.code,
-        estado: "pendiente",
-        placa:this.vehiculoSeleccionado.code,
-        capacidadvh:this.vehiculoSeleccionado.capacidad,
-        conductor:this.conductorSeleccionado.code,
-        conductor_nombre:this.conductorSeleccionado.name,
-        cantidad:0,
-        transportadora:this.transportadoraSeleccionada.code,
-        sitioentrega:this.sitioentrega,
-        municipioentrega:this.municipioentrega,
-        observacion:this.observacion,
-        pedidos:[]
-    });
-    this.envioLineaCarguePedido =false;
-    this.dialogCargueVehiculoPedido= false;
-    this.resetearForm();
-    //this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-    //this.configTablePedidosAlmacenCliente();
-    this.generarTreeTable();
+    
   }
 }
 
@@ -986,56 +960,8 @@ resetearForm(){
   this.horacargue = new Date();
 }
 
-generarTreeTable(){
-
-  let vehiculos :any[] = [];
-  
-
-  for(let solicitud of this.vehiculosEnSolicitud){
-    ////////////////////console.log(solicitud);
-    let fechacargue = new Date(solicitud.fechacargue);
-    let horacargue = new Date(solicitud.horacargue);
-    let data = {
-                    "data":{
-                          vehiculo:solicitud.placa,
-                          conductor:solicitud.conductor+' - '+solicitud.conductor_nombre,
-                          fechacargue:fechacargue.toLocaleDateString()+' '+horacargue.toLocaleTimeString(),
-                          cantidadcrg:solicitud.cantidad
-                    },
-                    "children":[]
-            }
-    if(solicitud.pedidos.length>0){
-      let children:any = [];
-      for(let pedido of solicitud.pedidos){
-        children.push(
-          {
-            "data":{
-                    vehiculo:solicitud.placa,
-                    conductor:pedido.pedido,
-                    fechacargue:pedido.itemcode+' - '+pedido.itemname,
-                    cantidadcrg:pedido.cantidad
-                }
-          }
-        );
-      }
-      data.children = children;
-    }
-    vehiculos.push(data);
-  }
-
-
-
-  let datatabletree2: any = {
-    "data":vehiculos
-  }
-  
-  this.vehiculosPedidos = datatabletree2.data as TreeNode[];
-//////////////////////console.log(this.vehiculosPedidos);
-  
-}
-
 async adicionarItemPedido(placa:string){
-  //////////////////////console.log(placa);
+  ////////////////////////console.log(placa);
   let vehiculo = await this.vehiculos.find(vehiculo =>vehiculo.code === placa);
   this.vehiculoSeleccionado = vehiculo;
   let clienteSeleccionado:any;
@@ -1044,7 +970,7 @@ async adicionarItemPedido(placa:string){
   }else{
     clienteSeleccionado = this.clienteSeleccionado;
   }
-  //////////////////console.log(this.clienteSeleccionado[0])
+  ////////////////////console.log(this.clienteSeleccionado[0])
   this.clienteSeleccionado2 = await clienteSeleccionado;
 
   await this.seleccionarVehiculo(this.vehiculoSeleccionado);
@@ -1057,519 +983,80 @@ async adicionarItemPedido(placa:string){
   this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code,clienteSeleccionado.code);
 
   /*let pedidosVehiculo = await this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa).pedidos;
-  ////////////////////console.log(pedidosVehiculo);
+  //////////////////////console.log(pedidosVehiculo);
   //Modificar pedidos del cliente x almacen adicionando las cantidades cargadas de los pedidos asociadas al vehiculo 
 
   for(let pedidoVehiculo of pedidosVehiculo){
     let index = this.tablaPedidosAlmacenCliente.data.findIndex((pedido: {itemcode: any; docnum: any; }) => pedido.docnum == pedidoVehiculo.pedido && pedido.itemcode == pedidoVehiculo.itemcode);
-    ////////////////////console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
+    //////////////////////console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
     this.tablaPedidosAlmacenCliente.data[index].cargada = pedidoVehiculo.cantidad;
   }*/
   
   this.dialogPedidosCliente = true;
 }
 
-async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
-  let capacidadDisponibleVH = 0;
-  let vehiculo:any = this.vehiculosEnSolicitud.filter(pedido =>pedido.placa == placa);
-  ////////////////////console.log(vehiculo.length);
-  if(vehiculo.length >0){
-    capacidadDisponibleVH =vehiculo[0].cantidad
-  }
- 
-  /*for(let pedido of pedidosVehiculo){
-    capacidadDisponibleVH+=pedido.cantidad;
-  }*/
-  ////////////////////console.log(capacidadDisponibleVH);
-  return capacidadDisponibleVH;
+async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
+  //this.pedidosAlmacenCliente = await this.pedidosService.getPedidosClientePorAlmacen(this.clienteSeleccionado, almacen);
+  //let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
+  let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacioncode === almacen && pedido.cardcode === cliente)
+  //////////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
+  let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
+
+  this.pedidosAlmacenCliente = pedidosAlmacenClienteCalcudada;
+
+  //console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
+  
+  this.configTablePedidosAlmacenCliente();
 }
 
-confirmarSeleccionPedidosAlmacenCliente(){
-  this.showItemsSelectedPedidosAlmacenCliente=true;
+async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
-  //this.dialogPedidosCliente = false;
-}
-
-
-async seleccionarPedidosAlmacenCliente(event:any){
- 
-  ////////////////console.log(this.clienteSeleccionado2);
-
-  const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-  //////console.log('pedidos seleccionados',pedidosSeleccionados);
-
-  if(pedidosSeleccionados.length > 0){
-      
-      let totalCarga = 0;
-      let error:boolean = false;
-      for(let pedido of pedidosSeleccionados){
-
-        //TODO Validar solo las lineas diferentes a flete   
-
-        if(!pedido.itemcode.toLowerCase().startsWith("sf")){
-            totalCarga+=parseFloat(pedido.cargada);
-
-            ////////console.log(pedido);
-   
-            if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
-              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
-              error = true;
-            }
-           
-            if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
-              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
-              error = true;
-            }
-   
-            if(parseFloat(pedido.cargada)> this.capacidadDisponibleVehiculo ){
-              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado`});
-              error = true;
-            }
-
-            if(parseFloat(pedido.cargada)+this.pesobruto> this.pesoneto ){
-              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} mas el peso bruto supera la capacidad máxima del vehículo seleccionado`});
-              error = true;
-            }
-        }
-              
-      }
-
-      if(!error && totalCarga> this.capacidadDisponibleVehiculo){
-          this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
-          error = true;
-      }
-
-      // TODO:: Si es transporta sociedad validar si exite linea de flete en seleccion
-      /*if(!error && this.condicion_tpt=="TRANSP" && pedidosSeleccionados.filter((pedidoSeleccionado: { itemcode: string; }) =>pedidoSeleccionado.itemcode.toLowerCase().startsWith('sf')).length ===0){
-        this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
-        error = true;
-
-      }*/
-
-
-
-      if(!error){
-          //Asignar pedidos al vehiculo
-          //Obtener index del vehiculo en la solicitud
-          let indexVehiculo = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == this.vehiculoSeleccionado.code);
-          //Obtener pedidos asociados al vehiculo en la solicitud
-          let pdidosVehiculo:any[] = this.vehiculosEnSolicitud[indexVehiculo].pedidos;
-          
-          for(let pedido of pedidosSeleccionados){
-
-            ////////console.log('pedido seleccionado',pedido);
-
-            if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode)!=undefined){
-              if(!pedido.itemcode.toLowerCase().startsWith("sf")){
-                let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode);
-                pdidosVehiculo[indexPedido].cantidad += parseFloat(pedido.cargada);
-              }
-              
-            }else{
-                  pdidosVehiculo.push({
-    
-                        pedido:pedido.docnum,
-                        itemcode:pedido.itemcode,
-                        itemname:pedido.itemname,
-                        cantidad:parseFloat(pedido.cargada),
-                        bodega:pedido.almacen,
-                        CardCode:this.clienteSeleccionado2.CardCode,
-                        CardName:this.clienteSeleccionado2.CardName,
-                        linenum:pedido.linenum,
-
-                  });
-            }
-            
-          }
-
-          this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
-          this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
-          this.dialogPedidosCliente = false;
-          this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-          //////console.log(this.vehiculosEnSolicitud);
-          this.configTablePedidosAlmacenCliente();
-          this.generarTreeTable();
-      }
-    
-
-
-  }else{
-      this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe seleccionar al menos un pedido - Item'});
-  }
-
-  this.showItemsSelectedPedidosAlmacenCliente=false;
-  /*
-  let pedidosSeleccionados = event;
-  
-  if(pedidosSeleccionados.length==0){
-    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe seleccionar al menos un pedido - Item'});
-  }else if(pedidosSeleccionados.some((pedido: { cargada: number; }) => pedido.cargada <= 0)){
-    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'De los pedidos seleccionados, al menos uno, en la columna de cantidad a cargar es menor o igual a cero (0)'});
-  }else if(await this.validarCantidadesCargadas(pedidosSeleccionados) >this.capacidadDisponibleVehiculo){
-    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La sumatoria total de la cantidad a cargar no puede ser mayor a la cantidad disponible del vehiculo'});
-  }else if(await this.validarCantidadesCargadasPorPedido(pedidosSeleccionados)){
-    //this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La sumatoria total de la cantidad a cargar no puede ser mayor a la cantidad disponible del vehiculo'});
-  }else{
-      //Asignar pedidos al vehiculo
-      let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == this.vehiculoSeleccionado.code);
-
-
-      let pdidosVehiculo:any = this.vehiculosEnSolicitud[index].pedidos;
-      let cantidadCargada =0;
-      for(let pedido of pedidosSeleccionados){
-
-        ////////////////////console.log(pdidosVehiculo,pedido);
-        if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode)!=undefined){
-          let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any }) => pedidovh.pedido == pedido.docnum && pedidovh.itemcode == pedido.itemcode);
-          pdidosVehiculo[indexPedido].cantidad = pedido.cargada;
-        }else{
-              pdidosVehiculo.push({
-
-                    pedido:pedido.docnum,
-                    itemcode:pedido.itemcode,
-                    itemname:pedido.itemname,
-                    cantidad:pedido.cargada
-              });
-        }
-
-        
-        cantidadCargada+=eval(pedido.cargada);
-      }
-
-      
-      //////////////////////console.log(index);
-      this.vehiculosEnSolicitud[index].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
-      this.vehiculosEnSolicitud[index].pedidos = pdidosVehiculo;
-      this.dialogPedidosCliente = false;
-      this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-      this.configTablePedidosAlmacenCliente();
-      this.generarTreeTable();
-      
-  }
-  this.showItemsSelectedPedidosAlmacenCliente=false;
-  */
-  
-  
-}
-
-async cantidadCargaVehiculo(placa:string):Promise<number>{
-  let cantidadCargada =0;
-  let vehiculo = this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa);
-  for(let pedidoVehiculo of vehiculo.pedidos){
-    //////////console.log(pedidoVehiculo)
-    if(!pedidoVehiculo.itemcode.toLowerCase().startsWith("sf")){
-      cantidadCargada+=eval(pedidoVehiculo.cantidad);
-    }
-  }
-  return cantidadCargada;
-}
-
-async validarCantidadesCargadas(pedidos:any):Promise<number>{
-  let cantidadCargada =0;
-  //////////////////console.log(pedidos);
   for(let pedido of pedidos){
-    
-    cantidadCargada+=eval(pedido.cargada);
-    
+   //////////////////console.log(pedido);
+    let cantidadComprometida=0; 
+    cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
+    cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
+    pedido.comprometida = cantidadComprometida;
+    //pedido.pendiente 
   }
-  ////////////////////console.log(cantidadCargada);
-  return  cantidadCargada;
+
+  return pedidos;
 }
 
-async validarCantidadesCargadasPorPedido(pedidos:any):Promise<boolean>{
-  let error = false;
-  for(let pedido of pedidos){
-    
-   
-    if(pedido.cargada>pedido.disponible){
-      this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad a cargar de la linea ${pedido.index} supera la cantidad disponible del pedido: ${pedido.docnum} - item: ${pedido.itemcode} - ${pedido.itemname} `});
-      error = true;
-    }
-  }
-  return  error;
+async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:string):Promise<number>{
+  
+  const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidas(pedido,itemcode,bodega,0);
+  const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
+
+  return cantidadComprometida;
+
+
 }
 
-
-
-quitarVehiculo(placa:string){
-  ////////////////////console.log(placa);
-  this.confirmRemoveVehiculo(placa);
-}
-
-quitarRegistro(placa:string,pedido:string,item:string){
-  ////////////////////console.log(placa,item);
-  this.confirmRemovePedidoItem(placa,pedido,item);
-}
-
-confirmRemoveVehiculo(placa:string) {
-  this.confirmationService.confirm({
-    message: 'Esta seguro de proceder con la eliminación del vehículo '+placa+', recuerde que los pedidos y productos asociados, tmabien seran elimnados de la lista?',
-    header: 'Confirmación',
-    icon: 'pi pi-exclamation-triangle',
-    accept: () => {
-        let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
-        this.vehiculosEnSolicitud.splice(index,1);
-        this.messageService.add({severity:'info', summary:'Confirmado', detail:'El vhículo '+placa+' fue eliminado de la lista'});
-        ////////////////////console.log(this.vehiculosEnSolicitud);
-        this.generarTreeTable();
-        ////////////////////console.log(this.tablaPedidosAlmacenCliente);
-
-    },
-    reject: (type: any) => {
-        switch(type) {
-            case ConfirmEventType.REJECT:
-                //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
-            break;
-            case ConfirmEventType.CANCEL:
-                //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
-            break;
+async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
+  //////////////////console.log(pedido, itemcode, bodega);
+    let cantidadComprometida =0;
+    for(let vehiculo of this.vehiculosEnSolicitud){
+        for(let lineaPedido of vehiculo.pedidos){
+         ////////////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
+            if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
+              
+              cantidadComprometida+=lineaPedido.cantidad;
+            }
         }
     }
-});
+
+    return cantidadComprometida;
 }
 
-confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
-  this.confirmationService.confirm({
-      message: 'Esta seguro de proceder con la eliminación del item '+item+' asociado al vehículo de placas '+placa+'?',
-      header: 'Confirmatción',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
-          let pedidos = this.vehiculosEnSolicitud[index].pedidos;
-          
-          let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
-          //////////////////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
-          this.vehiculosEnSolicitud[index].cantidad =this.vehiculosEnSolicitud[index].cantidad-eval(this.vehiculosEnSolicitud[index].pedidos[indexPedido].cantidad);
-          this.vehiculosEnSolicitud[index].pedidos.splice(indexPedido,1);
-          this.messageService.add({severity:'info', summary:'Confirmado', detail:'El item '+item+' fue eliminado de la lista'});
-          ////////////////////console.log(this.vehiculosEnSolicitud);
-          this.generarTreeTable();
-          ////////////////////console.log(this.tablaPedidosAlmacenCliente);
-
-      },
-      reject: (type: any) => {
-          switch(type) {
-              case ConfirmEventType.REJECT:
-                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
-              break;
-              case ConfirmEventType.CANCEL:
-                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
-              break;
-          }
-      }
-  });
-}
-
-setTimer(){
-  if(this.completeCargue){
-    this.displayModal = false;
-  }
-  this.completeTimer = true;
+configTablePedidosAlmacenCliente(){
+  let headersTable:any= this.configHeadersPedidos();
+  let dataTable:any = this.configDataTablePedidos(this.pedidosAlmacenCliente);
   
-}
-
-grabarSolicitud(){
-
-  ////////////////////console.log(this.vehiculosEnSolicitud);
-  this.displayModal = true;
-  this.loadingCargue = true;
-  this.completeCargue=false;
-  this.completeTimer = false;
-
-  //setTimeout(this.setTimer,2500);
-  setTimeout(()=>{this.setTimer()},2500);
- 
-  //Validar existencia de pedidos en vehiculos
-  let error = false;
-  let detalle_solicitud:any[] = [];
-
-  
-  
-  for(let vehiculo of this.vehiculosEnSolicitud){
-    if(vehiculo.pedidos.length == 0){
-      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado pedidos`});
-      error = true;
-      this.displayModal = false;
-    }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
-      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
-      error = true;
-      this.displayModal = false;
-    }else /*if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length >1 && this.condicion_tpt=='TRANSP'){
-      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} solo se le puede asignar un solo item de flete`});
-      error = true;
-      this.displayModal = false;
-    }else */if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
-      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
-      error = true;
-      this.displayModal = false;
-    }else{
-      let pedidosVehiculo:any[] = [];
-      for(let pedido of vehiculo.pedidos){
-       ////////////////console.log(pedido);
-        let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
-
-        pedidosVehiculo.push({
-          pedidonum:pedido.pedido,
-          itemcode:pedido.itemcode,
-          itemname:pedido.itemname,
-          cantidad:pedido.cantidad,
-          bodega: pedido.bodega,
-          CardCode: pedido.CardCode,
-          CardName: pedido.CardName,
-          email_vendedor: email_vendedor,
-          linea:pedido.linenum
-        });
-        
-        
-
-        //////////////////console.log(pedidosVehiculo);
-      }
-
-     ////////////////console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
-
-      detalle_solicitud.push({
-        fechacita:vehiculo.fechacargue,
-        horacita:vehiculo.horacargue,
-        lugarentrega:vehiculo.sitioentrega,
-        municipioentrega:vehiculo.municipioentrega,
-        observacion:vehiculo.observacion,
-        condiciontpt: this.condicion_tpt,
-        transportadora:this.transportadoras.find(transportadora => transportadora.code === vehiculo.transportadora).id,
-        vehiculo:this.vehiculos.find(vehiculoo => vehiculoo.code === vehiculo.placa).id,
-        conductor:this.conductores.find(conductor=>conductor.code === vehiculo.conductor).id,
-        locacion:this.almacenSeleccionado.code,
-        pedidos_detalle_solicitud:pedidosVehiculo
-      });
-    }
+  this.tablaPedidosAlmacenCliente = {
+    header: headersTable,
+    data: dataTable
   }
-
-  if (!error) {
-
-      let clientesSolicitud:any[] = this.multiplesClientes?
-                                        this.clienteSeleccionado.map((cliente: { id: any; }) =>{return cliente.id}):
-                                        [this.clienteSeleccionado].map((cliente: { id: any; }) =>{return cliente.id});
-      const newSolicitud:any = {
-        clientes: clientesSolicitud,
-        detalle_solicitud
-      }
-     ////console.log('newSolicitud',newSolicitud);
-      
-      this.solicitudTurnoService.create(newSolicitud)
-          .subscribe({
-                next:async (result)=>{
-                 
-                  if(this.completeTimer){
-                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
-                    this.displayModal = false;
-                    this.loadingCargue = false;
-                    
-                  }
-                  this.completeCargue = true;
-                  this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
-                  
-                  ////////console.log('Registro Solicitud',result);
-                  this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
-                      .subscribe({
-                            next:async (solicitud)=>{
-                              await this.bloqueoPedidosSolicitud(solicitud);
-                              ////console.log(solicitud);
-                              await this.configEmails(solicitud);
-                            },
-                            error:(err)=>{
-                              console.error(err);
-                            }
-                  });
-
-                  
-                  
-                },
-                error:(err)=>{
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                  console.error(err);
-                  this.displayModal = false;
-                  this.loadingCargue = false;
-                }
-        });
-
-
-  }
-}
-
-async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
-
-  //let lineasPedidosBloquear:any[] = [];
-
-  //console.log(this.pedidos[0].docnum, this.pedidosAlmacenCliente);
-
-
-  for(let turno of solicitud.detalle_solicitud_turnos){
-      for(let pedido of turno.detalle_solicitud_turnos_pedido){
-        /*lineasPedidosBloquear.push({
-            Code:`${turno.id}-${pedido.id}`,
-            Name:`${turno.id}-${pedido.id}`,
-            U_NF_ORDCARGUE:turno.id,
-            U_NF_PEDIDO:this.pedidosAlmacenCliente.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedido && pedidoCliente.linenum===pedido.linea).docentry,
-            U_NF_LINEA:pedido.linea,
-            U_NF_ABIERTO:'SI',
-            U_NF_CANTIDAD:pedido.cantidad,
-            U_NF_BODEGA: pedido.bodega,
-        })*/
-        //console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedidonum && pedidoCliente.linenum===pedido.linea));
-        //console.log(pedido.pedidonum);
-
-        //console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
-        let lineaPedidoBloqueo = {
-            Code:`${turno.id}-${pedido.id}`,
-            Name:`${turno.id}-${pedido.id}`,
-            U_NF_ORDCARGUE:turno.id,
-            U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
-            U_NF_LINEA:pedido.linea,
-            U_NF_ABIERTO:'SI',
-            U_NF_CANTIDAD:pedido.cantidad,
-            U_NF_BODEGA: pedido.bodega
-        }
-
-        //console.log(lineaPedidoBloqueo);
-
-        this.sB1SLService.bloqueoPedidos(lineaPedidoBloqueo)
-            .subscribe({
-                next:(result)=>{
-                  //console.log(result);
-                },
-                error:(err)=>{
-                  console.error(err);
-                }
-            });
-      }
-  }
-
-  
-
- 
-}
-
-goToSolicitudes(){
-  this.router.navigate(['/portal/solicitudes-de-cargue'])
-}
-
-toggle(index: number) {
-  this.activeStateTabs[index] = !this.activeStateTabs[index]?true:true;
-
-}
-
-filter(event: any, arrayFiltrar:any[]) {
-
-//////////////////////console.log(arrayFiltrar);
-const filtered: any[] = [];
-const query = event.query;
-for (let i = 0; i < arrayFiltrar.length; i++) {
-    const linea = arrayFiltrar[i];
-    if (linea.label.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-        filtered.push(linea);
-    }
-}
-
-return filtered.slice(0,10);
 }
 
 configHeadersPedidos(){
@@ -1631,6 +1118,557 @@ configDataTablePedidos(arregloPedido:any){
     return dataTable;
 }
 
+filtrarCliente2(event: any) {
+  this.clientesFiltrados2 = this.filter(event,this.clienteSeleccionado);
+}
+
+seleccionarCliente2(clienteSeleccionado2:any){
+     //console.log(clienteSeleccionado2, this.almacenSeleccionado)
+      this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code, clienteSeleccionado2.code);
+}   
+
+filtrarMunicipio(event:any){
+  this.municipiosFiltrados = this.filter(event,this.municipios);
+}
+
+seleccionarMunicipio(){
+ //console.log(this.municipioSeleccionado);
+  this.municipioentrega = this.municipioSeleccionado.label;
+}
+
+confirmarSeleccionPedidosAlmacenCliente(){
+  this.showItemsSelectedPedidosAlmacenCliente=true;
+  
+  //this.dialogPedidosCliente = false;
+}
+
+async seleccionarPedidosAlmacenCliente(event:any){
+ 
+  //////////////////console.log(this.clienteSeleccionado2);
+  this.envioLineaCarguePedido =true;
+
+
+  if(this.sitioentrega=="" || this.municipioentrega==""){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
+      this.showItemsSelectedPedidosAlmacenCliente=false;
+  }else{
+    const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
+    console.log('pedidos seleccionados',pedidosSeleccionados);
+  
+    if(pedidosSeleccionados.length > 0){
+        
+        let totalCarga = 0;
+        let error:boolean = false;
+        for(let pedido of pedidosSeleccionados){
+  
+          //TODO Validar solo las lineas diferentes a flete   
+  
+          if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+              totalCarga+=parseFloat(pedido.cargada);
+  
+              //////////console.log(pedido);
+     
+              if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
+                error = true;
+              }
+             
+              if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
+                error = true;
+              }
+     
+              if(parseFloat(pedido.cargada)> this.capacidadDisponibleVehiculo ){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado`});
+                error = true;
+              }
+  
+              if(parseFloat(pedido.cargada)+this.pesobruto> this.pesoneto ){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} mas el peso bruto supera la capacidad máxima del vehículo seleccionado`});
+                error = true;
+              }
+          }
+                
+        }
+  
+        if(!error && totalCarga> this.capacidadDisponibleVehiculo){
+            this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
+            error = true;
+        }
+  
+        // TODO:: Si es transporta sociedad validar si exite linea de flete en seleccion
+        if(!error && this.condicion_tpt=="TRANSP" && pedidosSeleccionados.filter((pedidoSeleccionado: { itemcode: string; }) =>pedidoSeleccionado.itemcode.toLowerCase().startsWith('sf')).length ===0){
+          this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `No se ha seleccionado linea de flete para este item`});
+          error = false;
+  
+        }
+  
+  
+  
+        if(!error){
+            //Asignar pedidos al vehiculo
+            //Obtener index del vehiculo en la solicitud
+            let indexVehiculo = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == this.vehiculoSeleccionado.code);
+            //Obtener pedidos asociados al vehiculo en la solicitud
+            let pdidosVehiculo:any[] = this.vehiculosEnSolicitud[indexVehiculo].pedidos;
+            
+            for(let pedido of pedidosSeleccionados){
+  
+              //////////console.log('pedido seleccionado',pedido);
+  
+              if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any }) => pedidovh.pedido == pedido.docnum && 
+                                                                                                                                                      pedidovh.itemcode == pedido.itemcode && 
+                                                                                                                                                      pedidovh.municipioentrega == this.municipioentrega &&
+                                                                                                                                                      pedidovh.lugarentrega == this.sitioentrega)!=undefined){
+                if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+                  let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any }) => pedidovh.pedido == pedido.docnum && 
+                                                                                                                                                  pedidovh.itemcode == pedido.itemcode && 
+                                                                                                                                                  pedidovh.municipioentrega == this.municipioentrega &&
+                                                                                                                                                  pedidovh.lugarentrega == this.sitioentrega);
+                  pdidosVehiculo[indexPedido].cantidad += parseFloat(pedido.cargada);
+                }
+                
+              }else{
+                    pdidosVehiculo.push({
+      
+                          pedido:pedido.docnum,
+                          itemcode:pedido.itemcode,
+                          itemname:pedido.itemname,
+                          cantidad_pedido:parseFloat(pedido.pendiente),
+                          cantidad:parseFloat(pedido.cargada),
+                          bodega:pedido.almacen,
+                          CardCode:this.clienteSeleccionado2.CardCode,
+                          CardName:this.clienteSeleccionado2.CardName,
+                          linenum:pedido.linenum,
+                          municipioentrega:this.municipioentrega,
+                          lugarentrega:this.sitioentrega,
+                          cliente:this.clienteSeleccionado2.CardName
+  
+                    });
+              }
+              
+            }
+  
+            this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
+            this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
+            this.envioLineaCarguePedido =false;
+            this.dialogPedidosCliente = false;
+            this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
+            ////////console.log(this.vehiculosEnSolicitud);
+            this.configTablePedidosAlmacenCliente();
+            this.generarTreeTable();
+        }
+      
+  
+  
+    }else{
+        this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe seleccionar al menos un pedido - Item'});
+        
+    }
+  
+    this.showItemsSelectedPedidosAlmacenCliente=false;
+  
+  }
+  
+}
+
+async cantidadCargaVehiculo(placa:string):Promise<number>{
+  let cantidadCargada =0;
+  let vehiculo = this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa);
+  for(let pedidoVehiculo of vehiculo.pedidos){
+    ////////////console.log(pedidoVehiculo)
+    if(!pedidoVehiculo.itemcode.toLowerCase().startsWith("sf")){
+      cantidadCargada+=eval(pedidoVehiculo.cantidad);
+    }
+  }
+  return cantidadCargada;
+}
+
+quitarVehiculo(placa:string){
+  //////////////////////console.log(placa);
+  this.confirmRemoveVehiculo(placa);
+}
+
+quitarRegistro(placa:string,pedido:string,item:string){
+  //////////////////////console.log(placa,item);
+  this.confirmRemovePedidoItem(placa,pedido,item);
+}
+
+confirmRemoveVehiculo(placa:string) {
+  this.confirmationService.confirm({
+    message: 'Esta seguro de proceder con la eliminación del vehículo '+placa+', recuerde que los pedidos y productos asociados, tmabien seran elimnados de la lista?',
+    header: 'Confirmación',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+        let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
+        this.vehiculosEnSolicitud.splice(index,1);
+        this.messageService.add({severity:'info', summary:'Confirmado', detail:'El vhículo '+placa+' fue eliminado de la lista'});
+        //////////////////////console.log(this.vehiculosEnSolicitud);
+        this.generarTreeTable();
+        //////////////////////console.log(this.tablaPedidosAlmacenCliente);
+
+    },
+    reject: (type: any) => {
+        switch(type) {
+            case ConfirmEventType.REJECT:
+                //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+            break;
+            case ConfirmEventType.CANCEL:
+                //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+            break;
+        }
+    }
+});
+}
+
+confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
+  this.confirmationService.confirm({
+      message: 'Esta seguro de proceder con la eliminación del item '+item+' asociado al vehículo de placas '+placa+'?',
+      header: 'Confirmatción',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
+          let pedidos = this.vehiculosEnSolicitud[index].pedidos;
+          
+          let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
+          ////////////////////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
+          this.vehiculosEnSolicitud[index].cantidad =this.vehiculosEnSolicitud[index].cantidad-eval(this.vehiculosEnSolicitud[index].pedidos[indexPedido].cantidad);
+          this.vehiculosEnSolicitud[index].pedidos.splice(indexPedido,1);
+          this.messageService.add({severity:'info', summary:'Confirmado', detail:'El item '+item+' fue eliminado de la lista'});
+          //////////////////////console.log(this.vehiculosEnSolicitud);
+          this.generarTreeTable();
+          //////////////////////console.log(this.tablaPedidosAlmacenCliente);
+
+      },
+      reject: (type: any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+              break;
+              case ConfirmEventType.CANCEL:
+                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+              break;
+          }
+      }
+  });
+}
+
+
+ confirmAdicionCliente(clienteSeleccionado:any) {
+  this.confirmationService.confirm({
+      message: 'Esta agregando un nuevo cliente a la solicitud y tiene seleccionad una locación, por lo tanto se modificara la selección de las locaciones y se borraran los vhiculos y pedidos seleccionados previamente. ¿Desea continuar?',
+      header: 'Confirmatción',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          this.getPedidosPorCliente(clienteSeleccionado);
+          this.almacenSeleccionado = [];
+          this.generarTreeTable();
+          //////////////////////console.log(this.tablaPedidosAlmacenCliente);
+
+      },
+      reject: async (type: any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+                  
+              break;
+              case ConfirmEventType.CANCEL:
+                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+                  
+              break;
+          }
+          this.clienteSeleccionado.pop();
+          ////////////////////console.log(this.clienteSeleccionado);
+          this.getPedidosPorCliente(clienteSeleccionado);
+      }
+  });
+}
+
+async validarHoraCargue():Promise<boolean>{
+  let horarioValido:boolean = true;
+
+  for(let horario of this.horariosSeleccionados){
+    //////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    //////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    //////////console.log(new Date(this.horacargue));
+
+    let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
+    let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
+    let horacargue = new Date(this.horacargue);
+
+    if(horainicio<= horacargue && horafin >= horacargue){
+      //////////console.log('hora valida en horario id '+horario.id);
+    }else{
+      //////////console.log('hora invalida en horario id '+horario.id);
+      horarioValido = false;
+    }
+  }
+
+  return horarioValido;
+}
+
+async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
+  let capacidadDisponibleVH = 0;
+  let vehiculo:any = this.vehiculosEnSolicitud.filter(pedido =>pedido.placa == placa);
+  //////////////////////console.log(vehiculo.length);
+  if(vehiculo.length >0){
+    capacidadDisponibleVH =vehiculo[0].cantidad
+  }
+ 
+  /*for(let pedido of pedidosVehiculo){
+    capacidadDisponibleVH+=pedido.cantidad;
+  }*/
+  //////////////////////console.log(capacidadDisponibleVH);
+  return capacidadDisponibleVH;
+}
+
+
+
+async validarCantidadesCargadas(pedidos:any):Promise<number>{
+  let cantidadCargada =0;
+  ////////////////////console.log(pedidos);
+  for(let pedido of pedidos){
+    
+    cantidadCargada+=eval(pedido.cargada);
+    
+  }
+  //////////////////////console.log(cantidadCargada);
+  return  cantidadCargada;
+}
+
+async validarCantidadesCargadasPorPedido(pedidos:any):Promise<boolean>{
+  let error = false;
+  for(let pedido of pedidos){
+    
+   
+    if(pedido.cargada>pedido.disponible){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad a cargar de la linea ${pedido.index} supera la cantidad disponible del pedido: ${pedido.docnum} - item: ${pedido.itemcode} - ${pedido.itemname} `});
+      error = true;
+    }
+  }
+  return  error;
+}
+
+
+
+setTimer(){
+  if(this.completeCargue){
+    this.displayModal = false;
+  }
+  this.completeTimer = true;
+  
+}
+
+grabarSolicitud(){
+
+  //////////////////////console.log(this.vehiculosEnSolicitud);
+  this.displayModal = true;
+  this.loadingCargue = true;
+  this.completeCargue=false;
+  this.completeTimer = false;
+
+  //setTimeout(this.setTimer,2500);
+  setTimeout(()=>{this.setTimer()},2500);
+ 
+  //Validar existencia de pedidos en vehiculos
+  let error = false;
+  let detalle_solicitud:any[] = [];
+
+  
+  
+  for(let vehiculo of this.vehiculosEnSolicitud){
+    if(vehiculo.pedidos.length == 0){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado pedidos`});
+      error = true;
+      this.displayModal = false;
+    }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
+      error = true;
+      this.displayModal = false;
+    }else /*if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length >1 && this.condicion_tpt=='TRANSP'){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} solo se le puede asignar un solo item de flete`});
+      error = true;
+      this.displayModal = false;
+    }else */if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
+      error = true;
+      this.displayModal = false;
+    }else{
+      let pedidosVehiculo:any[] = [];
+      for(let pedido of vehiculo.pedidos){
+       //////////////////console.log(pedido);
+        let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
+
+        pedidosVehiculo.push({
+          pedidonum:pedido.pedido,
+          itemcode:pedido.itemcode,
+          itemname:pedido.itemname,
+          cantidad_pedido:pedido.cantidad_pedido,
+          cantidad:pedido.cantidad,
+          bodega: pedido.bodega,
+          CardCode: pedido.CardCode,
+          CardName: pedido.CardName,
+          email_vendedor: email_vendedor,
+          linea:pedido.linenum,
+          municipioentrega:pedido.municipioentrega,
+          lugarentrega:pedido.lugarentrega
+
+        });
+        
+        
+
+        ////////////////////console.log(pedidosVehiculo);
+      }
+
+     //////////////////console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
+
+      detalle_solicitud.push({
+        fechacita:vehiculo.fechacargue,
+        horacita:vehiculo.horacargue,
+        lugarentrega:vehiculo.sitioentrega,
+        municipioentrega:vehiculo.municipioentrega,
+        observacion:vehiculo.observacion!=''?`${vehiculo.observacion};`:'',
+        condiciontpt: this.condicion_tpt,
+        transportadora:this.transportadoras.find(transportadora => transportadora.code === vehiculo.transportadora).id,
+        vehiculo:this.vehiculos.find(vehiculoo => vehiculoo.code === vehiculo.placa).id,
+        conductor:this.conductores.find(conductor=>conductor.code === vehiculo.conductor).id,
+        locacion:this.almacenSeleccionado.code,
+        pedidos_detalle_solicitud:pedidosVehiculo
+      });
+    }
+  }
+
+  if (!error) {
+
+      let clientesSolicitud:any[] = this.multiplesClientes?
+                                        this.clienteSeleccionado.map((cliente: { id: any; }) =>{return cliente.id}):
+                                        [this.clienteSeleccionado].map((cliente: { id: any; }) =>{return cliente.id});
+      const newSolicitud:any = {
+        clientes: clientesSolicitud,
+        detalle_solicitud
+      }
+     //////console.log('newSolicitud',newSolicitud);
+      
+      this.solicitudTurnoService.create(newSolicitud)
+          .subscribe({
+                next:async (result)=>{
+                 
+                  if(this.completeTimer){
+                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
+                    this.displayModal = false;
+                    this.loadingCargue = false;
+                    
+                  }
+                  this.completeCargue = true;
+                  this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
+                  
+                  //////////console.log('Registro Solicitud',result);
+                  this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
+                      .subscribe({
+                            next:async (solicitud)=>{
+                              await this.bloqueoPedidosSolicitud(solicitud);
+                              //////console.log(solicitud);
+                              await this.configEmails(solicitud);
+                            },
+                            error:(err)=>{
+                              console.error(err);
+                            }
+                  });
+
+                  
+                  
+                },
+                error:(err)=>{
+                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                  console.error(err);
+                  this.displayModal = false;
+                  this.loadingCargue = false;
+                }
+        });
+
+
+  }
+}
+
+async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
+
+  //let lineasPedidosBloquear:any[] = [];
+
+  ////console.log(this.pedidos[0].docnum, this.pedidosAlmacenCliente);
+
+
+  for(let turno of solicitud.detalle_solicitud_turnos){
+      for(let pedido of turno.detalle_solicitud_turnos_pedido){
+        /*lineasPedidosBloquear.push({
+            Code:`${turno.id}-${pedido.id}`,
+            Name:`${turno.id}-${pedido.id}`,
+            U_NF_ORDCARGUE:turno.id,
+            U_NF_PEDIDO:this.pedidosAlmacenCliente.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedido && pedidoCliente.linenum===pedido.linea).docentry,
+            U_NF_LINEA:pedido.linea,
+            U_NF_ABIERTO:'SI',
+            U_NF_CANTIDAD:pedido.cantidad,
+            U_NF_BODEGA: pedido.bodega,
+        })*/
+        ////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedidonum && pedidoCliente.linenum===pedido.linea));
+        ////console.log(pedido.pedidonum);
+
+        ////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
+        let lineaPedidoBloqueo = {
+            Code:`${turno.id}-${pedido.id}`,
+            Name:`${turno.id}-${pedido.id}`,
+            U_NF_ORDCARGUE:turno.id,
+            U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
+            U_NF_LINEA:pedido.linea,
+            U_NF_ABIERTO:'SI',
+            U_NF_CANTIDAD:pedido.cantidad,
+            U_NF_BODEGA: pedido.bodega
+        }
+
+        ////console.log(lineaPedidoBloqueo);
+
+        this.sB1SLService.bloqueoPedidos(lineaPedidoBloqueo)
+            .subscribe({
+                next:(result)=>{
+                  ////console.log(result);
+                },
+                error:(err)=>{
+                  console.error(err);
+                }
+            });
+      }
+  }
+
+  
+
+ 
+}
+
+goToSolicitudes(){
+  this.router.navigate(['/portal/solicitudes-de-cargue'])
+}
+
+toggle(index: number) {
+  this.activeStateTabs[index] = !this.activeStateTabs[index]?true:true;
+
+}
+
+filter(event: any, arrayFiltrar:any[]) {
+
+////////////////////////console.log(arrayFiltrar);
+const filtered: any[] = [];
+const query = event.query;
+for (let i = 0; i < arrayFiltrar.length; i++) {
+    const linea = arrayFiltrar[i];
+    if (linea.label.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+        filtered.push(linea);
+    }
+}
+
+return filtered.slice(0,10);
+}
+
+
+
 async emailsClientes(solicitud:any):Promise<void> {
 
   let turnosCliente:any[] = []; 
@@ -1641,7 +1679,7 @@ async emailsClientes(solicitud:any):Promise<void> {
 })=>{
     
     turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-      ////////console.log(turno.id, pedido.CardCode);
+      //////////console.log(turno.id, pedido.CardCode);
         let email_cliente = solicitud.clientes.find((cliente: { CardCode: any; })=>cliente.CardCode === pedido.CardCode).EmailAddress;
         if(turnosCliente.filter(cliente=>cliente.codigo===pedido.CardCode).length === 0){
 
@@ -1674,7 +1712,7 @@ async emailsClientes(solicitud:any):Promise<void> {
         }else{
             
             let indexCliente = turnosCliente.findIndex(cliente=>cliente.codigo === pedido.CardCode);
-            ////////console.log(turnosCliente[indexCliente]);
+            //////////console.log(turnosCliente[indexCliente]);
 
             if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
               let turnoCliente:any;
@@ -1697,7 +1735,7 @@ async emailsClientes(solicitud:any):Promise<void> {
               turnosCliente[indexCliente].turnos.push(turnoCliente);
             }else{
               let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
-              ////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+              //////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
               turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
               if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                 turnosCliente[indexCliente].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1712,14 +1750,14 @@ async emailsClientes(solicitud:any):Promise<void> {
 
 
 
-  console.log(turnosCliente);
+  //console.log(turnosCliente);
 
   turnosCliente.forEach(async (cliente)=>{
-   console.log('cliente', cliente);
+   //console.log('cliente', cliente);
    // if(cliente.email!='' && cliente.email!=null){
 
       let clienteTurno:any = solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === cliente.codigo);
-      console.log('solicitud.clientes',clienteTurno);
+      //console.log('solicitud.clientes',clienteTurno);
 
       //clienteTurno.turnos = cliente.turnos;
       let objectMail = {
@@ -1748,8 +1786,8 @@ async emailsClientes(solicitud:any):Promise<void> {
                     }
         }         
       };
-      console.log('objectMail Cliente',objectMail);
-      //console.log(await this.functionsService.sendMail(objectMail));
+      //console.log('objectMail Cliente',objectMail);
+      ////console.log(await this.functionsService.sendMail(objectMail));
       await this.functionsService.sendMail(objectMail)
   //  }
   });
@@ -1765,7 +1803,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
 })=>{
     
     turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-      ////////console.log(turno.id, pedido.CardCode);
+      //////////console.log(turno.id, pedido.CardCode);
         if(turnosVendedor.filter(vendedor=>vendedor.codigo===pedido.email_vendedor).length === 0){
 
             let turnoVendedor:any;
@@ -1797,7 +1835,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
         }else{
             
             let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.codigo === pedido.email_vendedor);
-            ////////console.log(turnosCliente[indexCliente]);
+            //////////console.log(turnosCliente[indexCliente]);
 
             if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
               let turnoVendedor:any;
@@ -1820,7 +1858,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
               turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
             }else{
               let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
-              ////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+              //////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
               turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
               if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                 turnosVendedor[indexVendedor].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1832,7 +1870,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
     
   });
 
-  //////console.log(turnosVendedor);
+  ////////console.log(turnosVendedor);
 
   turnosVendedor.forEach(async (vendedor)=>{
     if(vendedor.email!='' && vendedor.email!=null){
@@ -1852,8 +1890,8 @@ async emailsVendedores(solicitud:any): Promise<void>{
                     //cliente:solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === vendedor.code)
         }         
       };
-      console.log('objectMail vendedor',objectMail);
-      //console.log(await this.functionsService.sendMail(objectMail));
+      //console.log('objectMail vendedor',objectMail);
+      ////console.log(await this.functionsService.sendMail(objectMail));
       await this.functionsService.sendMail(objectMail)
     }
   });
@@ -1868,7 +1906,7 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
   let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLICITADO,locacion}))
                     .map((email: { email_responsable: any; }) => {return email.email_responsable});
 
-  ////console.log('emailsTurno',emailsTurno.join());
+  //////console.log('emailsTurno',emailsTurno.join());
 
   if(emailsTurno.join()!=''){
     emailBodega = emailsTurno.join();
@@ -1908,8 +1946,8 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
                   
       }         
     };
-    console.log('objectMail Bodega',objectMail);
-    //console.log(await this.functionsService.sendMail(objectMail));
+    //console.log('objectMail Bodega',objectMail);
+    ////console.log(await this.functionsService.sendMail(objectMail));
     await this.functionsService.sendMail(objectMail)
 
   }
@@ -1950,8 +1988,8 @@ async emailTransp(solicitud:any): Promise<void>{
                 
     }         
   };
-  console.log('objectMail trasporta sociedad',objectMail);
-  //console.log(await this.functionsService.sendMail(objectMail));
+  //console.log('objectMail trasporta sociedad',objectMail);
+  ////console.log(await this.functionsService.sendMail(objectMail));
   await this.functionsService.sendMail(objectMail)
 }
 
@@ -1992,16 +2030,16 @@ async emailCreador(solicitud:any): Promise<void>{
                 
     }         
   };
-  console.log('objectMail usuario creador',objectMail);
-  //console.log(await this.functionsService.sendMail(objectMail));
+  //console.log('objectMail usuario creador',objectMail);
+  ////console.log(await this.functionsService.sendMail(objectMail));
   await this.functionsService.sendMail(objectMail)
 
 }
 
 async configEmails(dataSolicitud:any): Promise<void>{
     
-    //////console.log(JSON.stringify(dataSolicitud));
-    console.log(dataSolicitud);
+    ////////console.log(JSON.stringify(dataSolicitud));
+    //console.log(dataSolicitud);
 
     await this.emailsClientes(dataSolicitud);
     await this.emailsVendedores(dataSolicitud);
@@ -2019,7 +2057,7 @@ async configEmails(dataSolicitud:any): Promise<void>{
     //let emailBodega:string = this.almacenSeleccionado.email;
     let objectMail:any;
     let usuarioCreador:any = await this.usuariosService.infoUsuario();
-    //////////console.log(usuarioCreador);
+    ////////////console.log(usuarioCreador);
     let totalvehiculos:number =0;
     let totaltoneladas:number = 0;
 
@@ -2071,10 +2109,10 @@ async configEmails(dataSolicitud:any): Promise<void>{
         if(cliente.EmailAddress==null || cliente.EmailAddress==undefined){
           //Obtenert email del cliente del usuario segun el cardcode 
           let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(cliente.CardCode);
-          //////////console.log('usuarioCliente',usuarioCliente);
+          ////////////console.log('usuarioCliente',usuarioCliente);
           if(usuarioCliente!=false){
             cliente.EmailAddress = usuarioCliente.email;
-            ////////console.log('usuarioCliente.email',usuarioCliente.email);
+            //////////console.log('usuarioCliente.email',usuarioCliente.email);
           }
           
         }
@@ -2098,8 +2136,8 @@ async configEmails(dataSolicitud:any): Promise<void>{
                           cliente
               }         
             };
-            ////////console.log('objectMail Cliente',objectMail);
-            ////////console.log(await this.functionsService.sendMail(objectMail));
+            //////////console.log('objectMail Cliente',objectMail);
+            //////////console.log(await this.functionsService.sendMail(objectMail));
         }
 
         // Configuracion de email para jefe de zona o vendedor
@@ -2140,8 +2178,8 @@ async configEmails(dataSolicitud:any): Promise<void>{
                     
         }         
       };
-      ////////console.log('objectMail Bodega',objectMail);
-      ////////console.log(await this.functionsService.sendMail(objectMail));
+      //////////console.log('objectMail Bodega',objectMail);
+      //////////console.log(await this.functionsService.sendMail(objectMail));
     }
     */
 
@@ -2161,12 +2199,12 @@ configTablaPedidosEnSolicitud(){
       data: dataTable
   }
   
-    ////////////////////console.log(this.tablaPedidosEnSolicitud);
+    //////////////////////console.log(this.tablaPedidosEnSolicitud);
   
 }
 
 adicionarPedido(event:any){
-  ////////////////////console.log(event);
+  //////////////////////console.log(event);
   if(this.tablaPedidosAlmacenCliente.data.length>0){
     this.dialogPedidosCliente = event;
   }else{
@@ -2197,7 +2235,7 @@ configComboSeleccionPedido(){
 
 
 seleccionarPedido(pedidoSeleccionado:any){
-  ////////////////////console.log(pedidoSeleccionado);
+  //////////////////////console.log(pedidoSeleccionado);
 }
 
 filtrarPedido(event:any){
@@ -2238,13 +2276,13 @@ filtrarPedido(event:any){
         almacen:this.almacenSeleccionado.code,
     });
     this.envioLineaCarguePedido =false;
-    ////////////////////console.log(this.detalleSolictudCargue);
+    //////////////////////console.log(this.detalleSolictudCargue);
     this.dialogCargueVehiculoPedido= false;
     this.resetearForm();
     
     this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
     this.pedidosEnSolicitud = await this.calcularCantidadesComprometidas(this.pedidosEnSolicitud);
-    ////////////////////console.log(this.pedidosAlmacenCliente, this.pedidosEnSolicitud);
+    //////////////////////console.log(this.pedidosAlmacenCliente, this.pedidosEnSolicitud);
 
     this.configTablaPedidosEnSolicitud();
     this.configTablePedidosAlmacenCliente();

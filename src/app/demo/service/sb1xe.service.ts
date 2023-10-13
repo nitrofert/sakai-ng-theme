@@ -35,7 +35,7 @@ import { UrlApiService } from "./url-api.service";
 
     getFactursaSocioNegocio(params:any):Observable<any> {
 
-        console.log(params);
+        //console.log(params);
         let parametros ="";
 
         if(params.compania){
@@ -59,13 +59,13 @@ import { UrlApiService } from "./url-api.service";
         }
 
         const url:string = `${this.api_url}/api/sb1xe/facturas-sn${parametros}`;
-       console.log(url);
+       //console.log(url);
         return this.http.get<any>(url);
     }
 
    
     async facturasSocioNegocio(params:any):Promise<any>{
-        //console.log(params);
+        ////console.log(params);
         const facturasSN$ = this.getFactursaSocioNegocio(params);
         const facturasSN = await lastValueFrom(facturasSN$);
         return facturasSN;

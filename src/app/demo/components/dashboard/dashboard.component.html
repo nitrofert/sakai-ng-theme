@@ -42,7 +42,8 @@
                         </div>
                         <div *ngIf="!aceptoPoliticaDatos" class="field-checkbox">
                             <p-checkbox [(ngModel)]="checkedPoliticaDatos" [binary]="true" inputId="binary"></p-checkbox>
-                            <label for="binary">Acepto términos y condiciones, política de tratamiento de datos y aviso de privacidad <a href="#">ver política de privacidad</a></label>
+                            <label for="binary">Acepto términos y condiciones, política de tratamiento de datos y aviso de privacidad</label>
+                            <a href="javascript:;" (click)="verTYC()">ver política de privacidad</a>
                         </div>
                         
                     </div>
@@ -62,15 +63,368 @@
               </ng-template>
     </p-dialog>
 <!------------------------------------------------------------->
+
+<!--Modal TYC politica de datos -->
+<p-dialog 
+[(visible)]="modalTYC" 
+[modal]="true" 
+[style]="{width: '50%', background:'url(https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png)', 'background-size':'cover' }"
+[maximizable]="true"
+[draggable]="false" 
+[resizable]="true" 
+[closable]="true">
+
+<ng-template pTemplate="header">
+    <div>
+        <img src="https://nitrofert.com.co/wp-content/uploads/2022/09/NITROFERT.png" width="200px">
+    </div>
+</ng-template>
+
+<div>
+    <div class="text-center ">
+        <h2>TÉRMINOS Y CONDICIONES PORTAL DE AUTOGESTIÓN DE CARTERA DE CLIENTES</h2>
+    </div>
+    <div class="text-justify">
+        Este documento describe los Términos y Condiciones Generales para el uso del Portal de Autogestión de NITROFERT S.A.S., (en adelante “<strong>Nitrofert</strong>” o la “<strong>Nitrofert</strong>”) mediante el cual personas naturales o jurídicas, en adelante “Clientes y/o Usuarios”, podrán acceder a los diferentes servicios y atributos descritos en estos términos y condiciones; lo anterior, a través de la página web www.nitrofert.com.co, o por los medios digitales que <strong>Nitrofert</strong> determine.
+        El uso del Portal de Autogestión es inherente a los productos y servicios prestados por <strong>Nitrofert</strong>; en razón de lo anterior, deberán usarse de manera integral.
+    </div>
+
+    <div>
+        <ol>
+            <li  class="text-center font-bold mb-5">
+                Definiciones
+                <p class="text-justify font-normal mb-3 mt-3">
+                    Los términos aquí definidos tendrán los significados que se les adscriben, independientemente de su uso en singular o en plural, en género masculino o femenino, o de cualquier forma o composición gramatical o sintáctica que sea necesaria para la adecuada redacción y comprensión de estos Términos y Condiciones. 
+
+Así mismo, los términos aquí definidos tendrán los significados que se les atribuyen, cualquiera sea la parte de estos Términos y Condiciones en que éstos sean empleados, ya sea antes o después de haber sido definidos. El orden de los términos aquí definidos no podrá ser interpretado como una prelación de ningún tipo entre aquellos.
+
+                </p>
+                <ol class="text-justify font-bold">
+                    <li class="mb-3">
+                        <span class="font-normal">
+                            <strong class="underline">Sitio Web</strong>: Hace referencia al portal web “<strong>Autogestión de Cartera</strong>” alojada bajo el dominio <a href="http://www.nitrofert.com.co/" target="_blank">www.nitrofert.com.co</a> desarrollada por <strong>Nitrofert</strong> y operada por dicha compañía que, a través de la integración de interfaces tecnológicas, permitirá a sus clientes la autogestión de seguimiento, verificación y administración del estado de su cartera vigente con <strong>Nitrofert</strong>, incluyendo las cuentas pendientes por pagar, así como los pagos y/o abonos efectuados y efectivamente registrados en las cuentas corrientes de la compañía.
+                        </span>
+                        
+                    </li>
+                    <li class="mb-3">
+                        <span class="font-normal">
+                        <strong class="underline">Contenido</strong>: Hace referencia a toda clase de imágenes, textos, videos, diagramas, dibujos, bases de datos, e información que en general se encuentre alojada, sea parte o sea accesible a través del Sitio Web. 
+                        </span>
+                    </li>
+
+                    <li class="mb-3">
+                        <span class="font-normal">
+                        <strong class="underline">Usuario</strong>: Hace referencia a todo Cliente que, como persona natural o jurídica, use el Sitio Web para la verificación y seguimiento del estado de su cartera con <strong>Nitrofert</strong>, así como para registrar información sobre su actividad económica, financiera o en general cualquier información requerida para el uso de las funcionalidades del Portal. 
+                        </span>
+                    </li>
+
+                    <li class="mb-3">
+                        <span class="font-normal">
+                        <strong class="underline">Cliente(s)</strong>: se refiere al tercero que está obligado a satisfacer una cuenta por pagar y/o obligación a favor de la Compañía, en virtud de un vínculo contractual existente entre ambas partes. 
+                        </span>
+                    </li>
+
+                    <li class="mb-3">
+                        <span class="font-normal">
+                        <strong class="underline">Perfil de Usuario</strong>: Hace referencia a la cuenta que los Usuarios deben crear para acceder al Sitio Web. 
+                        </span>
+                    </li>
+
+                    <li class="mb-3">
+                        <span class="font-normal">
+                        <strong class="underline">Autenticación</strong>: es la acción de acceder al Sitio Web como Usuario Registrado mediante el ingreso de su “Correo electrónico” y “Contraseña” en la sección de autenticación del Sitio.
+                        </span>
+                    </li>
+
+                </ol>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Aceptación de los Términos y Condiciones
+
+                <ol class="text-justify font-bold">
+                    <li class="mb-3">
+                        En cuanto al uso del Sitio Web:
+                        <p class="font-normal">
+                        Al registrarse y acceder al Sitio Web, el Usuario acepta voluntaria, informada y expresamente el contenido total de estos Términos y Condiciones en lo referente al ingreso y uso de la misma, manifestando que hace uso del aplicativo bajo su entera responsabilidad. En caso de discrepancia total o parcial con los presentes Términos y Condiciones, el Usuario deberá abstenerse de acceder o hacer cualquier tipo de uso del Sitio Web.  Particularmente, al hacer uso del Sitio Web el Usuario declara de manera expresa e inequívoca que:
+                        </p>
+                        <ol class="text-justify font-bold">
+                            <li class="mb-3">
+                                <span class="font-normal">
+                                    El uso del Sitio Web requiere de la aceptación total e inequívoca de los presentes Términos y Condiciones, siendo esta una aceptación que se entiende dada por el uso del Sitio Web mismo.
+                                </span>
+                            </li>
+                            <li class="mb-3">
+                                <span class="font-normal">
+                                No desarrolla ninguna actividad ilícita o irregular que pueda comprometer la responsabilidad, el buen nombre, o la actividad de <strong>Nitrofert</strong> en forma alguna, ni se encuentra incluido en listas restrictivas relacionadas con lavado de activos y/o financiación de terrorismo.
+                                </span>
+                            </li>
+        
+                            <li class="mb-3">
+                                <span class="font-normal">
+                                Entiende que la compañía procurará reflejar en el sitio web y en tiempo real la información financiera del usuario, sin perjuicio de las verificaciones previas que deba realizar para ello una vez los movimientos transaccionales queden registrados tanto en las cuentas bancarias dispuestas para recaudo como en su contabilidad.
+                                </span>
+                            </li>
+        
+                           
+        
+                        </ol>
+                    </li>
+                   
+                </ol>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Operación del Sitio Web
+                <p class="text-justify font-normal mb-3 mt-3">
+                    El Sitio Web es operado por <strong>Nitrofert</strong>, siendo esta una sociedad legalmente constituida bajo las leyes colombianas, cuyos datos de identificación y contacto son los siguientes:
+                </p>
+                <table width="100%" class="border-1 text-justify" [cellSpacing]="0" cellPadding="2px" >
+                    <tr>
+                        <td class="border-right-1 border-bottom-1" width="50%">Razón social:</td>
+                        <td class="border-bottom-1"width="50%">NITROFERT S.A.S.</td>
+                    </tr>
+
+                    <tr>
+                        <td  class="border-right-1 border-bottom-1">Número de Identificación Tributaria (NIT)</td>
+                        <td  class="border-bottom-1">901.174.177-1</td>
+                    </tr>
+
+                    <tr>
+                        <td  class="border-right-1 border-bottom-1">Dirección de notificación judicial</td>
+                        <td  class="border-bottom-1">Carrera 53 No. 80 – 198, Oficina 803</td>
+                    </tr>
+
+                    <tr>
+                        <td  class="border-right-1 border-bottom-1">Teléfono</td>
+                        <td  class="border-bottom-1">(605) 309 3308</td>
+                    </tr>
+
+                    <tr>
+                        <td  class="border-right-1 ">Correo electrónico</td>
+                        <td  >notificaciones@nitrofert.com.co</td>
+                    </tr>
+                </table>
+                
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Obligaciones del Usuario respecto al uso de la Website
+               
+                <ol class="text-justify font-bold mt-3 mb-3">
+
+                    <li class="mb-3">
+                        Obligaciones generales del Usuario respecto al uso del Sitio Web 
+                        <p class="text-justify font-normal mb-3 mt-3">
+                            El acceso al Sitio Web significa que el Usuario acepta de manera voluntaria, informada y expresa que hará uso legal y legítimo del contenido y la información alojada en el mismo, que tendrá propósitos legales y legítimos al hacer uso del Sitio Web y que cumplirá a cabalidad tanto los presentes Términos y Condiciones, como todas las leyes y regulaciones que resulten aplicables. En este sentido, el Usuario se compromete voluntaria y expresamente a: 
+                        </p>
+                        
+                    </li>
+
+                    <ol>
+                        <li class="mb-3">
+                        
+                            <span class="font-normal">
+                                Abstenerse de difundir información falsa, dañina, hostil, abusiva, problemática, amenazante, perjudicial o malintencionada o de cualquier otro tipo de información frente a la cual no cuente con la respectiva autorización por parte de <strong>Nitrofert</strong>.
+                            </span>
+                            
+                        </li>
     
-    <div *ngIf="showDashBoardCliente" class="grid">
+                        <li class="mb-3">
+                            
+                            <span class="font-normal">
+                                Abstenerse de usar el Sitio Web para finalidades malintencionadas, dañinas, problemáticas y/o perjudiciales en contra de <strong>Nitrofert</strong> o de terceros. 
+                            </span>
+                            
+                        </li>
+    
+                        <li class="mb-3">
+                            
+                            <span class="font-normal">
+                                Abstenerse de transmitir o emitir material que contenga virus informáticos o cualquier otro código, programa de computador o Website destinada a interrumpir, destruir, restringir o perjudicar la funcionalidad de computadores, programas de computador, sistemas de información, redes de telecomunicaciones o infraestructura y servicios de Nitrofert o de terceros. 
+                            </span>
+                            
+                        </li>
+    
+                        <li class="mb-3">
+                            
+                            <span class="font-normal">
+                                Abstenerse de violar o incumplir, de manera intencionada o no, cualquier ley aplicable nacional, local, estatal o internacional, incluyendo, pero sin limitarse a las normas de privacidad y protección de datos personales, entre cualquier otra que resulte aplicable.
+                            </span>
+                            
+                        </li>
+    
+                        <li class="mb-3">
+                            
+                            <span class="font-normal">
+                                Abstenerse de recolectar, guardar y administrar datos personales sobre personas naturales y jurídicas sin la correspondiente autorización y en incumplimiento de las leyes aplicables.
+                            </span>
+                            
+                        </li>
+    
+                        
+                        <li class="mb-3">
+                            
+                            <span class="font-normal">
+                                Abstenerse de infringir los derechos de propiedad intelectual de <strong>Nitrofert</strong> o de terceros, entre otras conductas lesivas de terceros o de las leyes aplicables.
+                            </span>
+                            
+                        </li>
+    
+                        <li class="mb-3">
+                            
+                            <span class="font-normal">
+                                Abstenerse de suministrar cualquier información falsa o errada en relación con su identidad, datos personales, datos de contacto, y en general información que tenga relación con la funcionalidad del Sitio Web.
+                            </span>
+                            
+                        </li>
+    
+                        <li class="mb-3">
+                            
+                            <span class="font-normal">
+                                Abstenerse en cualquier forma de i) La modificación, reproducción, decodificación, desencriptación, desarme, ingeniería de reversa, publicación, transferencia a otras personas, o cualquier otra manera la alteración o divulgación de los contenidos y la información alojada en el Sitio Web sin autorización previa explícita y escrita emitida por <strong>Nitrofert</strong>; y, ii) El uso de cualquier software que tenga por objeto o como efecto el daño, la interferencia, la afectación de la integridad o la interceptación de los sistemas que soportan el Sitio Web, su funcionamiento o los contenidos alojados en ella.
+                            </span>
+                            
+                        </li>
+    
+                        <li class="mb-3">
+                            En general, obrar de buena fe en el uso del Sitio Web.
+                            <p class="font-normal">
+                                Cualquier violación de los presentes Términos y Condiciones dará derecho a <strong>Nitrofert</strong> a investigar las circunstancias asociadas a éste, quien podrá, a su libre arbitrio y en el marco de la ley, tomar todas las medidas e iniciar todas las acciones legales y extralegales necesarias en su contra, con el fin de obtener la cesación de dichas conductas y la correspondiente indemnización de perjuicios en caso de que haya lugar a ella.
+                            </p>
+                            
+                        </li>
+    
+                        <li class="mb-3">
+                            Obligaciones frente a la información suministrada.
+                            <p class="font-normal">
+                                Los Usuarios podrán suministrar información personal a efectos de la creación de su Perfil de Cliente. Esta información se usa para la plena identificación de los Usuarios, así como con los fines del Sitio Web que se encuentran disponibles para el Usuario dentro de la Política de Tratamiento de Datos Personales disponible <a href="https://nitrofert.com.co/politica-de-tratamiento-de-datos-personales" target="_blank">aquí</a>,  la cual el Usuario declara conocer y aceptar.  Igualmente, los usuarios podrán suministrar información relacionada a su información financiera a efectos de ejecutar las funcionalidades propias del Sitio Web.
+                            </p>
+                            <p class="font-normal">
+                                Con la aceptación de los presentes Términos y Condiciones, el Usuario se compromete a suministrar datos personales e información técnica de naturaleza veraz y actualizada. <strong>Nitrofert</strong> no se hará responsable de las consecuencias negativas que puedan derivarse para el Usuario de suministrar información falsa al momento de utilizar el Sitio Web.
+                            </p>
+                            
+                        </li>
+                    </ol>
+
+
+
+                    
+                   
+                </ol>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Del Contenido de la Website
+                <p class="text-justify font-normal mb-3 mt-3">
+                        Tanto del Sitio Web como su Contenido son propiedad de <strong>Nitrofert</strong>. En cualquier caso, el Usuario manifiesta estar de acuerdo en que él es el único responsable por su propia conducta y por la veracidad de la información suministrada mientras utilice el servicio, siendo responsable por las consecuencias que provengan del suministro de datos incorrectos. 
+
+El Usuario está de acuerdo en que al usar este Sitio Web no publicará, enviará, distribuirá ni divulgará información de carácter difamatorio, obsceno o ilícito, inclusive información de propiedad exclusiva perteneciente a otras personas o entidades, así como marcas registradas o información protegida por derechos de autor, sin la expresa autorización del propietario de esos derechos. 
+
+El uso del aplicativo es personal e intransferible. Se prohíbe suplantar la identidad de otro usuario en el uso de éste. Usted es responsable por el contenido que los individuos no autorizados produzcan al usar este Sitio Web utilizando sus credenciales de acceso bajo su autorización. Esta regla no se aplica a los casos de violación u otros problemas de seguridad que puedan ser detectados en el Sitio Web o producidos por ataques cibernéticos.
+
+Los datos recolectados mediante este Sitio Web provienen de los usuarios que voluntariamente proporcionaron la información y que tienen acceso a los dispositivos con especificaciones tecnológicas mínimas.
+
+Como Usuario, usted podrá remitir a <strong>Nitrofert</strong> todos y cada uno de sus comentarios y/o cualquier otro contenido que requiera, siempre y cuando dicha información no sea ilegal, falsa, dañina, vulgar, obscena, difamatoria, pornográfica, infundada, injuriosa, odiosa o perjudicial, o respecto de la cual usted no cuente con las debidas autorizaciones legales o contractuales o que contenga algún tipo de virus informático. 
+
+                </p>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Responsabilidad por Reclamaciones o Daños
+                <p class="text-justify font-normal mb-3 mt-3">
+                    Usted como Usuario será el único responsable por los daños que el acceso al Sitio Web pueda causar a los sistemas de información y comunicación que utilice para acceder al mismo, incluyendo los daños por virus informático, y/o de los eventuales daños que puedan derivarse conforme a la ejecución a las funcionalidades propias del Sitio Web.
+
+                    <strong>Nitrofert</strong>, según lo permita la ley aplicable, no será responsable en ningún caso, existiendo o no reclamaciones o acciones de cualquier tipo o forma, por cualquier daño, sea éste directo o indirecto, especial, punitivo, ejemplar, emergente, real, eventual o cualquiera otro, que se cause a o sufra el usuario del Sitio Web o cualquier tercero, incluyendo pero sin limitarse a daños a la integridad humana, propiedad, pérdida comercial, pérdida económica, pérdida de datos o pérdida de ganancias, daño que se cause en virtud de responsabilidad contractual, negligencia, y/o responsabilidad extracontractual, por el acceso y uso de los Contenidos del Sitio Web o la utilización de la información incluida en la misma o la ejecución de las funcionalidades que le son propias.
+
+El acceso a y uso de esta Website implica que usted ha aceptado mantener indemne a <strong>Nitrofert</strong> por o respecto de cualquier reclamo, queja, investigación administrativa o judicial, acción legal o responsabilidad probada basada en o relativa a la violación de estos términos y condiciones. 
+
+En consecuencia, usted no podrá demandar o instaurar acciones de ningún tipo, ni recobrar ningún tipo de indemnización por daños o perjuicios de ningún tipo de parte de <strong>Nitrofert</strong> como resultado de cualquier decisión o acción de <strong>Nitrofert</strong> en la administración, manejo, operación y ejecución de este Sitio Web. Esta indemnidad aplica a cualquier violación por parte de los Usuarios de los Términos y Condiciones concretos.
+
+
+                </p>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                De la Propiedad Intelectual
+                <p class="text-justify font-normal mb-3 mt-3">
+                    <strong>Nitrofert</strong> es titular o licenciataria autorizada de todos los derechos de propiedad intelectual relacionados con el Sitio Web y el contenido alojado en este, incluyendo, pero sin limitarse a marcas, signos distintivos, software, códigos fuente y objeto, representaciones gráficas, textos, APIs, bases de datos, videos, entre otros derechos exclusivos que no podrán ser explotados en forma alguna sin autorización previa y expresa por parte de <strong>Nitrofert</strong>.
+
+Particularmente, <strong>Nitrofert</strong> es titular de los derechos patrimoniales de autor relacionados tanto el Sitio Web como con el contenido producido, presentado, alojado, o puesto a disposición del público a través del mismo. La reproducción total o parcial de cualquiera de dichas obras se encuentra prohibida, así como su transformación, traducción, distribución, comunicación pública incluida la puesta a disposición, transmisión de contenidos, almacenamiento o acceso a través de medios analógicos, digitales o de cualquier otro sistema o tecnología creada, así como cualquier otra forma de explotación llevada a cabo sin autorización previa y escrita de <strong>Nitrofert</strong>. 
+El uso del Sitio Web no implica ni podrá ser interpretado como una cesión a favor del Usuario de los derechos patrimoniales de autor o demás derechos de propiedad intelectual relacionados el Sitio Web o con su Contenido. 
+
+
+                </p>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Legislación Aplicable
+                <p class="text-justify font-normal mb-3 mt-3">
+                    Los presentes Términos y Condiciones se regirá en todos sus efectos por su contenido y en su defecto por la ley colombiana.
+
+                </p>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Peticiones, Quejas y Reclamos
+                <p class="text-justify font-normal mb-3 mt-3">
+                    Las Peticiones, Quejas o Reclamos (en adelante “PQRs”) relacionadas con el Sitio Web podrán ser presentadas a través de los siguientes canales, puestos a disposición por <strong>Nitrofert</strong> para atención de Usuarios: 
+                </p>
+                <ol class="font-bold">
+                    <li  class="text-justify  mb-3 mt-3">
+                        <span class="font-normal">
+                            Dirección física: a través de escrito dirigido a <strong>Nitrofert</strong> a su dirección física ubicada en la Carrera 53 No. 80-198, Oficina 803 en la ciudad de Barranquilla, Atlántico, en el horario de lunes a viernes de 8:00 a.m. a 12:30 m y de 2:00 p.m. a 6 p.m. 
+                        </span>
+                    </li>
+                    <li  class="text-justify mb-3 mt-3">
+                        <span class="font-normal ">
+                            Dirección electrónica: a través de escrito dirigido al correo electrónico: <a href="mailto:notificaciones@nitrofert.com.co">notificaciones@nitrofert.com.co</a>, en cualquier día y hora. 
+                        </span>
+                    </li>
+                </ol>
+                <p class="text-justify font-normal mb-3 mt-3">
+                    <strong>Nitrofert</strong> asignará un número de seguimiento a cada PQR recibida e informará al Usuario la adecuada recepción de la misma bien sea a través de un mensaje dirigido a la dirección de correo electrónico o dirección física suministrada al momento de radicar la PQR, o bien mediante la indicación del número de registro de la PQR en caso de recepción telefónica. 
+
+El Usuario podrá hacer seguimiento del estado de su PQR de manera telefónica, suministrando para ello el número de radicación que le haya sido asignado al momento de radicarla, a través de la línea telefónica antes mencionada y bajo los horarios allí definidos. 
+
+En todo caso, las PQR relacionadas con el uso de la Website serán resueltas por <strong>Nitrofert</strong> en un término no mayor a quince (15) días hábiles desde su recepción, sin perjuicio del derecho del Usuario a acudir ante las autoridades competentes en caso de considerar vulnerados sus derechos. 
+
+                </p>
+            </li>
+
+            <li  class="text-center font-bold mb-5">
+                Modificaciones o Actualizaciones a los Términos y Condiciones
+                <p class="text-justify font-normal mb-3 mt-3">
+                    <strong>Nitrofert</strong> se reserva el derecho a modificar y actualizar en cualquier momento y de cualquier forma las condiciones de uso del Sitio Web, manifestando que los nuevos términos y condiciones o las nuevas condiciones a que haya lugar serán puesta a disposición de los Usuarios a través del Sitio Web.  
+
+Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) de (*) de 2023.
+
+
+                </p>
+            </li>
+        </ol>
+
+    </div>
+    
+    
+</div>
+
+<ng-template pTemplate="footer">
+      
+      
+</ng-template>
+</p-dialog>
+<!------------------------------------------------------------->
+
+<!--Dashboard cliente-->
+<div *ngIf="showDashBoardCliente" class="grid">
 
         <div class="col-12">
             
             <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
                 <div>
                     <div *ngIf="info_usuario && info_usuario.clientes.length==1" class="font-medium">{{ info_usuario.clientes[0].CardName }} - {{ info_usuario.clientes[0].FederalTaxID }}</div>
-                    <div *ngIf="info_usuario && info_usuario.clientes.length>1" >
+                    <div *ngIf="(info_usuario && info_usuario.clientes.length>1) || (info_usuario && info_usuario.clientes.length==0 && clientes.length>1)" >
                         <!--<span class="p-float-label">-->
                             <p-autoComplete id="clientes" 
                                             [(ngModel)]="clienteSeleccionado" 
@@ -88,8 +442,8 @@
                 
             </div>
         </div>
-        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -105,8 +459,57 @@
             </div>
         </div>
 
-        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+            <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Cupo Disponible</span>
+                        <div class="text-900 font-medium text-xl">{{ cupoDisponible  | currency}}</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-green-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                        <i class="pi pi-dollar text-green-500 text-xl"></i>
+                    </div>
+                </div>
+                <!--<span class="text-green-500 font-medium">%52+ </span>
+                <span class="text-500">since last week</span>-->
+            </div>
+        </div>
+
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+            <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Cartera Corriente</span>
+                        <div class="text-900 font-medium text-xl">{{ carteraCorriente  | currency}}</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                        <i class="pi pi-wallet text-cyan-500 text-xl"></i>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+            <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Cartera Vencida</span>
+                        <div class="text-900 font-medium text-xl">{{ carteraVencida  | currency}}</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                        <i class="pi pi-wallet text-cyan-500 text-xl"></i>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -122,8 +525,8 @@
             </div>
         </div>
 
-        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -138,54 +541,43 @@
                 <span class="text-500">since last visit</span>-->
             </div>
         </div>
-        
-        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
-            <div class="card mb-0">
+
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+            <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Cartera Vencida</span>
-                        <div class="text-900 font-medium text-xl">{{ carteraVencida  | currency}}</div>
+                        <span class="block text-500 font-medium mb-3">Notas crédito</span>
+                        <div class="text-900 font-medium text-xl">{{ notasCredito  | currency}}</div>
                     </div>
-                    <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
-                        <i class="pi pi-wallet text-cyan-500 text-xl"></i>
+                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                        <i class="pi pi-dollar text-blue-500 text-xl"></i>
                     </div>
                 </div>
-               
+                <!--<span class="text-green-500 font-medium">24 new </span>
+                <span class="text-500">since last visit</span>-->
+            </div>
+        </div>
+        
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+            <div class="card mb-0" >
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Pagos por compensar</span>
+                        <div class="text-900 font-medium text-xl">{{ pagosRecibidos  | currency}}</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                        <i class="pi pi-dollar text-blue-500 text-xl"></i>
+                    </div>
+                </div>
+                <!--<span class="text-green-500 font-medium">24 new </span>
+                <span class="text-500">since last visit</span>-->
             </div>
         </div>
 
-        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
-            <div class="card mb-0">
-                <div class="flex justify-content-between mb-3">
-                    <div>
-                        <span class="block text-500 font-medium mb-3">Cartera Corriente</span>
-                        <div class="text-900 font-medium text-xl">{{ carteraCorriente  | currency}}</div>
-                    </div>
-                    <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
-                        <i class="pi pi-wallet text-cyan-500 text-xl"></i>
-                    </div>
-                </div>
-               
-            </div>
-        </div>
-        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-4"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-4">
-            <div class="card mb-0">
-                <div class="flex justify-content-between mb-3">
-                    <div>
-                        <span class="block text-500 font-medium mb-3">Cupo Disponible</span>
-                        <div class="text-900 font-medium text-xl">{{ cupoDisponible  | currency}}</div>
-                    </div>
-                    <div class="flex align-items-center justify-content-center bg-green-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
-                        <i class="pi pi-dollar text-green-500 text-xl"></i>
-                    </div>
-                </div>
-                <!--<span class="text-green-500 font-medium">%52+ </span>
-                <span class="text-500">since last week</span>-->
-            </div>
-        </div>
+       
+        
         <!--<div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
@@ -382,4 +774,5 @@
 
         
 </div>
+<!---Fin dashboard cliente --->
 

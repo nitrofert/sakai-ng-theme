@@ -165,7 +165,24 @@
                                 <div class="text-center">Locación cita/turno</div>
                                 <div>
                                     <p-sortIcon field="locacion_label"></p-sortIcon>
-                                    <p-columnFilter type="text" field="locacion_label" display="menu" placeholder="Buscar por locación turno"></p-columnFilter>
+                                    <!--<p-columnFilter type="text" field="locacion_label" display="menu" placeholder="Buscar por locación turno"></p-columnFilter>-->
+                                    <p-columnFilter field="filtroLocacion" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                                        <ng-template pTemplate="header">
+                                            <div class="px-3 pt-3 pb-0">
+                                                <span class="font-bold">Seleccione una locación</span>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                            <p-multiSelect [ngModel]="value" [options]="filtroLocaciones" placeholder="Cualquiera" (onChange)="filter($event.value)" optionLabel="name">
+                                                <ng-template let-option pTemplate="item">
+                                                    <div class="inline-block vertical-align-middle">
+                                                        <!--<img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="24" class="vertical-align-middle" />-->
+                                                        <span class="ml-1 mt-1">{{ option.name }}</span>
+                                                    </div>
+                                                </ng-template>
+                                            </p-multiSelect>
+                                        </ng-template>
+                                    </p-columnFilter>
                                 </div>
                                 
                             </div>
@@ -342,6 +359,28 @@
                             </div>
                         </th>
 
+                        <th pSortableColumn="lugarentrega" style="min-width:15rem">
+                            <div class="flex justify-content-between align-items-center">
+                                <div class="text-center">Lugar entrega</div>
+                                <div>
+                                    <p-sortIcon field="lugarentrega"></p-sortIcon>
+                                    <p-columnFilter type="text" field="lugarentrega" display="menu" placeholder="Buscar por lugar entrega"></p-columnFilter>
+                                </div>
+                                
+                            </div>
+                        </th>
+
+                        <th pSortableColumn="remision" style="min-width:15rem">
+                            <div class="flex justify-content-between align-items-center">
+                                <div class="text-center"># Remisión</div>
+                                <div>
+                                    <p-sortIcon field="remision"></p-sortIcon>
+                                    <p-columnFilter type="text" field="remision" display="menu" placeholder="Buscar por remisión"></p-columnFilter>
+                                </div>
+                                
+                            </div>
+                        </th>
+
 
 
 						<th pSortableColumn="solicitudes_turno_id"  style="min-width:7rem">
@@ -459,6 +498,16 @@
                         <td class="text-center">
                             {{ itemData.detalle_solicitudes_turnos_condiciontpt }}
                         </td>
+
+                        <td class="text-center">
+                            {{ itemData.lugarentrega }}
+                        </td>
+
+                        <td class="text-center">
+                            {{ itemData.remision }}
+                        </td>
+
+                        
 
                         <td class="text-center">
                             {{ itemData.solicitudes_turno_id }}

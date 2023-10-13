@@ -4,6 +4,7 @@ import { Observable, lastValueFrom } from 'rxjs';
 import { UrlApiService } from './url-api.service';
 import { EstadosDealleSolicitud } from '../components/turnos/estados-turno.enum';
 import { SolicitudInterface } from '../components/solicitudescargue/interface/solicitud.interface';
+import { Subject } from 'rxjs';
 
 
 
@@ -12,11 +13,18 @@ export class SolicitudTurnoService {
 
     private api_url:string = "";
 
+    private turnosLocacion$ = new Subject<any[]>();
+    private turnosLocacion!: any[];
+    
+
     public estadosTurno:any[] = [{name:EstadosDealleSolicitud.SOLICITADO, value:EstadosDealleSolicitud.SOLICITADO, backgroundColor:'orange-100', textColor:'gray-900', icon:'pi pi-send'},
     {name:EstadosDealleSolicitud.PAUSADO, value:EstadosDealleSolicitud.PAUSADO, backgroundColor:'red-500', textColor:'surface-50',icon:'pi pi-pause'},
     {name:EstadosDealleSolicitud.ACTIVADO, value:EstadosDealleSolicitud.ACTIVADO, backgroundColor:'white', textColor:'gray-900',icon:'pi pi-play'},
     {name:EstadosDealleSolicitud.AUTORIZADO, value:EstadosDealleSolicitud.AUTORIZADO, backgroundColor:'yellow-300', textColor:'gray-900',icon:'pi pi-check'},
-    {name:EstadosDealleSolicitud.ARRIBO, value:EstadosDealleSolicitud.ARRIBO, backgroundColor:'yellow-600', textColor:'surface-50',icon:'pi pi-sign-in'},
+    {name:EstadosDealleSolicitud.SOLINVENTARIO, value:EstadosDealleSolicitud.SOLINVENTARIO, backgroundColor:'purple-300', textColor:'surface-50',icon:'pi pi-search'},
+    {name:EstadosDealleSolicitud.VALINVENTARIO, value:EstadosDealleSolicitud.VALINVENTARIO, backgroundColor:'purple-300', textColor:'surface-50',icon:'pi pi-search'},
+
+    {name:EstadosDealleSolicitud.ARRIBO, value:EstadosDealleSolicitud.ARRIBO, backgroundColor:'yellow-600', textColor:'surface-50',icon:'pi pi-ticket'},
     {name:EstadosDealleSolicitud.PESADO, value:EstadosDealleSolicitud.PESADO, backgroundColor:'primary-100', textColor:'gray-900',icon:'pi pi-compass'},
     {name:EstadosDealleSolicitud.CARGANDO, value:EstadosDealleSolicitud.CARGANDO, backgroundColor:'primary-300', textColor:'gray-900',icon:'pi pi-download'},
     {name:EstadosDealleSolicitud.CARGADO, value:EstadosDealleSolicitud.CARGADO, backgroundColor:'primary-600', textColor:'surface-50',icon:'pi pi-box'},
@@ -70,6 +78,17 @@ export class SolicitudTurnoService {
     getTurnosPorLocalidad(localidad:string):Observable<any> {
         const url:string = `${this.api_url}/api/solicitud-turnos/localidad`;
         return this.http.get<any>(url, {params:{localidad}});
+    }
+
+    getTurnosLcacion$(localidad:string):Observable<any> {
+        
+        return this.turnosLocacion$.asObservable();
+    }
+
+    async getListaTurnosLocacion(localidad:string):Promise<void>{
+        this.turnosLocacion = await lastValueFrom(this.getTurnosPorLocalidad(localidad));
+        console.log(this.turnosLocacion);
+        this.turnosLocacion$.next(this.turnosLocacion);
     }
 
 

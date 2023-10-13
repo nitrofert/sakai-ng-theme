@@ -15,7 +15,8 @@ import { ClientesService } from '../../service/clientes.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
-    providers:[MessageService]
+    providers:[MessageService],
+    styles:['ol { counter-reset: item }', 'li { display: block }',' li:before { content: counters(item, ".") " "; counter-increment: item }']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
@@ -53,6 +54,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     pedidos_abiertos:number = 0;
     saldo_nitrocredit:number = 0;
 
+    notasCredito:number = 0;
+    pagosRecibidos:number =0;
+
     facturasPorPagarAgrupada:any[] = [];
     facturasPorPagar:any[] = [];
 
@@ -60,6 +64,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     showDashBoardCliente:boolean = false;
     loadingDashBoardCliente:boolean = false;
+
+    modalTYC:boolean = false;
 
 
     constructor(private productService: ProductService, 
@@ -177,6 +183,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         //Cartera corriente
         this.carteraCorriente = parseFloat(saldosClienteSeleccionado[0].CARTERASINVENCER);
+
+        //Notas Credito
+        this.notasCredito = parseFloat(saldosClienteSeleccionado[0].NOTASCREDITO);
+
+        //Pagos recibidos
+        this.pagosRecibidos = parseFloat(saldosClienteSeleccionado[0].PAGOSRECIBIDOS);
+
         
 
         //Setear Card Cupo disponible
@@ -261,6 +274,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
             
             this.modalCambioPassYPolitica = true;
         }
+    }
+
+    verTYC(){
+        this.modalTYC = true;
+        console.log("dkjfsdlkjhfklsda");
     }
 
     async changePasswordPolitica(){

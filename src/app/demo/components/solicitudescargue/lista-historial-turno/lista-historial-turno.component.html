@@ -42,6 +42,16 @@
                         </li>
                     </ul>
                 </div>
+
+                <div *ngIf="event.disponibilidad">
+                    <div class="font-medium text-700 line-height-1"> <span class="font-bold">¿Inventario disponible?</span></div>
+                    <div>{{ event.disponibilidad }}</div>
+                    <div *ngIf="event.disponibilidad==='si'">
+                        <div class="font-medium text-700 line-height-1"> <span class="font-bold">Fecha</span></div>
+                        <div>{{ event.fechadisponibilidad | date }}</div>
+                    </div>
+                </div>
+
                 <div *ngIf="event.comentario" class="font-medium text-700 line-height-1"> <span class="font-bold">Comentario</span></div>
                 <p *ngIf="event.comentario">
                     {{ event.comentario}}

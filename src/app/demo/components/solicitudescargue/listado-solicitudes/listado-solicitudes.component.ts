@@ -112,7 +112,9 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                             'detalle_solicitudes_turnos_pedidos_pedidonum',
                             'material',
                             'detalle_solicitudes_turnos_pedidos_cantidad',
-                            'detalle_solicitudes_turnos_pedidos_bodega'
+                            'detalle_solicitudes_turnos_pedidos_bodega',
+                            'remision',
+                            'lugarentrega'
                           ];
   selectionMode:string = "multiple";
   selectedItem:any[] = [];
@@ -129,6 +131,9 @@ export class ListadoSolicitudesComponent  implements  OnInit{
   optionsPieChart:any;
   barStackChart:any;
   optionsBarStackChart:any;
+
+  filtroLocaciones:any[]=[];
+
 
   constructor(private router:Router,
               public dialogService: DialogService,
@@ -154,7 +159,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              //////////console.log(permisos);
+              ////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -170,7 +175,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
               
               this.infoUsuario = await this.usuariosService.infoUsuario();
-              ////////console.log(this.infoUsuario);
+              //////////console.log(this.infoUsuario);
               this.getSolicitudesTurno();
 
             },
@@ -187,12 +192,12 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.solicitudTurnoService.getSolicitudesTurno()
         .subscribe({
               next: (solicitudesTurnos)=>{
-                 ////////console.log(solicitudesTurnos);
+                 //////////console.log(solicitudesTurnos);
                   let solicitudes:any[] = [];
 
                   for(let solicitud of solicitudesTurnos){
                      
-                    ////////console.log(solicitud);
+                    //////////console.log(solicitud);
                     let cantidadCarga =0;
                     let cantidadPedidos = 0;
                     let cantidadVehiculos =0;
@@ -214,7 +219,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                     })
                   }
 
-                  //////////console.log(solicitudes);
+                  ////////////console.log(solicitudes);
                   this.dataTable = solicitudes;
               },
               error:(err)=>{
@@ -253,6 +258,8 @@ export class ListadoSolicitudesComponent  implements  OnInit{
         
          
          solicitudesTurnos.raw.forEach((solicitud: {
+                                                              locacion_label: any;
+                                                              filtroLocacion: { name: any; };
                                                               detalle_solicitudes_turnos_fechacita: Date; 
                                                               solicitudes_turno_created_at: Date;
                                                               detalle_solicitudes_turnos_horacita: Date; 
@@ -274,7 +281,12 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                                                               solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
                                                               solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
                                                               solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
-
+                                                             
+                                                             
+                                                              solicitud.filtroLocacion = { name:solicitud.locacion_label}
+                                                              if(this.filtroLocaciones.filter(filtro=>filtro.name === solicitud.locacion_label).length===0){
+                                                                this.filtroLocaciones.push({name:solicitud.locacion_label})
+                                                              }
                                                                                                                           
 
                                                               if(dataPieChart.filter(label=>label.name === solicitud.detalle_solicitudes_turnos_estado).length===0){
@@ -312,7 +324,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
         await this.configPieChart(dataPieChart);
         await this.configBarSatckChart(dataBarStackChart);
 
-         //////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+         ////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
          this.solicitudesExtendida = solicitudesTurnos.raw;
          this.loading = false;
       },
@@ -326,7 +338,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
         .subscribe({
             next:(solicitud)=>{
-              console.log(solicitud);
+              //console.log(solicitud);
 
              
 
@@ -346,7 +358,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
 
 
-    //////console.log(totalToneladas);
+    ////////console.log(totalToneladas);
 
     this.pieChart = {
       labels: dataPieChart.map((item: { name: any; })=>item.name),
@@ -382,7 +394,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
       item.data = [item.data];
     })
 
-    //////console.log('ordenado',dataBarStackChartOrder);
+    ////////console.log('ordenado',dataBarStackChartOrder);
     
     this.barStackChart = {
         labels:['Estados'],
@@ -473,7 +485,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
 
   nuevaSolicitud(event: any){
-    //////////console.log(event);
+    ////////////console.log(event);
     this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
   }
 
@@ -490,7 +502,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   exportExcel() {
     import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.dataTable);
+        const worksheet = xlsx.utils.json_to_sheet(this.solicitudesExtendida);
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, `Solicitudes de cargue`);
@@ -524,10 +536,10 @@ export class ListadoSolicitudesComponent  implements  OnInit{
    if(index>0){
     index+=1;
    }
-   //////console.log(index);
+   ////////console.log(index);
 
    filtro[index].value = value;*/
-   //////console.log(field,value, filtro,other,other2 );
+   ////////console.log(field,value, filtro,other,other2 );
    //table.filter(value,field,filtro[0].matchMode);
  
   }
