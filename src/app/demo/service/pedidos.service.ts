@@ -23,8 +23,12 @@ export class PedidosService {
             .then(data => data);
     }
 
-    getSaldosPedidos():Observable<any> {
-        const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos?compania=${this.urlApiService.companySAP}`;
+    getSaldosPedidos(cliente?:string,locacion2?:string):Observable<any> {
+        let options:string = "";
+        if(cliente){
+            options+=`&cliente=${cliente}&locacion2=${locacion2}`;
+        }
+        const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos?compania=${this.urlApiService.companySAP}${options}`;
         return this.http.get<any>(url);
     }
 

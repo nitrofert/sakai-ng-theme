@@ -58,11 +58,11 @@ export class VistaEstadosTurnoComponent implements  OnInit{
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad)
         .subscribe({
               next:async (turnosLocalidad)=>{
-                  console.log(turnosLocalidad);
+                 //console.log(turnosLocalidad);
                   this.turnosLocalidad = turnosLocalidad;
                   let boxEstados =await this.setBoxEstadosDate(this.fechaEstados,this.estadosTurno, turnosLocalidad);
                   this.estadosTurno = boxEstados;
-                  console.log(boxEstados);
+                 //console.log(boxEstados);
               },
               error:(err)=>{
                 this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
@@ -91,9 +91,9 @@ export class VistaEstadosTurnoComponent implements  OnInit{
   }
 
   async seleccionarFecha(){
-    console.log(this.fechaEstados);
+   //console.log(this.fechaEstados);
     /*let boxEstados =await this.setBoxEstadosDate(this.fechaEstados,this.estadosTurno, this.turnosLocalidad);
-    console.log(boxEstados);
+   //console.log(boxEstados);
     this.estadosTurno = boxEstados;*/
     this.getTurnosPorLocalidad(this.locacion);
   }

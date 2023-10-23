@@ -165,7 +165,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     async setDashboardCliente(saldosClienteSeleccionado:any){
         this.loadingDashBoardCliente = false;
-        console.log('saldosClienteSeleccionado',saldosClienteSeleccionado);
+       ////console.log('saldosClienteSeleccionado',saldosClienteSeleccionado);
 
         let cupo:number =parseFloat(saldosClienteSeleccionado[0].CUPO);
 
@@ -196,7 +196,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         let saldoLQ:number = saldosClienteSeleccionado[0].SALDOLIQUITECH==null?0:parseFloat(saldosClienteSeleccionado[0].SALDOLIQUITECH);
         let partidasAbiertas:number = parseFloat(saldosClienteSeleccionado[0].PARTIDASABIERTAS);
         this.cupoDisponible = cupo-(this.pedidos_abiertos+ this.saldo_nitrocredit+  this.carteraVencida +  this.carteraCorriente);
-        console.log(this.cupoDisponible);
+       ////console.log(this.cupoDisponible);
         //Setear Card Cartera vigente
         this.carteraVigente = partidasAbiertas;
        
@@ -224,7 +224,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             linea.diasvencimiento = Math.ceil(await this.functionsService.dateDif(new Date(), new Date(linea.DocDueDate), 'days'));
         }
 
-        console.log(facturasPorPagarAgrupada);
+       ////console.log(facturasPorPagarAgrupada);
 
        this.facturasPorPagarAgrupada = facturasPorPagarAgrupada;
 
@@ -278,7 +278,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     verTYC(){
         this.modalTYC = true;
-        console.log("dkjfsdlkjhfklsda");
+       ////console.log("dkjfsdlkjhfklsda");
     }
 
     async changePasswordPolitica(){
@@ -301,7 +301,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.usuarioService.update(data, this.info_usuario.id)
             .subscribe({
                 next:(result)=>{
-                    console.log(result);
+                   ////console.log(result);
                     this.loading = false;
                     this.modalCambioPassYPolitica = false;
                     this.messageService.add({severity:'success', summary: `Notificación:`, detail: `Se ha actualizado correctamente la información usuario ${result.nombrecompleto}.`});
@@ -327,7 +327,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     async seleccionarCliente(clienteSeleccionado:any){
         this.loadingDashBoardCliente = false;
-        console.log(clienteSeleccionado);
+       ////console.log(clienteSeleccionado);
         let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
         this.setDashboardCliente(saldosClienteSeleccionado);
     }

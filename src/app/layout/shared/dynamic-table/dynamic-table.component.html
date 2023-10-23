@@ -152,7 +152,8 @@
 											[(ngModel)]="itemData[key]" 
 											class="w-full" 
 											[style]="'min-width: '+headersTable[0][key].sizeCol+';'+'text-align:'+headersTable[0][key].align+';'"
-											(change)="selectLine(itemData['index'], itemData[key],itemData)">
+											(change)="cambioValorCampo(itemData['index'], itemData[key],itemData,key)"
+											(keydown.enter)="pressEnter($event,itemData['index'], itemData[key],itemData,key)">
 								</ng-template>
 								<ng-template pTemplate="output">
 									<div [style]="'text-align:'+headersTable[0][key].align+';'">

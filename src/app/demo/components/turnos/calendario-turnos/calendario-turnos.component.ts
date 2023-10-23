@@ -427,12 +427,12 @@ export class CalendarioTurnosComponent implements OnInit {
         let a:any;
         await this.solicitudTurnoService.getListaTurnosLocacion(localidad);
         this.turnosLocalidad$ = this.solicitudTurnoService.getTurnosLcacion$(localidad);
-        console.log(this.turnosLocalidad$);
+       //console.log(this.turnosLocalidad$);
         this.turnosLocalidad$.subscribe(turno=>a = turno);
-        console.log(a);
+       //console.log(a);
         this.turnosLocalidad$.subscribe({
               next:async (turnosLocalidad)=>{
-                console.log(turnosLocalidad);
+               //console.log(turnosLocalidad);
                 if(this.completeTimer){
                   this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                   this.displayModal = false;

@@ -75,7 +75,7 @@ export class AccionesComponent implements  OnInit{
         this.usuariosService.getPermisosModulo(modulo)
             .subscribe({
                 next: (permisos)=>{
-                  console.log(permisos);
+                 //console.log(permisos);
                   if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                     this.router.navigate(['/auth/access']);
                   }
@@ -100,7 +100,7 @@ export class AccionesComponent implements  OnInit{
       this.accionesService.getListadoAcciones()
           .subscribe({
               next: (acciones)=>{
-                console.log(acciones);
+               //console.log(acciones);
                 let accionesTmp:any[] = [];
                 for(let item of acciones){
                   accionesTmp.push({
@@ -121,7 +121,7 @@ export class AccionesComponent implements  OnInit{
     }
   
     nuevaAccion(event: any){
-      console.log(event);
+     //console.log(event);
       //this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
      
         const ref = this.dialogService.open(FormAccionesComponent, {
@@ -163,7 +163,7 @@ export class AccionesComponent implements  OnInit{
     }
    
     deleteAccion(event: any){
-        console.log(event);
+       //console.log(event);
     }
 
 

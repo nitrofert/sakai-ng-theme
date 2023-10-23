@@ -113,7 +113,7 @@ async getNovedades():Promise<void>{
                   novedad.label = novedad.novedad;
                 });
 
-                console.log(novedades);
+               //console.log(novedades);
                 this.novedades = novedades;
             },
             error:(err)=>{
@@ -132,7 +132,7 @@ async getTurno(id: number){
   this.solicitudTurnoService.getTurnosByID(id)
       .subscribe({
             next:async (turno)=>{
-                console.log('turno',turno);
+               //console.log('turno',turno);
 
                
 
@@ -198,7 +198,7 @@ async setEventsTimeLine(data:any):Promise<void>{
 
   let events:any[] =[];
   for(let event of data){
-    console.log(event);
+   //console.log(event);
     //let dateEvent = new Date(new Date(event.fecha).getTime()+(60*60000*5));
     let dateEventTime = new Date(event.fecha+' '+event.hora);
     //console.log(event.fecha,dateEvent, dateEventTime);

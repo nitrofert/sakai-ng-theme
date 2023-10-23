@@ -215,8 +215,8 @@ bufferToString(buffer:any):string{
 async formatDate(date:Date,format:string, lan:string='ES'): Promise<string>{
   let dateFormat:string ='';
 
-  console.log(date.toLocaleDateString('en-us',{weekday:"long"})); 
-  console.log(date.toLocaleDateString('en-us',{month:"long"})); 
+ //console.log(date.toLocaleDateString('en-us',{weekday:"long"})); 
+ //console.log(date.toLocaleDateString('en-us',{month:"long"})); 
 
 
   switch(format){

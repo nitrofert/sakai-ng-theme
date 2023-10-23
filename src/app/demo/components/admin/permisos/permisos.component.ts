@@ -266,7 +266,7 @@ export class PermisosComponent implements  OnInit{
       this.permisosService.updateEstadoPermmisoRol(formQuery)
       .subscribe({
           next:(permiso)=>{
-              console.log(permiso);
+             //console.log(permiso);
               this.messageService.add({severity:'success', summary:'información', detail:`la actualización del estado del permiso seleccionado se ha realizado correctamente`});
           },
           error:(err)=>{

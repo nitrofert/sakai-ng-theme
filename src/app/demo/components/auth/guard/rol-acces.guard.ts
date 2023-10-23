@@ -21,10 +21,10 @@ export class RoleAccesGuard implements CanActivate {
     const roles = await lastValueFrom(roles$);
 
     //const roles = await this.usuarioService.getRolesUsuario2();
-    console.log(roles,expectedRole, roles.find((rol: any) => rol.nombre === expectedRole));
+   //console.log(roles,expectedRole, roles.find((rol: any) => rol.nombre === expectedRole));
 
     if( roles === undefined || ! roles.find((rol: any) => rol.nombre === expectedRole)){
-        console.log('rol no definido')
+       //console.log('rol no definido')
         return false;
     }
 

@@ -210,7 +210,7 @@ async getFacturasCliente(){
     //console.log(linea.diasvencimiento);
   }
 
-  console.log('facturasClienteAgrupada',facturasClienteAgrupada);
+ //console.log('facturasClienteAgrupada',facturasClienteAgrupada);
 
 
 

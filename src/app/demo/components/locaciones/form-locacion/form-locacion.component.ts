@@ -99,8 +99,8 @@ ngOnInit() {
   this.horainicio =new Date(new Date().setHours(8,0,0));
   this.horafin =new Date(new Date().setHours(16,30,0));
 
-  console.log(this.horainicio.toLocaleTimeString('en-US',{ hour12: false }));
-  console.log(this.horafin.toLocaleTimeString('en-US',{ hour12: false }));
+ //console.log(this.horainicio.toLocaleTimeString('en-US',{ hour12: false }));
+ //console.log(this.horafin.toLocaleTimeString('en-US',{ hour12: false }));
   this.getLocacionesMySQL();
 
  
@@ -111,7 +111,7 @@ getLocacionesMySQL(){
   this.almacenesService.getLocaciones()
   .subscribe({
       next:(locaciones)=>{
-          console.log('locacionesMySQL',locaciones);
+         //console.log('locacionesMySQL',locaciones);
           this.locacionesMySQL = locaciones;
           if(this.locacionId!=0){
             this.editLocacion = true;
@@ -129,7 +129,7 @@ getLocacionesMySQL(){
   this.almacenesService.getAlmacenes()
   .subscribe({
       next:async (almacenes:any[])=>{
-        console.log('getLocacionesSAP',almacenes);
+       //console.log('getLocacionesSAP',almacenes);
         let almacenesTMP:any[] = await this.functionsService.objectToArray(almacenes);
         almacenesTMP = almacenesTMP.filter((almacen: { CorreoNoti: string | null; }) => almacen.CorreoNoti!=null && almacen.CorreoNoti!="");
         
@@ -161,7 +161,7 @@ getLocacionByCode(code:any){
   this.almacenesService.getLocacionByCode(code)
       .subscribe({
             next:(locacion)=>{
-              console.log(locacion);
+             //console.log(locacion);
               this.locacion = locacion.locacion;
               this.email_bodega = locacion.email;
               this.direccion = locacion.direccion;
@@ -191,7 +191,7 @@ cambioLocacion(){
 }
 
 editHorario(event:any){
-  console.log(event);
+ //console.log(event);
   
   
   this.tituloFormHorario ="Editar horario";
@@ -230,7 +230,7 @@ nuevoHorario(event:any){
 }
 
 grabarHorario(){
-  console.log(this.diasSeleccionados, this.horainicio, this.horafin)
+ //console.log(this.diasSeleccionados, this.horainicio, this.horafin)
   this.submitHorario = true;
   if(this.diasSeleccionados.length ==0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe seleccionar al menos un dia para la atención"});
@@ -282,12 +282,12 @@ grabarLocacion(){
           horarios:this.horarios
         }
 
-        console.log(data);
+       //console.log(data);
 
         this.almacenesService.setLocacion(data)
             .subscribe({
                 next:(locacion)=>{
-                  console.log(locacion);
+                 //console.log(locacion);
                   this.messageService.add({severity:'success', summary: '!Error¡', detail: `Se ha realizado correctamente el registro de la locación ${locacion.locacion}.`});
                   this.cerrar();                
                 },

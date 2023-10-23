@@ -230,7 +230,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.solicitudTurnoService.getSolicitudesTurnoExtendido()
     .subscribe({
       next: async (solicitudesTurnos)=>{
-         console.log(solicitudesTurnos);
+        //console.log(solicitudesTurnos);
          /*let solicitudesTMP = solicitudesTurnos.raw.map((solicitud: {
            detalle_solicitudes_turnos_fechacita: Date; 
            solicitudes_turno_created_at: Date;
