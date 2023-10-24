@@ -857,7 +857,7 @@ loadingPedidosTurno:boolean = false;
         
       }];
 
-      if(this.estado === this.estadosTurno.PESADOF){
+      if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
         
         headersTable[0].remision = {label:'# Remision',type:'number', sizeCol:'8rem', align:'left', editable:true}
       }
@@ -1666,6 +1666,21 @@ async validarHoraCargue():Promise<boolean>{
                         }
       
                         this.configSplitButton(this.estado,this.permisosModulo);
+
+
+                        this.solicitudTurnoService.sendNotification(turno.id)
+                            .subscribe({
+                                next:(result)=>{
+                                  if(result){
+                                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${turno.id}.`});
+                                  }
+                                },
+                                error:(err)=>{
+                                  console.error(err);
+                                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                                }
+
+                            });
                         /*
 
                         let turnoMail:any = {
@@ -1694,7 +1709,7 @@ async validarHoraCargue():Promise<boolean>{
 
                     },
                     error:(err)=> {
-                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
                         console.error(err);
                         this.displayModal = false;
                         this.loadingCargue = false;

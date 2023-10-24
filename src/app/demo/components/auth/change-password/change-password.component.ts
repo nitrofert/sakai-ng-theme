@@ -32,7 +32,7 @@ export class ChangePasswordComponent implements OnInit {
   constructor(public layoutService: LayoutService,
     private messageService: MessageService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
     ) {}
 
     ngOnInit() {
@@ -74,6 +74,7 @@ export class ChangePasswordComponent implements OnInit {
                       
                           this.loading = false;
                           this.messageService.add({severity:'success', summary: `Notificación:`, detail: `Se ha realizado correctamente el cambio del password usuario ${this.usuario}.`});     
+                          this.authService.logOut();
                           this.router.navigate(['/']);
                       
                   },

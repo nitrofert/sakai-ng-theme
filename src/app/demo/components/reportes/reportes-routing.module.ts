@@ -7,7 +7,7 @@ import { ListadoFacturasComponent } from './listado-facturas/listado-facturas.co
     imports: [RouterModule.forChild([
         { path: '', component: ListadoReportesComponent },
         { path: 'facturas', component: ListadoFacturasComponent },
-        { path: '**', redirectTo: '/notfound' }
+        //{ path: '**', redirectTo: '/notfound' }
     ])],
     exports: [RouterModule]
 })

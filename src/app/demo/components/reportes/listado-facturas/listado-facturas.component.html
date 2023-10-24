@@ -17,7 +17,8 @@
 					 [globalFilterFields]="globalFilterFields" 
 					 [selectionMode]="selectionMode" 
 					 [(selection)]="selectedItem" 
-					 responsiveLayout="scroll">
+					 responsiveLayout="scroll"
+                     (firstChange)="setFiltros(dt1)">
 
                      <ng-template pTemplate="caption">
 
@@ -109,6 +110,16 @@
                                         (click)="exportExcel()">
                                 </button>
 
+                                <button pButton
+                                        
+                                        pTooltip="Restaurar" tooltipPosition="bottom" placeholder="Bottom"   
+                                        class="p-button-outlined mb-2 mr-2 p-button-help p-button-sm" 
+                                        icon="pi pi-sync" 
+                                        (click)="restore(dt1)">
+                                </button>
+
+                                
+
                                 
 
                                 
@@ -177,7 +188,7 @@
                             <th>
                                 <div class="flex justify-content-between align-items-center">
                                     Dias de vencimento
-                                    <p-columnFilter type="text" field="diasvencimiento" display="menu" placeholder="Buscar por comentario"></p-columnFilter>
+                                    <p-columnFilter type="numeric" field="diasvencimiento" display="menu" placeholder="Buscar por dias de vencimiento"></p-columnFilter>
                                 </div>
                             </th>
 

@@ -1050,7 +1050,7 @@ async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, 
 }
 
 configTablePedidosAlmacenCliente(){
-  //console.log(this.pedidosAlmacenCliente);
+  console.log(this.pedidosAlmacenCliente);
   let headersTable:any= this.configHeadersPedidos();
   let dataTable:any = this.configDataTablePedidos(this.pedidosAlmacenCliente);
    
@@ -1058,6 +1058,7 @@ configTablePedidosAlmacenCliente(){
     header: headersTable,
     data: dataTable
   }
+  
 }
 
 configHeadersPedidos(){
@@ -1553,7 +1554,7 @@ grabarSolicitud(){
         clientes: clientesSolicitud,
         detalle_solicitud
       }
-     //console.log('newSolicitud',newSolicitud);
+     console.log('newSolicitud',newSolicitud);
       
       this.solicitudTurnoService.create(newSolicitud)
           .subscribe({

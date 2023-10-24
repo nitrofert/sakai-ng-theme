@@ -292,8 +292,8 @@ grabarLocacion(){
                   this.cerrar();                
                 },
                 error:(error)=>{
-                  console.error(error);
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  error});
+                  console.error(error.error);
+                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  error.error.message});
                 }
             });
     }

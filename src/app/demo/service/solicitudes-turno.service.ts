@@ -120,7 +120,12 @@ export class SolicitudTurnoService {
         const emailsturno = await lastValueFrom(emailsturno$);
         return emailsturno;
     }
-    
+
+    sendNotification(turnoid:number):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/envio-notificacion/${turnoid}`;
+        return this.http.get<any>(url);
+    }
+
 
    
 

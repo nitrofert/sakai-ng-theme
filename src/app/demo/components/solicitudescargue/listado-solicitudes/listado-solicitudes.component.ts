@@ -181,6 +181,8 @@ export class ListadoSolicitudesComponent  implements  OnInit{
             },
             error:(err)=>{
                 console.error(err);
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                
             }
         });
         
@@ -189,7 +191,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   async getSolicitudesTurno(){
 
-    this.solicitudTurnoService.getSolicitudesTurno()
+    /*this.solicitudTurnoService.getSolicitudesTurno()
         .subscribe({
               next: (solicitudesTurnos)=>{
                  //////////console.log(solicitudesTurnos);
@@ -225,7 +227,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
               error:(err)=>{
                 console.error(err);
               }
-        });
+        });*/
 
     this.solicitudTurnoService.getSolicitudesTurnoExtendido()
     .subscribe({

@@ -477,7 +477,7 @@ Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) d
         </div>
 
         <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3" style="cursor: pointer" (click)="goFacturas('cartera_corriente')">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -493,7 +493,7 @@ Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) d
         </div>
 
         <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3" style="cursor: pointer" (click)="goFacturas('cartera_vencida')">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -525,8 +525,8 @@ Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) d
             </div>
         </div>
 
-        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+        <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem" ></p-skeleton>
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3" style="cursor: pointer" (click)="goFacturas('Nitrocredit')">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>
@@ -543,7 +543,7 @@ Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) d
         </div>
 
         <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
-        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
+        <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3" style="cursor: pointer" (click)="goFacturas('notas_credito')">
             <div class="card mb-0" >
                 <div class="flex justify-content-between mb-3">
                     <div>

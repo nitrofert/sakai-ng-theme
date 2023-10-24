@@ -22,7 +22,9 @@ home:any;
       let tmpBreadCrumb = this.urlBreadCrumb.split("/",);
       for(let item of tmpBreadCrumb){
           //console.log(item);
-          this.breadcrumb.push({label:item.replace(/-/g,' ')});
+          let path = item.split("?")[0]
+          //console.log(path);
+          this.breadcrumb.push({label:path.replace(/-/g,' ')});
       }
        this.breadcrumb.shift();
        this.breadcrumb.shift();

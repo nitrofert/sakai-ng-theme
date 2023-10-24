@@ -155,6 +155,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
             this.clientes = clientes;
             this.clienteSeleccionado = this.clientes[0];
+            //console.log( this.clienteSeleccionado);
             let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
             this.setDashboardCliente(saldosClienteSeleccionado);
             this.showDashBoardCliente = true;
@@ -253,6 +254,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
     }
 
+    async generarFiltrosRptFacturas(nombreFiltro:string):Promise<any> {
+        let filtros:any ="";
+
+        //filtros+=`?cliente=${this.clienteSeleccionado.CardCode}&tipo=${nombreFiltro}`;
+        filtros = {cliente:this.clienteSeleccionado.CardCode,tipo:nombreFiltro }
+       
+        return filtros;
+    }
+
+    async goFacturas(nombreFiltro:string){
+        let params = await this.generarFiltrosRptFacturas(nombreFiltro);
+        let url = `/portal/reportes/facturas`
+        console.log(url);
+        this.router.navigate([url], { queryParams: params});
+    }
 
 
    async modalCambioPasswordPoliticaDatos(){

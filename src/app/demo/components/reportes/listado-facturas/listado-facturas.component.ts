@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -62,6 +62,8 @@ export class ListadoFacturasComponent  implements  OnInit{
 
   empresasCredito!:any[];
 
+  filtros!:any ;
+
 
 
   rangoFechas:Date[] = [];
@@ -69,6 +71,7 @@ export class ListadoFacturasComponent  implements  OnInit{
   
 
   @ViewChild('filter') filterTable!: ElementRef;
+  @ViewChild('dt') dt1!:Table;
 
   constructor(private router:Router,
               public dialogService: DialogService,
@@ -78,7 +81,8 @@ export class ListadoFacturasComponent  implements  OnInit{
               private usuarioService: UsuarioService,
               private sb1XEService:SB1XEService,
               private functionsService:FunctionsService,
-              private clientesService:ClientesService){}
+              private clientesService:ClientesService,
+              private rutaActiva: ActivatedRoute){}
 
 
   async ngOnInit() {
@@ -88,17 +92,21 @@ export class ListadoFacturasComponent  implements  OnInit{
     //Obtener info usuario
     this.info_usuario = await this.usuarioService.infoUsuario();
     this.rangoFechas = [await this.functionsService.dateAdd(new Date(),-3,'months'),new Date() ];
-    this.getClientesUsuario();
+    //this.getClientesUsuario();
     //////console.log(await this.functionsService.dateAdd(new Date(),3,'months'));
 
     this.empresasCredito = [{name:'Nitrofert', image: 'https://nitrofert.com.co/wp-content/uploads/2022/09/NITROFERT.png'},
                             {name:'Nitrocredit', image: 'https://nitrofert.com.co/wp-content/uploads/2023/07/NITROCRE.png'}];
 
-    
+    await this.getFilter();
+    this.getClientesUsuario();
+
+   
   }
 
   getPermisosModulo(){
     const modulo = this.router.url;
+    
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: (permisos)=>{
@@ -124,6 +132,15 @@ export class ListadoFacturasComponent  implements  OnInit{
             }
         });
         
+}
+
+async getFilter():Promise<void>{
+  
+  //console.log(this.rutaActiva);
+  this.filtros =  this.rutaActiva.snapshot.queryParams;
+
+  
+  
 }
 
 async getClientesUsuario(){
@@ -169,7 +186,17 @@ async getClientesUsuario(){
                 cliente.label =  `${cliente.CardName} - ${cliente.FederalTaxID}`;
             }
             this.clientes = clientes;
-            this.clienteSeleccionado = this.clientes[0];
+
+            /**
+             * Validar si la variable filtros esta vacia, seleccionar el primer cliente de la lista, si no tomar el cliente contenido en la varible .
+             */
+
+            if(this.filtros.cliente){
+              this.clienteSeleccionado = this.clientes.find(cliente=>cliente.CardCode === this.filtros.cliente);
+            }else{
+              this.clienteSeleccionado = this.clientes[0];
+            }
+            
             this.getFacturasCliente();
         }
 
@@ -216,11 +243,82 @@ async getFacturasCliente(){
 
   this.facturasClienteAgrupada = await this.functionsService.sortArrayObject(facturasClienteAgrupada,'DocNum','DESC');
 
-
+  //await this.setFiltros();
 
   this.loading = false;
 }
 
+async setFiltros(table: Table):Promise<void>{
+
+  //console.log(table.filters);
+  if(this.filtros.tipo){
+      switch(this.filtros.tipo){
+        case 'cartera_vencida':
+          table.filter(0,'diasvencimiento','gt');
+          table.filter('NO','PAGADA','is');
+          table.filter('Nota Credito','TIPOFAC','isNot');
+          
+         
+        break;
+        case 'cartera_corriente':
+          table.filter(0,'diasvencimiento','lt');
+          table.filter('NO','PAGADA','is');
+          table.filter('Nota Credito','TIPOFAC','isNot');
+        break;
+
+        case 'notas_credito':
+          
+          table.filter('Nota Credito','TIPOFAC','is');
+          table.filter('NO','PAGADA','is');
+        break;
+
+        case 'Nitrocredit':
+          
+        table.filter('Nitrocredit','creditCompany','is');
+        table.filter('NO','PAGADA','is');
+        
+      break;
+
+      }
+  }
+}
+
+async resetFiltros(table: Table):Promise<void>{
+
+  table.clear()
+
+  //console.log(table.filters);
+  if(this.filtros.tipo){
+      switch(this.filtros.tipo){
+        case 'cartera_vencida':
+          table.filter(null,'diasvencimiento','equals');
+          table.filter(null,'PAGADA','startsWith');
+          table.filter(null,'TIPOFAC','startsWith');
+          
+         
+        break;
+        case 'cartera_corriente':
+          table.filter(null,'diasvencimiento','equals');
+          table.filter(null,'PAGADA','startsWith');
+          table.filter(null,'TIPOFAC','startsWith');
+        break;
+
+        case 'notas_credito':
+          
+          table.filter(null,'TIPOFAC','startsWith');
+          table.filter(null,'PAGADA','startsWith');
+        break;
+
+        case 'Nitrocredit':
+          
+        table.filter(null,'creditCompany','i"equals"s');
+        table.filter(null,'PAGADA','startsWith');
+        
+      break;
+
+      }
+  }
+}
 
 filtrarCliente(event:any){
   let clientesAfiltrar:any = this.clientes;
@@ -326,11 +424,27 @@ formatCurrency(value: number) {
 
 onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    
 }
 
 clear(table: Table) {
   table.clear();
   this.filterTable.nativeElement.value = '';
+  //this.filtros = {}
+}
+
+async restore(table: Table){
+
+  
+  console.log(window.location);
+
+  let path = `${window.location.protocol}//${window.location.host}/#/portal/reportes/facturas`;
+  console.log(path);
+
+  window.location.href= (path);
+  window.location.reload();
+  
+  //window.location.href = '/portal/reportes/facturas/';
 }
 
 }
