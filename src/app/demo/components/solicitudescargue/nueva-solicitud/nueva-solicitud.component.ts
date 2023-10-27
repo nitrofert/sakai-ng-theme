@@ -1579,6 +1579,7 @@ grabarSolicitud(){
                             },
                             error:(err)=>{
                               console.error(err);
+                              this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});            
                             }
                   });
 
@@ -1586,7 +1587,7 @@ grabarSolicitud(){
                   
                 },
                 error:(err)=>{
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
                   console.error(err);
                   this.displayModal = false;
                   this.loadingCargue = false;
