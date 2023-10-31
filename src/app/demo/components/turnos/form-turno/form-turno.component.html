@@ -508,6 +508,22 @@
                                 </span>
                             </div>
 
+                            <div *ngIf="accion=='solicitud produccion'" class="field col-12 ">
+                                <span class="p-float-label">
+                                
+                                        
+                                        <p-dropdown [options]="solictudesProduccion" 
+                                                    [(ngModel)]="solictudProduccionSeleccionada" 
+                                                    placeholder="Seleccione un tipo de solicitud" 
+                                                    [editable]="true" 
+                                                    optionLabel="label"
+                                                    (onChange)="seleccionarTS()"
+                                                    [ngClass]="{'ng-invalid ng-dirty' :  (accion == 'solicitud produccion') && solictudProduccionSeleccionada.length==0 }"></p-dropdown>
+                                        
+                                        <label for="comentario"><h6>Tipo solicitud</h6></label>
+                                </span>
+                            </div>
+
                             <div class="field col-12 ">
                                 <span class="p-float-label">
                                     <!--<input type="text" 

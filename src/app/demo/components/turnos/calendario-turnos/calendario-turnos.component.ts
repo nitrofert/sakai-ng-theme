@@ -513,7 +513,7 @@ export class CalendarioTurnosComponent implements OnInit {
     }*/
     //alert(clickInfo.event.title);
     
-
+    console.log(clickInfo.event.title);
 
     
     let objectEvent = JSON.parse(clickInfo.event.title);

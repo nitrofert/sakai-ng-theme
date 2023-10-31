@@ -52,11 +52,18 @@
                     </div>
                 </div>
 
+                <div *ngIf="event.tipo_solicitud">
+                    <div class="font-medium text-700 line-height-1"> <span class="font-bold">Tipo solicitud</span></div>
+                    <div>{{ event.tipo_solicitud }}</div>
+                    
+                </div>
+
+
                 <div *ngIf="event.comentario" class="font-medium text-700 line-height-1"> <span class="font-bold">Comentario</span></div>
                 <p *ngIf="event.comentario">
                     {{ event.comentario}}
                 </p>
-                <span> <span class="font-bold">Realizado por:</span> {{event.usuario}}</span>
+                <span class="mt-5"> <span class="font-bold">Realizado por:</span> {{event.usuario}}</span>
                 
             </p-card>
         </ng-template>

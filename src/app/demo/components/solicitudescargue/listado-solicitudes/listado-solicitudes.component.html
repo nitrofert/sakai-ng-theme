@@ -259,6 +259,28 @@
                             </div>
                         </th>
 
+                        <th pSortableColumn="detalle_solicitudes_turnos_pedidos_dependencia" style="min-width:11rem">
+                            <div class="flex justify-content-between align-items-center">
+                                <div class="text-center">Dependencia</div>
+                                <div>
+                                    <p-sortIcon field="detalle_solicitudes_turnos_pedidos_dependencia"></p-sortIcon>
+                                    <p-columnFilter type="text" field="detalle_solicitudes_turnos_pedidos_dependencia" display="menu" placeholder="Buscar por dependencia"></p-columnFilter>
+                                </div>
+                                
+                            </div>
+                        </th>
+
+                        <th pSortableColumn="detalle_solicitudes_turnos_pedidos_localidad" style="min-width:11rem">
+                            <div class="flex justify-content-between align-items-center">
+                                <div class="text-center">Localidad</div>
+                                <div>
+                                    <p-sortIcon field="detalle_solicitudes_turnos_pedidos_localidad"></p-sortIcon>
+                                    <p-columnFilter type="text" field="detalle_solicitudes_turnos_pedidos_localidad" display="menu" placeholder="Buscar por localidad"></p-columnFilter>
+                                </div>
+                                
+                            </div>
+                        </th>
+
                         <th pSortableColumn="detalle_solicitudes_turnos_pedidos_bodega" style="min-width:11rem">
                             <div class="flex justify-content-between align-items-center">
                                 <div class="text-center">Almacén</div>
@@ -461,6 +483,14 @@
 						
                         <td class="text-center">
                             {{ itemData.material }}
+                        </td>
+
+                        <td class="text-center">
+                            {{ itemData.detalle_solicitudes_turnos_pedidos_dependencia }}
+                        </td>
+
+                        <td class="text-center">
+                            {{ itemData.detalle_solicitudes_turnos_pedidos_localidad }}
                         </td>
                         
                         <td class="text-center">

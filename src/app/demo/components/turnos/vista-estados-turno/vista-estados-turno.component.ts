@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -23,6 +23,8 @@ export class VistaEstadosTurnoComponent implements  OnInit{
   fechaEstados:Date = new Date();
   turnosLocalidad:any;
   turnosPlural: {[k: string]: string} = {'=0': 'turnos', '=1': 'turno', 'other': 'turnos'};
+
+  @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
 
 
@@ -96,6 +98,25 @@ export class VistaEstadosTurnoComponent implements  OnInit{
    //console.log(boxEstados);
     this.estadosTurno = boxEstados;*/
     this.getTurnosPorLocalidad(this.locacion);
+  }
+
+  selectTurno(event:any){
+    
+
+    let infoEvent = { 
+      event:{
+        id:event.id,
+        title:JSON.stringify({
+          placa:event.vehiculo.placa,
+          cliente:event.detalle_solicitud_turnos_pedido[0].CardName,
+          estado:event.estado,
+          turnoid:event.id
+        })
+      }
+    }
+
+    console.log(infoEvent);
+    this.onSelect.emit(infoEvent)
   }
 
 }

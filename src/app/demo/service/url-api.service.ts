@@ -41,7 +41,7 @@ export class UrlApiService {
         let token = this.getToken();
  
         //headers=headers.append('content-type','application/json')
-        //headers=headers.append('Access-Control-Allow-Origin', '*')
+        headers=headers.append('Access-Control-Allow-Origin', '*')
         //headers=headers.append('content-type','application/x-www-form-urlencoded')
         if(token!=""){
             headers=headers.append('withCredentials','true')

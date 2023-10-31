@@ -29,15 +29,18 @@
                             <div class="text-center">No exiten turnos</div>
                         </ng-template>
                         <ng-template #elseBlock>
-                            <p-card *ngFor="let turno of estado.turnos" [header]="'Turno '+turno.id" [subheader]="turno.detalle_solicitud_turnos_pedido[0].CardName" class=" mb-2">
-                                <div class="mb-2"><span class="font-bold">Placa:</span> {{turno.vehiculo.placa}}</div>
-                                <div class="mb-2"><span class="font-bold">Conductor:</span> {{turno.conductor.nombre | titlecase}}</div>
-                                <div class="mb-2"><span class="font-bold">Transportadora:</span> {{turno.transportadora.nombre | titlecase}}</div>
-                                <div *ngIf="turno.remision" class="mb-2"><span class="font-bold">Remisión:</span> {{turno.remision }}</div>
-                                <ng-template pTemplate="footer">
-                                    Hora cita: {{ turno.horacita | date:'mediumTime' }}
-                                </ng-template>
-                            </p-card>
+                            <div *ngFor="let turno of estado.turnos" style="cursor: pointer" (click)="selectTurno(turno)">
+                                <p-card  [header]="'Turno '+turno.id" [subheader]="turno.detalle_solicitud_turnos_pedido[0].CardName" class=" mb-2" >
+                                    <div class="mb-2"><span class="font-bold">Placa:</span> {{turno.vehiculo.placa}}</div>
+                                    <div class="mb-2"><span class="font-bold">Conductor:</span> {{turno.conductor.nombre | titlecase}}</div>
+                                    <div class="mb-2"><span class="font-bold">Transportadora:</span> {{turno.transportadora.nombre | titlecase}}</div>
+                                    <div *ngIf="turno.remision" class="mb-2"><span class="font-bold">Remisión:</span> {{turno.remision }}</div>
+                                    <ng-template pTemplate="footer">
+                                        Hora cita: {{ turno.horacita | date:'mediumTime' }}
+                                    </ng-template>
+                                </p-card>
+                            </div>
+                            
                         </ng-template>
                         
                     </div>

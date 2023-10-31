@@ -43,7 +43,7 @@ export class ListaHistorialTurnoComponent implements OnInit {
   historialTurno:any = {
     header: [{
       'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
-        'estado': { label:'Estao',type:'text', sizeCol:'6rem', align:'center', editable:false},
+        'estado': { label:'Estado',type:'text', sizeCol:'6rem', align:'center', editable:false},
         'fecha': { label:'Fecha',type:'date', sizeCol:'6rem', align:'center', editable:false},
         'hora': {label:'Hora',type:'text', sizeCol:'6rem', align:'center',},
         'usuario': {label:'Usuario',type:'text', sizeCol:'6rem', align:'center', editable:false},
@@ -144,21 +144,28 @@ async getTurno(id: number){
                   hora_accion: any;
                   fecha_accion: any; id: any; estado: any; 
                   //disponibilidad:any, fechadisponibilidad:any
+                  //tipo_solicitud:any
 })=>{
                   let novedades =  linea.novedades.map((novedad: { novedad: any; })=>{return novedad.novedad});
                   let comentario ="";
-                  let disponibilidad ="";
-                  let fechadisponibilidad = "";
+                  //let disponibilidad ="";
+                  //let fechadisponibilidad = "";
+                  //let tipo_solicitud = ""
 
                   if(linea.comentario!=null){
                     
                     comentario =  this.functionsService.bufferToString(linea.comentario)           
                   }
 
-                  /*if(linea.disponibilidad!=null){
+                 /* if(linea.disponibilidad!=null){
                     
                     disponibilidad =  linea.disponibilidad;
                     fechadisponibilidad = linea.fechadisponibilidad;
+                    
+                  }
+
+                  if(linea.tipo_solicitud){
+                    tipo_solicitud = linea.tipo_solicitud
                   }*/
                  
                 
@@ -171,7 +178,8 @@ async getTurno(id: number){
                     comentario,
                     novedades,
                     //disponibilidad,
-                    //fechadisponibilidad
+                    //fechadisponibilidad,
+                    //tipo_solicitud
                   }
                 });
 
@@ -207,10 +215,15 @@ async setEventsTimeLine(data:any):Promise<void>{
                   usuario:event.usuario,
                   comentario:event.comentario,
                   novedades:event.novedades, 
+                  disponibilidad:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).disponibilidad,
+                  fechadisponibilidad:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).fechadisponibilidad,
+                  tipo_solicitud:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).tipo_solicitud,
                   icon: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).icon, 
                   textColor: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).textColor, 
                   backgroundColor:this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).backgroundColor,
                   image: 'game-controller.jpg' })
+      
+                
   }
   /*this.events = [
     { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
@@ -220,6 +233,8 @@ async setEventsTimeLine(data:any):Promise<void>{
 ];*/
 
   this.events = events;
+
+  console.log(this.events);
 }
 
 }

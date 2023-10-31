@@ -117,7 +117,7 @@
     </div>
     -->
 
-    <app-vista-estados-turno [locacion]="localidadSeleccionada.code"></app-vista-estados-turno>
+    <app-vista-estados-turno [locacion]="localidadSeleccionada.code" (onSelect)="handleEventClick($event)"></app-vista-estados-turno>
 </div>
 
 <!-- Dialog loading -->

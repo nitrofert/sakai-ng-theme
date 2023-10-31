@@ -165,8 +165,8 @@ export class FormTurnoComponent implements  OnInit {
   btnFinCargue: MenuItem =   {label: 'Fin cargue', icon: 'pi pi-box', command: () => { this.finalizarCargueTurno();}};
   btnPesoFinal: MenuItem =   {label: 'Pesaje final', icon: 'pi pi-compass', command: () => { this.pesarTurno2();}};
   btnDespachar: MenuItem =   {label: 'Remisionar', icon: 'pi pi-sign-out', command: () => { this.despacharTurno();}};
-  btnSolRevInv: MenuItem =   {label: 'Solicitar inventario', icon: 'pi pi-search', command: () => { this.solicitarInventarioTurno();}};
-  btnValidInv: MenuItem =   {label: 'Validar inventario', icon: 'pi pi-verified', command: () => { this.validarInventarioTurno();}};
+  btnSolRevInv: MenuItem =   {label: 'Solicitud producción', icon: 'pi pi-search', command: () => { this.solicitarInventarioTurno();}};
+  btnValidInv: MenuItem =   {label: 'Validación producción', icon: 'pi pi-verified', command: () => { this.validarInventarioTurno();}};
 
   btnUpdateInfo: MenuItem =   {label: 'Actualizar informaciíon', icon: 'pi pi-pencil', command: () => { this.updateInfoTurno();}};
 
@@ -292,6 +292,9 @@ clientesFiltrados : any[] = [];
 municipios!:any[];
 municipioSeleccionado:any = [];
 municipiosFiltrados:any[] = [];
+
+solictudesProduccion:any[] =[{label:"Solicitud de inventario", code:"Solicitud de inventario"},{label:"Solicitud adicional", code:"Solicitud adicional"}];
+solictudProduccionSeleccionada:any = [];
 
 pedidosCliente:any[] = [];
 
@@ -953,11 +956,11 @@ loadingPedidosTurno:boolean = false;
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Ingresar turno').valor){
           this.arrayBtnTurnos.push(this.btnIngreso);
         }
-        /*
+        
         if(this.updateModulo){
           this.arrayBtnTurnos.push(this.btnUpdateInfo);
         }
-        */
+        
       break;
 
       case this.estadosTurno.ARRIBO:
@@ -1462,9 +1465,9 @@ async validarHoraCargue():Promise<boolean>{
 
   async solicitarInventarioTurno(){
     if(await this.validarFormulario()){
-      this.accion = 'solicitar revision inventario'
+      this.accion = 'solicitud produccion'
       this.formEstadoTurno = true;
-      this.tituloEstado = "Solicitar revisión de inventario items turno "+this.turnoId;
+      this.tituloEstado = "Solicitud producción items turno "+this.turnoId;
     }
   }
 
@@ -1491,10 +1494,16 @@ async validarHoraCargue():Promise<boolean>{
  
   }
 
+  seleccionarTS(){
+    console.log(this.solictudProduccionSeleccionada)
+  }
+
   cambiarEstadoTurno(){
 
     if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para ${this.accion} el turno, debe seleccionar una novedad.` });
+    }else if((this.accion == 'solicitud produccion' ) && ( this.solictudProduccionSeleccionada.length==0)){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe seleccionar el tipo de solicitud.` });
     }else if((this.accion == 'validar revision inventario' ) && ( !this.comentario)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe ingesar un comentario.` });
     }else{
@@ -1513,9 +1522,9 @@ async validarHoraCargue():Promise<boolean>{
                     mensaje = `fue aprobado`;
                   break;
 
-                  case 'solicitar revision inventario':
+                  case 'solicitud produccion':
                     nuevoEstado = this.estadosTurno.SOLINVENTARIO;
-                    mensaje = `fue solicitado revisión de inventario`;
+                    mensaje = `fue solicitado validacion a producción`;
                   break;
 
                   case 'validar revision inventario':
@@ -1593,6 +1602,10 @@ async validarHoraCargue():Promise<boolean>{
               //////console.log(this.existeInventario);
               data.historial.disponibilidad = this.existeInventario;
               data.historial.fechadisponibilidad = this.fechadisponibilidad;
+            }
+
+            if(nuevoEstado == this.estadosTurno.SOLINVENTARIO){
+              data.historial.tipo_solicitud = this.solictudProduccionSeleccionada.code
             }
 
             if(this.novedadesSeleccionadas.length>0){
