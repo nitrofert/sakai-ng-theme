@@ -39,6 +39,8 @@ export class UrlApiService {
         let headers = new HttpHeaders()
 
         let token = this.getToken();
+
+        console.log(token);
  
         headers=headers.append('content-type','application/json')
         headers=headers.append('Access-Control-Allow-Origin', '*')

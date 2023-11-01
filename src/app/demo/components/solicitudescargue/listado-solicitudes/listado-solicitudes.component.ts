@@ -150,7 +150,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.getPermisosModulo(); 
     Calendar.prototype.getDateFormat = () => 'dd/mm/yy';
     this.estadosTurno = this.solicitudTurnoService.estadosTurno;
-
+    console.log(this.estadosTurno)
     
   }
 
@@ -281,6 +281,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                                                               let hoy = new Date();
                                                               hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
                                                               solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
+                                                              console.log(solicitud.detalle_solicitudes_turnos_estado);
                                                               solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
                                                               solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
                                                              
