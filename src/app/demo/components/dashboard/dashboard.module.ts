@@ -13,6 +13,9 @@ import { PrimengModule } from 'src/app/layout/shared/primeng/primeng.module';
 import { ChangePasswordComponent } from '../auth/change-password/change-password.component';
 import { ChangePasswordModule } from '../auth/change-password/change-password.module';
 import { DialogService } from 'primeng/dynamicdialog';
+import { DashboardComponentTurno } from '../turnos/dashboard/dashboard.component';
+import { TurnosModule } from '../turnos/turnos.module';
+import { DashboardTurnosModule } from '../turnos/dashboard/dashboard-turnos.module';
 
 @NgModule({
     imports: [
@@ -26,7 +29,8 @@ import { DialogService } from 'primeng/dynamicdialog';
         ButtonModule,
         DashboardsRoutingModule,
         PrimengModule,
-        ChangePasswordModule
+        ChangePasswordModule,
+        DashboardTurnosModule
     ],
     declarations: [DashboardComponent],
     providers: [DialogService]

@@ -24,13 +24,13 @@ export class ListadoOrdenesComponent implements OnInit {
   getOrdenes(){
     this.ordenesCargueService.getOrdenes().then(ordenes => {
       this.ordenes = ordenes;
-      //console.log(this.pedidos);
+      ////console.log(this.pedidos);
       this.configTable();
     });
   }
 
   nuevaSolicitud(event: any){
-    //console.log(event);
+    ////console.log(event);
   }
 
   configTable(){

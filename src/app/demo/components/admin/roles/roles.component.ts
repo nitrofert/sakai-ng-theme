@@ -72,7 +72,7 @@ export class RolesComponent implements  OnInit {
         this.usuariosService.getPermisosModulo(modulo)
             .subscribe({
                 next: (permisos)=>{
-                 //console.log(permisos);
+                 ////console.log(permisos);
                   if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                     this.router.navigate(['/auth/access']);
                   }
@@ -97,7 +97,7 @@ export class RolesComponent implements  OnInit {
       this.rolesService.getListadoRoles()
           .subscribe({
               next: (roles)=>{
-               //console.log(roles);
+               ////console.log(roles);
                 let rolesTmp:any[] = [];
                 for(let item of roles){
                   rolesTmp.push({
@@ -118,7 +118,7 @@ export class RolesComponent implements  OnInit {
     }
   
     nuevaAccion(event: any){
-     //console.log(event);
+     ////console.log(event);
       //this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
      
         const ref = this.dialogService.open(FormRolesComponent, {
@@ -134,7 +134,7 @@ export class RolesComponent implements  OnInit {
       
         ref.onClose.subscribe(() => {
           this.getListadoRoles();
-          //console.log("Refresh calendar");
+          ////console.log("Refresh calendar");
         });
     }
   
@@ -155,11 +155,11 @@ export class RolesComponent implements  OnInit {
       
         ref.onClose.subscribe(() => {
           this.getListadoRoles();
-          //console.log("Refresh calendar");
+          ////console.log("Refresh calendar");
         });
     }
    
     deleteAccion(event: any){
-       //console.log(event);
+       ////console.log(event);
     }
 }

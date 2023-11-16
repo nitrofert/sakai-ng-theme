@@ -419,6 +419,13 @@ Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) d
 <!--Dashboard cliente-->
 <div *ngIf="showDashBoardCliente" class="grid">
 
+    <p-divider align="left" class="field col-12">
+        <div class="inline-flex align-items-center">
+            <i class="pi pi-building mr-2"></i>
+            <b>Cliente</b>
+        </div>
+    </p-divider>
+
         <div class="col-12">
             
             <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
@@ -442,6 +449,7 @@ Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) d
                 
             </div>
         </div>
+
         <p-skeleton *ngIf="!loadingDashBoardCliente" class="col-12  xl:col-3"  height="9rem"></p-skeleton>
         <div *ngIf="loadingDashBoardCliente" class="col-12  xl:col-3">
             <div class="card mb-0" >
@@ -775,4 +783,8 @@ Estos Términos y Condiciones fueron actualizados por última vez en fecha (*) d
         
 </div>
 <!---Fin dashboard cliente --->
+
+<app-dashboard-turnos *ngIf="showDashBoardLogistica"></app-dashboard-turnos>
+
+
 

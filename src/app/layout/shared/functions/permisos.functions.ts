@@ -19,7 +19,7 @@ export class PermisosFunction {
         const permisosModulo$ = this.usuariosService.getPermisosModulo(modulo);
         const permisosModulo = await lastValueFrom(permisosModulo$) 
 
-       //console.log(permisosModulo);
+       ////console.log(permisosModulo);
 
         this.multiplesClientes = permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
             

@@ -48,7 +48,7 @@ export class ForgotPasswordComponent {
           this.authService.resetPassword(dataRestore)
           .subscribe({
               next: (data)=>{
-                  //console.log(data);
+                  ////console.log(data);
                   
                       
                      

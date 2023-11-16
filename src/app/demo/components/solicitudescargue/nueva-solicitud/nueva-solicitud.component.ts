@@ -224,7 +224,7 @@ getPermisosModulo(){
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-            //////////////console.log(permisos);
+            //////////////// //// console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -234,7 +234,7 @@ getPermisosModulo(){
             }
             this.permisosModulo = permisos;
             this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-            //////////////////////////console.log(this.multiplesClientes);
+            //////////////////////////// //// console.log(this.multiplesClientes);
 
            
             /*
@@ -251,7 +251,7 @@ getPermisosModulo(){
               this.condicion_tpt="TRANSP";
             }
 
-            //////////////console.log(this.condicion_tpt);
+            //////////////// //// console.log(this.condicion_tpt);
             
 
           },
@@ -267,7 +267,7 @@ this.clientes = [];
 this.usuariosService.getInfoUsuario()
     .subscribe({
         next: async (infoUsuario)=>{
-          ////////////////////console.log(infoUsuario);
+          ////////////////////// //// console.log(infoUsuario);
           let clientesUsuario!:any;
 
           if(await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.TRANSPORTASOCIEDAD) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.ADMIN)){
@@ -277,10 +277,10 @@ this.usuariosService.getInfoUsuario()
           }else{
             //Mostrar clientes asociados al usuario
             clientesUsuario = infoUsuario.clientes;
-            ////////////////console.log(clientesUsuario[0].CardCode,await this.usuariosService.infoUsuarioByCardCode(clientesUsuario[0].CardCode));
+            ////////////////// //// console.log(clientesUsuario[0].CardCode,await this.usuariosService.infoUsuarioByCardCode(clientesUsuario[0].CardCode));
           }
 
-          ////////////////console.log('clientesUsuario',clientesUsuario);
+          ////////////////// //// console.log('clientesUsuario',clientesUsuario);
 
           for(let clienteUsuario of clientesUsuario){
             clienteUsuario.code = clienteUsuario.CardCode;
@@ -289,7 +289,7 @@ this.usuariosService.getInfoUsuario()
           }
           this.clientes = clientesUsuario;
 
-          //////////////////console.log(this.clientes);
+          //////////////////// //// console.log(this.clientes);
           this.getSaldosPedidos();
           
           
@@ -304,7 +304,7 @@ async getCiudades(){
     this.ciudadesService.getCiudades()
         .subscribe({
             next:(ciudades)=>{
-             //////console.log(ciudades);
+             //////// //// console.log(ciudades);
               ciudades.map((ciudad:any)=>{
                 ciudad.label = `${ciudad.code} - ${ciudad.nombre}`;
               });
@@ -322,7 +322,7 @@ async getLocaciones(){
   this.almacenesService.getLocaciones()
       .subscribe({
           next:(locaciones)=>{
-              //////console.log('locaciones',locaciones);
+              //////// //// console.log('locaciones',locaciones);
               this.locaciones = locaciones;
           },
           error:(err)=>{
@@ -335,10 +335,10 @@ getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
           next:(saldosPedidos)=>{
-           ////console.log('saldosPedidos',saldosPedidos);
+            console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
-            ////////////////////console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
+            ////////////////////// //// console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
                 
@@ -394,6 +394,7 @@ getSaldosPedidos(){
                   email_vendedor:saldosPedidos[indexPedido].Email,
                   dependencia:saldosPedidos[indexPedido].DEPENDENCIA,
                   localidad:saldosPedidos[indexPedido].LOCALIDAD,
+                  tipoprod:saldosPedidos[indexPedido].TipoProd
                   
                 })
 
@@ -402,10 +403,10 @@ getSaldosPedidos(){
 
            }
 
-           //////////////////////////console.log(pedidosClientes[0]);
-           //////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
+           // console.log(pedidosClientes.filter(pedido =>pedido.docnum ===290000003));
+           // //// console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
            this.pedidos = pedidosClientes;
-           ////console.log(this.pedidos);
+           ////// //// console.log(this.pedidos);
           },
           error:(err)=>{
             console.error(err);
@@ -416,7 +417,7 @@ getSaldosPedidos(){
 getPedidos(){
 this.pedidosService.getPedidos().then(pedidos => {
   this.pedidos = pedidos;
-  //////////////////////////console.log(this.pedidos[0]);
+  //////////////////////////// //// console.log(this.pedidos[0]);
 });
 }
 
@@ -436,7 +437,7 @@ getAlmacenes(){
            
             }
             this.almacenes = almacenesTMP.filter(almacen=>almacen.CorreoNoti !=null && almacen.CorreoNoti!='');
-            //////console.log('almacenes',this.almacenes);
+            //////// //// console.log('almacenes',this.almacenes);
             
           },
           error:(err)=>{
@@ -450,14 +451,14 @@ getVehiculos(){
   this.vehiculosService.getVehiculos()
       .subscribe({
         next: (vehiculos)=>{
-            ////////////////console.log(vehiculos);
+            ////////////////// //// console.log(vehiculos);
             for(let vehiculo of vehiculos){
               vehiculo.code = vehiculo.placa;
               vehiculo.name = vehiculo.placa;
               vehiculo.label = vehiculo.placa+' ('+vehiculo.tipo_vehiculo.capacidad+' TON)';
               vehiculo.clase = vehiculo.tipo_vehiculo;
             }
-            //////////////////////////console.log(conductores);
+            //////////////////////////// //// console.log(conductores);
             this.vehiculos = vehiculos;
         },
         error: (err)=>{
@@ -477,7 +478,7 @@ getTransportadoras(){
             transportadora.name = transportadora.nombre;
             transportadora.label = transportadora.nit+' - '+transportadora.nombre;
           }
-          //////////////////////////console.log(conductores);
+          //////////////////////////// //// console.log(conductores);
           this.transportadoras = transportadoras;
       },
       error: (err)=>{
@@ -496,7 +497,7 @@ getConductores(){
                 conductor.name = conductor.nombre;
                 conductor.label = conductor.cedula+' - '+conductor.nombre;
               }
-              //////////////////////////console.log(conductores);
+              //////////////////////////// //// console.log(conductores);
               this.conductores = conductores;
           },
           error: (err)=>{
@@ -513,9 +514,9 @@ this.clientesFiltrados = this.filter(event,this.clientes);
 
 
 seleccionarCliente(clienteSeleccionado:any){
-  //////////////////////console.log(clienteSeleccionado);
+  //////////////////////// //// console.log(clienteSeleccionado);
   //this.getPedidosPorCliente(clienteSeleccionado.code);
-  /*////////////////////////console.log(this.almacenSeleccionado);
+  /*////////////////////////// //// console.log(this.almacenSeleccionado);
   if(!this.almacenSeleccionado || this.almacenSeleccionado.length ==0){
     this.getPedidosPorCliente(clienteSeleccionado);
   }else{
@@ -533,7 +534,7 @@ seleccionarCliente(clienteSeleccionado:any){
 async getPedidosPorCliente(clientesSeleccionados:any){
     
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-  //console.log('pedidosCliente',this.pedidosCliente);
+  //// //// console.log('pedidosCliente',this.pedidosCliente);
   this.getAlmacenesEnPedidos();
 }
 
@@ -548,7 +549,7 @@ getAlmacenesEnPedidos(){
       if(this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode).length>0){
         //let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.Location == pedido.locacion)[0];
         let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode)[0];
-        ////////////////////////console.log(informacionAlmacen);
+        ////////////////////////// //// console.log(informacionAlmacen);
         //informacionAlmacen.label = informacionAlmacen.Location+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
         informacionAlmacen.label = informacionAlmacen.locacion2+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
         //almacenesPedidosCliente.push(informacionAlmacen);
@@ -562,7 +563,7 @@ getAlmacenesEnPedidos(){
     }
   }
   this.almacenesPedidosCliente = almacenesPedidosCliente;
-  //////console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
+  //////// //// console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
 
 }
 
@@ -570,10 +571,10 @@ getAlmacenesEnPedidos(){
 generarTreeTable(){
 
   let vehiculos :any[] = [];
- //////console.log(this.condicion_tpt);
+ //////// //// console.log(this.condicion_tpt);
 
   for(let solicitud of this.vehiculosEnSolicitud){
-    //////////////////////////console.log(solicitud);
+    //////////////////////////// //// console.log(solicitud);
     let fechacargue = new Date(solicitud.fechacargue);
     let horacargue = new Date(solicitud.horacargue);
     let data = {
@@ -611,7 +612,7 @@ generarTreeTable(){
   }
   
   this.vehiculosPedidos = datatabletree2.data as TreeNode[];
-////////////////////////////console.log(this.vehiculosPedidos);
+////////////////////////////// //// console.log(this.vehiculosPedidos);
   
 }
 
@@ -621,16 +622,16 @@ this.almacenesFiltrados = this.filter(event,this.almacenesPedidosCliente);
 }
 
 async seleccionarAlmacen(almacenSeleccionado:any){
-  //////console.log(almacenSeleccionado);
+  //////// //// console.log(almacenSeleccionado);
   //this.getPedidosClientePorAlmacen(almacenSeleccionado.code);
  
   if(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code).length>0){
-    ////////////////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
-    ////////////////console.log(this.horainicio, this.horafin);
+    ////////////////// //// console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
+    ////////////////// //// console.log(this.horainicio, this.horafin);
     this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
     this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion;
 
-    //////////////console.log('horariosLocacion',this.horariosLocacion);
+    //////////////// //// console.log('horariosLocacion',this.horariosLocacion);
     await this.seleccionarFechaCita();
   }else{
     //Establecer horarios locacion
@@ -647,20 +648,20 @@ async obtenerDiasNoAtencion(horarios:any[]):Promise<any[]>{
     for(let horario of horarios){
       let diasNot:any[] = [];
       let diasAtencionLocacion:any[] = horario.dias_atencion.split(',');
-      ////////////////console.log(diasAtencionLocacion);
+      ////////////////// //// console.log(diasAtencionLocacion);
       for(let dia of diasNoAtencion){
-        ////////////////console.log(diasAtencionLocacion.includes(dia.fullname));
+        ////////////////// //// console.log(diasAtencionLocacion.includes(dia.fullname));
 
         if(!diasAtencionLocacion.includes(dia.fullname)){
             diasNot.push(dia);
         }
-        ////////////////console.log(dia.fullname,JSON.stringify(diasNot));
+        ////////////////// //// console.log(dia.fullname,JSON.stringify(diasNot));
       }
       
       diasNoAtencion = diasNot;
     }
 
-   // //////////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
+   // //////////////// //// console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
 
   return diasNoAtencion.map((dia)=>{ return dia.id});
 }
@@ -674,35 +675,35 @@ async seleccionarFechaCita():Promise<void>{
   this.horariosSeleccionados = horariosSeleccionados;
 
   /*for(let horario of this.horariosLocacion){
-    //////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+    //////////////// //// console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
   }*/
-  //////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+  //////////////// //// console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
   await this.cambioHoraCita();
 }
 
 async cambioHoraCita():Promise<void>{
-  //////////////console.log(this.horacargue.toLocaleTimeString());
+  //////////////// //// console.log(this.horacargue.toLocaleTimeString());
   /*for(let horario of this.horariosSeleccionados){
-    //////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    //////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
-    //////////////console.log(new Date(this.horacargue));
+    //////////////// //// console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    //////////////// //// console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    //////////////// //// console.log(new Date(this.horacargue));
 
     let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
     let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
     let horacargue = new Date(this.horacargue);
 
     if(horainicio<= horacargue && horafin >= horacargue){
-      //////////////console.log('hora valida en horario id '+horario.id);
+      //////////////// //// console.log('hora valida en horario id '+horario.id);
     }else{
-      //////////////console.log('hora invalida en horario id '+horario.id);
+      //////////////// //// console.log('hora invalida en horario id '+horario.id);
     }
   }*/
-  ////////////////console.log(this.horariosSeleccionados.filter(horario=>new Date(horario.horainicio)< new Date(this.horacargue) && new Date(horario.horafin)> new Date(this.horacargue)));
+  ////////////////// //// console.log(this.horariosSeleccionados.filter(horario=>new Date(horario.horainicio)< new Date(this.horacargue) && new Date(horario.horafin)> new Date(this.horacargue)));
 
   if(await this.validarHoraCargue()){
-    //////////////console.log('hora valida en horario ');
+    //////////////// //// console.log('hora valida en horario ');
   }else{
-    //////////////console.log('hora invalida en horario');
+    //////////////// //// console.log('hora invalida en horario');
   }
 }
 
@@ -735,7 +736,7 @@ filtrarVehiculo(event:any){
   this.vehiculosFiltrados.unshift({
     id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
   });
-  //////////////////////////console.log(this.vehiculosFiltrados);
+  //////////////////////////// //// console.log(this.vehiculosFiltrados);
 }
 
 filtrarConductor(event:any){
@@ -763,7 +764,7 @@ filtrarTransportadora(event:any){
 }
 
 seleccionarTransportadora(transportadoraSeleccionada:any){
-  //////////////////console.log(transportadoraSeleccionada)
+  //////////////////// //// console.log(transportadoraSeleccionada)
   if(transportadoraSeleccionada.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevaTransportadora();
@@ -772,19 +773,19 @@ seleccionarTransportadora(transportadoraSeleccionada:any){
 }
 
 async seleccionarVehiculo(vehiculoSeleccionado:any){
-  //////////console.log(vehiculoSeleccionado)
+  //////////// //// console.log(vehiculoSeleccionado)
   if(vehiculoSeleccionado.id == 0){
       //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
       this.nuevoVehiculo();
   }else{
-      ////////////////////////console.log(vehiculoSeleccionado)
+      ////////////////////////// //// console.log(vehiculoSeleccionado)
       this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
       //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
       let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
 
       this.pesobruto = vehiculoSeleccionado.pesovacio;
       this.pesoneto = vehiculoSeleccionado.pesomax;
-      //////////////////////////console.log(this.capacidadVehiculo,capacidaVh);
+      //////////////////////////// //// console.log(this.capacidadVehiculo,capacidaVh);
       this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
       
 
@@ -810,7 +811,7 @@ nuevaTransportadora(){
 
   ref.onClose.subscribe((infoTransportadora) => {
     this.getTransportadoras();
-    //////////////////console.log(infoTransportadora)
+    //////////////////// //// console.log(infoTransportadora)
     
     if(infoTransportadora.update){
       this.transportadoraSeleccionada.code = infoTransportadora.nit;
@@ -819,9 +820,9 @@ nuevaTransportadora(){
       this.transportadoraSeleccionada.name = infoTransportadora.nombre;
       this.transportadoraSeleccionada.label  = infoTransportadora.nit+' - '+infoTransportadora.nombre;
 
-      //////////////////console.log(this.transportadoraSeleccionada)
+      //////////////////// //// console.log(this.transportadoraSeleccionada)
     }
-    //////////////////////////console.log("Refresh calendar");
+    //////////////////////////// //// console.log("Refresh calendar");
   });
 }
 
@@ -839,7 +840,7 @@ nuevoVehiculo(){
 
   ref.onClose.subscribe(async (infoVehiculo) => {
     this.getVehiculos();
-    //////////////////console.log(infoVehiculo)
+    //////////////////// //// console.log(infoVehiculo)
     if(infoVehiculo.update){
       this.capacidadVehiculo = infoVehiculo.capacidad;
       let capacidaVh = await this.cacluarCapacidadDisponibleVH(infoVehiculo.placa); 
@@ -849,7 +850,7 @@ nuevoVehiculo(){
       this.vehiculoSeleccionado.capacidad = infoVehiculo.capacidad;
       this.vehiculoSeleccionado.label = infoVehiculo.placa;
     }
-    //////////////////////////console.log("Refresh calendar");
+    //////////////////////////// //// console.log("Refresh calendar");
   });
 }
 
@@ -867,7 +868,7 @@ nuevoConductor(){
 
   ref.onClose.subscribe((infoConductor) => {
     this.getConductores();
-    //////////////////console.log(infoConductor)
+    //////////////////// //// console.log(infoConductor)
     if(infoConductor.update){
       this.conductorSeleccionado.code = infoConductor.cedula;
       this.conductorSeleccionado.cedula = infoConductor.cedula;
@@ -882,7 +883,7 @@ nuevoConductor(){
 }
 
 seleccionarConductor(conductorSeleccionado:any){
-  //////////////////console.log(conductorSeleccionado)
+  //////////////////// //// console.log(conductorSeleccionado)
   if(conductorSeleccionado.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevoConductor();
@@ -892,7 +893,7 @@ seleccionarConductor(conductorSeleccionado:any){
 async adicionVehiculoSolicitud(){
   //this.envioLineaCarguePedido =true;
   this.envioAdicionVehiculo = true;
-  ////////////////////////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
+  ////////////////////////// //// console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
   if(Object.keys(this.vehiculoSeleccionado).length ==0 || 
      Object.keys(this.conductorSeleccionado).length ==0 ||
      Object.keys(this.transportadoraSeleccionada).length ==0 //||
@@ -963,7 +964,7 @@ resetearForm(){
 }
 
 async adicionarItemPedido(placa:string){
-  ////////////////////////////console.log(placa);
+  ////////////////////////////// //// console.log(placa);
   let vehiculo = await this.vehiculos.find(vehiculo =>vehiculo.code === placa);
   this.vehiculoSeleccionado = vehiculo;
   let clienteSeleccionado:any;
@@ -972,7 +973,7 @@ async adicionarItemPedido(placa:string){
   }else{
     clienteSeleccionado = this.clienteSeleccionado;
   }
-  ////////////////////////console.log(this.clienteSeleccionado[0])
+  ////////////////////////// //// console.log(this.clienteSeleccionado[0])
   this.clienteSeleccionado2 = await clienteSeleccionado;
 
   await this.seleccionarVehiculo(this.vehiculoSeleccionado);
@@ -985,12 +986,12 @@ async adicionarItemPedido(placa:string){
   this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code,clienteSeleccionado.code);
 
   /*let pedidosVehiculo = await this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa).pedidos;
-  //////////////////////////console.log(pedidosVehiculo);
+  //////////////////////////// //// console.log(pedidosVehiculo);
   //Modificar pedidos del cliente x almacen adicionando las cantidades cargadas de los pedidos asociadas al vehiculo 
 
   for(let pedidoVehiculo of pedidosVehiculo){
     let index = this.tablaPedidosAlmacenCliente.data.findIndex((pedido: {itemcode: any; docnum: any; }) => pedido.docnum == pedidoVehiculo.pedido && pedido.itemcode == pedidoVehiculo.itemcode);
-    //////////////////////////console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
+    //////////////////////////// //// console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
     this.tablaPedidosAlmacenCliente.data[index].cargada = pedidoVehiculo.cantidad;
   }*/
   
@@ -1001,12 +1002,12 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
   //this.pedidosAlmacenCliente = await this.pedidosService.getPedidosClientePorAlmacen(this.clienteSeleccionado, almacen);
   //let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
   let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacioncode === almacen && pedido.cardcode === cliente)
-  //////////////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
+  //////////////// //// console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
   let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
 
   this.pedidosAlmacenCliente = pedidosAlmacenClienteCalcudada;
 
-  //////console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
+  //////// //// console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
   
   this.configTablePedidosAlmacenCliente();
 }
@@ -1014,7 +1015,7 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
 async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
   for(let pedido of pedidos){
-   //////////////////////console.log(pedido);
+   //////////////////////// //// console.log(pedido);
     let cantidadComprometida=0; 
     cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
     cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
@@ -1036,11 +1037,11 @@ async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:stri
 }
 
 async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
-  //////////////////////console.log(pedido, itemcode, bodega);
+  //////////////////////// //// console.log(pedido, itemcode, bodega);
     let cantidadComprometida =0;
     for(let vehiculo of this.vehiculosEnSolicitud){
         for(let lineaPedido of vehiculo.pedidos){
-         ////////////////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
+         ////////////////////////// //// console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
             if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
               
               cantidadComprometida+=lineaPedido.cantidad;
@@ -1052,7 +1053,7 @@ async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, 
 }
 
 configTablePedidosAlmacenCliente(){
-  //console.log(this.pedidosAlmacenCliente);
+  //// //// console.log(this.pedidosAlmacenCliente);
   let headersTable:any= this.configHeadersPedidos();
   let dataTable:any = this.configDataTablePedidos(this.pedidosAlmacenCliente);
    
@@ -1128,7 +1129,7 @@ filtrarCliente2(event: any) {
 }
 
 seleccionarCliente2(clienteSeleccionado2:any){
-     //////console.log(clienteSeleccionado2, this.almacenSeleccionado)
+     //////// //// console.log(clienteSeleccionado2, this.almacenSeleccionado)
       this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code, clienteSeleccionado2.code);
 }   
 
@@ -1137,7 +1138,7 @@ filtrarMunicipio(event:any){
 }
 
 seleccionarMunicipio(){
- //////console.log(this.municipioSeleccionado);
+ //////// //// console.log(this.municipioSeleccionado);
   this.municipioentrega = this.municipioSeleccionado.label;
 }
 
@@ -1149,7 +1150,7 @@ confirmarSeleccionPedidosAlmacenCliente(){
 
 async seleccionarPedidosAlmacenCliente(event:any){
  
-  //////////////////////console.log(this.clienteSeleccionado2);
+  //////////////////////// //// console.log(this.clienteSeleccionado2);
   this.envioLineaCarguePedido =true;
 
 
@@ -1158,7 +1159,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
       this.showItemsSelectedPedidosAlmacenCliente=false;
   }else{
     const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-   //////console.log('pedidos seleccionados',pedidosSeleccionados);
+   //////// //// console.log('pedidos seleccionados',pedidosSeleccionados);
   
     if(pedidosSeleccionados.length > 0){
         
@@ -1171,7 +1172,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
           if(!pedido.itemcode.toLowerCase().startsWith("sf")){
               totalCarga+=parseFloat(pedido.cargada);
   
-              //////////////console.log(pedido);
+              //////////////// //// console.log(pedido);
      
               if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
                 this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
@@ -1219,7 +1220,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
             
             for(let pedido of pedidosSeleccionados){
   
-             ////console.log('pedido seleccionado',pedido);
+             ////// //// console.log('pedido seleccionado',pedido);
   
               if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any }) => pedidovh.pedido == pedido.docnum && 
                                                                                                                                                       pedidovh.itemcode == pedido.itemcode && 
@@ -1255,14 +1256,14 @@ async seleccionarPedidosAlmacenCliente(event:any){
               
             }
 
-            ////console.log(pdidosVehiculo);
+            ////// //// console.log(pdidosVehiculo);
   
             this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
             this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
             this.envioLineaCarguePedido =false;
             this.dialogPedidosCliente = false;
             this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-            ////////////console.log(this.vehiculosEnSolicitud);
+            ////////////// //// console.log(this.vehiculosEnSolicitud);
             this.configTablePedidosAlmacenCliente();
             this.generarTreeTable();
         }
@@ -1284,7 +1285,7 @@ async cantidadCargaVehiculo(placa:string):Promise<number>{
   let cantidadCargada =0;
   let vehiculo = this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa);
   for(let pedidoVehiculo of vehiculo.pedidos){
-    ////////////////console.log(pedidoVehiculo)
+    ////////////////// //// console.log(pedidoVehiculo)
     if(!pedidoVehiculo.itemcode.toLowerCase().startsWith("sf")){
       cantidadCargada+=eval(pedidoVehiculo.cantidad);
     }
@@ -1293,12 +1294,12 @@ async cantidadCargaVehiculo(placa:string):Promise<number>{
 }
 
 quitarVehiculo(placa:string){
-  //////////////////////////console.log(placa);
+  //////////////////////////// //// console.log(placa);
   this.confirmRemoveVehiculo(placa);
 }
 
 quitarRegistro(placa:string,pedido:string,item:string){
-  //////////////////////////console.log(placa,item);
+  //////////////////////////// //// console.log(placa,item);
   this.confirmRemovePedidoItem(placa,pedido,item);
 }
 
@@ -1311,9 +1312,9 @@ confirmRemoveVehiculo(placa:string) {
         let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
         this.vehiculosEnSolicitud.splice(index,1);
         this.messageService.add({severity:'info', summary:'Confirmado', detail:'El vhículo '+placa+' fue eliminado de la lista'});
-        //////////////////////////console.log(this.vehiculosEnSolicitud);
+        //////////////////////////// //// console.log(this.vehiculosEnSolicitud);
         this.generarTreeTable();
-        //////////////////////////console.log(this.tablaPedidosAlmacenCliente);
+        //////////////////////////// //// console.log(this.tablaPedidosAlmacenCliente);
 
     },
     reject: (type: any) => {
@@ -1339,13 +1340,13 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
           let pedidos = this.vehiculosEnSolicitud[index].pedidos;
           
           let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
-          ////////////////////////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
+          ////////////////////////// //// console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
           this.vehiculosEnSolicitud[index].cantidad =this.vehiculosEnSolicitud[index].cantidad-eval(this.vehiculosEnSolicitud[index].pedidos[indexPedido].cantidad);
           this.vehiculosEnSolicitud[index].pedidos.splice(indexPedido,1);
           this.messageService.add({severity:'info', summary:'Confirmado', detail:'El item '+item+' fue eliminado de la lista'});
-          //////////////////////////console.log(this.vehiculosEnSolicitud);
+          //////////////////////////// //// console.log(this.vehiculosEnSolicitud);
           this.generarTreeTable();
-          //////////////////////////console.log(this.tablaPedidosAlmacenCliente);
+          //////////////////////////// //// console.log(this.tablaPedidosAlmacenCliente);
 
       },
       reject: (type: any) => {
@@ -1371,7 +1372,7 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
           this.getPedidosPorCliente(clienteSeleccionado);
           this.almacenSeleccionado = [];
           this.generarTreeTable();
-          //////////////////////////console.log(this.tablaPedidosAlmacenCliente);
+          //////////////////////////// //// console.log(this.tablaPedidosAlmacenCliente);
 
       },
       reject: async (type: any) => {
@@ -1386,7 +1387,7 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
               break;
           }
           this.clienteSeleccionado.pop();
-          ////////////////////////console.log(this.clienteSeleccionado);
+          ////////////////////////// //// console.log(this.clienteSeleccionado);
           this.getPedidosPorCliente(clienteSeleccionado);
       }
   });
@@ -1396,18 +1397,18 @@ async validarHoraCargue():Promise<boolean>{
   let horarioValido:boolean = true;
 
   for(let horario of this.horariosSeleccionados){
-    //////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    //////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
-    //////////////console.log(new Date(this.horacargue));
+    //////////////// //// console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    //////////////// //// console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    //////////////// //// console.log(new Date(this.horacargue));
 
     let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
     let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
     let horacargue = new Date(this.horacargue);
 
     if(horainicio<= horacargue && horafin >= horacargue){
-      //////////////console.log('hora valida en horario id '+horario.id);
+      //////////////// //// console.log('hora valida en horario id '+horario.id);
     }else{
-      //////////////console.log('hora invalida en horario id '+horario.id);
+      //////////////// //// console.log('hora invalida en horario id '+horario.id);
       horarioValido = false;
     }
   }
@@ -1418,7 +1419,7 @@ async validarHoraCargue():Promise<boolean>{
 async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
   let capacidadDisponibleVH = 0;
   let vehiculo:any = this.vehiculosEnSolicitud.filter(pedido =>pedido.placa == placa);
-  //////////////////////////console.log(vehiculo.length);
+  //////////////////////////// //// console.log(vehiculo.length);
   if(vehiculo.length >0){
     capacidadDisponibleVH =vehiculo[0].cantidad
   }
@@ -1426,7 +1427,7 @@ async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
   /*for(let pedido of pedidosVehiculo){
     capacidadDisponibleVH+=pedido.cantidad;
   }*/
-  //////////////////////////console.log(capacidadDisponibleVH);
+  //////////////////////////// //// console.log(capacidadDisponibleVH);
   return capacidadDisponibleVH;
 }
 
@@ -1434,13 +1435,13 @@ async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
 
 async validarCantidadesCargadas(pedidos:any):Promise<number>{
   let cantidadCargada =0;
-  ////////////////////////console.log(pedidos);
+  ////////////////////////// //// console.log(pedidos);
   for(let pedido of pedidos){
     
     cantidadCargada+=eval(pedido.cargada);
     
   }
-  //////////////////////////console.log(cantidadCargada);
+  //////////////////////////// //// console.log(cantidadCargada);
   return  cantidadCargada;
 }
 
@@ -1469,7 +1470,7 @@ setTimer(){
 
 grabarSolicitud(){
 
-  //////////////////////////console.log(this.vehiculosEnSolicitud);
+  //////////////////////////// //// console.log(this.vehiculosEnSolicitud);
   this.displayModal = true;
   this.loadingCargue = true;
   this.completeCargue=false;
@@ -1503,13 +1504,19 @@ grabarSolicitud(){
       this.displayModal = false;
     }else{
       let pedidosVehiculo:any[] = [];
+      // console.log(this.pedidosCliente);
       for(let pedido of vehiculo.pedidos){
-       ////console.log(pedido);
-       ////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
+       ////// //// console.log(pedido);
+       ////// //// console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
         let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
         let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
         
         let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
+
+        let tipoproducto = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].tipoprod;
+
+      
+
 
         pedidosVehiculo.push({
           pedidonum:pedido.pedido,
@@ -1526,16 +1533,17 @@ grabarSolicitud(){
           municipioentrega:pedido.municipioentrega,
           lugarentrega:pedido.lugarentrega,
           dependencia,
-          localidad
+          localidad,
+          tipoproducto
 
         });
         
         
 
-        ////////////////////////console.log(pedidosVehiculo);
+        ////////////////////////// //// console.log(pedidosVehiculo);
       }
 
-     //////////////////////console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
+     //////////////////////// //// console.log(this.vehiculos.find(vehiculo => vehiculo.code === vehiculo.placa))
 
       detalle_solicitud.push({
         fechacita:vehiculo.fechacargue,
@@ -1562,9 +1570,10 @@ grabarSolicitud(){
         clientes: clientesSolicitud,
         detalle_solicitud
       }
-     //console.log('newSolicitud',newSolicitud);
+     // console.log('newSolicitud',newSolicitud);
       
-      this.solicitudTurnoService.create(newSolicitud)
+      
+     this.solicitudTurnoService.create(newSolicitud)
           .subscribe({
                 next:async (result)=>{
                  
@@ -1577,12 +1586,11 @@ grabarSolicitud(){
                   this.completeCargue = true;
                   this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
                   
-                  //////////////console.log('Registro Solicitud',result);
+                  
                   this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
                       .subscribe({
                             next:async (solicitud)=>{
                               await this.bloqueoPedidosSolicitud(solicitud);
-                              ////console.log(solicitud);
                               await this.configEmails(solicitud);
                             },
                             error:(err)=>{
@@ -1600,8 +1608,8 @@ grabarSolicitud(){
                   this.displayModal = false;
                   this.loadingCargue = false;
                 }
-        });
-
+      });
+      
         
   }
 }
@@ -1610,7 +1618,7 @@ async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
 
   //let lineasPedidosBloquear:any[] = [];
 
-  ////////console.log(this.pedidos[0].docnum, this.pedidosAlmacenCliente);
+  ////////// //// console.log(this.pedidos[0].docnum, this.pedidosAlmacenCliente);
 
 
   for(let turno of solicitud.detalle_solicitud_turnos){
@@ -1625,13 +1633,13 @@ async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
             U_NF_CANTIDAD:pedido.cantidad,
             U_NF_BODEGA: pedido.bodega,
         })*/
-        ////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedidonum && pedidoCliente.linenum===pedido.linea));
-        ////////console.log(pedido.pedidonum);
+        ////////// //// console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedidonum && pedidoCliente.linenum===pedido.linea));
+        ////////// //// console.log(pedido.pedidonum);
 
-        ////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
+        ////////// //// console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
         let lineaPedidoBloqueo = {
-            Code:`${turno.id}-${pedido.id}`,
-            Name:`${turno.id}-${pedido.id}`,
+            Code:`${turno.id}-${pedido.id}-${new Date().getTime()}`,
+            Name:`${turno.id}-${pedido.id}-${new Date().getTime()}`,
             U_NF_ORDCARGUE:turno.id,
             //U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
             U_NF_PEDIDO:pedido.docentry,
@@ -1641,12 +1649,12 @@ async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
             U_NF_BODEGA: pedido.bodega
         }
 
-        //console.log(lineaPedidoBloqueo);
+        //// //// console.log(lineaPedidoBloqueo);
 
         this.sB1SLService.bloqueoPedidos(lineaPedidoBloqueo)
             .subscribe({
                 next:(result)=>{
-                  ////////console.log(result);
+                  ////////// //// console.log(result);
                 },
                 error:(err)=>{
                   console.error(err);
@@ -1671,7 +1679,7 @@ toggle(index: number) {
 
 filter(event: any, arrayFiltrar:any[]) {
 
-////////////////////////////console.log(arrayFiltrar);
+////////////////////////////// //// console.log(arrayFiltrar);
 const filtered: any[] = [];
 const query = event.query;
 for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -1696,7 +1704,7 @@ async emailsClientes(solicitud:any):Promise<void> {
 })=>{
     
     turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-      //////////////console.log(turno.id, pedido.CardCode);
+      //////////////// //// console.log(turno.id, pedido.CardCode);
         let email_cliente = solicitud.clientes.find((cliente: { CardCode: any; })=>cliente.CardCode === pedido.CardCode).EmailAddress;
         if(turnosCliente.filter(cliente=>cliente.codigo===pedido.CardCode).length === 0){
 
@@ -1729,7 +1737,7 @@ async emailsClientes(solicitud:any):Promise<void> {
         }else{
             
             let indexCliente = turnosCliente.findIndex(cliente=>cliente.codigo === pedido.CardCode);
-            //////////////console.log(turnosCliente[indexCliente]);
+            //////////////// //// console.log(turnosCliente[indexCliente]);
 
             if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
               let turnoCliente:any;
@@ -1752,7 +1760,7 @@ async emailsClientes(solicitud:any):Promise<void> {
               turnosCliente[indexCliente].turnos.push(turnoCliente);
             }else{
               let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
-              //////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+              //////////////// //// console.log(turnosCliente[indexCliente].turnos[indexTurno]);
               turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
               if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                 turnosCliente[indexCliente].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1767,14 +1775,14 @@ async emailsClientes(solicitud:any):Promise<void> {
 
 
 
-  //////console.log(turnosCliente);
+  //////// //// console.log(turnosCliente);
 
   turnosCliente.forEach(async (cliente)=>{
-   //////console.log('cliente', cliente);
+   //////// //// console.log('cliente', cliente);
    // if(cliente.email!='' && cliente.email!=null){
 
       let clienteTurno:any = solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === cliente.codigo);
-      //////console.log('solicitud.clientes',clienteTurno);
+      //////// //// console.log('solicitud.clientes',clienteTurno);
 
       //clienteTurno.turnos = cliente.turnos;
       let objectMail = {
@@ -1803,8 +1811,8 @@ async emailsClientes(solicitud:any):Promise<void> {
                     }
         }         
       };
-      //////console.log('objectMail Cliente',objectMail);
-      ////////console.log(await this.functionsService.sendMail(objectMail));
+      //////// //// console.log('objectMail Cliente',objectMail);
+      ////////// //// console.log(await this.functionsService.sendMail(objectMail));
       await this.functionsService.sendMail(objectMail)
   //  }
   });
@@ -1820,7 +1828,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
 })=>{
     
     turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-      //////////////console.log(turno.id, pedido.CardCode);
+      //////////////// //// console.log(turno.id, pedido.CardCode);
         if(turnosVendedor.filter(vendedor=>vendedor.codigo===pedido.email_vendedor).length === 0){
 
             let turnoVendedor:any;
@@ -1852,7 +1860,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
         }else{
             
             let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.codigo === pedido.email_vendedor);
-            //////////////console.log(turnosCliente[indexCliente]);
+            //////////////// //// console.log(turnosCliente[indexCliente]);
 
             if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
               let turnoVendedor:any;
@@ -1875,7 +1883,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
               turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
             }else{
               let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
-              //////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+              //////////////// //// console.log(turnosCliente[indexCliente].turnos[indexTurno]);
               turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
               if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                 turnosVendedor[indexVendedor].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1887,7 +1895,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
     
   });
 
-  ////////////console.log(turnosVendedor);
+  ////////////// //// console.log(turnosVendedor);
 
   turnosVendedor.forEach(async (vendedor)=>{
     if(vendedor.email!='' && vendedor.email!=null){
@@ -1907,8 +1915,8 @@ async emailsVendedores(solicitud:any): Promise<void>{
                     //cliente:solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === vendedor.code)
         }         
       };
-      //////console.log('objectMail vendedor',objectMail);
-      ////////console.log(await this.functionsService.sendMail(objectMail));
+      //////// //// console.log('objectMail vendedor',objectMail);
+      ////////// //// console.log(await this.functionsService.sendMail(objectMail));
       await this.functionsService.sendMail(objectMail)
     }
   });
@@ -1923,7 +1931,7 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
   let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLICITADO,locacion}))
                     .map((email: { email_responsable: any; }) => {return email.email_responsable});
 
-  //////////console.log('emailsTurno',emailsTurno.join());
+  //////////// //// console.log('emailsTurno',emailsTurno.join());
 
   if(emailsTurno.join()!=''){
     emailBodega = emailsTurno.join();
@@ -1963,8 +1971,8 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
                   
       }         
     };
-    //////console.log('objectMail Bodega',objectMail);
-    ////////console.log(await this.functionsService.sendMail(objectMail));
+    //////// //// console.log('objectMail Bodega',objectMail);
+    ////////// //// console.log(await this.functionsService.sendMail(objectMail));
     await this.functionsService.sendMail(objectMail)
 
   }
@@ -2005,8 +2013,8 @@ async emailTransp(solicitud:any): Promise<void>{
                 
     }         
   };
-  //////console.log('objectMail trasporta sociedad',objectMail);
-  ////////console.log(await this.functionsService.sendMail(objectMail));
+  //////// //// console.log('objectMail trasporta sociedad',objectMail);
+  ////////// //// console.log(await this.functionsService.sendMail(objectMail));
   await this.functionsService.sendMail(objectMail)
 }
 
@@ -2047,16 +2055,16 @@ async emailCreador(solicitud:any): Promise<void>{
                 
     }         
   };
-  //////console.log('objectMail usuario creador',objectMail);
-  ////////console.log(await this.functionsService.sendMail(objectMail));
+  //////// //// console.log('objectMail usuario creador',objectMail);
+  ////////// //// console.log(await this.functionsService.sendMail(objectMail));
   await this.functionsService.sendMail(objectMail)
 
 }
 
 async configEmails(dataSolicitud:any): Promise<void>{
     
-    ////////////console.log(JSON.stringify(dataSolicitud));
-    //////console.log(dataSolicitud);
+    ////////////// //// console.log(JSON.stringify(dataSolicitud));
+    //////// //// console.log(dataSolicitud);
 
     await this.emailsClientes(dataSolicitud);
     await this.emailsVendedores(dataSolicitud);
@@ -2074,7 +2082,7 @@ async configEmails(dataSolicitud:any): Promise<void>{
     //let emailBodega:string = this.almacenSeleccionado.email;
     let objectMail:any;
     let usuarioCreador:any = await this.usuariosService.infoUsuario();
-    ////////////////console.log(usuarioCreador);
+    ////////////////// //// console.log(usuarioCreador);
     let totalvehiculos:number =0;
     let totaltoneladas:number = 0;
 
@@ -2126,10 +2134,10 @@ async configEmails(dataSolicitud:any): Promise<void>{
         if(cliente.EmailAddress==null || cliente.EmailAddress==undefined){
           //Obtenert email del cliente del usuario segun el cardcode 
           let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(cliente.CardCode);
-          ////////////////console.log('usuarioCliente',usuarioCliente);
+          ////////////////// //// console.log('usuarioCliente',usuarioCliente);
           if(usuarioCliente!=false){
             cliente.EmailAddress = usuarioCliente.email;
-            //////////////console.log('usuarioCliente.email',usuarioCliente.email);
+            //////////////// //// console.log('usuarioCliente.email',usuarioCliente.email);
           }
           
         }
@@ -2153,8 +2161,8 @@ async configEmails(dataSolicitud:any): Promise<void>{
                           cliente
               }         
             };
-            //////////////console.log('objectMail Cliente',objectMail);
-            //////////////console.log(await this.functionsService.sendMail(objectMail));
+            //////////////// //// console.log('objectMail Cliente',objectMail);
+            //////////////// //// console.log(await this.functionsService.sendMail(objectMail));
         }
 
         // Configuracion de email para jefe de zona o vendedor
@@ -2195,8 +2203,8 @@ async configEmails(dataSolicitud:any): Promise<void>{
                     
         }         
       };
-      //////////////console.log('objectMail Bodega',objectMail);
-      //////////////console.log(await this.functionsService.sendMail(objectMail));
+      //////////////// //// console.log('objectMail Bodega',objectMail);
+      //////////////// //// console.log(await this.functionsService.sendMail(objectMail));
     }
     */
 
@@ -2216,12 +2224,12 @@ configTablaPedidosEnSolicitud(){
       data: dataTable
   }
   
-    //////////////////////////console.log(this.tablaPedidosEnSolicitud);
+    //////////////////////////// //// console.log(this.tablaPedidosEnSolicitud);
   
 }
 
 adicionarPedido(event:any){
-  //////////////////////////console.log(event);
+  //////////////////////////// //// console.log(event);
   if(this.tablaPedidosAlmacenCliente.data.length>0){
     this.dialogPedidosCliente = event;
   }else{
@@ -2252,7 +2260,7 @@ configComboSeleccionPedido(){
 
 
 seleccionarPedido(pedidoSeleccionado:any){
-  //////////////////////////console.log(pedidoSeleccionado);
+  //////////////////////////// //// console.log(pedidoSeleccionado);
 }
 
 filtrarPedido(event:any){
@@ -2293,13 +2301,13 @@ filtrarPedido(event:any){
         almacen:this.almacenSeleccionado.code,
     });
     this.envioLineaCarguePedido =false;
-    //////////////////////////console.log(this.detalleSolictudCargue);
+    //////////////////////////// //// console.log(this.detalleSolictudCargue);
     this.dialogCargueVehiculoPedido= false;
     this.resetearForm();
     
     this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
     this.pedidosEnSolicitud = await this.calcularCantidadesComprometidas(this.pedidosEnSolicitud);
-    //////////////////////////console.log(this.pedidosAlmacenCliente, this.pedidosEnSolicitud);
+    //////////////////////////// //// console.log(this.pedidosAlmacenCliente, this.pedidosEnSolicitud);
 
     this.configTablaPedidosEnSolicitud();
     this.configTablePedidosAlmacenCliente();

@@ -63,7 +63,7 @@ import { UrlApiService } from "./url-api.service";
    changePassword(dataChange:any, token:string):Observable<any>{
 
     //const requestOptions = this.urlApiService.getHeadersAPI(token);
-    //console.log(requestOptions)
+    ////console.log(requestOptions)
     //const requestOptions = { headers: headers };
       
     const url:string = `${this.api_url}/api/auth/change-password`;

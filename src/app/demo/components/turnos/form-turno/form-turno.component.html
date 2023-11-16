@@ -812,3 +812,90 @@
 
 </p-dialog>
 <!--Fin Dialog loading-->
+
+
+<!-- Dialog pedidos cliente-->
+<p-dialog [header]="'Cambio de Locación/bodega'"
+          [(visible)]="dialogCambioBodega" 
+          [modal]="true" 
+          [style]="{width: '50vw'}"
+          [maximizable]="true" 
+          [draggable]="false" 
+          [resizable]="false">
+
+          <div class="grid">
+            <div class="col-12">
+                <div class="card">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12">
+                            <span class="p-float-label">
+                                <p-autoComplete id="vhiculo"
+                                        
+                                        [(ngModel)]="bodegaSeleccionada" 
+                                        [suggestions]="bodegasFiltradas" 
+                                        (completeMethod)="filtrarBodega($event)" 
+                                        field="label" 
+                                        [dropdown]="true"
+                                        
+                                        (onSelect)="seleccionarBodega(bodegaSeleccionada)"
+                                        [ngClass]="{'ng-invalid ng-dirty' :  envioCambioBodega && (bodegaSeleccionada.length==0 )}">
+                                </p-autoComplete>
+                                <label for="placa"><h6>Locación/Bodega</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-12 md:col-6 ">
+                            <span class="p-float-label">
+                                <p-calendar inputId="fechacargueCambioBodega" 
+                                            [showIcon]="true" 
+                                            [(ngModel)]="fechacargueCambioBodega" 
+                                            [minDate]="hoy"
+                                            
+                                            (onSelect)="seleccionarFechaCitaCambioBodega()"
+                                            [ngClass]="{'ng-invalid ng-dirty' : envioCambioBodega && !fechacargueCambioBodega}">
+                                </p-calendar>
+                                <label for="fechacargueCambioBodega"><h6>Fecha estimada del cargue</h6></label>
+                            </span>
+                        </div>
+                        <div class="field col-12 md:col-6 ">
+                            <span class="p-float-label">
+                                <p-calendar [(ngModel)]="horacargueCambioBodega"  
+                                            [timeOnly]="true" 
+                                            [hourFormat]="'12'" 
+                                            inputId="timeonly"
+                                            
+                                            (ngModelChange)="cambioHoraCitaCambioBodega()"
+                                            [ngClass]="{'ng-invalid ng-dirty' : envioCambioBodega && !horacargueCambioBodega}">
+                                </p-calendar>
+                                <label for="horacargueCambioBodega"><h6>Hora estimada del cargue</h6></label>
+                            </span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          
+          <app-dynamic-table [dataTable]="tablaCambioBodegaPedidosTurno.data" 
+                             [headersTable]="tablaCambioBodegaPedidosTurno.header"
+                             dataKey="index" 
+                             [rows]="10" 
+                             [paginator]="true"
+                             [selectionMode]="'multiple'"
+                             [loading]="loadingCambioBodegaPedidosTurno"
+                             [viewCheckselectedItem] ="true"
+                             nameExport="pedidos_almacen_cliente"
+                             [showSelectedItems]="showItemsSelectedPedidosAlmacenCliente"
+                             [showBtnDelete]="(updatePedidosTurno && editCantidad)"
+                             (onDeleteAccion)="borrarLineaCambioBodega($event)"
+                             [showBtnNew]="false"
+                             (onChangeValue)="cambioValorCampoCambioBodega($event)">
+          </app-dynamic-table>
+        
+
+          <ng-template pTemplate="footer">
+            <p-button icon="pi pi-check" (click)="confirmarCambioBodega()" label="Realizar cambio de bodega" styleClass="p-button-text"></p-button>
+        </ng-template>
+
+</p-dialog>
+<!-- Fin Dialog pedidos cliente-->

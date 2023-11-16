@@ -22,7 +22,8 @@ import { TransportadorasService } from '../../service/transportadoras.service';
 import { TipoVehiculosService } from '../../service/tipo-vehiculo.service';
 import { NovedadesService } from '../../service/novedades.service';
 import { VistaEstadosTurnoComponent } from './vista-estados-turno/vista-estados-turno.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponentTurno } from './dashboard/dashboard.component';
+import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynamic-charts.module';
 
 
 
@@ -31,7 +32,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     CalendarioTurnosComponent,
     FormTurnoComponent,
     VistaEstadosTurnoComponent,
-    DashboardComponent
   ],
   imports: [
     CommonModule,
@@ -43,6 +43,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     FullCalendarModule,
     ApplicationPipesModule,
     DynamicTableModule,
+    
     
   ],
   providers:[AlmacenesService, 

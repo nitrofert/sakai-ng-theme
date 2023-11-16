@@ -55,7 +55,7 @@ export class LoginComponent {
             this.authService.login(dataLogin)
                 .subscribe({
                     next: (data)=>{
-                        //console.log(data);
+                        ////console.log(data);
                         
                             
                             this.verifycodeStatus = true;
@@ -93,11 +93,11 @@ export class LoginComponent {
             this.authService.verifyCode(dataVerifyCode)
                 .subscribe({
                     next: (data)=>{
-                        //console.log(data);
+                        ////console.log(data);
 
                         if(data.token){
                             this.usuario = data.usuario;
-                            //console.log(this.usuario);
+                            ////console.log(this.usuario);
                             //TODO: Registrar token
                             localStorage.setItem('token', data.token);
                             this.messageService.add({severity:'success', summary: `Notificación`, detail: `Bienvenid@ ${this.usuario.nombrecompleto}`});    

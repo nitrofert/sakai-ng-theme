@@ -29,7 +29,7 @@ export class FormFacturaComponent implements  OnInit {
     ){}
 
     ngOnInit() {
-      //console.log(this.config.data);
+      ////console.log(this.config.data);
       this.PEDIDO = this.config.data.detalleFactura[0].PEDIDO;
       this.DocDate = new Date(this.config.data.detalleFactura[0].DocDate);
       this.DocDueDate = new Date(this.config.data.detalleFactura[0].DocDueDate);

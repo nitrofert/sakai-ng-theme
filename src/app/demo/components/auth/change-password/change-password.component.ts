@@ -38,14 +38,14 @@ export class ChangePasswordComponent implements OnInit {
     ngOnInit() {
       this.urlTree = this.router.parseUrl(this.router.url);
       if(!this.urlTree.queryParams['token']){
-       //console.log("error");
+       ////console.log("error");
         this.showErrorToken();
       }else{
           this.token = this.urlTree.queryParams['token'];
           localStorage.setItem('token', this.token);
           if(this.urlTree.queryParams['usuario']){
             this.usuario = this.urlTree.queryParams['usuario'];
-           //console.log(this.usuario);
+           ////console.log(this.usuario);
           }
           
       }
@@ -70,7 +70,7 @@ export class ChangePasswordComponent implements OnInit {
           this.authService.changePassword(dataChange, this.token)
               .subscribe({
                   next: (data)=>{
-                     //console.log(data);
+                     ////console.log(data);
                       
                           this.loading = false;
                           this.messageService.add({severity:'success', summary: `Notificación:`, detail: `Se ha realizado correctamente el cambio del password usuario ${this.usuario}.`});     

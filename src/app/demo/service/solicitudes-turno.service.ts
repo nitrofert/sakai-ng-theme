@@ -64,6 +64,21 @@ export class SolicitudTurnoService {
         return this.http.get<any>(url);
     }
 
+    getTurnosExtendido(params?:any):Observable<any> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/solicitud-turnos/turnos-extended`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url,{params:params});
+    }
+
+    async turnosExtendido(params?:any):Promise<any> {
+        const turnosExtendido$ = this.getTurnosExtendido(params);
+        const turnosExtendido = await lastValueFrom(turnosExtendido$);
+        return turnosExtendido;
+    }
+
 
     create(nuevaSolicutud:any):Observable<any>{
       
@@ -87,7 +102,7 @@ export class SolicitudTurnoService {
 
     async getListaTurnosLocacion(localidad:string):Promise<void>{
         this.turnosLocacion = await lastValueFrom(this.getTurnosPorLocalidad(localidad));
-       //console.log(this.turnosLocacion);
+       ////console.log(this.turnosLocacion);
         this.turnosLocacion$.next(this.turnosLocacion);
     }
 
@@ -123,6 +138,12 @@ export class SolicitudTurnoService {
 
     sendNotification(turnoid:number):Observable<any> {
         const url:string = `${this.api_url}/api/solicitud-turnos/envio-notificacion/${turnoid}`;
+        return this.http.get<any>(url);
+    }
+
+
+    cancelarTurnosVencidos():Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/cancelar-turnos-vencidos`;
         return this.http.get<any>(url);
     }
 
