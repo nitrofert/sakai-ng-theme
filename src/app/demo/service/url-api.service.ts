@@ -13,7 +13,7 @@ export class UrlApiService {
     //env:string = 'dev';
     env:string = environment.env;
     url_api:string =environment.url_backend;
-    url_api_ssl:string =environment.url_backend_ssl;
+    url_ssl:boolean =environment.url_ssl;
     
     companySAP:string = environment.companySAP;
     companyMySQL:string = environment.companyMySQL;
@@ -23,7 +23,7 @@ export class UrlApiService {
 
     getUrlAPI():string{
        
-        let url = this.env!='prod'?this.url_api:this.url_api_ssl;
+        let url = this.url_ssl?`https://${this.url_api}`:`http://${this.url_api}`;
         console.log('url api:',url);
         return url;
     }
