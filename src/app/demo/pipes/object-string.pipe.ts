@@ -13,7 +13,7 @@ export class ObjectStringPipe implements PipeTransform {
 
     let objeto = JSON.parse(value);
 
-    ////console.log(objeto);
+    //////console.log(objeto);
 
     return objeto[key];
 

@@ -85,7 +85,7 @@ export class UsuariosComponent implements  OnInit{
       this.usuariosService.getPermisosModulo(modulo)
           .subscribe({
               next: (permisos)=>{
-               ////console.log(permisos);
+               //////console.log(permisos);
                 if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                   this.router.navigate(['/auth/access']);
                 }
@@ -110,7 +110,7 @@ export class UsuariosComponent implements  OnInit{
     this.usuariosService.getListadoUsuarios()
         .subscribe({
             next: (usuario)=>{
-             ////console.log(usuario);
+             //////console.log(usuario);
               let usuarioTmp:any[] = [];
               for(let item of usuario){
                   usuarioTmp.push({
@@ -133,7 +133,7 @@ export class UsuariosComponent implements  OnInit{
   }
             
   nuevoUsuario(event: any){
-   ////console.log(event);
+   //////console.log(event);
     //this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
     
       const ref = this.dialogService.open(FormUsuarioComponent, {
@@ -149,7 +149,7 @@ export class UsuariosComponent implements  OnInit{
     
       ref.onClose.subscribe(() => {
         this.getListadoUsuarios();
-        ////console.log("Refresh calendar");
+        //////console.log("Refresh calendar");
       });
   }
             
@@ -170,11 +170,11 @@ export class UsuariosComponent implements  OnInit{
     
       ref.onClose.subscribe(() => {
         this.getListadoUsuarios();
-        ////console.log("Refresh calendar");
+        //////console.log("Refresh calendar");
       });
   }
   
   deleteUsuario(event: any){
-     ////console.log(event);
+     //////console.log(event);
   }
 }

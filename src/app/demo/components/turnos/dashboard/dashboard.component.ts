@@ -103,7 +103,7 @@ export class DashboardComponentTurno implements OnInit {
   async ngOnInit() {
     
     this.infousuario = await this.usuariosService.infoUsuario();
-   //// //////////////////console.log(this.infousuario);
+   //// ////////////////////console.log(this.infousuario);
     //this.configTablaProgramacionDiaria();
 
     
@@ -133,7 +133,7 @@ export class DashboardComponentTurno implements OnInit {
               }
               this.getLocaciones();
               this.allbodegas = almacenesTMP;
-             //// //////////////////console.log(almacenesTMP);
+             //// ////////////////////console.log(almacenesTMP);
              
             },
             error:(err)=>{
@@ -153,11 +153,11 @@ export class DashboardComponentTurno implements OnInit {
                 locacion.label = locacion.locacion
               })
               //this.locaciones = locaciones;
-            // //////////////////console.log(locaciones);
+            // ////////////////////console.log(locaciones);
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               this.locacionSeleccionada = this.locaciones[0];
               this.seleccionarLocacion(this.locacionSeleccionada);
-              ////////////////////console.log();
+              //////////////////////console.log();
             },
             error:(err)=>{
               console.error(err);
@@ -186,9 +186,9 @@ export class DashboardComponentTurno implements OnInit {
   }
 
   seleccionarLocacion(locacion:any){
-    //////////////////console.log(locacion);
+    ////////////////////console.log(locacion);
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
-   //// //////////////////console.log(bodegas_locacion);
+   //// ////////////////////console.log(bodegas_locacion);
     this.bodegas = bodegas_locacion;
     this.bodegaSeleccionada = this.bodegas[0];
     this.seleccionarBodega(this.bodegaSeleccionada);
@@ -196,7 +196,7 @@ export class DashboardComponentTurno implements OnInit {
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    ////////////////////////////////console.log((arrayFiltrar);
+    //////////////////////////////////console.log((arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -215,12 +215,12 @@ export class DashboardComponentTurno implements OnInit {
   }
 
   seleccionarBodega(bodega:any){
-    //////////////////console.log(bodega);
+    ////////////////////console.log(bodega);
    this.setDashboard();
   }
 
  async seleccionarFecha(){
-    ////////////////console.log(this.fechaProgramacion)
+    //////////////////console.log(this.fechaProgramacion)
     this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
     this.setDashboard();
   }
@@ -241,7 +241,7 @@ export class DashboardComponentTurno implements OnInit {
                                                                                           linea.turnos_estado != EstadosDealleSolicitud.CANCELADO &&
                                                                                           linea.turnos_estado != EstadosDealleSolicitud.SOLINVENTARIO );
       
-      ////console.log(this.lineasProgramacionDiariaGerencia);
+      //////console.log(this.lineasProgramacionDiariaGerencia);
       this.configTablaProgramacionGerencia();
   }
 
@@ -252,10 +252,10 @@ export class DashboardComponentTurno implements OnInit {
       //locacion:this.locacionSeleccionada.code,
       //bodega:this.bodegaSeleccionada.code
     }
-    ////////////////console.log(this.fechaProgramacion);
+    //////////////////console.log(this.fechaProgramacion);
 
     let programacionBodega = await this.solicitudTurnoService.turnosExtendido(params);
-    //////////////console.log(programacionBodega.raw);
+    ////////////////console.log(programacionBodega.raw);
     
     return programacionBodega.raw;
   }
@@ -319,7 +319,7 @@ export class DashboardComponentTurno implements OnInit {
 
     let consolidadoItems:any = await this.functionsService.groupArray(this.lineasProgramacionDiariaBodega,'pedidos_turno_itemcode');
     let totalToneladas:number = (await this.functionsService.sumColArray(this.lineasProgramacionDiariaBodega,[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
-    //////////////////console.log('consolidadoItems',consolidadoItems);
+    ////////////////////console.log('consolidadoItems',consolidadoItems);
     
     await consolidadoItems.map(async (linea:any)=>{
         
@@ -327,8 +327,8 @@ export class DashboardComponentTurno implements OnInit {
         linea.totalToneladas = totalToneladas;
         linea.prcItemBodega = prcItemBodega;
 
-        ////////////////////console.log('itemcode',linea.pedidos_turno_itemcode);
-        ////////////////////console.log(this.lineasProgramacionDiariaBodega.filter(item=>item.pedidos_turno_itemcode === linea.pedidos_turno_itemcode));
+        //////////////////////console.log('itemcode',linea.pedidos_turno_itemcode);
+        //////////////////////console.log(this.lineasProgramacionDiariaBodega.filter(item=>item.pedidos_turno_itemcode === linea.pedidos_turno_itemcode));
     });
 
     let consolidadoProgramacionBodega:any = {
@@ -337,7 +337,7 @@ export class DashboardComponentTurno implements OnInit {
 
     };
 
-    //////////////////console.log(consolidadoProgramacionBodega);
+    ////////////////////console.log(consolidadoProgramacionBodega);
     
     return consolidadoProgramacionBodega;
   }
@@ -362,7 +362,7 @@ export class DashboardComponentTurno implements OnInit {
     this.chartPieData = await this.functionsService.setDataPieDoughnutChart(tabla.data,{label:'itemname',value:'cantidad'});
     
    
-    //////////////console.log(this.tablaConsolidadoProgramacionDiariaBodega.data.length);
+    ////////////////console.log(this.tablaConsolidadoProgramacionDiariaBodega.data.length);
 
   }
 
@@ -405,7 +405,7 @@ export class DashboardComponentTurno implements OnInit {
       let color = await this.functionsService.generarColorHex();
       backgroundColor.push(color)
     }
-    //console.log(backgroundColor);
+    ////console.log(backgroundColor);
     let hoverBackgroundColor:any[] = backgroundColor;
 
 
@@ -441,7 +441,7 @@ export class DashboardComponentTurno implements OnInit {
     let turnosFehaSeleccionadaConfirmados = this.turnosFehaSeleccionada.filter(turno=>turno.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
     let configPlacasCompartidas = await this.configHeaderTablaPlacasCompartidasBodegas(turnosFehaSeleccionadaConfirmados);
     this.tablaPlacasCompartidasBodegas.header = configPlacasCompartidas.headersTable;
-    ////////////console.log(turnosFehaSeleccionadaConfirmados,configPlacasCompartidas);
+    //////////////console.log(turnosFehaSeleccionadaConfirmados,configPlacasCompartidas);
 
     
     this.tablaPlacasCompartidasBodegas.data = await this.configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas,turnosFehaSeleccionadaConfirmados);
@@ -449,7 +449,7 @@ export class DashboardComponentTurno implements OnInit {
     let colsSum = await this.configSumTabla(configPlacasCompartidas.headersTable,this.tablaPlacasCompartidasBodegas.data);
 
     this.tablaPlacasCompartidasBodegas.colsSum = colsSum;
-    ////////console.log(this.tablaPlacasCompartidasBodegas.colsSum);
+    //////////console.log(this.tablaPlacasCompartidasBodegas.colsSum);
     this.loadingPC = false;
   }
 
@@ -480,7 +480,7 @@ export class DashboardComponentTurno implements OnInit {
     //objString = objString.substring(0,objString.length-1);
     objString +='"total":{"label":"Total placa","type":"number","sizeCol":"6rem","align":"center","currency":"TON","side":"rigth","editable":false,"sum":true}}]'
 
-    ////////////console.log(objString)
+    //////////////console.log(objString)
 
     let headersTable:any[] = JSON.parse(objString);
 
@@ -495,7 +495,7 @@ export class DashboardComponentTurno implements OnInit {
 
   async configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas:any, turnos:any[]):Promise<any>{
 
-    //////console.log(turnos);
+    ////////console.log(turnos);
     this.loadingPC = true;
     let placas:any[] = configPlacasCompartidas.placas;
     let bodegas:any[] = configPlacasCompartidas.bodegas;
@@ -508,7 +508,7 @@ export class DashboardComponentTurno implements OnInit {
       let totalPlaca:number =0;
       for(let bodega of bodegas){
 
-        //////////////console.log(headersTable[0]['bodega'+idBodega].label);
+        ////////////////console.log(headersTable[0]['bodega'+idBodega].label);
         let cantidadBodegaPlaca =0;
         let codeBodega = headersTable[0]['bodega'+idBodega].label;
         
@@ -526,12 +526,12 @@ export class DashboardComponentTurno implements OnInit {
 
       objString +=`"total":"${totalPlaca}"}`
 
-      ////////////console.log(objString);
+      //////////////console.log(objString);
       dataTable.push(JSON.parse(objString));
 
     }
     
-    //////////console.log(dataTable);
+    ////////////console.log(dataTable);
 
 
     return dataTable;
@@ -541,30 +541,30 @@ export class DashboardComponentTurno implements OnInit {
 
   async configSumTabla(headersTable:any[],dataTable:any[]):Promise<any>{
     let colsSum:any[] = [];
-    ////////console.log(dataTable);
-    ////////////console.log(Object.keys(headersTable[0]));
+    //////////console.log(dataTable);
+    //////////////console.log(Object.keys(headersTable[0]));
     let objString:string = "";
     let colsSumSwitch:boolean = false;
     for(let key of Object.keys(headersTable[0])){
       objString+=`"${key}":`
       if(headersTable[0][key].sum){
-        ////////////console.log(key);
+        //////////////console.log(key);
         colsSumSwitch = true;
         let total = await this.functionsService.sumColArray(dataTable,JSON.parse(`[{"${key}":0}]`));
-        ////////////console.log(total[0][key]);
+        //////////////console.log(total[0][key]);
         objString+=`${parseFloat(total[0][key])},`
       }else{
         objString+=`"",`
       }
     }
     objString = `{${objString.substring(0,objString.length-1)}}`;
-    ////////////console.log(objString);
+    //////////////console.log(objString);
     if(colsSumSwitch){
       colsSum.push(JSON.parse(objString));
     }
     
 
-    ////////////console.log(colsSum);
+    //////////////console.log(colsSum);
 
     return colsSum;
 
@@ -574,36 +574,36 @@ export class DashboardComponentTurno implements OnInit {
   async configTablaProgramacionGerencia(){
 
     let headerTabla =   this.configHeaderTablaProgramacionDiariaGerencia();
-    console.log(this.lineasProgramacionDiariaGerencia);
+    //console.log(this.lineasProgramacionDiariaGerencia);
     let dependencias = await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_dependencia');
-    //console.log(dependencias);
+    ////console.log(dependencias);
 
     for(let dependencia of dependencias ){
 
       let lineasProgramacionDiariaDependencia = this.lineasProgramacionDiariaGerencia.filter(linea=>linea.pedidos_turno_dependencia === dependencia.pedidos_turno_dependencia);
       
-      //console.log(lineasProgramacionDiariaDependencia);
+      ////console.log(lineasProgramacionDiariaDependencia);
       let dataDependencia =  await this.configDataTablaProgramacionDiariaaGerencia(lineasProgramacionDiariaDependencia);
-      //console.log(dataDependencia);
+      ////console.log(dataDependencia);
       let colsSumDependencia = await this.configSumTabla(headerTabla,dataDependencia)
-      //console.log(colsSumDependencia);
+      ////console.log(colsSumDependencia);
       
       let lineasProgramacionDiariaDependenciaTipoProducto = await this.functionsService.groupArray(lineasProgramacionDiariaDependencia,'pedidos_turno_tipoproducto',[{pedidos_turno_cantidad:0}]);
-      //console.log(lineasProgramacionDiariaDependenciaTipoProducto);
+      ////console.log(lineasProgramacionDiariaDependenciaTipoProducto);
       let consolidadoTipoProductoDependencia = await this.configDataTablaConsolidadoTipoProducto(lineasProgramacionDiariaDependenciaTipoProducto);
-      //console.log(consolidadoTipoProductoDependencia);
+      ////console.log(consolidadoTipoProductoDependencia);
       let colSumConsolidadoTipoProductoDependencia = await this.configSumTabla(this.tablaConsolidadoTipoProducto.header,consolidadoTipoProductoDependencia)
-      //console.log(colSumConsolidadoTipoProductoDependencia);
+      ////console.log(colSumConsolidadoTipoProductoDependencia);
 
       let chartDataConsolidadoTipoProducto = await this.functionsService.setDataBasicChart(consolidadoTipoProductoDependencia,{label:'tipo',value:'cantidad'});
 
 
       let lineasProgramacionDiariaDependenciaModTPT = await this.functionsService.groupArray(lineasProgramacionDiariaDependencia,'turnos_condiciontpt',[{pedidos_turno_cantidad:0}]);
-      //console.log(lineasProgramacionDiariaDependenciaTipoProducto);
+      ////console.log(lineasProgramacionDiariaDependenciaTipoProducto);
       let consolidadoModTPT = await this.configDataTablaConsolidadooModTPT(lineasProgramacionDiariaDependenciaModTPT);
-      //console.log(consolidadoTipoProductoDependencia);
+      ////console.log(consolidadoTipoProductoDependencia);
       let colSumConsolidadoModTPT = await this.configSumTabla(this.tablaConsolidadoModTPT.header,consolidadoModTPT)
-      //console.log(colSumConsolidadoTipoProductoDependencia);
+      ////console.log(colSumConsolidadoTipoProductoDependencia);
 
       let chartDataConsolidadoModTPT = await this.functionsService.setDataBasicChart(consolidadoModTPT,{label:'tipo',value:'cantidad'});
       
@@ -624,7 +624,7 @@ export class DashboardComponentTurno implements OnInit {
     
     let toneladasZonaPedido = await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]);
 
-    //console.log(toneladasZonaPedido);
+    ////console.log(toneladasZonaPedido);
    
     let tablaToneladasZonaPedido:any = {
       header:  this.configHeaderTablaToneladasZona(),
@@ -635,7 +635,7 @@ export class DashboardComponentTurno implements OnInit {
     this.tablaToneladasZona = tablaToneladasZonaPedido;
     this.tablaToneladasZona.colsSum = colsSum;
 
-    //console.log(this.tablaToneladasZona);
+    ////console.log(this.tablaToneladasZona);
 
     //this.chartDataConsolidadoZona = await this.setConsolidadoZonaDataChart(this.tablaToneladasZona.data)
 
@@ -645,18 +645,18 @@ export class DashboardComponentTurno implements OnInit {
 
 
     this.dependencias = await dependencias.map(async (dependencia)=>{
-      //console.log(dependencia);
+      ////console.log(dependencia);
       let dataDependencia = await tabla.data.filter((linea: { dependencia: any; })=>linea.dependencia === dependencia.dependencia);
-      console.log('dataDependencia',dataDependencia);
+      //console.log('dataDependencia',dataDependencia);
       let colsSumDependencia = await this.configSumTabla(tabla.header,dataDependencia)
-      console.log('colsSumDependencia',colsSumDependencia);
+      //console.log('colsSumDependencia',colsSumDependencia);
       return {
                 'dependencia':dependencia.dependencia,
                 data: dataDependencia,
                 colsSum:  colsSumDependencia
              }
     })
-    console.log(this.dependencias);
+    //console.log(this.dependencias);
 
     this.tablaProgramacionDiariaGerencia = tabla;
 
@@ -687,7 +687,7 @@ export class DashboardComponentTurno implements OnInit {
 
   async configDataTablaProgramacionDiariaaGerencia(data:any[]){
 
-    //console.log(data);
+    ////console.log(data);
     
 
     let dataTable:any[] = [];
@@ -754,7 +754,7 @@ export class DashboardComponentTurno implements OnInit {
       let color = await this.functionsService.generarColorHex();
       backgroundColor.push(color)
     }
-    //console.log(backgroundColor);
+    ////console.log(backgroundColor);
     let hoverBackgroundColor:any[] = backgroundColor;
 
 
@@ -799,7 +799,7 @@ export class DashboardComponentTurno implements OnInit {
 
   async configDataTablaConsolidadoTipoProducto(data:any[]){
 
-    //console.log(data);
+    ////console.log(data);
     
 
     let dataTable:any[] = [];
@@ -830,7 +830,7 @@ export class DashboardComponentTurno implements OnInit {
 
   async configDataTablaConsolidadooModTPT(data:any[]){
 
-    //console.log(data);
+    ////console.log(data);
     
 
     let dataTable:any[] = [];

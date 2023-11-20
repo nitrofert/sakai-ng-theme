@@ -15,16 +15,16 @@ export class RoleAccesGuard implements CanActivate {
 
   async canActivate(route:ActivatedRouteSnapshot):Promise<boolean>  {
     const expectedRole = route.data['expectedRole'];
-    ////console.log(expectedRole);
+    //////console.log(expectedRole);
 
     const roles$ = this.usuarioService.getRolesUsuario();
     const roles = await lastValueFrom(roles$);
 
     //const roles = await this.usuarioService.getRolesUsuario2();
-   ////console.log(roles,expectedRole, roles.find((rol: any) => rol.nombre === expectedRole));
+   //////console.log(roles,expectedRole, roles.find((rol: any) => rol.nombre === expectedRole));
 
     if( roles === undefined || ! roles.find((rol: any) => rol.nombre === expectedRole)){
-       ////console.log('rol no definido')
+       //////console.log('rol no definido')
         return false;
     }
 

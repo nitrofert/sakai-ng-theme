@@ -55,7 +55,7 @@ export class PermisosComponent implements  OnInit{
       
       //this.getListadoPermisos();
 
-      ////console.log(this.opcionPermiso);
+      //////console.log(this.opcionPermiso);
       
   
     }
@@ -65,7 +65,7 @@ export class PermisosComponent implements  OnInit{
         this.usuariosService.getPermisosModulo(modulo)
             .subscribe({
                 next: (permisos)=>{
-                  ////console.log(permisos);
+                  //////console.log(permisos);
                   if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                     this.router.navigate(['/auth/access']);
                   }
@@ -90,7 +90,7 @@ export class PermisosComponent implements  OnInit{
       this.rolesService.getListadoRoles()
           .subscribe({
               next:(roles)=>{
-                ////console.log(roles);
+                //////console.log(roles);
                 
                 for(let rol of roles){
                     rol.code = rol.id,
@@ -110,7 +110,7 @@ export class PermisosComponent implements  OnInit{
       this.usuariosService.getListadoUsuarios()
           .subscribe({
               next:(usuarios)=>{
-                ////console.log(usuarios);
+                //////console.log(usuarios);
 
                 for(let usuario of usuarios){
                   usuario.code = usuario.id,
@@ -128,7 +128,7 @@ export class PermisosComponent implements  OnInit{
 
 
     seleccionarOpcion(opcionPermiso: any){
-        ////console.log(opcionPermiso);
+        //////console.log(opcionPermiso);
         this.rolSeleccionado = [];
         this.usuarioSeleccionado=[];
         this.dataTable=[];
@@ -153,12 +153,12 @@ export class PermisosComponent implements  OnInit{
     }
 
     seleccionarRol(rolSeleccionado:any){
-        ////console.log(rolSeleccionado);
+        //////console.log(rolSeleccionado);
         this.getListadoPermisos(rolSeleccionado.id);
     }
 
     seleccionarUsuario(usuarioSeleccionado:any){
-      ////console.log(usuarioSeleccionado);
+      //////console.log(usuarioSeleccionado);
       this.getListadoPermisos(usuarioSeleccionado.id);
     }
 
@@ -166,7 +166,7 @@ export class PermisosComponent implements  OnInit{
       this.permisosService.getListadoPermisos(this.opcionPermiso.code,idSeleccion)
           .subscribe({
               next: (permisos)=>{
-                ////console.log(permisos);
+                //////console.log(permisos);
                 /*let permisosTmp:any[] = [];
                 for(let item of permisos){
                   permisosTmp.push({
@@ -188,7 +188,7 @@ export class PermisosComponent implements  OnInit{
     }
   
     nuevaAccion(event: any){
-      ////console.log(event);
+      //////console.log(event);
       //this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
       
         const ref = this.dialogService.open(FormPermisosComponent, {
@@ -204,7 +204,7 @@ export class PermisosComponent implements  OnInit{
       
         ref.onClose.subscribe(() => {
           //this.getListadoPermisos();
-          //////console.log("Refresh calendar");
+          ////////console.log("Refresh calendar");
         });
     }
   
@@ -224,19 +224,19 @@ export class PermisosComponent implements  OnInit{
       
         ref.onClose.subscribe(() => {
           //this.getListadoPermisos();
-          //////console.log("Refresh calendar");
+          ////////console.log("Refresh calendar");
         });
     }
     
     deleteAccion(event: any){
-        ////console.log(event);
+        //////console.log(event);
     }
 
     changeState(event:any){
-      ////console.log(event);
+      //////console.log(event);
       const {key, valor, id} = event;
       const arregloPermiso = id.toString().split('-');
-      ////console.log(arregloPermiso);
+      //////console.log(arregloPermiso);
       let formQuery:any;
       if(this.opcionPermiso.code==='rol'){
         formQuery = {
@@ -262,11 +262,11 @@ export class PermisosComponent implements  OnInit{
     }
 
     updateEstadoPermmisoRol(formQuery:any,){
-      ////console.log(formQuery)
+      //////console.log(formQuery)
       this.permisosService.updateEstadoPermmisoRol(formQuery)
       .subscribe({
           next:(permiso)=>{
-             ////console.log(permiso);
+             //////console.log(permiso);
               this.messageService.add({severity:'success', summary:'información', detail:`la actualización del estado del permiso seleccionado se ha realizado correctamente`});
           },
           error:(err)=>{
@@ -280,7 +280,7 @@ export class PermisosComponent implements  OnInit{
       this.permisosService.updateEstadoPermmisoUsuario(formQuery)
             .subscribe({
                 next:(permiso)=>{
-                    ////console.log(permiso);
+                    //////console.log(permiso);
                     this.messageService.add({severity:'success', summary:'información', detail:`la actualización del estado del permiso seleccionado se ha realizado correctamente`});
                 },
                 error:(err)=>{
@@ -379,7 +379,7 @@ export class PermisosComponent implements  OnInit{
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    ////////console.log(arrayFiltrar);
+    //////////console.log(arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {

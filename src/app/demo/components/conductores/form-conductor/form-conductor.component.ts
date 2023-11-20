@@ -31,7 +31,7 @@ export class FormConductorComponent  implements  OnInit {
     ){}
 
     ngOnInit() {
-      ////console.log(this.config.data.id);
+      //////console.log(this.config.data.id);
       if(this.config.data.id!=0){
         this.getInfoConductor(this.config.data.id);
         this.updateMode = true;
@@ -42,7 +42,7 @@ export class FormConductorComponent  implements  OnInit {
       this.conductoresService.getConductorById(id)
           .subscribe({
               next:(infoConductor)=>{
-                 ////console.log(infoConductor);
+                 //////console.log(infoConductor);
                   this.nombre= infoConductor.nombre;
                   this.cedula=  infoConductor.cedula;
                   this.email= infoConductor.email;
@@ -76,7 +76,7 @@ export class FormConductorComponent  implements  OnInit {
             this.conductoresService.update(nuevoConductor,this.config.data.id)
               .subscribe({
                   next: (conductor)=>{
-                   ////console.log(conductor);
+                   //////console.log(conductor);
                     this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue actualizado correctamente`});
                   },
                   error:(err)=> {
@@ -90,7 +90,7 @@ export class FormConductorComponent  implements  OnInit {
             this.conductoresService.create(nuevoConductor)
               .subscribe({
                   next: (conductor)=>{
-                   ////console.log(conductor);
+                   //////console.log(conductor);
                     this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue registrado correctamente`});
                   },
                   error:(err)=> {
@@ -118,7 +118,7 @@ export class FormConductorComponent  implements  OnInit {
     }
 
     keyPress(event:any){
-       ////console.log(event);
+       //////console.log(event);
         
         var key =  event.keyCode;
         let teclasFuncionales:any[] =[8,46,9,13];
@@ -130,7 +130,7 @@ export class FormConductorComponent  implements  OnInit {
            teclasFuncionales.includes(key)){
           
         }else{
-         ////console.log(key);
+         //////console.log(key);
           event.preventDefault();
         }
     }

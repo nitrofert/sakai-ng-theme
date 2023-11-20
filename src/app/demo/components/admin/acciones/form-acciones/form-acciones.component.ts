@@ -47,7 +47,7 @@ export class FormAccionesComponent implements  OnInit {
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else{
-      ////console.log(this.hierarchy,this.visible, this.opcionPadre);
+      //////console.log(this.hierarchy,this.visible, this.opcionPadre);
         let nuevaAccion ={
           accion:this.accion,
           descripcion:this.descripcion,
@@ -56,7 +56,7 @@ export class FormAccionesComponent implements  OnInit {
         this.accionesService.create(nuevaAccion)
             .subscribe({
                 next: (accion)=>{
-                  ////console.log(menu);
+                  //////console.log(menu);
                   this.messageService.add({severity:'success', summary:'información', detail:`La opción ${accion.accion} fue registrado correctamente al menú`});
                 },
                 error:(err)=> {
@@ -83,7 +83,7 @@ export class FormAccionesComponent implements  OnInit {
         this.accionesService.update(nuevaAccion,this.config.data.id)
             .subscribe({
                 next: (accion)=>{
-                  ////console.log(menu);
+                  //////console.log(menu);
                   this.messageService.add({severity:'success', summary:'información', detail:`La opción ${accion.accion} fue actualizada correctamente al menú`});
                 },
                 error:(err)=> {

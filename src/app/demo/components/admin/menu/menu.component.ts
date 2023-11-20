@@ -97,7 +97,7 @@ export class MenuComponent implements  OnInit{
       this.usuariosService.getPermisosModulo(modulo)
           .subscribe({
               next: (permisos)=>{
-               ////console.log(permisos);
+               //////console.log(permisos);
                 if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                   this.router.navigate(['/auth/access']);
                 }
@@ -122,7 +122,7 @@ export class MenuComponent implements  OnInit{
     this.menuService.getListadoMenu()
         .subscribe({
             next: (menu)=>{
-             ////console.log(menu);
+             //////console.log(menu);
               let menuTmp:any[] = [];
               for(let item of menu){
                   menuTmp.push({
@@ -146,7 +146,7 @@ export class MenuComponent implements  OnInit{
   }
 
   nuevoMenu(event: any){
-   ////console.log(event);
+   //////console.log(event);
     //this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
    
       const ref = this.dialogService.open(FormMenuComponent, {
@@ -162,7 +162,7 @@ export class MenuComponent implements  OnInit{
     
       ref.onClose.subscribe(() => {
         this.getListadoMenu();
-        ////console.log("Refresh calendar");
+        //////console.log("Refresh calendar");
       });
   }
 
@@ -183,12 +183,12 @@ export class MenuComponent implements  OnInit{
     
       ref.onClose.subscribe(() => {
         this.getListadoMenu();
-        ////console.log("Refresh calendar");
+        //////console.log("Refresh calendar");
       });
   }
  
   deleteMenu(event: any){
-     ////console.log(event);
+     //////console.log(event);
   }
 
 }

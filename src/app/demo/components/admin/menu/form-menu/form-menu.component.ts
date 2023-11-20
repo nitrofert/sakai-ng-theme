@@ -63,9 +63,9 @@ export class FormMenuComponent implements  OnInit {
         const opcionesMenu = await lastValueFrom(opcionesMenu$);
        
         this.opcionesPadres = await this.getMenuPadres(opcionesMenu);
-        ////console.log( this.opcionesPadres);
+        //////console.log( this.opcionesPadres);
         this.opcionPadre = this.opcionesPadres.find(opcion => opcion.id === menu.iddad);
-        ////console.log( this.opcionPadre);
+        //////console.log( this.opcionPadre);
 
     }
 
@@ -100,7 +100,7 @@ export class FormMenuComponent implements  OnInit {
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////console.log(arrayFiltrar);
+    ////////console.log(arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -113,7 +113,7 @@ export class FormMenuComponent implements  OnInit {
   }
 
   seleccionarJerarquia(hierarchy:any){
-    ////console.log(this.hierarchy)
+    //////console.log(this.hierarchy)
     if(hierarchy.code ==='H'){
      
       this.hierarchyDisabled = false;
@@ -129,7 +129,7 @@ export class FormMenuComponent implements  OnInit {
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else{
-      ////console.log(this.hierarchy,this.visible, this.opcionPadre);
+      //////console.log(this.hierarchy,this.visible, this.opcionPadre);
         let nuevoMenu:any ={
           title:this.title,
           description:this.description,
@@ -144,7 +144,7 @@ export class FormMenuComponent implements  OnInit {
         this.menuService.create(nuevoMenu)
             .subscribe({
                 next: (menu)=>{
-                  ////console.log(menu);
+                  //////console.log(menu);
                   this.messageService.add({severity:'success', summary:'información', detail:`La opción ${menu.title} fue registrado correctamente al menú`});
                 },
                 error:(err)=> {
@@ -177,7 +177,7 @@ export class FormMenuComponent implements  OnInit {
         this.menuService.update(nuevoMenu,this.config.data.id)
             .subscribe({
                 next: (menu)=>{
-                  ////console.log(menu);
+                  //////console.log(menu);
                   this.messageService.add({severity:'success', summary:'información', detail:`La opción ${this.title} fue actualizada correctamente al menú`});
                   //this.ref.close();
                 },
