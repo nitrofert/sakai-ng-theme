@@ -23,7 +23,7 @@ export class UrlApiService {
 
     getUrlAPI():string{
        
-        let url = this.env=='dev'?this.url_api:this.url_api_ssl;
+        let url = this.env!='prod'?this.url_api:this.url_api_ssl;
         console.log('url api:',url);
         return url;
     }
