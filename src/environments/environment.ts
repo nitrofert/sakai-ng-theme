@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   env:'dev',
   url_backend:'http://localhost:5001',
+  url_backend_ssl:'https://localhost:5001',
   companySAP:'NITROFERT_PRD',
   companyMySQL:'nitrosap'
 };

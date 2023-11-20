@@ -13,6 +13,7 @@ export class UrlApiService {
     //env:string = 'dev';
     env:string = environment.env;
     url_api:string =environment.url_backend;
+    url_api_ssl:string =environment.url_backend_ssl;
     
     companySAP:string = environment.companySAP;
     companyMySQL:string = environment.companyMySQL;
@@ -21,8 +22,10 @@ export class UrlApiService {
     constructor() {}
 
     getUrlAPI():string{
-       // ////console.log('url api2:',this.url_api);
-        return this.url_api;
+       
+        let url = this.env=='dev'?this.url_api:this.url_api_ssl;
+        console.log('url api:',url);
+        return url;
     }
 
     getToken():string{

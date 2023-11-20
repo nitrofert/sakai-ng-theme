@@ -2919,8 +2919,8 @@ async validarHoraCargue():Promise<boolean>{
     this.envioCambioBodega = true;
     let totoalCargaCambio = (await this.functionsService.sumColArray(this.pedidosCambioBodegaTurno,[{canridad:0}]))[0].cantidad;
 
-    if(this.bodegaSeleccionada.length ==0){
-      this.messageService.add({severity:'error', summary:'Error', detail:'Debe seleccionar una Locación/Bodega'});
+    if(this.bodegaSeleccionada.length ==0 || !this.fechacargueCambioBodega || !this.horacargueCambioBodega){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Debe seleccionar los campos resaltados en rojo'});
     }else if(this.pedidosCambioBodegaTurno.length ==0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Debe existir al menos una linea para realizar el cambio de bodega'});
     }else if(this.capacidadvh< totoalCargaCambio || this.pesomax < totoalCargaCambio){
