@@ -131,8 +131,9 @@ export class DashboardComponentTurno implements OnInit {
                 almacenesTMP.push(linea);
              
               }
-              this.getLocaciones();
+              
               this.allbodegas = almacenesTMP;
+              this.getLocaciones();
              //// ////////////////////console.log(almacenesTMP);
              
             },
@@ -230,6 +231,7 @@ export class DashboardComponentTurno implements OnInit {
       /**
        * COnfigurar tabla de programacion diaria bodega
        */
+      console.log(this.bodegaSeleccionada);
       this.loadingPDB = true;
       this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && linea.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
       this.configTablaProgramacionDiaria();

@@ -887,7 +887,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
       if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
         
-        headersTable[0].remision = {label:'# Remision',type:'number', sizeCol:'8rem', align:'left', editable:true}
+        headersTable[0].remision = {label:'# Remision',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.PESADOF?true:false)}
       }
 
 
@@ -923,7 +923,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
             lugarentrega:`${pedido.municipioentrega} - ${pedido.lugarentrega}`,
           }
   
-          if(this.estado === this.estadosTurno.PESADOF){
+          if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
             lineaPedido.remision =  pedido.remision;
           }
   
