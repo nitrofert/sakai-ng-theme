@@ -729,7 +729,7 @@ export class DashboardComponentTurno implements OnInit {
     dataTable = await this.functionsService.groupArray(dataTable,'pedido',[{cantidad:0}]);
     //Ordenar por Dependencia - bodega 
     //dataTable = await this.functionsService.sortArrayObject(dataTable,'bodega','ASC')
-    console.log(dataTable);
+    console.log(dataTable.filter(line=>line.dependencia === null));
     
     dataTable.sort((a,b)=> (a.dependencia.localeCompare(b.dependencia) || a.bodega.localeCompare(b.bodega)));
 
