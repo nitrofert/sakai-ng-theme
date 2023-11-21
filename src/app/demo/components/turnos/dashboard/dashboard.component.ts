@@ -133,6 +133,7 @@ export class DashboardComponentTurno implements OnInit {
               }
               
               this.allbodegas = almacenesTMP;
+              console.log(this.allbodegas);
               this.getLocaciones();
              //// ////////////////////console.log(almacenesTMP);
              
@@ -187,7 +188,7 @@ export class DashboardComponentTurno implements OnInit {
   }
 
   seleccionarLocacion(locacion:any){
-    ////////////////////console.log(locacion);
+    console.log(locacion);
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
    //// ////////////////////console.log(bodegas_locacion);
     this.bodegas = bodegas_locacion;
