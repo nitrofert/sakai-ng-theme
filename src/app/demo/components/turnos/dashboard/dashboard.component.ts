@@ -190,6 +190,7 @@ export class DashboardComponentTurno implements OnInit {
   seleccionarLocacion(locacion:any){
     //console.log(locacion);
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
+    console.log(bodegas_locacion);
     if(bodegas_locacion.length==0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La locación ${locacion.label} no tiene bodegas asociadas`});
     }else{
