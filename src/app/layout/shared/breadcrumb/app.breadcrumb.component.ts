@@ -21,9 +21,9 @@ home:any;
     if(this.urlBreadCrumb!=''){
       let tmpBreadCrumb = this.urlBreadCrumb.split("/",);
       for(let item of tmpBreadCrumb){
-          //////console.log(item);
+          ////////console.log(item);
           let path = item.split("?")[0]
-          //////console.log(path);
+          ////////console.log(path);
           this.breadcrumb.push({label:path.replace(/-/g,' ')});
       }
        this.breadcrumb.shift();

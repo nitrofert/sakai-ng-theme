@@ -26,7 +26,7 @@ import { lastValueFrom } from 'rxjs';
     async infoCiudades():Promise<any>{
         const infoCiudades$ = this.getCiudades();
         const infoCiudades = await lastValueFrom(infoCiudades$);
-        //////console.log(infoClientes)
+        ////////console.log(infoClientes)
         return infoCiudades;
     } 
 

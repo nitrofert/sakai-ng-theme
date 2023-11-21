@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TooltipsPipe implements PipeTransform {
 
   transform(value: string, longitud:number,doc?:string): string  {
-    //////console.log(value,doc);
-    //////console.log(value.length,longitud);
+    ////////console.log(value,doc);
+    ////////console.log(value.length,longitud);
 
     if(value.length>=longitud){
         value = value.substring(0,longitud)+' ...';

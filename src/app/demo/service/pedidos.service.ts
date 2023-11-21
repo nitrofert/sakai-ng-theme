@@ -35,13 +35,13 @@ export class PedidosService {
     async getPedidosPorCliente(clientesSeleccionados: any, condicion_tpt:string, pedidos:any[]){
         //let pedidos = await this.getPedidos();
 
-        ////////console.log(pedidos);
+        //////////console.log(pedidos);
         let pedidosClientes:any[] = [];
-        ////////console.log(typeof clientesSeleccionados, Object.prototype.toString.call(clientesSeleccionados));
+        //////////console.log(typeof clientesSeleccionados, Object.prototype.toString.call(clientesSeleccionados));
         let pedidosPorCliente!:any[];
         if(Object.prototype.toString.call(clientesSeleccionados) === '[object Array]'){
             for(let cliente of clientesSeleccionados){
-                //////console.log(pedidos.filter(pedido => pedido.cardcode === cliente.code),condicion_tpt);
+                ////////console.log(pedidos.filter(pedido => pedido.cardcode === cliente.code),condicion_tpt);
                 pedidosPorCliente = pedidos.filter(pedido => pedido.cardcode === cliente.code && pedido.condicion_tpt === condicion_tpt);
                 for(let pedido of pedidosPorCliente){
                     pedidosClientes.push(pedido)
@@ -50,11 +50,11 @@ export class PedidosService {
         }else{
 
             pedidosClientes = pedidos.filter(pedido => pedido.cardcode === clientesSeleccionados.code && pedido.condicion_tpt === condicion_tpt);
-            //////console.log(pedidos.filter(pedido => pedido.cardcode === clientesSeleccionados.code));
+            ////////console.log(pedidos.filter(pedido => pedido.cardcode === clientesSeleccionados.code));
         }
         
 
-        //////console.log(pedidosClientes);
+        ////////console.log(pedidosClientes);
         return pedidosClientes;
     }
 

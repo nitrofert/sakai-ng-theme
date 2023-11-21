@@ -26,7 +26,7 @@ import { lastValueFrom } from 'rxjs';
     async infoClientes():Promise<any>{
         const infoClientes$ = this.getClientes();
         const infoClientes = await lastValueFrom(infoClientes$);
-        //////console.log(infoClientes)
+        ////////console.log(infoClientes)
         return infoClientes;
     } 
 

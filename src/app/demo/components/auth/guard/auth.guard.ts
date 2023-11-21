@@ -14,7 +14,7 @@ import { AuthService } from "src/app/demo/service/auth.service";
     async canActivate():  Promise<boolean> {
   
       if(!this.authService.isAuth()){
-       //////console.log('No existe token');
+       ////////console.log('No existe token');
         this.router.navigate(['/']);
         return false;
       }

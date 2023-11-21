@@ -65,21 +65,21 @@ async groupArray(array:any[], field:any,colsSum?:any[]):Promise<any[]>{
             if(colsSum){
 
               Object.keys(colsSum[0]).map((col)=>{
-                //////console.log(col);
+                ////////console.log(col);
                 colsSum[0][col] = 0;
               })
-              //////console.log('colsSum groupArray',colsSum);
-              //////console.log('lineasField groupArray',lineasField);
+              ////////console.log('colsSum groupArray',colsSum);
+              ////////console.log('lineasField groupArray',lineasField);
               let colsTotal = await this.sumColArray(lineasField,colsSum);
-              //////console.log('colsTotal groupArray',colsTotal);
+              ////////console.log('colsTotal groupArray',colsTotal);
               Object.keys(colsTotal[0]).map((col)=>{
-                //////console.log(col);
+                ////////console.log(col);
                 item[col] = colsTotal[0][col];
               })
             }
             arrayGroup.push(item)
 
-            //////console.log(arrayGroup);
+            ////////console.log(arrayGroup);
         }
     }
 
@@ -92,7 +92,7 @@ async dateDif(date1:Date, date2:Date, format:string = 'days'):Promise<any>{
     //dif = date2.getTime() - date1.getTime();
     dif = date1.getTime() - date2.getTime();
 
-    ////////////console.log(dif)
+    //////////////console.log(dif)
 
     switch(format){
         case 'seconds':
@@ -181,7 +181,7 @@ async resolveObservable(observable:Observable<any>):Promise<any>{
 
 async sumColArray(arrayData:any[], arrayCols:any[]):Promise<any[]>{
 
-  //////console.log(arrayData);
+  ////////console.log(arrayData);
   
   let arrayKeys:any[] = Object.keys(arrayCols[0]);
   for(let itemData of arrayData){
@@ -202,7 +202,7 @@ sendMailObservable(objectMail:any):Observable<any>{
 async sendMail(objectMail:any): Promise<any>{
   const resultSendMail$ = this.sendMailObservable(objectMail);
   const resultSendMail = await lastValueFrom(resultSendMail$);
-  //////////console.log(infoClientes)
+  ////////////console.log(infoClientes)
   return resultSendMail;
 }
 
@@ -226,7 +226,7 @@ bufferToString(buffer:any):string{
 
   let json = JSON.stringify(buffer);
   let bufferOriginal = Buffer.from(JSON.parse(json).data);
-  ///////////console.log(bufferOriginal.toString('utf8'));
+  /////////////console.log(bufferOriginal.toString('utf8'));
   result = bufferOriginal.toString('utf8')
 
   return result;
@@ -236,8 +236,8 @@ bufferToString(buffer:any):string{
 async formatDate(date:Date,format:string, lan:string='ES'): Promise<string>{
   let dateFormat:string ='';
 
- //////////console.log(date.toLocaleDateString('en-us',{weekday:"long"})); 
- //////////console.log(date.toLocaleDateString('en-us',{month:"long"})); 
+ ////////////console.log(date.toLocaleDateString('en-us',{weekday:"long"})); 
+ ////////////console.log(date.toLocaleDateString('en-us',{month:"long"})); 
 
 
   switch(format){
@@ -284,7 +284,7 @@ async setDataPieDoughnutChart(data:any[],fields:any):Promise<any>{
     let color = await this.generarColorHex();
     backgroundColor.push(color)
   }
-  ////console.log(backgroundColor);
+  //////console.log(backgroundColor);
   let hoverBackgroundColor:any[] = backgroundColor;
 
 
@@ -325,7 +325,7 @@ async setDataBasicChart(data:any[],fields:any):Promise<any>{
     let color = await this.generarColorHex();
     backgroundColor.push(color)
   }
-  ////console.log(backgroundColor);
+  //////console.log(backgroundColor);
   let hoverBackgroundColor:any[] = backgroundColor;
 
 

@@ -33,7 +33,7 @@ export class PieChartComponent implements OnInit, OnDestroy{
 
   async initChart(){
 
-    //console.log(this.chartData);
+    ////console.log(this.chartData);
 
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');

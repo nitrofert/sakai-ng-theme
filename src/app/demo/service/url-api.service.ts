@@ -24,7 +24,7 @@ export class UrlApiService {
     getUrlAPI():string{
        
         let url = this.url_ssl?`https://${this.url_api}`:`http://${this.url_api}`;
-        console.log('url api:',url);
+        //console.log('url api:',url);
         return url;
     }
 
@@ -43,7 +43,7 @@ export class UrlApiService {
 
         let token = this.getToken();
 
-       // ////console.log(token);
+       // //////console.log(token);
  
         headers=headers.append('content-type','application/json')
         headers=headers.append('Access-Control-Allow-Origin', '*')
@@ -53,7 +53,7 @@ export class UrlApiService {
             headers=headers.append('Authorization','Bearer ' + token) 
         }
         
-        //////console.log(headers) 
+        ////////console.log(headers) 
        
         return { headers: headers };
     }

@@ -27,7 +27,7 @@ export class FormRolesComponent {
     
     if(this.config.data.id!=0){
       //Buscar información  del rol seleccionado
-     //////console.log(this.config.data.id);
+     ////////console.log(this.config.data.id);
       this.getInfoRol(this.config.data.id);
     }
   }
@@ -48,7 +48,7 @@ export class FormRolesComponent {
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else{
-      //////console.log(this.hierarchy,this.visible, this.opcionPadre);
+      ////////console.log(this.hierarchy,this.visible, this.opcionPadre);
         let nuevaRol ={
           nombre:this.rol,
           descripcion:this.descripcion,
@@ -57,7 +57,7 @@ export class FormRolesComponent {
         this.rolesService.create(nuevaRol)
             .subscribe({
                 next: (rol)=>{
-                 //////console.log(rol);
+                 ////////console.log(rol);
                   this.messageService.add({severity:'success', summary:'información', detail:`La opción ${rol.nombre} fue registrado correctamente al menú`});
                 },
                 error:(err)=> {
@@ -84,7 +84,7 @@ export class FormRolesComponent {
         this.rolesService.update(nuevaRol,this.config.data.id)
             .subscribe({
                 next: (rol)=>{
-                  //////console.log(menu);
+                  ////////console.log(menu);
                   this.messageService.add({severity:'success', summary:'información', detail:`La opción ${this.rol} fue actualizada correctamente al menú`});
                 },
                 error:(err)=> {

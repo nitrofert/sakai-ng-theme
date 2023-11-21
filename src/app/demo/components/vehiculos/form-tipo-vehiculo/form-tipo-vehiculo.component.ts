@@ -15,7 +15,7 @@ export class FormTipoVehiculoComponent implements  OnInit {
     ){}
 
     ngOnInit() {
-     //////console.log(this.config.data.id);
+     ////////console.log(this.config.data.id);
     }
 
     grabar(){

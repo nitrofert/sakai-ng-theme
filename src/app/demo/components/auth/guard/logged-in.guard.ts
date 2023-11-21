@@ -12,7 +12,7 @@ import { AuthService } from "src/app/demo/service/auth.service";
     
     canActivate(): boolean {
 
-         //////console.log(this.authService.isAuth());
+         ////////console.log(this.authService.isAuth());
         
           if(this.authService.isAuth()){
 

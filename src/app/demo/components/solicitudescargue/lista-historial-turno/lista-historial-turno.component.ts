@@ -77,11 +77,11 @@ ngOnInit() {
 getPermisosModulo(){
   
   const modulo = this.router.url;
-  //////////console.log(modulo);
+  ////////////console.log(modulo);
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-            ////////////////console.log(permisos);
+            //////////////////console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -113,7 +113,7 @@ async getNovedades():Promise<void>{
                   novedad.label = novedad.novedad;
                 });
 
-               //////console.log(novedades);
+               ////////console.log(novedades);
                 this.novedades = novedades;
             },
             error:(err)=>{
@@ -132,7 +132,7 @@ async getTurno(id: number){
   this.solicitudTurnoService.getTurnosByID(id)
       .subscribe({
             next:async (turno)=>{
-               //////console.log('turno',turno);
+               ////////console.log('turno',turno);
 
                
 
@@ -202,14 +202,14 @@ async getTurno(id: number){
 
 async setEventsTimeLine(data:any):Promise<void>{
 
-  //////console.log(data, this.estadosTurno2);
+  ////////console.log(data, this.estadosTurno2);
 
   let events:any[] =[];
   for(let event of data){
-   //////console.log(event);
+   ////////console.log(event);
     //let dateEvent = new Date(new Date(event.fecha).getTime()+(60*60000*5));
     let dateEventTime = new Date(event.fecha+' '+event.hora);
-    //////console.log(event.fecha,dateEvent, dateEventTime);
+    ////////console.log(event.fecha,dateEvent, dateEventTime);
     events.push({ status: event.estado, 
                   date: `${dateEventTime.toLocaleDateString()} ${dateEventTime.toLocaleTimeString("en-US", { hour12: true, timeZone:'America/Bogota' })}`,
                   usuario:event.usuario,
@@ -234,7 +234,7 @@ async setEventsTimeLine(data:any):Promise<void>{
 
   this.events = events;
 
-  ////console.log(this.events);
+  //////console.log(this.events);
 }
 
 }

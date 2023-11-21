@@ -163,7 +163,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
             this.clientes = clientes;
             this.clienteSeleccionado = this.clientes[0];
-            //////console.log( this.clienteSeleccionado);
+            ////////console.log( this.clienteSeleccionado);
             let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
             this.setDashboardCliente(saldosClienteSeleccionado);
             this.showDashBoardCliente = true;
@@ -174,7 +174,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     async setDashboardCliente(saldosClienteSeleccionado:any){
         this.loadingDashBoardCliente = false;
-       ////////console.log('saldosClienteSeleccionado',saldosClienteSeleccionado);
+       //////////console.log('saldosClienteSeleccionado',saldosClienteSeleccionado);
 
         let cupo:number =parseFloat(saldosClienteSeleccionado[0].CUPO);
 
@@ -205,7 +205,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         let saldoLQ:number = saldosClienteSeleccionado[0].SALDOLIQUITECH==null?0:parseFloat(saldosClienteSeleccionado[0].SALDOLIQUITECH);
         let partidasAbiertas:number = parseFloat(saldosClienteSeleccionado[0].PARTIDASABIERTAS);
         this.cupoDisponible = cupo-(this.pedidos_abiertos+ this.saldo_nitrocredit+  this.carteraVencida +  this.carteraCorriente);
-       ////////console.log(this.cupoDisponible);
+       //////////console.log(this.cupoDisponible);
         //Setear Card Cartera vigente
         this.carteraVigente = partidasAbiertas;
        
@@ -220,20 +220,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
 
         facturasPorPagar =(await this.functionsService.objectToArray(facturasPorPagar));
-        //////console.log(facturasPorPagar);
+        ////////console.log(facturasPorPagar);
         this.facturasPorPagar = facturasPorPagar;
         
         let facturasPorPagarAgrupada = await  this.functionsService.groupArray(facturasPorPagar,'DocNum');
 
-        //////console.log(facturasPorPagarAgrupada);
+        ////////console.log(facturasPorPagarAgrupada);
 
-        //////console.log(Math.ceil(await this.functionsService.dateDif(new Date(), new Date('2023-06-15'), 'days')));
+        ////////console.log(Math.ceil(await this.functionsService.dateDif(new Date(), new Date('2023-06-15'), 'days')));
 
         for(let linea of facturasPorPagarAgrupada){
             linea.diasvencimiento = Math.ceil(await this.functionsService.dateDif(new Date(), new Date(linea.DocDueDate), 'days'));
         }
 
-       ////////console.log(facturasPorPagarAgrupada);
+       //////////console.log(facturasPorPagarAgrupada);
 
        this.facturasPorPagarAgrupada = facturasPorPagarAgrupada;
 
@@ -258,7 +258,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       
         ref.onClose.subscribe(() => {
           //this.getVehiculos();
-          //////////console.log("Refresh calendar");
+          ////////////console.log("Refresh calendar");
         });
     }
 
@@ -274,7 +274,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     async goFacturas(nombreFiltro:string){
         let params = await this.generarFiltrosRptFacturas(nombreFiltro);
         let url = `/portal/reportes/facturas`
-        ////console.log(url);
+        //////console.log(url);
         this.router.navigate([url], { queryParams: params});
     }
 
@@ -302,7 +302,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     verTYC(){
         this.modalTYC = true;
-       ////////console.log("dkjfsdlkjhfklsda");
+       //////////console.log("dkjfsdlkjhfklsda");
     }
 
     async changePasswordPolitica(){
@@ -325,7 +325,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.usuarioService.update(data, this.info_usuario.id)
             .subscribe({
                 next:(result)=>{
-                   ////////console.log(result);
+                   //////////console.log(result);
                     this.loading = false;
                     this.modalCambioPassYPolitica = false;
                     this.messageService.add({severity:'success', summary: `Notificación:`, detail: `Se ha actualizado correctamente la información usuario ${result.nombrecompleto}.`});
@@ -351,14 +351,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     async seleccionarCliente(clienteSeleccionado:any){
         this.loadingDashBoardCliente = false;
-       ////////console.log(clienteSeleccionado);
+       //////////console.log(clienteSeleccionado);
         let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
         this.setDashboardCliente(saldosClienteSeleccionado);
     }
 
     filter(event: any, arrayFiltrar:any[]) {
 
-        ////////////console.log(arrayFiltrar);
+        //////////////console.log(arrayFiltrar);
         const filtered: any[] = [];
         const query = event.query;
         for (let i = 0; i < arrayFiltrar.length; i++) {

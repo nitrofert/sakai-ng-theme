@@ -81,7 +81,7 @@ export class LocacionesComponent implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////console.log(permisos);
+              //////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -97,7 +97,7 @@ export class LocacionesComponent implements  OnInit{
 
               
               this.infoUsuario = await this.usuariosService.infoUsuario();
-              //////console.log(this.infoUsuario);
+              ////////console.log(this.infoUsuario);
               this.getLocaciones();
 
             },
@@ -112,7 +112,7 @@ export class LocacionesComponent implements  OnInit{
       this.almacenesService.getLocaciones()
           .subscribe({
               next:async (locaciones)=>{
-                 //////console.log(locaciones);
+                 ////////console.log(locaciones);
                   let dataLocaciones:any[] = [];
                   for(let locacion of locaciones){
                     let horarios =await this.formatHorariosLinea(locacion.horarios_locacion);
@@ -135,28 +135,28 @@ export class LocacionesComponent implements  OnInit{
   async formatHorariosLinea(arrayHorarios:any[]):Promise<any>{
     let horarios:string="";
     arrayHorarios = await this.functionsService.sortArrayObject(arrayHorarios,'id','ASC');
-   //////console.log(arrayHorarios);
+   ////////console.log(arrayHorarios);
     
     let horariosStr="";
     for(let horario of arrayHorarios){
 
       let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])).toLocaleTimeString();
       let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])).toLocaleTimeString();
-     //////console.log(horainicio);
+     ////////console.log(horainicio);
       //horarios=horarios+`${horario.dias_atencion} de ${horario.horainicio} a ${horario.horafin} `;
-      //////console.log(`${horario.dias_atencion} de ${horario.horainicio} a ${horario.horafin} `);
+      ////////console.log(`${horario.dias_atencion} de ${horario.horainicio} a ${horario.horafin} `);
       horariosStr= horarios.concat(horariosStr,`[${horario.dias_atencion} de ${horainicio} - ${horafin}] `)
      
     }
 
-   //////console.log(horariosStr.toLowerCase());
+   ////////console.log(horariosStr.toLowerCase());
     
 
     return horariosStr.toLowerCase();
   }
 
   editlocacion(event: any){
-   //////console.log(event);
+   ////////console.log(event);
     const ref = this.dialogService.open(FormLocacionComponent, {
       data: {
           id: event

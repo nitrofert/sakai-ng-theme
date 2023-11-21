@@ -62,33 +62,33 @@ export class DynamicTableComponent implements OnInit {
 
   ngOnInit(): void {
    
-    ////////////console.log(this.loading);
+    //////////////console.log(this.loading);
 
    this.columnsTable = Object.keys(this.headersTable[0]).length+1;
 
-    //////////////console.log(this.columnsTable);
+    ////////////////console.log(this.columnsTable);
     let tmpKeysHeader:any[]=[];
     for(let key in this.headersTable[0]){
       
       tmpKeysHeader.push(key);
     }
     this.globalFilterFields = tmpKeysHeader;
-    //////////////console.log( this.globalFilterFields);
+    ////////////////console.log( this.globalFilterFields);
 
-    ////////console.log('this.colsSum',this.colsSum);
+    //////////console.log('this.colsSum',this.colsSum);
 
     if(this.colsSum){
-      //////console.log('this.colsSum',this.colsSum);
+      ////////console.log('this.colsSum',this.colsSum);
     }
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    //////console.log(changes);
+    ////////console.log(changes);
 
     if(changes['showSelectedItems']!=undefined){
       if(changes['showSelectedItems'].currentValue ==true){
-        //////////////console.log('emit items selected or table', this.dataTable);
+        ////////////////console.log('emit items selected or table', this.dataTable);
         //this.onSelectedItems.emit(this.selectedItem);
         this.onSelectedItems.emit(this.dataTable);
       }else{
@@ -97,9 +97,9 @@ export class DynamicTableComponent implements OnInit {
       
     }
     if(changes['colsSum']){
-      //////console.log(this.colsSum);
+      ////////console.log(this.colsSum);
       this.totalCols = this.colsSum;
-      ////console.log(this.totalCols);
+      //////console.log(this.totalCols);
     }
 }
 
@@ -108,7 +108,7 @@ export class DynamicTableComponent implements OnInit {
   }
 
   editAccion(){
-   //////////////console.log(this.selectedItem, this.selectedItem.length);
+   ////////////////console.log(this.selectedItem, this.selectedItem.length);
     this.onEditAccion.emit(this.selectedItem[0].id);
   }
 
@@ -132,10 +132,10 @@ export class DynamicTableComponent implements OnInit {
   cambioValorCampo(index:any,valor:any, itemData:any,campo:any){
    
     let fila = `${index}`;
-    //////////console.log(fila, valor, itemData);
+    ////////////console.log(fila, valor, itemData);
     /*let checkbox: HTMLElement;
     checkbox= document.getElementById(`selectRow${filaSeleccionada}`)!;
-    ////////////console.log(checkbox.closest("tr"));
+    //////////////console.log(checkbox.closest("tr"));
     let tr: any = checkbox.closest("tr");
     tr.pSelectableRow = itemData;
     if(valor == 0 || valor ==''){
@@ -148,7 +148,7 @@ export class DynamicTableComponent implements OnInit {
   }
 
   pressEnter(event:any,index:any,valor:any, itemData:any,campo:any){
-    //////////console.log(event);
+    ////////////console.log(event);
     this.cambioValorCampo(index,valor,itemData,campo);
   }
 

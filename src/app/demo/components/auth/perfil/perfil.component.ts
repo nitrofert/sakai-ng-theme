@@ -48,7 +48,7 @@ getPermisosModulo(){
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-           //////console.log(permisos);
+           ////////console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -58,7 +58,7 @@ getPermisosModulo(){
             }
             this.permisosModulo = permisos;
            
-           //////console.log(this.permisosModulo);
+           ////////console.log(this.permisosModulo);
             this.getInfoUsuario();
           
           },
@@ -71,7 +71,7 @@ getPermisosModulo(){
 
 async getInfoUsuario():Promise<void> {
   this.infoUsuario = await this.usuariosService.infoUsuario();
- //////console.log(this.infoUsuario);
+ ////////console.log(this.infoUsuario);
 
   this.nombrecompleto = this.infoUsuario.nombrecompleto;
   this.email = this.infoUsuario.email;
