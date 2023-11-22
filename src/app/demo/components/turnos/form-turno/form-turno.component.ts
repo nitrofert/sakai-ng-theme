@@ -578,11 +578,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
                   this.fechacargue = fechacargue;
                   
-                  //////////////// //////////console.log(fechacargue.toLocaleDateString());
-                  //////////////// //////////console.log(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }));
-                  //////////////// //////////console.log(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2]));
-                  //////////////// //////////console.log(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
-                  //////////////// //////////console.log(new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))))
+                  
                   let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
                   //this.horacargue = new Date(turno.horacita);
                   this.horacargue = horacargue;
@@ -1576,78 +1572,6 @@ async validarHoraCargue():Promise<boolean>{
     
   }
 
-  updateTurno(data:any){
-    this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
-              .subscribe({
-                    next:async (turno)=>{
-                        ////////// //////////console.log(turno);
-                        if(this.updateModulo){
-                          this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
-                        }
-
-                        this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
-                        this.displayModal = false;
-                        this.loadingCargue = false;
-                        this.formEstadoTurno = false;
-                        this.estado = turno.estado
-
-                        if(turno.estado===this.estadosTurno.VALINVENTARIO){
-                            
-
-                            let newEstado:any = {
-                              historial : {
-                                            estado:this.estadosTurno.SOLICITADO,
-                                            fechaaccion:this.fechaaccion,
-                                            horaaccion:this.horaaccion,
-                                            comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`
-                                          }
-                            };
-
-                            this.solicitudTurnoService.updateInfoTruno(this.turnoId,newEstado)
-                            .subscribe({
-                                  next:async (turno)=>{
-                                    this.estado = turno.estado
-                                  },  
-                                  error:(err)=> {
-                                    this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                                      console.error(err);
-                                      this.displayModal = false;
-                                      this.loadingCargue = false;
-                                      
-                                  }
-                            });
-                        }
-      
-                        this.configSplitButton(this.estado,this.permisosModulo);
-
-
-                        this.solicitudTurnoService.sendNotification(turno.id)
-                            .subscribe({
-                                next:(result)=>{
-                                  if(result){
-                                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${turno.id}.`});
-                                  }
-                                },
-                                error:(err)=>{
-                                  console.error(err);
-                                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                                }
-
-                            });
-                      
-
-                    },
-                    error:(err)=> {
-                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                        console.error(err);
-                        this.displayModal = false;
-                        this.loadingCargue = false;
-                        
-                    }
-              });
-              
-  }
-
   async configDataTurno():Promise<any> {
     
 
@@ -1776,6 +1700,80 @@ async validarHoraCargue():Promise<boolean>{
 
     return data;
   }
+
+  updateTurno(data:any){
+    this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
+              .subscribe({
+                    next:async (turno)=>{
+                        ////////// //////////console.log(turno);
+                        if(this.updateModulo){
+                          this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
+                        }
+
+                        this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
+                        this.displayModal = false;
+                        this.loadingCargue = false;
+                        this.formEstadoTurno = false;
+                        this.estado = turno.estado
+
+                        if(turno.estado===this.estadosTurno.VALINVENTARIO){
+                            
+
+                            let newEstado:any = {
+                              historial : {
+                                            estado:this.estadosTurno.SOLICITADO,
+                                            fechaaccion:this.fechaaccion,
+                                            horaaccion:this.horaaccion,
+                                            comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`
+                                          }
+                            };
+
+                            this.solicitudTurnoService.updateInfoTruno(this.turnoId,newEstado)
+                            .subscribe({
+                                  next:async (turno)=>{
+                                    this.estado = turno.estado
+                                  },  
+                                  error:(err)=> {
+                                    this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                                      console.error(err);
+                                      this.displayModal = false;
+                                      this.loadingCargue = false;
+                                      
+                                  }
+                            });
+                        }
+      
+                        this.configSplitButton(this.estado,this.permisosModulo);
+
+
+                        this.solicitudTurnoService.sendNotification(turno.id)
+                            .subscribe({
+                                next:(result)=>{
+                                  if(result){
+                                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${turno.id}.`});
+                                  }
+                                },
+                                error:(err)=>{
+                                  console.error(err);
+                                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                                }
+
+                            });
+                      
+
+                    },
+                    error:(err)=> {
+                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                        console.error(err);
+                        this.displayModal = false;
+                        this.loadingCargue = false;
+                        
+                    }
+              });
+              
+  }
+
+
 
   async emailsClientes(turno:any,mensaje:string):Promise<void> {
     if(turno.estado === EstadosDealleSolicitud.AUTORIZADO || turno.estado === EstadosDealleSolicitud.PAUSADO || turno.estado === EstadosDealleSolicitud.DESPACHADO){
