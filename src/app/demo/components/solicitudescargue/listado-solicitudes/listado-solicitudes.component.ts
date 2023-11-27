@@ -154,31 +154,22 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   ngOnInit() {
     this.getLocalidades();
-    this.getDependencias();
-    this.getPermisosModulo(); 
+    
     Calendar.prototype.getDateFormat = () => 'dd/mm/yy';
     this.estadosTurno = this.solicitudTurnoService.estadosTurno;
     
-    //////console.log(this.estadosTurno)
-    /*this.solicitudTurnoService.cancelarTurnosVencidos()
-        .subscribe({
-            next:(result)=>{
-
-            },
-            error:(err)=>{
-              console.error(err);
-            }
-        });*/
   }
 
   async getLocalidades(){
     this.localidades =  await this.localidadesService.getLocalidades();
-    //console.log(this.localidades);    
+    //console.log(this.localidades); 
+    this.getDependencias();   
   }
 
   async getDependencias(){
     this.dependencias =  await this.dependenciasService.getDependencias();
     //console.log(this.dependencias);    
+    this.getPermisosModulo(); 
   }
 
   getPermisosModulo(){
@@ -358,8 +349,8 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                                                                 
                                                               }
 
-                                                              //solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name;
-                                                              //solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
+                                                              solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name;
+                                                              solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
                                                               //console.log(solicitud);
                                                               
 
