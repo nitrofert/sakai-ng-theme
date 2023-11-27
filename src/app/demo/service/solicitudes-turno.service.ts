@@ -17,20 +17,20 @@ export class SolicitudTurnoService {
     private turnosLocacion!: any[];
     
 
-    public estadosTurno:any[] = [{name:EstadosDealleSolicitud.SOLICITADO, value:EstadosDealleSolicitud.SOLICITADO, backgroundColor:'orange-100', textColor:'gray-900', icon:'pi pi-send'},
-    {name:EstadosDealleSolicitud.PAUSADO, value:EstadosDealleSolicitud.PAUSADO, backgroundColor:'red-500', textColor:'surface-50',icon:'pi pi-pause'},
-    {name:EstadosDealleSolicitud.ACTIVADO, value:EstadosDealleSolicitud.ACTIVADO, backgroundColor:'white', textColor:'gray-900',icon:'pi pi-play'},
-    {name:EstadosDealleSolicitud.AUTORIZADO, value:EstadosDealleSolicitud.AUTORIZADO, backgroundColor:'yellow-300', textColor:'gray-900',icon:'pi pi-check'},
-    {name:EstadosDealleSolicitud.SOLINVENTARIO, value:EstadosDealleSolicitud.SOLINVENTARIO, backgroundColor:'purple-300', textColor:'surface-50',icon:'pi pi-search'},
-    {name:EstadosDealleSolicitud.VALINVENTARIO, value:EstadosDealleSolicitud.VALINVENTARIO, backgroundColor:'purple-300', textColor:'surface-50',icon:'pi pi-search'},
+    public estadosTurno:any[] = [{name:EstadosDealleSolicitud.SOLICITADO, value:EstadosDealleSolicitud.SOLICITADO, backgroundColor:'orange-100', textColor:'gray-900', icon:'pi pi-send',order:1},
+    {name:EstadosDealleSolicitud.PAUSADO, value:EstadosDealleSolicitud.PAUSADO, backgroundColor:'red-500', textColor:'surface-50',icon:'pi pi-pause',order:2},
+    {name:EstadosDealleSolicitud.ACTIVADO, value:EstadosDealleSolicitud.ACTIVADO, backgroundColor:'white', textColor:'gray-900',icon:'pi pi-play',order:3},
+    {name:EstadosDealleSolicitud.AUTORIZADO, value:EstadosDealleSolicitud.AUTORIZADO, backgroundColor:'yellow-300', textColor:'gray-900',icon:'pi pi-check',order:4},
+    {name:EstadosDealleSolicitud.SOLINVENTARIO, value:EstadosDealleSolicitud.SOLINVENTARIO, backgroundColor:'purple-300', textColor:'surface-50',icon:'pi pi-search',order:5},
+    {name:EstadosDealleSolicitud.VALINVENTARIO, value:EstadosDealleSolicitud.VALINVENTARIO, backgroundColor:'purple-300', textColor:'surface-50',icon:'pi pi-search',order:6},
 
-    {name:EstadosDealleSolicitud.ARRIBO, value:EstadosDealleSolicitud.ARRIBO, backgroundColor:'yellow-600', textColor:'surface-50',icon:'pi pi-ticket'},
-    {name:EstadosDealleSolicitud.PESADO, value:EstadosDealleSolicitud.PESADO, backgroundColor:'primary-100', textColor:'gray-900',icon:'pi pi-compass'},
-    {name:EstadosDealleSolicitud.CARGANDO, value:EstadosDealleSolicitud.CARGANDO, backgroundColor:'primary-300', textColor:'gray-900',icon:'pi pi-download'},
-    {name:EstadosDealleSolicitud.CARGADO, value:EstadosDealleSolicitud.CARGADO, backgroundColor:'primary-600', textColor:'surface-50',icon:'pi pi-box'},
-    {name:EstadosDealleSolicitud.PESADOF, value:EstadosDealleSolicitud.PESADOF, backgroundColor:'green-100', textColor:'gray-900',icon:'pi pi-compass'},
-    {name:EstadosDealleSolicitud.DESPACHADO, value:EstadosDealleSolicitud.DESPACHADO, backgroundColor:'green-600', textColor:'surface-50',icon:'pi pi-truck'},
-    {name:EstadosDealleSolicitud.CANCELADO, value:EstadosDealleSolicitud.CANCELADO, backgroundColor:'bluegray-600', textColor:'surface-50',icon:'pi pi-times-circle'},
+    {name:EstadosDealleSolicitud.ARRIBO, value:EstadosDealleSolicitud.ARRIBO, backgroundColor:'yellow-600', textColor:'surface-50',icon:'pi pi-ticket',order:7},
+    {name:EstadosDealleSolicitud.PESADO, value:EstadosDealleSolicitud.PESADO, backgroundColor:'primary-100', textColor:'gray-900',icon:'pi pi-compass',order:8},
+    {name:EstadosDealleSolicitud.CARGANDO, value:EstadosDealleSolicitud.CARGANDO, backgroundColor:'primary-300', textColor:'gray-900',icon:'pi pi-download',order:9},
+    {name:EstadosDealleSolicitud.CARGADO, value:EstadosDealleSolicitud.CARGADO, backgroundColor:'primary-600', textColor:'surface-50',icon:'pi pi-box',order:10},
+    {name:EstadosDealleSolicitud.PESADOF, value:EstadosDealleSolicitud.PESADOF, backgroundColor:'green-100', textColor:'gray-900',icon:'pi pi-compass',order:11},
+    {name:EstadosDealleSolicitud.DESPACHADO, value:EstadosDealleSolicitud.DESPACHADO, backgroundColor:'green-600', textColor:'surface-50',icon:'pi pi-truck',order:12},
+    {name:EstadosDealleSolicitud.CANCELADO, value:EstadosDealleSolicitud.CANCELADO, backgroundColor:'bluegray-600', textColor:'surface-50',icon:'pi pi-times-circle',order:13},
   ];
 
 

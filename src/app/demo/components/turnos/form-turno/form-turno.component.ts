@@ -548,8 +548,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
                     novedad.label = novedad.novedad;
                   });
 
-                  //////// //////////console.log(novedades);
-                  this.novedades = novedades;
+                  console.log(novedades);
+                  //this.novedades = novedades;
               },
               error:(err)=>{
                   console.error(err);
@@ -619,6 +619,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
                     pedido.lineaUpdate = {update:false, create:false};
                     pedido.cantidadOld =pedido.cantidad;
                   });
+
+                  console.log(this.pedidosTurno);
                   this.telefono = turno.conductor.numerotelefono;
                   this.celular = turno.conductor.numerocelular;
                   this.email = turno.conductor.email;
@@ -3017,6 +3019,18 @@ async validarHoraCargue():Promise<boolean>{
                     
                     this.accion = 'actualizar la información del turno y reestablecer el estado  de '
                     this.tituloEstado = "actualizar la información del turno y reestablecer el estado  de ";
+
+                    if(this.pedidosTurno.length == this.pedidosTurno.filter(pedido =>pedido.estado === 'I').length){
+
+                      this.accion = 'cancelar'
+                      this.tituloEstado = "ha sido cancelado";
+                      this.fechaaccion = new Date();
+                      this.horaaccion = new Date();
+                      this.comentario = "Cancelación automatica del turno por cambio de bodega";
+                      this.novedadesSeleccionadas = this.novedades.filter(novedad => novedad.id === 11);
+
+                    }
+
                     let data:any = await this.configDataTurno();
                     ////console.log(data);
                     this.updateTurno(data);

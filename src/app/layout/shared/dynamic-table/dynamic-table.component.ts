@@ -186,4 +186,13 @@ export class DynamicTableComponent implements OnInit {
     this.filter.nativeElement.value = '';
   }
 
+  getBgColor(arrayWhitBgColor:any[],value:any){
+    
+    let bgColor = arrayWhitBgColor.find(item => item.name === value).backgroundColor;
+
+    console.log(bgColor);
+
+    return bgColor
+  }
+
 }

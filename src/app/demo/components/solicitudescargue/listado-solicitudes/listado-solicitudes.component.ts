@@ -12,6 +12,8 @@ import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
 import { Calendar } from 'primeng/calendar';
 import { DetalleSolicitudTurno } from '../interface/solicitud.interface';
 import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
+import { LocalidadesService } from 'src/app/demo/service/localidades.service';
+import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 
 @Component({
   selector: 'app-listado-solicitudes',
@@ -133,6 +135,8 @@ export class ListadoSolicitudesComponent  implements  OnInit{
   optionsBarStackChart:any;
 
   filtroLocaciones:any[]=[];
+  localidades:any;
+  dependencias:any;
 
 
   constructor(private router:Router,
@@ -142,14 +146,19 @@ export class ListadoSolicitudesComponent  implements  OnInit{
               private usuariosService:UsuarioService,
               private solicitudTurnoService:SolicitudTurnoService,
               public functionsService:FunctionsService,
-              private sB1SLService:SB1SLService){}
+              private sB1SLService:SB1SLService,
+              private localidadesService:LocalidadesService,
+              private dependenciasService:DependenciasService){}
               
 
 
   ngOnInit() {
+    this.getLocalidades();
+    this.getDependencias();
     this.getPermisosModulo(); 
     Calendar.prototype.getDateFormat = () => 'dd/mm/yy';
     this.estadosTurno = this.solicitudTurnoService.estadosTurno;
+    
     //////console.log(this.estadosTurno)
     /*this.solicitudTurnoService.cancelarTurnosVencidos()
         .subscribe({
@@ -160,6 +169,16 @@ export class ListadoSolicitudesComponent  implements  OnInit{
               console.error(err);
             }
         });*/
+  }
+
+  async getLocalidades(){
+    this.localidades =  await this.localidadesService.getLocalidades();
+    //console.log(this.localidades);    
+  }
+
+  async getDependencias(){
+    this.dependencias =  await this.dependenciasService.getDependencias();
+    //console.log(this.dependencias);    
   }
 
   getPermisosModulo(){
@@ -278,6 +297,10 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                                                               bgColor:string;
                                                               txtColor:string;
                                                               detalle_solicitudes_turnos_pedidos_cantidad:number;
+                                                              detalle_solicitudes_turnos_pedidos_dependencia:string;
+                                                              detalle_solicitudes_turnos_pedidos_dependencia_label:string;
+                                                              detalle_solicitudes_turnos_pedidos_localidad:string;
+                                                              detalle_solicitudes_turnos_pedidos_localidad_label:string;
                                                     })=>{
                                                               
 
@@ -334,6 +357,10 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                                                                 dataBarStackChart[index].data+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
                                                                 
                                                               }
+
+                                                              solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name;
+                                                              solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
+                                                              //console.log(solicitud);
                                                               
 
           //return solicitud
@@ -372,19 +399,32 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   async configPieChart(dataPieChart:any):Promise<void>{
 
+    //console.log(dataPieChart);
+
     let totalToneladas:number = (await this.functionsService.sumColArray(dataPieChart,[{value:0}]))[0].value;
 
+    let dataPieChartOrder:any[] = [];
+    let estados = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno,'order','ASC');
+    
+    for(let estado of  estados){
+      let data = dataPieChart.filter((item: { name: any; })=>item.name === estado.name);
+      
+      if(data.length > 0){
+        //console.log('estado',estado.name);
+       // console.log('data',data);
+        dataPieChartOrder = dataPieChartOrder.concat(data);
+      }
+    }
 
-
-    //////////////console.log(totalToneladas);
+    //console.log(dataPieChartOrder);
 
     this.pieChart = {
-      labels: dataPieChart.map((item: { name: any; })=>item.name),
+      labels: dataPieChartOrder.map((item: { name: any; })=>item.name),
       datasets:[
         {
-          data:dataPieChart.map((item: { value: any; })=>(item.value*100)/totalToneladas),
-          backgroundColor:dataPieChart.map((item: { backgroundColor: any; })=>item.backgroundColor),
-          hoverBackgroundColor:dataPieChart.map((item: { backgroundColor: any; })=>item.backgroundColor),
+          data:dataPieChartOrder.map((item: { value: any; })=>(item.value*100)/totalToneladas),
+          backgroundColor:dataPieChartOrder.map((item: { backgroundColor: any; })=>item.backgroundColor),
+          hoverBackgroundColor:dataPieChartOrder.map((item: { backgroundColor: any; })=>item.backgroundColor),
         }
       ]
     }
@@ -403,62 +443,80 @@ export class ListadoSolicitudesComponent  implements  OnInit{
   } 
 
   async configBarSatckChart(dataBarStackChart:any):Promise<void>{
-    
-    let dataBarStackChartOrder:any[] = await this.functionsService.sortArrayObject(dataBarStackChart,'data','ASC');
+    ///console.log(dataBarStackChart)
+    /*let dataBarStackChartOrder:any[] = await this.functionsService.sortArrayObject(dataBarStackChart,'data','ASC');
     
     
 
     dataBarStackChartOrder.forEach((item)=>{
       item.data = [item.data];
-    })
+    })*/
+    
+    let dataBarStackChartOrder:any[] = [];
+    let estados = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno,'order','ASC');
+    
+    for(let estado of  estados){
+      let data = dataBarStackChart.filter((item: { label: any; })=>item.label === estado.name);
+      
+      if(data.length > 0){
+        //console.log('estado',estado.name);
+        //console.log('data',data);
+        dataBarStackChartOrder = dataBarStackChartOrder.concat(data);
+      }
+    }
 
-    //////////////console.log('ordenado',dataBarStackChartOrder);
+    dataBarStackChartOrder.forEach((item)=>{
+      item.data = [item.data];
+    })
+    
+    //console.log('ordenado',dataBarStackChartOrder);
+
+
     
     this.barStackChart = {
         labels:['Estados'],
-        datasets:dataBarStackChart
-      }
-
-     
+        //datasets:dataBarStackChart
+        datasets:dataBarStackChartOrder
+    }
       
-      this.optionsBarStackChart = {
-        indexAxis: 'y',
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            legend: {
-                labels: {
-                    color: this.textColor
-                }
-            }
-        },
-        scales: {
-            x: {
-                stacked: true,
-                ticks: {
-                    color: this.textColorSecondary,
-                    font: {
-                        weight: 500
-                    }
-                },
-                grid: {
-                    color: this.surfaceBorder,
-                    drawBorder: false
-                }
-            },
-            y: {
-                stacked: true,
-                ticks: {
-                    color: this.textColorSecondary
-                },
-                grid: {
-                    color: this.surfaceBorder,
-                    drawBorder: false
-                }
-            }
-        }
-
+    this.optionsBarStackChart = {
+      indexAxis: 'y',
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+          legend: {
+              labels: {
+                  color: this.textColor
+              }
+          }
+      },
+      scales: {
+          x: {
+              stacked: true,
+              ticks: {
+                  color: this.textColorSecondary,
+                  font: {
+                      weight: 500
+                  }
+              },
+              grid: {
+                  color: this.surfaceBorder,
+                  drawBorder: false
+              }
+          },
+          y: {
+              stacked: true,
+              ticks: {
+                  color: this.textColorSecondary
+              },
+              grid: {
+                  color: this.surfaceBorder,
+                  drawBorder: false
+              }
+          }
       }
+
+    }
       
       /*
       this.optionsBarStackChart = {

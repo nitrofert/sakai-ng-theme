@@ -21,6 +21,8 @@ import { FunctionsService } from '../../service/functions.service';
 import { NovedadesService } from '../../service/novedades.service';
 import { ListaHistorialTurnoComponent } from './lista-historial-turno/lista-historial-turno.component';
 import { CiudadesService } from '../../service/ciudades.service';
+import { LocalidadesService } from '../../service/localidades.service';
+import { DependenciasService } from '../../service/dependencias.service';
 
 
 
@@ -51,7 +53,9 @@ import { CiudadesService } from '../../service/ciudades.service';
               SolicitudTurnoService,
               FunctionsService,
               NovedadesService,
-              CiudadesService
+              CiudadesService,
+              LocalidadesService,
+              DependenciasService
    ]
 })
 export class SolicitudescargueModule { }

@@ -111,7 +111,7 @@
 						<td *ngIf="viewCheckselectedItem">
                             <p-tableCheckbox [value]="itemData" [id]="'selectRow'+itemData['index']" ></p-tableCheckbox>
                         </td>
-						<td *ngFor="let key of objectKeys(itemData)" [style]="'min-width: '+headersTable[0][key].sizeCol+';'" pEditableColumn>
+						<td *ngFor="let key of objectKeys(itemData)" [class]="headersTable[0][key].backgroundColor?'bg-'+getBgColor(headersTable[0][key].backgroundColor.arrayColor,itemData[key]):''" [style]="'min-width: '+headersTable[0][key].sizeCol+';'" pEditableColumn>
 							
 
 							<div *ngIf="!headersTable[0][key].editable" [style]="'text-align:'+headersTable[0][key].align+';'">

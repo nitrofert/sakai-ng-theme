@@ -10,6 +10,8 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-table.module';
 import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.service';
 import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynamic-charts.module';
+import { DependenciasService } from 'src/app/demo/service/dependencias.service';
+import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 
 
 
@@ -29,7 +31,7 @@ import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynami
     DynamicChartsModule
     
   ],
-  providers:[AlmacenesService,SolicitudTurnoService],
+  providers:[AlmacenesService,SolicitudTurnoService,LocalidadesService,DependenciasService],
   exports:[DashboardComponentTurno]
 })
 export class DashboardTurnosModule { }

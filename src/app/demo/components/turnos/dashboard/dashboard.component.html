@@ -160,7 +160,7 @@
 
         <div  class="col-12">
             <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-                <div class="text-center mb-3"><h1>Programacion Gerencia {{dependencia.dependencia}}</h1></div>
+                <div class="text-center mb-3"><h1>Programacion Gerencia {{dependencia.dependencia | titlecase}}</h1></div>
                 <div class="p-fluid p-formgrid grid flex align-items-center justify-content-center">
     
                     <app-dynamic-table [dataTable]="dependencia.programacionDiaria " 

@@ -8,6 +8,8 @@ import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.se
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
 import { EstadosDealleSolicitud } from '../estados-turno.enum';
 import { TipoRol } from '../../admin/roles/roles.enum';
+import { LocalidadesService } from 'src/app/demo/service/localidades.service';
+import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 
 @Component({
   selector: 'app-dashboard-turnos',
@@ -90,6 +92,9 @@ export class DashboardComponentTurno implements OnInit {
 
   };
 
+  localidades:any;
+  dependencias_all:any;
+
   
 
   constructor(private almacenesService:AlmacenesService,
@@ -98,11 +103,14 @@ export class DashboardComponentTurno implements OnInit {
               public usuariosService:UsuarioService,
               private solicitudTurnoService:SolicitudTurnoService,
               private functionsService:FunctionsService,
-              private router:Router){}
+              private router:Router,
+              private localidadesService:LocalidadesService,
+              private dependenciasService:DependenciasService){}
 
 
   async ngOnInit() {
-    
+    this.getLocalidades();
+    this.getDependencias();
     this.infousuario = await this.usuariosService.infoUsuario();
    ////console.log(this.infousuario);
     //this.configTablaProgramacionDiaria();
@@ -114,6 +122,16 @@ export class DashboardComponentTurno implements OnInit {
     this.getAlmacenes();
    
 
+  }
+
+  async getLocalidades(){
+    this.localidades =  await this.localidadesService.getLocalidades();
+    //console.log(this.localidades);    
+  }
+
+  async getDependencias(){
+    this.dependencias_all =  await this.dependenciasService.getDependencias();
+    //console.log(this.dependencias);    
   }
 
 
@@ -243,7 +261,8 @@ export class DashboardComponentTurno implements OnInit {
        */
       
       this.loadingPDB = true;
-      this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && linea.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
+      //this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && linea.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
+      this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code);
       ////console.log(this.lineasProgramacionDiariaBodega);
       this.configTablaProgramacionDiaria();
       this.lineasConsolidadoProgramacionDiariaBodega = (await this.getInfoTablaConsolidadoProgramacionDiaria()).consolidadoItems;
@@ -275,8 +294,26 @@ export class DashboardComponentTurno implements OnInit {
     //////////////////////////console.log(this.fechaProgramacion);
 
     let programacionBodega = await this.solicitudTurnoService.turnosExtendido(params);
-    ////console.log(programacionBodega.raw);
     
+
+    programacionBodega.raw.forEach((solicitud: {
+     
+          pedidos_turno_dependencia:string;
+          pedidos_turno_dependencia_label:string;
+          pedidos_turno_localidad:string;
+          pedidos_turno_localidad_label:string;
+    })=>{
+
+          solicitud.pedidos_turno_dependencia_label = this.dependencias_all.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.pedidos_turno_dependencia).name;
+          solicitud.pedidos_turno_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.pedidos_turno_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.pedidos_turno_localidad).name:'';
+         //console.log(solicitud.pedidos_turno_dependencia);
+         //console.log(solicitud.pedidos_turno_localidad);
+          
+
+    //return solicitud
+    });
+
+    console.log(programacionBodega.raw);
     return programacionBodega.raw;
   }
 
@@ -296,6 +333,7 @@ export class DashboardComponentTurno implements OnInit {
     let headersTable:any[] =  [{
       'hora': { label:'Hora',type:'text', sizeCol:'6rem', align:'center', editable:false},
       'id': { label:'Turno',type:'text', sizeCol:'6rem', align:'center', editable:false},
+      'estado': { label:'Estado',type:'text', sizeCol:'6rem', align:'center', editable:false, backgroundColor:{arrayColor:this.solicitudTurnoService.estadosTurno}},
       'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false},
       'CardName': { label:'Cliente',type:'text', sizeCol:'6rem', align:'center', editable:false},
       'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',},
@@ -319,6 +357,7 @@ export class DashboardComponentTurno implements OnInit {
         dataTable.push({
           hora:new Date(linea.turnos_horacita).toLocaleTimeString(),
           id:linea.turnos_id,
+          estado:linea.turnos_estado,
           docnum:linea.pedidos_turno_pedidonum,
           CardName:linea.pedidos_turno_CardName,
           itemcode:linea.pedidos_turno_itemcode,
@@ -629,7 +668,7 @@ export class DashboardComponentTurno implements OnInit {
       
       
       this.dependencias.push({
-        dependencia: dependencia.pedidos_turno_dependencia,
+        dependencia: dependencia.pedidos_turno_dependencia_label,
         programacionDiaria:dataDependencia,
         colsSumProgramacionDiaria:colsSumDependencia,
         consolidadoTipoProductoDependencia,
@@ -714,7 +753,7 @@ export class DashboardComponentTurno implements OnInit {
 
     for(let linea of data){
         dataTable.push({
-          dependencia:linea.pedidos_turno_dependencia,
+          dependencia:linea.pedidos_turno_dependencia_label,
           bodega:linea.pedidos_turno_bodega,
           estado:linea.turnos_estado,
           cliente:linea.pedidos_turno_CardName,
@@ -758,7 +797,7 @@ export class DashboardComponentTurno implements OnInit {
 
     for(let linea of data){
         dataTable.push({
-          zona:linea.pedidos_turno_localidad==null?'SIN ZONA':linea.pedidos_turno_localidad,
+          zona:linea.pedidos_turno_localidad==null?'SIN ZONA':linea.pedidos_turno_localidad_label,
           cantidad:linea.pedidos_turno_cantidad
         });
     }
