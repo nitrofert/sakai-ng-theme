@@ -349,7 +349,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                                                                 
                                                               }
 
-                                                              solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name;
+                                                              solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia)?this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name:'';
                                                               solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
                                                               //console.log(solicitud);
                                                               
