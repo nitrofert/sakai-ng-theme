@@ -1,0 +1,22 @@
+<p-toast></p-toast>
+<app-breadcrumb></app-breadcrumb>
+
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+
+            <app-dynamic-table [dataTable]="tablaMatrizNotificacion.data" 
+                             [headersTable]="tablaMatrizNotificacion.header"
+                             dataKey="index" 
+                             [rows]="10" 
+                             [paginator]="true"
+                             [selectionMode]="'multiple'"
+                             [loading]="loadingTablaMatrizNotificacion"
+                             [viewCheckselectedItem] ="true"
+                             nameExport="matriz-notificacion"
+                             [showBtnNew]="false">
+          </app-dynamic-table>
+
+        </div>
+    </div>
+</div>

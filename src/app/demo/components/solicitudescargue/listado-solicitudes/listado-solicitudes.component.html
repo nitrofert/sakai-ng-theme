@@ -24,6 +24,20 @@
 </div>
 -->
 
+<div class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="field col-12 ">
+                <span class="p-float-label">
+                    <p-calendar id="rangoFecha" [(ngModel)]="filtroRnagoFechas" selectionMode="range" [readonlyInput]="true" [showIcon]="true" [numberOfMonths]="1"  styleClass="w-full"  (ngModelChange)="cambioFecha($event)"  ></p-calendar>
+                    <label for="rangoFecha"><h6>Seleccionar rango de fecha</h6></label>
+                </span>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
 <div class="grid flex align-items-center flex-wrap">
     <div class="col-12 xl:col-8">
         <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">

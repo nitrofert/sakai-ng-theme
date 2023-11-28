@@ -41,6 +41,10 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   @ViewChild('filter') filter!: ElementRef;
 
+  hoy = new Date();
+  primerDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
+  ultimoDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth() + 1, 0);
+  filtroRnagoFechas:Date[] = [this.primerDiaMes,this.ultimoDiaMes];
   permisosModulo!:any[];
 
   showBtnNew:boolean =false;
@@ -139,6 +143,8 @@ export class ListadoSolicitudesComponent  implements  OnInit{
   dependencias:any;
 
 
+
+
   constructor(private router:Router,
               public dialogService: DialogService,
               private confirmationService: ConfirmationService,
@@ -209,70 +215,16 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   async getSolicitudesTurno(){
 
-    /*this.solicitudTurnoService.getSolicitudesTurno()
-        .subscribe({
-              next: (solicitudesTurnos)=>{
-                 ////////////////console.log(solicitudesTurnos);
-                  let solicitudes:any[] = [];
+   
+    let params:any = {
+      fechainicio:this.filtroRnagoFechas[0],
+      fechafin:this.filtroRnagoFechas[1],
+    }
 
-                  for(let solicitud of solicitudesTurnos){
-                     
-                    ////////////////console.log(solicitud);
-                    let cantidadCarga =0;
-                    let cantidadPedidos = 0;
-                    let cantidadVehiculos =0;
-                    for(let detalle_vehiculos of solicitud.detalle_solicitud_turnos){
-                      cantidadVehiculos++;
-                      for(let detalle_pedidos_vehiculo of detalle_vehiculos.detalle_solicitud_turnos_pedido){
-                        cantidadPedidos++;
-                        cantidadCarga += detalle_pedidos_vehiculo.cantidad;
-                      }
-                    }
-
-                    solicitudes.push({
-                      id:solicitud.id,
-                      docdate:solicitud.createdAt,
-                      clienteid: solicitud.clientes[0].CardCode,
-                      pedidos:cantidadPedidos,
-                      vehiculos: cantidadVehiculos,
-                      toneladas: cantidadCarga
-                    })
-                  }
-
-                  //////////////////console.log(solicitudes);
-                  this.dataTable = solicitudes;
-              },
-              error:(err)=>{
-                console.error(err);
-              }
-        });*/
-
-    this.solicitudTurnoService.getSolicitudesTurnoExtendido()
+    this.solicitudTurnoService.getSolicitudesTurnoExtendido(params)
     .subscribe({
       next: async (solicitudesTurnos)=>{
-        //////console.log(solicitudesTurnos);
-         /*let solicitudesTMP = solicitudesTurnos.raw.map((solicitud: {
-           detalle_solicitudes_turnos_fechacita: Date; 
-           solicitudes_turno_created_at: Date;
-           detalle_solicitudes_turnos_horacita: Date; 
-           detalle_solicitudes_turnos_horacita2:Date;
-           detalle_solicitudes_turnos_estado:string;
-           bgColor:string;
-           txtColor:string;
-})=>{
-           solicitud.solicitudes_turno_created_at = new Date(solicitud.solicitudes_turno_created_at);
-           solicitud.detalle_solicitudes_turnos_fechacita = new Date(solicitud.detalle_solicitudes_turnos_fechacita);
-           solicitud.detalle_solicitudes_turnos_horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita);
-           let horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita).toLocaleTimeString("en-US", { hour12: false });
-           let hoy = new Date();
-           hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
-           solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
-           solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
-           solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
-
-           return solicitud
-         })*/
-
+     
          let dataPieChart:any[] = [];
          let dataBarStackChart:any[any] = [];
         
@@ -618,6 +570,17 @@ export class ListadoSolicitudesComponent  implements  OnInit{
   clear(table: Table) {
     table.clear();
     this.filter.nativeElement.value = '';
+  }
+
+  cambioFecha(event:any){
+    
+    
+    if(event[1]){
+      console.log(this.filtroRnagoFechas);
+      //this.filtroRnagoFechas = event;
+      this.getSolicitudesTurno();
+  
+    }
   }
 
 

@@ -109,29 +109,32 @@ export class DashboardComponentTurno implements OnInit {
 
 
   async ngOnInit() {
-    this.getLocalidades();
-    this.getDependencias();
     this.infousuario = await this.usuariosService.infoUsuario();
+    this.getLocalidades();
+    
+   
    ////console.log(this.infousuario);
     //this.configTablaProgramacionDiaria();
 
     
     //this.configTablaConsolidadoProgramacionDiaria();
-    this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
-    //console.log(this.turnosFehaSeleccionada);
-    this.getAlmacenes();
+    
    
 
   }
 
   async getLocalidades(){
     this.localidades =  await this.localidadesService.getLocalidades();
-    //console.log(this.localidades);    
+    //console.log(this.localidades);   
+    this.getDependencias(); 
   }
 
   async getDependencias(){
     this.dependencias_all =  await this.dependenciasService.getDependencias();
     //console.log(this.dependencias);    
+    this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
+    //console.log(this.turnosFehaSeleccionada);
+    this.getAlmacenes();
   }
 
 
