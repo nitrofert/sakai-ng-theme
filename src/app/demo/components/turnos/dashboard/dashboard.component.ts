@@ -635,6 +635,8 @@ export class DashboardComponentTurno implements OnInit {
 
   async configTablaProgramacionGerencia(){
 
+    this.dependencias = [];
+
     let headerTabla =   this.configHeaderTablaProgramacionDiariaGerencia();
     //////////console.log(this.lineasProgramacionDiariaGerencia);
     let dependencias = await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_dependencia');
