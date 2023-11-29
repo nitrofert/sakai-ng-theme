@@ -181,11 +181,14 @@ async resolveObservable(observable:Observable<any>):Promise<any>{
 
 async sumColArray(arrayData:any[], arrayCols:any[]):Promise<any[]>{
 
-  ////////console.log(arrayData);
+ 
+ 
   
   let arrayKeys:any[] = Object.keys(arrayCols[0]);
   for(let itemData of arrayData){
+    //console.log(itemData.pedidos_turno_cantidad);
       for(let itemKey of arrayKeys){
+        //console.log(itemKey,itemData[itemKey]);
           arrayCols[0][itemKey] += parseFloat(itemData[itemKey]);
       }
 

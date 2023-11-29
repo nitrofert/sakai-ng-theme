@@ -168,13 +168,13 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   async getLocalidades(){
     this.localidades =  await this.localidadesService.getLocalidades();
-    //console.log(this.localidades); 
+    ////console.log(this.localidades); 
     this.getDependencias();   
   }
 
   async getDependencias(){
     this.dependencias =  await this.dependenciasService.getDependencias();
-    //console.log(this.dependencias);    
+    ////console.log(this.dependencias);    
     this.getPermisosModulo(); 
   }
 
@@ -183,7 +183,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              //////////////////console.log(permisos);
+              ////////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -199,7 +199,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
               
               this.infoUsuario = await this.usuariosService.infoUsuario();
-              ////////////////console.log(this.infoUsuario);
+              //////////////////console.log(this.infoUsuario);
               this.getSolicitudesTurno();
 
             },
@@ -255,12 +255,12 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                                                               let hoy = new Date();
                                                               hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
                                                               solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
-                                                              //////console.log(solicitud.detalle_solicitudes_turnos_estado);
+                                                              ////////console.log(solicitud.detalle_solicitudes_turnos_estado);
                                                               if(this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado)){
                                                                 solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
                                                                 solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
                                                               }else{
-                                                                console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+                                                                //console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
                                                                 solicitud.bgColor = 'indigo-50';
                                                                 solicitud.txtColor = 'primary-900';
                                                               }
@@ -303,7 +303,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
                                                               solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia)?this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name:'';
                                                               solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
-                                                              //console.log(solicitud);
+                                                              ////console.log(solicitud);
                                                               
 
           //return solicitud
@@ -312,7 +312,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
         await this.configPieChart(dataPieChart);
         await this.configBarSatckChart(dataBarStackChart);
 
-         //////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+         ////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
          this.solicitudesExtendida = solicitudesTurnos.raw;
          this.loading = false;
       },
@@ -326,7 +326,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
         .subscribe({
             next:(solicitud)=>{
-              ////////console.log(solicitud);
+              //////////console.log(solicitud);
 
              
 
@@ -342,7 +342,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
   async configPieChart(dataPieChart:any):Promise<void>{
 
-    //console.log(dataPieChart);
+    ////console.log(dataPieChart);
 
     let totalToneladas:number = (await this.functionsService.sumColArray(dataPieChart,[{value:0}]))[0].value;
 
@@ -353,13 +353,13 @@ export class ListadoSolicitudesComponent  implements  OnInit{
       let data = dataPieChart.filter((item: { name: any; })=>item.name === estado.name);
       
       if(data.length > 0){
-        //console.log('estado',estado.name);
-       // console.log('data',data);
+        ////console.log('estado',estado.name);
+       // //console.log('data',data);
         dataPieChartOrder = dataPieChartOrder.concat(data);
       }
     }
 
-    //console.log(dataPieChartOrder);
+    ////console.log(dataPieChartOrder);
 
     this.pieChart = {
       labels: dataPieChartOrder.map((item: { name: any; })=>item.name),
@@ -386,7 +386,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
   } 
 
   async configBarSatckChart(dataBarStackChart:any):Promise<void>{
-    ///console.log(dataBarStackChart)
+    /////console.log(dataBarStackChart)
     /*let dataBarStackChartOrder:any[] = await this.functionsService.sortArrayObject(dataBarStackChart,'data','ASC');
     
     
@@ -402,8 +402,8 @@ export class ListadoSolicitudesComponent  implements  OnInit{
       let data = dataBarStackChart.filter((item: { label: any; })=>item.label === estado.name);
       
       if(data.length > 0){
-        //console.log('estado',estado.name);
-        //console.log('data',data);
+        ////console.log('estado',estado.name);
+        ////console.log('data',data);
         dataBarStackChartOrder = dataBarStackChartOrder.concat(data);
       }
     }
@@ -412,7 +412,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
       item.data = [item.data];
     })
     
-    //console.log('ordenado',dataBarStackChartOrder);
+    ////console.log('ordenado',dataBarStackChartOrder);
 
 
     
@@ -504,7 +504,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
 
   nuevaSolicitud(event: any){
-    //////////////////console.log(event);
+    ////////////////////console.log(event);
     this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
   }
 
@@ -555,10 +555,10 @@ export class ListadoSolicitudesComponent  implements  OnInit{
    if(index>0){
     index+=1;
    }
-   //////////////console.log(index);
+   ////////////////console.log(index);
 
    filtro[index].value = value;*/
-   //////////////console.log(field,value, filtro,other,other2 );
+   ////////////////console.log(field,value, filtro,other,other2 );
    //table.filter(value,field,filtro[0].matchMode);
  
   }
@@ -576,7 +576,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     
     
     if(event[1]){
-      console.log(this.filtroRnagoFechas);
+      //console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.getSolicitudesTurno();
   

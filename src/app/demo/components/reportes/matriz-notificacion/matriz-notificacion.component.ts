@@ -38,7 +38,7 @@ export class MatrizNotificacionComponent implements  OnInit{
     this.configTablaMatrizNotificacion();
     this.getMatrizNotificacion();
     this.estadosTurnos = this.solicitudTurnoService.estadosTurno;
-    //console.log(this.estadosTurnos);
+    ////console.log(this.estadosTurnos);
   }
 
   getMatrizNotificacion(){
@@ -47,12 +47,12 @@ export class MatrizNotificacionComponent implements  OnInit{
             next:(notificaciones)=>{
               
               notificaciones.map((notificacion:any)=>{
-                //console.log(notificacion)
+                ////console.log(notificacion)
                 notificacion.order = this.estadosTurnos.find((estado: { name: any; })=>estado.name === notificacion.estado_turno).order;
               });
               
               notificaciones.sort((a:{locacion:string; order:number},b:{locacion:string; order:number})=> (a.locacion.localeCompare(b.locacion) || (a.order < b.order)));
-              //console.log(notificaciones);
+              ////console.log(notificaciones);
               this.matrizNotificacion = notificaciones;
               this.configTablaMatrizNotificacion();
             },
@@ -90,7 +90,7 @@ export class MatrizNotificacionComponent implements  OnInit{
 
   configDataTableMatrizNotificacion(data:any){
     
-     ////// //////////console.log('arregloPedido',arregloPedido);
+     ////// ////////////console.log('arregloPedido',arregloPedido);
      
      let dataTable:any[] = [];
      

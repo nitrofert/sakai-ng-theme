@@ -351,7 +351,7 @@ export class AppMenuComponent implements OnInit {
     async getMenuUsuario():Promise<any>{
        const menuUsuario$ = this.usuarioService.getMenuUsuario();
        const menuUsuario = await lastValueFrom(menuUsuario$);
-       ////////console.log(menuUsuario);
+       //////////console.log(menuUsuario);
 
        let model:any[] =[{
             label: 'Inicio',
@@ -390,7 +390,7 @@ export class AppMenuComponent implements OnInit {
 
         }
 
-        ////////console.log(model);
+        //////////console.log(model);
         return model;
     }
 }

@@ -55,7 +55,7 @@ export class SeriesPipe implements PipeTransform {
                       serie = series[item].name;  
                     }
                   }
-                  ////////console.log(serie);
+                  //////////console.log(serie);
                   return serie;
               },
               error:(err)=>{
