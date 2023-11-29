@@ -359,6 +359,11 @@ async setDataBasicChart(data:any[],fields:any):Promise<any>{
   return dataChart;
 }
 
+async clonObject(object:any): Promise<any>{
+  const newObject:any = JSON.parse(JSON.stringify(object));
+  return newObject;
+}
+
   
 
 }

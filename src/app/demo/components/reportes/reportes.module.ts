@@ -13,6 +13,16 @@ import { FormFacturaComponent } from './form-factura/form-factura.component';
 import { MatrizNotificacionComponent } from './matriz-notificacion/matriz-notificacion.component';
 import { MatrizNotificacionService } from '../../service/matriz-notificacion.service';
 import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
+import { PlacasCompartidasComponent } from './placas-compartidas/placas-compartidas.component';
+import { MessageService } from 'primeng/api';
+import { AlmacenesService } from '../../service/almacenes.service';
+import { UsuarioService } from '../../service/usuario.service';
+import { FunctionsService } from '../../service/functions.service';
+import { ProgramacionBodegaComponent } from './programacion-bodega/programacion-bodega.component';
+import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynamic-charts.module';
+import { LocalidadesService } from '../../service/localidades.service';
+import { DependenciasService } from '../../service/dependencias.service';
+import { ProgramacionGerenciasComponent } from './programacion-gerencias/programacion-gerencias.component';
 
 
 
@@ -21,7 +31,10 @@ import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
     ListadoReportesComponent,
     ListadoFacturasComponent,
     FormFacturaComponent,
-    MatrizNotificacionComponent
+    MatrizNotificacionComponent,
+    PlacasCompartidasComponent,
+    ProgramacionBodegaComponent,
+    ProgramacionGerenciasComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +44,17 @@ import { SolicitudTurnoService } from '../../service/solicitudes-turno.service';
     ApplicationPipesModule,
     PrimengModule,
     FormsModule,
+    DynamicChartsModule
   ],
-  providers:[DialogService,MatrizNotificacionService,SolicitudTurnoService]
+  providers:[DialogService,
+             MessageService,
+             FunctionsService,
+             MatrizNotificacionService,
+             SolicitudTurnoService, 
+             AlmacenesService,
+             UsuarioService,
+             LocalidadesService,
+             DependenciasService
+            ]
 })
 export class ReportesModule { }

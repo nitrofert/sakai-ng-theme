@@ -1,0 +1,42 @@
+<p-toast></p-toast>
+<app-breadcrumb></app-breadcrumb>
+
+<div class="grid">
+	<div class="col-12">
+		<div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="p-fluid p-formgrid grid">
+
+                <div class="field col-12 ">
+                    <span class="p-float-label">
+                        
+                        <p-calendar [(ngModel)]="fechaProgramacion" [showIcon]="true" dateFormat="DD, dd MM yy"  (ngModelChange)="seleccionarFecha()"></p-calendar>
+                        <label for="conductor"><h6>Fecha pogramación</h6></label>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12">
+    <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+        <div class="text-center mb-3"><h1>Placas compartidas</h1></div>
+        <div class="p-fluid p-formgrid grid flex align-items-center justify-content-center">
+
+            <app-dynamic-table [dataTable]="tablaPlacasCompartidasBodegas.data" 
+                            [headersTable]="tablaPlacasCompartidasBodegas.header"
+                            [colsSum]="tablaPlacasCompartidasBodegas.colsSum"
+                            dataKey="index" 
+                            [rows]="10" 
+                            [paginator]="true"
+                            [selectionMode]="'multiple'"
+                            [loading]="loadingPC"
+                            [showBtnExp]="true"
+                            class="min-w-full"                                    
+                            nameExport="placas_compartidas">
+            </app-dynamic-table>
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+<p-toast></p-toast>
+<app-breadcrumb></app-breadcrumb>
+
+<div class="grid">
+	<div class="col-12">
+		<div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="p-fluid p-formgrid grid">
+
+                <div class="field col-12 ">
+                    <span class="p-float-label">
+                        
+                        <p-calendar [(ngModel)]="fechaProgramacion" [showIcon]="true" dateFormat="DD, dd MM yy"  (ngModelChange)="seleccionarFecha()"></p-calendar>
+                        <label for="conductor"><h6>Fecha pogramación</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locaciones.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="conductor"
+                               *ngIf="locaciones.length>0" 
+                               [(ngModel)]="locacionSeleccionada" 
+                               
+                               [suggestions]="locacionesFiltradas" 
+                               (completeMethod)="filtrarLocacion($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               (onSelect)="seleccionarLocacion(locacionSeleccionada)">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Locación</h6></label>
+                    </span>
+                </div>
+    
+                <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locaciones.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete 
+                                *ngIf="locaciones.length>0"
+                                id="conductor" 
+                               [(ngModel)]="bodegaSeleccionada" 
+                               
+                               [suggestions]="bodegasFiltradas" 
+                               (completeMethod)="filtrarBodega($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               (onSelect)="seleccionarBodega(bodegaSeleccionada)">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Bodega</h6></label>
+                    </span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <div class="w-full flex">
+        <div class="flex  col-12  xl:col-6">
+            <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+                <div class="text-center mb-3"><h1>Consolidado items bodega</h1></div>
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 ">
+                        <app-dynamic-table [dataTable]="tablaConsolidadoProgramacionDiariaBodega.data" 
+                                    [headersTable]="tablaConsolidadoProgramacionDiariaBodega.header"
+                                    [colsSum]="tablaConsolidadoProgramacionDiariaBodega.colsSum"
+                                    dataKey="index" 
+                                    [rows]="10" 
+                                    [paginator]="true"
+                                    [selectionMode]="'multiple'"
+                                    [loading]="loadingCPDB"
+                                    [showBtnExp]="true"
+                                    class="min-w-full"
+                                    nameExport="consolidado_programacion_diaria_bodega">
+                        </app-dynamic-table>
+                    </div>  
+                    
+    
+                </div>
+            </div>
+        </div>   
+    
+        <div class="flex justify-content-center col-12  xl:col-6">
+            <div class="card min-w-full">
+                <!--<app-pie-chart  [chartData]="chartPieData"></app-pie-chart>-->
+                <app-pie-chart *ngIf="this.tablaConsolidadoProgramacionDiariaBodega.data.length>0 ;else elseBlock"  [chartData]="chartPieData"></app-pie-chart>
+                <ng-template #elseBlock>
+                    <div class="flex align-items-center justify-content-center ">
+                        <i class="pi pi-chart-pie" style="font-size: 5rem"></i>
+                        
+                    </div>
+                    <div class="mt-5 text-center">
+                        Grafica no disponible
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="text-center mb-3"><h1>Programacion cargue bodega</h1></div>
+            <div class="p-fluid p-formgrid grid">
+
+                <app-dynamic-table [dataTable]="tablaProgramacionDiariaBodega.data" 
+                                [headersTable]="tablaProgramacionDiariaBodega.header"
+                                dataKey="index" 
+                                [rows]="10" 
+                                [paginator]="true"
+                                [selectionMode]="'multiple'"
+                                [loading]="loadingPDB"
+                                [showBtnExp]="true"
+                                class="min-w-full"
+                                nameExport="programacion_diaria_bodega">
+                </app-dynamic-table>
+
+
+            </div>
+        </div>
+    </div>
+</div>

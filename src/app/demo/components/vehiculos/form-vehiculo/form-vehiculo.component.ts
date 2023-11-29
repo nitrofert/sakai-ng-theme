@@ -47,7 +47,7 @@ export class FormVehiculoComponent implements  OnInit {
     ){}
 
     ngOnInit() {
-     ////////console.log(this.config.data.id);
+     console.log(this.config.data.id);
       this.getTipoVehiculos();
       this.getConductores();
       if(this.config.data.id!=0){

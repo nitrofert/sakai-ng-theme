@@ -1143,7 +1143,7 @@ async validarHoraCargue():Promise<boolean>{
   
   async seleccionarVehiculo(vehiculoSeleccionado:any){
 
-    //////////////////// ////////////console.log(vehiculoSeleccionado);
+    console.log(vehiculoSeleccionado);
   
     if(vehiculoSeleccionado.id == 0){
         //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
@@ -1197,7 +1197,7 @@ async validarHoraCargue():Promise<boolean>{
   nuevaTransportadora(){
     const ref = this.dialogService.open(FormTransportadoraComponent, {
       data: {
-          id: parseInt('1')
+          id: parseInt('0')
       },
       header: `Nueva transportadora` ,
       width: '70%',
@@ -1215,7 +1215,7 @@ async validarHoraCargue():Promise<boolean>{
   nuevoVehiculo(){
     const ref = this.dialogService.open(FormVehiculoComponent, {
       data: {
-          id: parseInt('1')
+          id: parseInt('0')
       },
       header: `Nuevo Vehículo` ,
       width: '70%',
@@ -1233,7 +1233,7 @@ async validarHoraCargue():Promise<boolean>{
   nuevoConductor(){
     const ref = this.dialogService.open(FormConductorComponent, {
       data: {
-          id: parseInt('1')
+          id: parseInt('0')
       },
       header: `Nuevo Conductor` ,
       width: '70%',
