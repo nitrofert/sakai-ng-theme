@@ -1677,9 +1677,9 @@ async validarHoraCargue():Promise<boolean>{
             }
             
             if(this.updateModulo){
-             
+                let horacargue = `${this.fechacargue.toISOString().split("T")[0]}T${this.horacargue.toISOString().split("T")[1]}`;
                 data.fechacita = new Date(this.fechacargue);
-                data.horacita = new Date(this.horacargue);
+                data.horacita = new Date(horacargue);
                 //data.estado = this.estado;
                 data.transportadora = this.transportadoraSeleccionada.id;
                 data.vehiculo = this.vehiculoSeleccionado.id;
@@ -1699,6 +1699,8 @@ async validarHoraCargue():Promise<boolean>{
                 }
               
             }
+
+            console.log(data);
 
     return data;
   }

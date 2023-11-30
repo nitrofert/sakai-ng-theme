@@ -152,18 +152,20 @@ export class ProgramacionGerenciasComponent implements OnInit {
                                                                                         linea.turnos_estado != EstadosDealleSolicitud.CANCELADO &&
                                                                                         linea.turnos_estado != EstadosDealleSolicitud.SOLINVENTARIO );
 
-    //console.log('lineasProgramacionDiariaGerencia',this.lineasProgramacionDiariaGerencia);
+    console.log('lineasProgramacionDiariaGerencia',this.lineasProgramacionDiariaGerencia);
     
 
     this.gerencias =  (await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_dependencia')).map(gerencia=>{
       return {code:gerencia.pedidos_turno_dependencia, name:gerencia.pedidos_turno_dependencia_label, label:gerencia.pedidos_turno_dependencia_label}
     });
     
-    //console.log('gerencias',this.gerencias);
+    console.log('gerencias',this.gerencias);
     
 
 
     this.gerenciaSeleccionada = this.gerencias[0];
+
+    console.log('gerenciaSeleccionada',this.gerenciaSeleccionada);
 
     this.seleccionarGerencia(this.gerenciaSeleccionada);
 
@@ -188,9 +190,9 @@ export class ProgramacionGerenciasComponent implements OnInit {
    
     //let dependencias = await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_dependencia');
 
-    let dependencias = [this.gerenciaSeleccionada];
+    let dependencias = this.gerenciaSeleccionada?[this.gerenciaSeleccionada]:[];
 
-    ////console.log(dependencias);
+   console.log('dependencias',dependencias);
 
     for(let dependencia of dependencias ){
 

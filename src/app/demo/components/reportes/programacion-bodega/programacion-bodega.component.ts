@@ -186,7 +186,9 @@ export class ProgramacionBodegaComponent implements OnInit {
   }
 
   seleccionarLocacion(locacion:any){
-    //////////////console.log(locacion);
+    console.log('allbodegas',this.allbodegas);
+    console.log('locacion',locacion);
+
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
     //////////////console.log(bodegas_locacion);
     if(bodegas_locacion.length==0){
@@ -319,8 +321,8 @@ export class ProgramacionBodegaComponent implements OnInit {
 
   async getInfoTablaConsolidadoProgramacionDiaria():Promise<any> {
 
-    let consolidadoItems:any = await this.functionsService.groupArray(this.lineasProgramacionDiariaBodega,'pedidos_turno_itemcode');
-    let totalToneladas:number = (await this.functionsService.sumColArray(this.lineasProgramacionDiariaBodega,[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
+    let consolidadoItems:any = await this.functionsService.groupArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaBodega),'pedidos_turno_itemcode',[{pedidos_turno_cantidad:0}]);
+    let totalToneladas:number = (await this.functionsService.sumColArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaBodega),[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
     //////////////////////////////////console.log('consolidadoItems',consolidadoItems);
     
     await consolidadoItems.map(async (linea:any)=>{

@@ -74,58 +74,54 @@
         </div>
     </div>
 
-    <div class="w-full p-fluid p-formgrid grid" *ngFor="let dependencia of dependencias">
-
-        <div  class="col-12">
-            <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+    <div class="w-full" *ngFor="let dependencia of dependencias">
+        <div class=" col-12">
+            <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
                 <div class="text-center mb-3"><h1>Programacion Gerencia {{dependencia.dependencia | titlecase}}</h1></div>
-                <div class="p-fluid p-formgrid grid flex align-items-center justify-content-center">
-    
-                    <app-dynamic-table [dataTable]="dependencia.programacionDiaria " 
-                                    [headersTable]="tablaProgramacionDiariaGerencia.header"
-                                    [colsSum]="dependencia.colsSumProgramacionDiaria"
-                                    dataKey="index" 
-                                    [rows]="10" 
-                                    [paginator]="true"
-                                    [selectionMode]="'multiple'"
-                                    [loading]="loadingPDG"
-                                    [showBtnExp]="true"
-                                    class="min-w-full"            
-                                    nameExport="programacion_diaria_bodega">
-                    </app-dynamic-table>
-    
-    
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 ">
+                        <app-dynamic-table [dataTable]="dependencia.programacionDiaria " 
+                                            [headersTable]="tablaProgramacionDiariaGerencia.header"
+                                            [colsSum]="dependencia.colsSumProgramacionDiaria"
+                                            dataKey="index" 
+                                            [rows]="10" 
+                                            [paginator]="true"
+                                            [selectionMode]="'multiple'"
+                                            [loading]="loadingPDG"
+                                            [showBtnExp]="true"
+                                            class="min-w-full"            
+                                            nameExport="programacion_diaria_bodega">
+                        </app-dynamic-table>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="w-full flex">
-            <div class="flex col-12  xl:col-6">
-                <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class=" col-12 xl:col-6">
+                <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
                     <div class="text-center mb-3"><h1>Consolidado Tipo porducto</h1></div>
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 ">
                             <app-dynamic-table [dataTable]="dependencia.consolidadoTipoProductoDependencia" 
-                                        [headersTable]="tablaConsolidadoTipoProducto.header"
-                                        [colsSum]="dependencia.colSumConsolidadoTipoProductoDependencia"
-                                        dataKey="index" 
-                                        [rows]="10" 
-                                        [paginator]="true"
-                                        [selectionMode]="'multiple'"
-                                        [loading]="loadingPDG"
-                                        [showBtnExp]="true"
-                                        class="min-w-full"
-                                        nameExport="consolidado_zona">
+                                                    [headersTable]="tablaConsolidadoTipoProducto.header"
+                                                    [colsSum]="dependencia.colSumConsolidadoTipoProductoDependencia"
+                                                    dataKey="index" 
+                                                    [rows]="10" 
+                                                    [paginator]="true"
+                                                    [selectionMode]="'multiple'"
+                                                    [loading]="loadingPDG"
+                                                    [showBtnExp]="true"
+                                                    class="min-w-full"
+                                                    nameExport="consolidado_zona">
                             </app-dynamic-table>
-                        </div> 
+                        </div>  
                     </div>
                 </div>
-            </div> 
-            <!--Grafica consolidado tipo producto dependencia-->
-                
-            <div class="flex justify-content-center col-12  xl:col-6">
+            </div>  
+    
+            <div class=" justify-content-center col-12 xl:col-6">
                 <div class="card min-w-full">
-                    <!--<app-basic-chart></app-basic-chart>-->
                     <app-basic-chart *ngIf="dependencia.consolidadoTipoProductoDependencia.length>0 ;else elseBlock"  [chartData]="dependencia.chartDataConsolidadoTipoProducto"></app-basic-chart>
                     <ng-template #elseBlock>
                         <div class="flex align-items-center justify-content-center ">
@@ -138,37 +134,33 @@
                     </ng-template>
                 </div>
             </div>
-    
-        </div>        
+        </div>
 
         <div class="w-full flex">
-            <div class="flex col-12  xl:col-6">
-                <div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class=" col-12 xl:col-6">
+                <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
                     <div class="text-center mb-3"><h1>Consolidado Modo transporte</h1></div>
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 ">
                             <app-dynamic-table [dataTable]="dependencia.consolidadoModTPT" 
-                                        [headersTable]="tablaConsolidadoModTPT.header"
-                                        [colsSum]="dependencia.colSumConsolidadoModTPT"
-                                        dataKey="index" 
-                                        [rows]="10" 
-                                        [paginator]="true"
-                                        [selectionMode]="'multiple'"
-                                        [loading]="loadingPDG"
-                                        [showBtnExp]="true"
-                                        class="min-w-full"                                    
-                                        nameExport="consolidado_zona">
+                                                [headersTable]="tablaConsolidadoModTPT.header"
+                                                [colsSum]="dependencia.colSumConsolidadoModTPT"
+                                                dataKey="index" 
+                                                [rows]="10" 
+                                                [paginator]="true"
+                                                [selectionMode]="'multiple'"
+                                                [loading]="loadingPDG"
+                                                [showBtnExp]="true"
+                                                class="min-w-full"                                    
+                                                nameExport="consolidado_zona">
                             </app-dynamic-table>
                         </div>  
                     </div>
                 </div>
-            </div> 
-
-            <!--Grafica consolidado tipo producto dependencia-->
-                
-            <div class="flex justify-content-center col-12  xl:col-6">
+            </div>  
+    
+            <div class=" justify-content-center col-12 xl:col-6">
                 <div class="card min-w-full">
-                    <!--<app-basic-chart></app-basic-chart>-->
                     <app-basic-chart *ngIf="dependencia.consolidadoModTPT.length>0 ;else elseBlock"  [chartData]="dependencia.chartDataConsolidadoModTPT"></app-basic-chart>
                     <ng-template #elseBlock>
                         <div class="flex align-items-center justify-content-center ">
@@ -181,10 +173,12 @@
                     </ng-template>
                 </div>
             </div>
-    
         </div>
- 
+            
+
     </div>
+    
+ 
 
     <div class="w-full flex">
         <div class="flex col-12  xl:col-6">
