@@ -72,7 +72,11 @@ async getInfoTablaProgramacionDiaria():Promise<any> {
 
   const programacionBodega = await this.solicitudTurnoService.turnosExtendido(params);
   //console.log(programacionBodega);
-  return programacionBodega.raw;
+  console.log(programacionBodega.raw);
+  console.log(programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false));
+  let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false);
+  //return programacionBodega.raw;
+  return programacionBodegaSinFlete;
 }
 
 async setTablaPlacasCompartidas(turnosAutorizados:any[]):Promise<void> {

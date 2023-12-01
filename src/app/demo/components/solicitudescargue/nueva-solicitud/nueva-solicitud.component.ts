@@ -244,6 +244,8 @@ getPermisosModulo(){
             this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
             this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
             */
+
+            //console.log(this.permisosModulo);
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='RETIRA').valor){
               this.condicion_tpt="RETIRA";
             }
@@ -336,10 +338,17 @@ getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
           next:(saldosPedidos)=>{
-            //////console.log('saldosPedidos',saldosPedidos);
+            //console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
             ////////////////////// //// //////console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
+              /*if(saldosPedidos[indexPedido].U_NF_CONDTRANS==='TRANSP'){
+                if(saldosPedidos[indexPedido].ItemCode.toString().startsWith('SF')){
+                  console.log(saldosPedidos[indexPedido]);
+                }
+                
+              }*/
+
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
                 
@@ -533,7 +542,9 @@ seleccionarCliente(clienteSeleccionado:any){
 
 
 async getPedidosPorCliente(clientesSeleccionados:any){
-    
+  //console.log(this.condicion_tpt);
+ // console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
+
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
   //// //// //////console.log('pedidosCliente',this.pedidosCliente);
   this.getAlmacenesEnPedidos();

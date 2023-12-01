@@ -133,9 +133,11 @@ export class ProgramacionGerenciasComponent implements OnInit {
 
     //return solicitud
     });
-
-    //////////console.log(programacionBodega.raw);
-    return programacionBodega.raw;
+    console.log(programacionBodega.raw);
+    console.log(programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false));
+    let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false);
+    //return programacionBodega.raw;
+    return programacionBodegaSinFlete;
   }
 
   async seleccionarFecha(){
