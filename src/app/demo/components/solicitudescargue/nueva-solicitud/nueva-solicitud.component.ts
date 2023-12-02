@@ -1333,9 +1333,12 @@ quitarVehiculo(placa:string){
 }
 
 quitarRegistro(placa:string,pedido:string,item:string, other?:any){
-  console.log(placa,item,pedido);
-  console.log(other);
-  this.confirmRemovePedidoItem(placa,pedido,item);
+
+  let placaNode = other.parent.data.vehiculo;
+  let pedidoNode = other.node.data.conductor.split('-')[0].trim()
+  let itemNode = other.node.data.fechacargue.split('-')[0].trim();
+  console.log(other,placaNode,pedidoNode,itemNode);
+  this.confirmRemovePedidoItem(placaNode,pedidoNode,itemNode);
 }
 
 confirmRemoveVehiculo(placa:string) {
@@ -1380,8 +1383,14 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
           this.mostrarLogs?console.log(`Index array vehiculos de la placa ${placa}`,index):null;
           
           let pedidos = this.vehiculosEnSolicitud[index].pedidos;
+
+          this.mostrarLogs?console.log(`pedidos asociados al vehiculos de placa ${placa}`,pedidos):null;
           
-          let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
+          //let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
+          let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode == item);
+
+          this.mostrarLogs?console.log(`Index array pedidos del pedido ${pedido} item ${item}`,indexPedido):null;
+
           ////////////////////////// //// //////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
           this.vehiculosEnSolicitud[index].cantidad =this.vehiculosEnSolicitud[index].cantidad-eval(this.vehiculosEnSolicitud[index].pedidos[indexPedido].cantidad);
           this.vehiculosEnSolicitud[index].pedidos.splice(indexPedido,1);

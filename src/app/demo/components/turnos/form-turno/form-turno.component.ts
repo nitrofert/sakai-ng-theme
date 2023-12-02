@@ -2524,23 +2524,27 @@ async validarHoraCargue():Promise<boolean>{
                 ////////////// ////////////console.log(pedido);
        
                 if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
+                  //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
+                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad disponible (${pedido.disponible} TON) del pedio - item`}); 
                   error = true;
                 }
                
                 if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
+                  //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
+                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad pendiente (${pedido.pendiente} TON) del pedio - item`});
                   error = true;
                 }
        
                 if(parseFloat(pedido.cargada)> this.capacidadDisponibleVehiculo ){
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado`});
-                  error = true;
+                  //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado`});
+                  this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado (${this.capacidadDisponibleVehiculo} TON)`});
+                  //error = true;
                 }
     
-                if(parseFloat(pedido.cargada)+this.peso_bruto> this.peso_neto ){
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} mas el peso bruto supera la capacidad máxima del vehículo seleccionado`});
-                  error = true;
+                if(parseFloat(pedido.cargada)+this.peso_bruto> this.pesomax ){
+                  //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} mas el peso bruto supera la capacidad máxima del vehículo seleccionado`});
+                  this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} mas el peso bruto (${this.peso_bruto} TON) (${parseFloat(pedido.cargada)+this.peso_bruto} TON) supera la capacidad máxima del vehículo seleccionado (${this.pesomax} TON)`});
+                  //error = true;
                 }
             }
                   
