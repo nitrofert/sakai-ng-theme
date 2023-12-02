@@ -73,18 +73,18 @@ export class ProgramacionBodegaComponent implements OnInit {
 
   configHeaderTablaProgramacionDiaria(){
     let headersTable:any[] =  [{
-      'hora': { label:'Hora',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'id': { label:'Turno',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'estado': { label:'Estado',type:'text', sizeCol:'6rem', align:'center', editable:false, backgroundColor:{arrayColor:this.solicitudTurnoService.estadosTurno}},
-      'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'CardName': { label:'Cliente',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',},
-      'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false},
-      'placa': { label:'Placa',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'conductor': { label:'Conductor',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'cedula': { label:'Cedula',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'telefono': { label:'Teléfono',type:'text', sizeCol:'6rem', align:'center', editable:false},
+      'hora': { label:'Hora',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"hora"},
+      'id': { label:'Turno',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"id"},
+      'estado': { label:'Estado',type:'text', sizeCol:'6rem', align:'center', editable:false, backgroundColor:{arrayColor:this.solicitudTurnoService.estadosTurno},field:"estado"},
+      'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"docnum"},
+      'CardName': { label:'Cliente',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"CardName"},
+      'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',field:"itemcode"},
+      'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"itemname"},
+      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,field:"cantidad"},
+      'placa': { label:'Placa',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"placa"},
+      'conductor': { label:'Conductor',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"conductor"},
+      'cedula': { label:'Cedula',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"cedula"},
+      'telefono': { label:'Teléfono',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"telefono"},
 
     }];
 
@@ -94,9 +94,9 @@ export class ProgramacionBodegaComponent implements OnInit {
   configHeaderTablaConsolidadoProgramacionDiaria(){
     let headersTable:any[] =  [{
       
-      'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',},
-      'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true},
+      'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',field:"itemcode"},
+      'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"itemname"},
+      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
       
     }];
 

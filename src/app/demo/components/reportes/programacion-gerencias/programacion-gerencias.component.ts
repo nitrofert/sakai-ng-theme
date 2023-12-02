@@ -276,13 +276,13 @@ export class ProgramacionGerenciasComponent implements OnInit {
   configHeaderTablaProgramacionDiariaGerencia(){
     let headersTable:any[] =  [{
       
-      'dependencia': {label:'Dependencia',type:'text', sizeCol:'6rem', align:'center',},
-      'bodega': {label:'Bodega',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'estado': {label:'Estado',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'cliente': {label:'Cliente',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'tipo': {label:'Tipo',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'pedido': {label:'Pedido venta',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true},
+      'dependencia': {label:'Dependencia',type:'text', sizeCol:'6rem', align:'center',field:"dependencia"},
+      'bodega': {label:'Bodega',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"bodega"},
+      'estado': {label:'Estado',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"estado"},
+      'cliente': {label:'Cliente',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"cliente"},
+      'tipo': {label:'Tipo',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"tipo"},
+      'pedido': {label:'Pedido venta',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"pedido"},
+      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
       
     }];
 
@@ -369,8 +369,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
   configHeaderTablaToneladasZona(){
     let headersTable:any[] =  [{
       
-      'zona': {label:'Zona',type:'text', sizeCol:'6rem', align:'center',},
-      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true},
+      'zona': {label:'Zona',type:'text', sizeCol:'6rem', align:'center',field:"zona"},
+      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
       
     }];
 
@@ -437,8 +437,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
   configHeaderTablaConsolidadoModTPT(){
     let headersTable:any[] =  [{
       
-      'tipo': {label:'Modo transporte',type:'text', sizeCol:'6rem', align:'center',},
-      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true},
+      'tipo': {label:'Modo transporte',type:'text', sizeCol:'6rem', align:'center',field:"tipo"},
+      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
       
     }];
 

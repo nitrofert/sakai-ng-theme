@@ -858,8 +858,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
-        'CardName': { label:'Cliente',type:'text', sizeCol:'6rem', align:'center', editable:false},
-        'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false},
+        'CardName': { label:'Cliente',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'CardName'},
+        'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'docnum'},
         
         //'docdate': {label:'Fecha de contabilización',type:'date', sizeCol:'6rem',  align:'center', editable:false},
         //'duedate': {label:'Fecha de vencimiento',type:'date', sizeCol:'6rem', align:'center', editable:false},
@@ -867,15 +867,15 @@ horariosSeleccionadosCambioBodega:any[] = [];
         //'estado_linea': {label:'Estado Linea',type:'text', sizeCol:'6rem', align:'center', visible:false,},
         
         //'dias': {label:'Dias',type:'number', sizeCol:'6rem', align:'center',visible:false,},
-        'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',},
-        'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-        'almacen': {label:'Almacen.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-        'cantidad_pedido': {label:'Cantidad pedido',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false},
-        'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:this.editCantidad},
-        'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false},
-        'cantidadbodega': {label:'Cantidad en bodega',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false},
-        'disponible': {label:'Disponible para cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false},
-        'lugarentrega':{label:'Lugar entrega',type:'text', sizeCol:'8rem', align:'left', editable:false},
+        'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',field:'itemcode'},
+        'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'itemname'},
+        'almacen': {label:'Almacen.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'almacen'},
+        'cantidad_pedido': {label:'Cantidad pedido',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,field:'cantidad_pedido'},
+        'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:this.editCantidad,field:'cantidad'},
+        'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,field:'comprometida'},
+        'cantidadbodega': {label:'Cantidad en bodega',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false,field:'cantidadbodega'},
+        'disponible': {label:'Disponible para cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false,field:'disponible'},
+        'lugarentrega':{label:'Lugar entrega',type:'text', sizeCol:'8rem', align:'left', editable:false,field:'lugarentrega'},
         
 
         //'remision':{label:'# Remision',type:'text', sizeCol:'8rem', align:'left', editable:false}, 
@@ -885,7 +885,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
       if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
         
-        headersTable[0].remision = {label:'# Remision',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.PESADOF?true:false)}
+        headersTable[0].remision = {label:'# Remision',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.PESADOF?true:false),field:'remision'}
       }
 
 
@@ -2442,7 +2442,7 @@ async validarHoraCargue():Promise<boolean>{
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
-        'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false},
+        'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'docnum'},
         //'cardname':{label:'Cliente',type:'text', sizeCol:'8rem', align:'left', editable:false}, 
         //'docdate': {label:'Fecha de contabilización',type:'date', sizeCol:'6rem',  align:'center', editable:false},
         //'duedate': {label:'Fecha de vencimiento',type:'date', sizeCol:'6rem', align:'center', editable:false},
@@ -2450,16 +2450,16 @@ async validarHoraCargue():Promise<boolean>{
         //'estado_linea': {label:'Estado Linea',type:'text', sizeCol:'6rem', align:'center', visible:false,},
         
         //'dias': {label:'Dias',type:'number', sizeCol:'6rem', align:'center',visible:false,},
-        'linenum': {label:'Linea',type:'text', sizeCol:'6rem', align:'center',},
-        'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',},
-        'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-        'almacen': {label:'Almacen.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-        'cantidad': {label:'Cantidad pedido',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
+        'linenum': {label:'Linea',type:'text', sizeCol:'6rem', align:'center',field:'linenum'},
+        'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',field:'itemcode'},
+        'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'itemname'},
+        'almacen': {label:'Almacen.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'almacen'},
+        'cantidad': {label:'Cantidad pedido',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false,field:'cantidad'},
         
-        'pendiente': {label:'Cantidad pendiente',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
-        'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
-        'disponible': {label:'Cantidad disponible',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
-        'cargada': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:true},
+        'pendiente': {label:'Cantidad pendiente',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false,field:'pendiente'},
+        'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false,field:'comprometida'},
+        'disponible': {label:'Cantidad disponible',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false,field:'disponible'},
+        'cargada': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:true,field:'cargada'},
         
       }];
       

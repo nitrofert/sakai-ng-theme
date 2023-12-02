@@ -88,17 +88,21 @@
                         </th>
 						<th *ngFor="let key of objectKeys(headersTable[0])">
 							<div class="flex justify-content-between align-items-center">
+
 								<div [style]="'text-align:'+headersTable[0][key].align+';'">
 									{{ headersTable[0][key].label }}
 								</div>
-								
-								<p-columnFilter *ngIf="headersTable[0][key].type!=''" [type]="headersTable[0][key].type" 
+								<div class="flex">
+									<p-columnFilter *ngIf="headersTable[0][key].type!='' && headersTable[0][key].field" [type]="headersTable[0][key].type" 
                                                 [field]="headersTable[0][key].field" 
                                                 display="menu"
 												ngClass="ml-1" 
                                                 [placeholder]="'Buscar por '+headersTable[0][key].label"
                                                 [currency]="headersTable[0][key].currency">
                                 </p-columnFilter>
+								<p-sortIcon class="mt-1" *ngIf="headersTable[0][key].type!='' && headersTable[0][key].field" [field]="headersTable[0][key].field"></p-sortIcon>
+								</div>
+								
 							</div>
 						</th>
 
@@ -124,7 +128,7 @@
 									{{ itemData[key] | date }} 
 								</div>
 
-								<div *ngIf="headersTable[0][key].type==='number'">
+								<div *ngIf="headersTable[0][key].type==='number' || headersTable[0][key].type==='numeric'">
 									<span *ngIf="headersTable[0][key].currency && headersTable[0][key].side=='left'">{{headersTable[0][key].currency}}</span>
 									{{ itemData[key] | number }} 
 									<span *ngIf="headersTable[0][key].currency && headersTable[0][key].side=='rigth'">{{headersTable[0][key].currency}}</span>

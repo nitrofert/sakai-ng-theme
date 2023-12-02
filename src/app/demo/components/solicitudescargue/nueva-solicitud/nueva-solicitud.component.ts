@@ -154,6 +154,8 @@ municipiosFiltrados:any[] = [];
 
 envioAdicionVehiculo:boolean = false;
 
+mostrarLogs:boolean = false;
+
 
 constructor(private pedidosService: PedidosService,
             private almacenesService: AlmacenesService,
@@ -252,6 +254,9 @@ getPermisosModulo(){
 
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor){
               this.condicion_tpt="TRANSP";
+            }
+            if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver logs').valor){
+              this.mostrarLogs = true;
             }
 
             //////////////// //// //////console.log(this.condicion_tpt);
@@ -1093,7 +1098,7 @@ configHeadersPedidos(){
   let headersTable:any[] = [
     {
       'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
-      'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false},
+      'docnum': { label:'Número pedido',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'docnum'},
       //'cardname':{label:'Cliente',type:'text', sizeCol:'8rem', align:'left', editable:false}, 
       //'docdate': {label:'Fecha de contabilización',type:'date', sizeCol:'6rem',  align:'center', editable:false},
       //'duedate': {label:'Fecha de vencimiento',type:'date', sizeCol:'6rem', align:'center', editable:false},
@@ -1101,16 +1106,16 @@ configHeadersPedidos(){
       //'estado_linea': {label:'Estado Linea',type:'text', sizeCol:'6rem', align:'center', visible:false,},
       
       //'dias': {label:'Dias',type:'number', sizeCol:'6rem', align:'center',visible:false,},
-      'linenum': {label:'Linea',type:'text', sizeCol:'6rem', align:'center',},
-      'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',},
-      'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'almacen': {label:'Almacen.',type:'text', sizeCol:'6rem', align:'center', editable:false},
-      'cantidad': {label:'Cantidad pedido',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
+      'linenum': {label:'Linea',type:'text', sizeCol:'6rem', align:'center',field:'linenum'},
+      'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',field:'itemcode'},
+      'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false, field:'itemname'},
+      'almacen': {label:'Almacen.',type:'text', sizeCol:'6rem', align:'center', editable:false, field:'almacen'},
+      'cantidad': {label:'Cantidad pedido',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false, field:'cantidad'},
       
-      'pendiente': {label:'Cantidad pendiente',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
-      'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
-      'disponible': {label:'Cantidad disponible',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false},
-      'cargada': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:true},
+      'pendiente': {label:'Cantidad pendiente',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false,field:'pendiente'},
+      'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false, field:'comprometida'},
+      'disponible': {label:'Cantidad disponible',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:false, field:'disponible'},
+      'cargada': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:true, field:'cargada'},
       
     }];
     
@@ -1197,34 +1202,38 @@ async seleccionarPedidosAlmacenCliente(event:any){
           if(!pedido.itemcode.toLowerCase().startsWith("sf")){
               totalCarga+=parseFloat(pedido.cargada);
   
-              //////////////// //// //////console.log(pedido);
+              this.mostrarLogs?console.log('Linea pedido',pedido):null;
+
+              
      
               if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
+                
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad disponible (${pedido.disponible} TON) del pedio - item`});
                 error = true;
               }
              
               if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
+                
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad pendiente (${pedido.pendiente} TON) del pedio - item`});
                 error = true;
               }
      
               if(parseFloat(pedido.cargada)> this.capacidadDisponibleVehiculo ){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado`});
-                error = true;
+                this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la capacidad disponible del vehículo seleccionado (${this.capacidadDisponibleVehiculo} TON)`});
+                //error = true;
               }
   
               if(parseFloat(pedido.cargada)+this.pesobruto> this.pesoneto ){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} mas el peso bruto supera la capacidad máxima del vehículo seleccionado`});
-                error = true;
+                this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} mas el peso bruto (${this.pesobruto} TON) (${parseFloat(pedido.cargada)+this.pesobruto} TON) supera la capacidad máxima del vehículo seleccionado (${this.pesoneto} TON)`});
+                //error = true;
               }
           }
                 
         }
   
         if(!error && totalCarga> this.capacidadDisponibleVehiculo){
-            this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
-            error = true;
+            this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `El total a cargar (${totalCarga} TON) de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado (${this.capacidadDisponibleVehiculo} TON)`});
+            //error = true;
         }
   
         // TODO:: Si es transporta sociedad validar si exite linea de flete en seleccion
@@ -1319,12 +1328,13 @@ async cantidadCargaVehiculo(placa:string):Promise<number>{
 }
 
 quitarVehiculo(placa:string){
-  //////////////////////////// //// //////console.log(placa);
+  console.log(placa);
   this.confirmRemoveVehiculo(placa);
 }
 
-quitarRegistro(placa:string,pedido:string,item:string){
-  //////////////////////////// //// //////console.log(placa,item);
+quitarRegistro(placa:string,pedido:string,item:string, other?:any){
+  console.log(placa,item,pedido);
+  console.log(other);
   this.confirmRemovePedidoItem(placa,pedido,item);
 }
 
@@ -1361,7 +1371,14 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
       header: 'Confirmatción',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
+
+          this.mostrarLogs?console.log('Accion para remover linea de pedido asociado a un vehiculo'):null;
+          this.mostrarLogs?console.log('Vehiculos en solicitud',this.vehiculosEnSolicitud):null;
+          
           let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
+
+          this.mostrarLogs?console.log(`Index array vehiculos de la placa ${placa}`,index):null;
+          
           let pedidos = this.vehiculosEnSolicitud[index].pedidos;
           
           let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);

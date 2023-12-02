@@ -104,14 +104,14 @@ async configHeaderTablaPlacasCompartidasBodegas(arrayTurnos:any[]):Promise<any>{
   let bodegas:any[] = [];
   let placas:any[] = [];
 
-  let objString:string =`[{"placas":{"label":"Placa","type":"text","sizeCol":"6rem","align":"center","editable":false},`;
+  let objString:string =`[{"placas":{"label":"Placa","type":"text","sizeCol":"6rem","align":"center","editable":false,"field":"placas"},`;
   let iterador:number = 1;
   let idBodega:number = 1;
   for(let turno of arrayTurnos){
       
       if(!bodegas.find(bodega=>bodega.code === turno.pedidos_turno_bodega)){
 
-        objString += `"bodega${idBodega}":{"label":"${turno.pedidos_turno_bodega}","type":"number","sizeCol":"6rem","align":"center","currency":"TON","side":"rigth","editable":false,"sum":true},`;
+        objString += `"bodega${idBodega}":{"label":"${turno.pedidos_turno_bodega}","type":"numeric","sizeCol":"6rem","align":"center","currency":"TON","side":"rigth","editable":false,"sum":true,"field":"bodega${idBodega}"},`;
         bodegas.push({code: turno.pedidos_turno_bodega});
         
         idBodega++;

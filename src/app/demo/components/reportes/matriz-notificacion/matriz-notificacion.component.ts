@@ -77,10 +77,10 @@ export class MatrizNotificacionComponent implements  OnInit{
     let headersTable:any[] = [
       {
        
-        'locacion': { label:'Locacion',type:'text', sizeCol:'6rem', align:'center', editable:false},
-        'estado_turno': { label:'Estado turno',type:'text', sizeCol:'6rem', align:'center', editable:false},
-        'nombre_responsable': {label:'Responsable',type:'text', sizeCol:'6rem', align:'center',},
-        'email_responsable': {label:'Email',type:'text', sizeCol:'6rem', align:'center', editable:false},
+        'locacion': { label:'Locacion',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'locacion'},
+        'estado_turno': { label:'Estado turno',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'estado_turno'},
+        'nombre_responsable': {label:'Responsable',type:'text', sizeCol:'6rem', align:'center',field:'nombre_responsable'},
+        'email_responsable': {label:'Email',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'email_responsable'},
         
       }];
 
