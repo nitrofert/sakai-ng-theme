@@ -323,8 +323,9 @@ async setDataBasicChart(data:any[],fields:any):Promise<any>{
   let labelsChart:any[] = [];
   let valuesChart:any[] = [];
   let backgroundColor:any[] = [];
-
+  console.log(data);
   for(let item of data){
+    console.log(item);
     let color = await this.generarColorHex();
     backgroundColor.push(color)
   }
@@ -355,7 +356,7 @@ async setDataBasicChart(data:any[],fields:any):Promise<any>{
       
     ]
 };
-
+console.log(dataChart);
   return dataChart;
 }
 

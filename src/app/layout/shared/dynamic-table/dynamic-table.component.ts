@@ -62,7 +62,7 @@ export class DynamicTableComponent implements OnInit {
 
   ngOnInit(): void {
    
-    
+    //console.log('headersTable',this.headersTable[0]);
 
    this.columnsTable = Object.keys(this.headersTable[0]).length+1;
 

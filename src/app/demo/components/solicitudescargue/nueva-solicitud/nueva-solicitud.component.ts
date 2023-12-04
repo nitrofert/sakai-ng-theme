@@ -639,7 +639,7 @@ this.almacenesFiltrados = this.filter(event,this.almacenesPedidosCliente);
 }
 
 async seleccionarAlmacen(almacenSeleccionado:any){
-  //////// //// //////console.log(almacenSeleccionado);
+  //console.log(almacenSeleccionado);
   //this.getPedidosClientePorAlmacen(almacenSeleccionado.code);
  
   if(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code).length>0){
@@ -1975,7 +1975,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
 async emailBodegaEstado(solicitud:any): Promise<void>{
 
   let emailBodega!:string;
-  let locacion:any = this.almacenSeleccionado.label;
+  let locacion:any = this.almacenSeleccionado.name;
 
   let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLICITADO,locacion}))
                     .map((email: { email_responsable: any; }) => {return email.email_responsable});
