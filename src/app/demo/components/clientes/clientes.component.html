@@ -1,0 +1,23 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <app-dynamic-table [dataTable]="dataTable" 
+                               [headersTable]="headersTable"
+                               dataKey="CardCode" 
+                               [rows]="10" 
+                               [paginator]="true"
+                               [selectionMode]="'multiple'"
+                               [showBtnNew]="showBtnNew"
+                               [showBtnEdit]="showBtnEdit"
+                               [showBtnExp]="showBtnExp"
+                               [showBtnDelete]="showBtnDelete"
+                               nameExport="clientes"
+                               (onEditAccion)="editCliente($event)"
+                               (onDeleteAccion)="deleteCliente($event)"
+                               (onNewAccion)="nuevoCliente($event)">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>
+

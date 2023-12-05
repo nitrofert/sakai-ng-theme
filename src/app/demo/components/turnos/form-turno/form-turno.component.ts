@@ -2577,15 +2577,17 @@ async validarHoraCargue():Promise<boolean>{
                 
                 ////////////// ////////////console.log('pedido seleccionado',pedido);
     
-                if(pedidosTurno.find((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any }) => linea.pedidonum == pedido.docnum && 
+                if(pedidosTurno.find((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => linea.pedidonum == pedido.docnum && 
                                                                                                                             linea.itemcode == pedido.itemcode && 
                                                                                                                             linea.municipioentrega == this.municipioentrega &&
+                                                                                                                            linea.linenum == pedido.linenum &&
                                                                                                                           linea.lugarentrega == this.sitioentrega)!=undefined){
                                                                                                                             
                   if(!pedido.itemcode.toLowerCase().startsWith("sf")){
-                    let indexPedido = pedidosTurno.findIndex((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any }) => linea.pedidonum == pedido.docnum && 
+                    let indexPedido = pedidosTurno.findIndex((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => linea.pedidonum == pedido.docnum && 
                                                                                                                                                       linea.itemcode == pedido.itemcode && 
                                                                                                                                                       linea.municipioentrega == this.municipioentrega &&
+                                                                                                                                                      linea.linenum == pedido.linenum &&
                                                                                                                                                       linea.lugarentrega == this.sitioentrega);
                     pedidosTurno[indexPedido].cantidad += parseFloat(pedido.cargada);
                     

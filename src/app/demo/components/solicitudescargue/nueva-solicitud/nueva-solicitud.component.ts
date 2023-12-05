@@ -551,7 +551,7 @@ async getPedidosPorCliente(clientesSeleccionados:any){
  // console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
 
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-  //// //// //////console.log('pedidosCliente',this.pedidosCliente);
+  console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
   this.getAlmacenesEnPedidos();
 }
 
@@ -1251,20 +1251,22 @@ async seleccionarPedidosAlmacenCliente(event:any){
             let indexVehiculo = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == this.vehiculoSeleccionado.code);
             //Obtener pedidos asociados al vehiculo en la solicitud
             let pdidosVehiculo:any[] = this.vehiculosEnSolicitud[indexVehiculo].pedidos;
-            
+            console.log(pdidosVehiculo)
             for(let pedido of pedidosSeleccionados){
   
-             ////// //// //////console.log('pedido seleccionado',pedido);
+             console.log('pedido seleccionado',pedido);
   
-              if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any }) => pedidovh.pedido == pedido.docnum && 
-                                                                                                                                                      pedidovh.itemcode == pedido.itemcode && 
-                                                                                                                                                      pedidovh.municipioentrega == this.municipioentrega &&
-                                                                                                                                                      pedidovh.lugarentrega == this.sitioentrega)!=undefined){
+              if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => pedidovh.pedido == pedido.docnum && 
+                                                                                                                                                                    pedidovh.itemcode == pedido.itemcode && 
+                                                                                                                                                                    pedidovh.municipioentrega == this.municipioentrega &&
+                                                                                                                                                                    pedidovh.linenum == pedido.linenum &&
+                                                                                                                                                                    pedidovh.lugarentrega == this.sitioentrega)!=undefined){
                 if(!pedido.itemcode.toLowerCase().startsWith("sf")){
-                  let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any }) => pedidovh.pedido == pedido.docnum && 
-                                                                                                                                                  pedidovh.itemcode == pedido.itemcode && 
-                                                                                                                                                  pedidovh.municipioentrega == this.municipioentrega &&
-                                                                                                                                                  pedidovh.lugarentrega == this.sitioentrega);
+                  let indexPedido = pdidosVehiculo.findIndex((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => pedidovh.pedido == pedido.docnum && 
+                                                                                                                                                                pedidovh.itemcode == pedido.itemcode && 
+                                                                                                                                                                pedidovh.municipioentrega == this.municipioentrega &&
+                                                                                                                                                                pedidovh.linenum == pedido.linenum &&
+                                                                                                                                                                pedidovh.lugarentrega == this.sitioentrega);
                   pdidosVehiculo[indexPedido].cantidad += parseFloat(pedido.cargada);
                 }
                 
@@ -1551,7 +1553,7 @@ grabarSolicitud(){
       this.displayModal = false;
     }else */if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
-      error = true;
+      error = false;
       this.displayModal = false;
     }else{
       let pedidosVehiculo:any[] = [];
