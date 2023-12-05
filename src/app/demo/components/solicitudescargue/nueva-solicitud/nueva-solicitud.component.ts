@@ -255,9 +255,11 @@ getPermisosModulo(){
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor){
               this.condicion_tpt="TRANSP";
             }
+            /*
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver logs').valor){
               this.mostrarLogs = true;
             }
+            */
 
             //////////////// //// //////console.log(this.condicion_tpt);
             
