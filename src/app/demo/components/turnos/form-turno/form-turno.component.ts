@@ -26,109 +26,7 @@ import { CiudadesService } from 'src/app/demo/service/ciudades.service';
   providers:[ConfirmationService,MessageService], 
   templateUrl: './form-turno.component.html',
   styleUrls: ['./form-turno.component.scss'],
-  /*styles:[`:host ::ng-deep {
-    .speeddial-linear-demo {
-        .p-speeddial-direction-up {
-            left: calc(50% - 2rem);
-            bottom: 0;
-        }
-
-        .p-speeddial-direction-down {
-            left: calc(50% - 2rem);
-            top: 0;
-        }
-
-        .p-speeddial-direction-left {
-            right: 0;
-            top: calc(50% - 2rem);
-        }
-
-        .p-speeddial-direction-right {
-            left: 0;
-            top: calc(50% - 2rem);
-        }
-    }
-
-    .speeddial-circle-demo {
-        .p-speeddial-circle {
-            top: calc(50% - 2rem);
-            left: calc(50% - 2rem);
-        }
-
-        .p-speeddial-semi-circle {
-            &.p-speeddial-direction-up {
-                left: calc(50% - 2rem);
-                bottom: 0;
-            }
-
-            &.p-speeddial-direction-down {
-                left: calc(50% - 2rem);
-                top: 0;
-            }
-
-            &.p-speeddial-direction-left {
-                right: 0;
-                top: calc(50% - 2rem);
-            }
-
-            &.p-speeddial-direction-right {
-                left: 0;
-                top: calc(50% - 2rem);
-            }
-        }
-
-        .p-speeddial-quarter-circle {
-            &.p-speeddial-direction-up-left {
-                right: 0;
-                bottom: 0;
-            }
-
-            &.p-speeddial-direction-up-right {
-                left: 0;
-                bottom: 0;
-            }
-
-            &.p-speeddial-direction-down-left {
-                right: 0;
-                top: 0;
-            }
-
-            &.p-speeddial-direction-down-right {
-                left: 0;
-                top: 0;
-            }
-        }
-    }
-
-    .speeddial-tooltip-demo {
-        .p-speeddial-direction-up {
-            &.speeddial-left {
-                left: 0;
-                bottom: 0;
-            }
-
-            &.speeddial-right {
-                right: 0;
-                bottom: 0;
-            }
-        }
-    }
-
-    .speeddial-delay-demo {
-        .p-speeddial-direction-up {
-            left: calc(50% - 2rem);
-            bottom: 0;
-        }
-    }
-
-    .speeddial-mask-demo {
-        .p-speeddial-direction-up {
-            right: 0;
-            bottom: 0;
-        }
-    }
-
-}`]*/
+ 
 })
 export class FormTurnoComponent implements  OnInit {
 
@@ -351,7 +249,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
     this.getPermisosModulo();
     this.getCiudades();
 
-    ////////////////////////////// ////////////console.log(this.config.data.id);
+    ////////////////////////////// ////////////// console.log(this.config.data.id);
     this.configTablePedidosAlmacenCliente();
     this.configNewTablePedidosAlmacenCliente();
     this.configTableCambioPedidosBodega();
@@ -367,11 +265,11 @@ horariosSeleccionadosCambioBodega:any[] = [];
   getPermisosModulo(){
   
     const modulo = this.router.url;
-    //////////////////// ////////////console.log(modulo);
+    //////////////////// ////////////// console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////console.log(permisos);
+              ////////////////////////// ////////////// console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -381,7 +279,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -391,19 +289,19 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
               await this.getVehiculos();
               await this.getConductores();
               await this.getTransportadoras();
               
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
-             //////////console.log(this.updateModulo);
+             //////////// console.log(this.updateModulo);
              this.updatePedidosTurno = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar pedidos turno').valor;
-             ////// ////////////console.log('updatePedidosTurno',this.updatePedidosTurno); 
+             ////// ////////////// console.log('updatePedidosTurno',this.updatePedidosTurno); 
              this.updatePesoBruto = await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.BASCULA);
              this.updateRemision = await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.REMISION);
-             ////////////////// ////////////console.log(this.updateModulo ,this.updatePesoBruto); 
-             ////////////////// ////////////console.log(!(this.updateModulo && this.updatePesoBruto)?true:false); 
+             ////////////////// ////////////// console.log(this.updateModulo ,this.updatePesoBruto); 
+             ////////////////// ////////////// console.log(!(this.updateModulo && this.updatePesoBruto)?true:false); 
              /*if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor){
               this.condicion_tpt="TRANSP";
             }*/
@@ -421,7 +319,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
     this.ciudadesService.getCiudades()
         .subscribe({
             next:(ciudades)=>{
-             ////// ////////////console.log(ciudades);
+             ////// ////////////// console.log(ciudades);
               ciudades.map((ciudad:any)=>{
                 ciudad.label = `${ciudad.code} - ${ciudad.nombre}`;
               });
@@ -439,14 +337,14 @@ horariosSeleccionadosCambioBodega:any[] = [];
     /*this.vehiculosService.getVehiculos()
         .subscribe({
           next: (vehiculos)=>{
-              ////////////////////////////// ////////////console.log(vehiculos);
+              ////////////////////////////// ////////////// console.log(vehiculos);
               for(let vehiculo of vehiculos){
                 vehiculo.code = vehiculo.placa;
                 vehiculo.name = vehiculo.placa;
                 vehiculo.label = vehiculo.placa;
                 vehiculo.clase = vehiculo.tipo_vehiculo;
               }
-              ////////////////////////////// ////////////console.log(conductores);
+              ////////////////////////////// ////////////// console.log(conductores);
               this.vehiculos = vehiculos;
           },
           error: (err)=>{
@@ -463,7 +361,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
       vehiculo.label = vehiculo.placa;
       vehiculo.clase = vehiculo.tipo_vehiculo;
     }
-    //////////////// ////////////console.log('vehiculos',vehiculos);
+    //////////////// ////////////// console.log('vehiculos',vehiculos);
     this.vehiculos = vehiculos;
 
   }
@@ -478,7 +376,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
               transportadora.name = transportadora.nombre;
               transportadora.label = transportadora.nit+' - '+transportadora.nombre;
             }
-            ////////////////////////////// ////////////console.log(conductores);
+            ////////////////////////////// ////////////// console.log(conductores);
             this.transportadoras = transportadoras;
         },
         error: (err)=>{
@@ -493,7 +391,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
       transportadora.name = transportadora.nombre;
       transportadora.label = transportadora.nit+' - '+transportadora.nombre;
     }
-    //////////////// ////////////console.log(transportadoras);
+    //////////////// ////////////// console.log(transportadoras);
     this.transportadoras = transportadoras;
   }
   
@@ -507,7 +405,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   conductor.name = conductor.nombre;
                   conductor.label = conductor.cedula+' - '+conductor.nombre;
                 }
-                ////////////////////////////// ////////////console.log(conductores);
+                ////////////////////////////// ////////////// console.log(conductores);
                 this.conductores = conductores;
             },
             error: (err)=>{
@@ -521,7 +419,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
         conductor.name = conductor.nombre;
         conductor.label = conductor.cedula+' - '+conductor.nombre;
       }
-      //////////////// ////////////console.log(conductores);
+      //////////////// ////////////// console.log(conductores);
       this.conductores = conductores;
   }
 
@@ -529,7 +427,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
     this.almacenesService.getLocaciones()
         .subscribe({
             next:(locaciones)=>{
-                //////////console.log('locaciones',locaciones);
+                //////////// console.log('locaciones',locaciones);
                 this.locaciones = locaciones;
             },
             error:(err)=>{
@@ -548,7 +446,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                     novedad.label = novedad.novedad;
                   });
 
-                  //console.log(novedades);
+                  //// console.log(novedades);
                   this.novedades = novedades;
               },
               error:(err)=>{
@@ -565,7 +463,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                  //////console.log('turno',turno);
+                  //////// console.log('turno',turno);
                   
                   this.turno = turno;
                   
@@ -588,7 +486,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
                   this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
                   //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
-                  ////////////////// ////////////console.log(this.vehiculoSeleccionado);
+                  ////////////////// ////////////// console.log(this.vehiculoSeleccionado);
                   this.pesomax = this.vehiculoSeleccionado.pesomax;
                   this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
 
@@ -606,21 +504,21 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   this.capacidadvh = this.vehiculoSeleccionado.capacidad;
                   
                   this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
-                  ////////////////////// ////////////console.log('transportadoras',this.transportadoras);
+                  ////////////////////// ////////////// console.log('transportadoras',this.transportadoras);
                   //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
                   this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
                   this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
                   this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
                   //his.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
-                  ////////////////////////// ////////////console.log(this.estadoSeleccionado);
+                  ////////////////////////// ////////////// console.log(this.estadoSeleccionado);
                   this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
-                  //////console.log(this.pedidosTurno);
+                  //////// console.log(this.pedidosTurno);
                   this.pedidosTurno.map((pedido)=>{
                     pedido.lineaUpdate = {update:false, create:false};
                     pedido.cantidadOld =pedido.cantidad;
                   });
 
-                  //console.log(this.pedidosTurno);
+                  //// console.log(this.pedidosTurno);
                   this.telefono = turno.conductor.numerotelefono;
                   this.celular = turno.conductor.numerocelular;
                   this.email = turno.conductor.email;
@@ -641,8 +539,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
 
                   if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
-                    ////////////// ////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
-                    ////////////////// ////////////console.log(this.horainicio, this.horafin);
+                    ////////////// ////////////// console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
+                    ////////////////// ////////////// console.log(this.horainicio, this.horafin);
                     this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
                     this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
 
@@ -650,7 +548,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                     this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
                     this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
                 
-                    ////////////// ////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
+                    ////////////// ////////////// console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
                     await this.seleccionarFechaCita();
                   }else{
                     //Establecer horarios locacion
@@ -672,7 +570,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   }
                 
 
-                  ////////////////// ////////////console.log(this.estado);
+                  ////////////////// ////////////// console.log(this.estado);
                   /*
                   let pedidosTurno:any[] = turno.detalle_solicitud_turnos_pedido;
                   let clientesTurno:any[] = [];
@@ -680,10 +578,10 @@ horariosSeleccionadosCambioBodega:any[] = [];
                     if(clientesTurno.filter(cliente=>cliente.CardCode === pedido.CardCode).length==0){
                       let EmailAddress = "";
                       let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(pedido.CardCode);
-                      ////////////////// ////////////console.log('usuarioCliente',usuarioCliente);
+                      ////////////////// ////////////// console.log('usuarioCliente',usuarioCliente);
                       if(usuarioCliente!=false){
                         EmailAddress = usuarioCliente.email;
-                        //////////////// ////////////console.log('usuarioCliente.email',usuarioCliente.email);
+                        //////////////// ////////////// console.log('usuarioCliente.email',usuarioCliente.email);
                       }
                       
                       clientesTurno.push({
@@ -694,7 +592,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                     }
                   });
 
-                  //////////////// ////////////console.log('clientesTurno',clientesTurno);
+                  //////////////// ////////////// console.log('clientesTurno',clientesTurno);
                   
                   let turno2:any = {
                     conductor:this.conductorSeleccionado,
@@ -712,7 +610,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                     detalle_solicitud_turnos_pedido:this.pedidosTurno
                   }
 
-                  //////////////// ////////////console.log('turno2',turno2);*/
+                  //////////////// ////////////// console.log('turno2',turno2);*/
                   
                   this.configTablePedidosAlmacenCliente();
                   this.configSplitButton(this.estado,this.permisosModulo);
@@ -730,7 +628,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
   async validarEditarCampoCantidad():Promise<boolean> {
     let editable = false;
-   ////// ////////////console.log(this.estado,this.updatePedidosTurno);
+   ////// ////////////// console.log(this.estado,this.updatePedidosTurno);
 
     if((this.estado === this.estadosTurno.SOLICITADO || this.estado === this.estadosTurno.AUTORIZADO || this.estado === this.estadosTurno.ARRIBO ) && this.updatePedidosTurno){
           editable = true;
@@ -752,13 +650,13 @@ horariosSeleccionadosCambioBodega:any[] = [];
   async calcularDisponibilidadPedido(pedidosTurno:any):Promise<any[]>{
     
     for(let pedido of pedidosTurno){
-      //////////////////////////// ////////////console.log(pedido);
+      //////////////////////////// ////////////// console.log(pedido);
       let cantidadComprometida = 0;
       cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id);
-      //////////////////////// ////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
+      //////////////////////// ////////////// console.log('cantidadComprometida',cantidadComprometida , new Date());
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
-      //////////////////////// ////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
+      //////////////////////// ////////////// console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
       pedido.disponible = (pedido.cantidadbodega-cantidadComprometida)<0?0:(pedido.cantidadbodega-cantidadComprometida);
       
       
@@ -781,7 +679,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     
-    ////////////////////////////// ////////////console.log(inventarioItemBodega);
+    ////////////////////////////// ////////////// console.log(inventarioItemBodega);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
     
 
@@ -789,13 +687,13 @@ horariosSeleccionadosCambioBodega:any[] = [];
                                                                                   WhsCode: string; 
                                                                                 }) => inventario.ItemCode == itemcode && 
                                                                                       inventario.WhsCode == bodega);
-    //////////////////////////// ////////////console.log(inventarioItemBodega);                                                                                  
+    //////////////////////////// ////////////// console.log(inventarioItemBodega);                                                                                  
 
     let cantidadInventarioItenBodega:number = 0;
     
      inventarioItemBodega.forEach(function(a){cantidadInventarioItenBodega += parseFloat(a.OnHand);});
 
-    //////////////////////////// ////////////console.log(cantidadInventarioItenBodega);    
+    //////////////////////////// ////////////// console.log(cantidadInventarioItenBodega);    
   
     return cantidadInventarioItenBodega;
   }
@@ -806,20 +704,20 @@ horariosSeleccionadosCambioBodega:any[] = [];
       for(let horario of horarios){
         let diasNot:any[] = [];
         let diasAtencionLocacion:any[] = horario.dias_atencion.split(',');
-        ////////////////// ////////////console.log(diasAtencionLocacion);
+        ////////////////// ////////////// console.log(diasAtencionLocacion);
         for(let dia of diasNoAtencion){
-          ////////////////// ////////////console.log(diasAtencionLocacion.includes(dia.fullname));
+          ////////////////// ////////////// console.log(diasAtencionLocacion.includes(dia.fullname));
   
           if(!diasAtencionLocacion.includes(dia.fullname)){
               diasNot.push(dia);
           }
-          ////////////////// ////////////console.log(dia.fullname,JSON.stringify(diasNot));
+          ////////////////// ////////////// console.log(dia.fullname,JSON.stringify(diasNot));
         }
         
         diasNoAtencion = diasNot;
       }
   
-     // //////////////// ////////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
+     // //////////////// ////////////// console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
   
     return diasNoAtencion.map((dia)=>{ return dia.id});
   }
@@ -833,9 +731,9 @@ horariosSeleccionadosCambioBodega:any[] = [];
     this.horariosSeleccionados = horariosSeleccionados;
   
     /*for(let horario of this.horariosLocacion){
-      //////////////// ////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+      //////////////// ////////////// console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
     }*/
-    //////////////// ////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+    //////////////// ////////////// console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
     await this.cambioHoraCita();
   }
 
@@ -897,7 +795,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
   
   configDataTablePedidos(arregloPedido:any){
 
-      ////// ////////////console.log('arregloPedido',arregloPedido);
+      ////// ////////////// console.log('arregloPedido',arregloPedido);
       let totalCarga:number=0;
       let dataTable:any[] = [];
       let index:number = 0;
@@ -956,7 +854,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
   }
 
   configSplitButton(estadoActual:string, permisosModulo:any){
-    //////////////////////// ////////////console.log(estadoActual,permisosModulo);
+    //////////////////////// ////////////// console.log(estadoActual,permisosModulo);
 
     this.arrayBtnTurnos = [];
 
@@ -1052,11 +950,11 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
   
   async cambioHoraCita():Promise<void>{
-    //////////////// ////////////console.log(this.horacargue.toLocaleTimeString());
+    //////////////// ////////////// console.log(this.horacargue.toLocaleTimeString());
     if(await this.validarHoraCargue()){
-      //////////////// ////////////console.log('hora valida en horario ');
+      //////////////// ////////////// console.log('hora valida en horario ');
     }else{
-      //////////////// ////////////console.log('hora invalida en horario');
+      //////////////// ////////////// console.log('hora invalida en horario');
     }
   }
 
@@ -1065,21 +963,21 @@ async validarHoraCargue():Promise<boolean>{
   let horarioValido:boolean = true;
 
   for(let horario of this.horariosSeleccionados){
-    //////////////// ////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    //////////////// ////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    //////////////// ////////////// console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    //////////////// ////////////// console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
     
-    //////////////// ////////////console.log(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]));
+    //////////////// ////////////// console.log(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]));
 
-    //////////////// ////////////console.log(new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))));
+    //////////////// ////////////// console.log(new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))));
 
     let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
     let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
     let horacargue = new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
 
     if(horainicio<= horacargue && horafin >= horacargue){
-      //////////////// ////////////console.log('hora valida en horario id '+horario.id);
+      //////////////// ////////////// console.log('hora valida en horario id '+horario.id);
     }else{
-      //////////////// ////////////console.log('hora invalida en horario id '+horario.id);
+      //////////////// ////////////// console.log('hora invalida en horario id '+horario.id);
       horarioValido = false;
     }
   }
@@ -1103,7 +1001,7 @@ async validarHoraCargue():Promise<boolean>{
     this.vehiculosFiltrados.unshift({
       id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
     });
-    ////////////////////////////// ////////////console.log(this.vehiculosFiltrados);
+    ////////////////////////////// ////////////// console.log(this.vehiculosFiltrados);
   }
   
   filtrarConductor(event:any){
@@ -1143,13 +1041,13 @@ async validarHoraCargue():Promise<boolean>{
   
   async seleccionarVehiculo(vehiculoSeleccionado:any){
 
-    console.log(vehiculoSeleccionado);
+    // console.log(vehiculoSeleccionado);
   
     if(vehiculoSeleccionado.id == 0){
         //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
         this.nuevoVehiculo();
     }else{
-        //////////////////// ////////////console.log(vehiculoSeleccionado)
+        //////////////////// ////////////// console.log(vehiculoSeleccionado)
         if(vehiculoSeleccionado.tipo_vehiculo.capacidad < this.cantidad ){
           //error cantidad a cargar mayor a la capacidad del vehiculo
           this.messageService.add({severity:'error', summary: '!Error¡', detail:`La cantidad a cargar es mayor a la capacidad del vehículo`});
@@ -1174,18 +1072,18 @@ async validarHoraCargue():Promise<boolean>{
 
   /*async asignarVehiculo(code:string):Promise<any>{
     let vehiculoSeleccionado:any =this.vehiculos.find(vehiculo=>vehiculo.code == code);
-    ////////////////// ////////////console.log(this.vehiculos,vehiculoSeleccionado,code);
+    ////////////////// ////////////// console.log(this.vehiculos,vehiculoSeleccionado,code);
 
     return vehiculoSeleccionado;
   }*/
 
   seleccionarConductor(conductorSeleccionado:any){
-    //////////////// ////////////console.log(conductorSeleccionado)
+    //////////////// ////////////// console.log(conductorSeleccionado)
     if(conductorSeleccionado.id == 0){
       //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
       this.nuevoConductor();
     }else{
-      //////////////////////// ////////////console.log(conductorSeleccionado);
+      //////////////////////// ////////////// console.log(conductorSeleccionado);
 
       this.telefono = conductorSeleccionado.numerotelefono;
       this.celular = conductorSeleccionado.numerocelular;
@@ -1208,7 +1106,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getTransportadoras();
-      ////////////////////////////// ////////////console.log("Refresh calendar");
+      ////////////////////////////// ////////////// console.log("Refresh calendar");
     });
   }
   
@@ -1226,7 +1124,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getVehiculos();
-      ////////////////////////////// ////////////console.log("Refresh calendar");
+      ////////////////////////////// ////////////// console.log("Refresh calendar");
     });
   }
   
@@ -1244,7 +1142,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getConductores();
-      ////////////////////////////// ////////////console.log("Refresh calendar");
+      ////////////////////////////// ////////////// console.log("Refresh calendar");
     });
   }
 
@@ -1278,7 +1176,7 @@ async validarHoraCargue():Promise<boolean>{
   async objectToArray(object:any): Promise<any>{
       let array:any[] = [];
 
-      //Object.keys(object).map((key) => { //////////////////////////// ////////////console.log(object[key])});
+      //Object.keys(object).map((key) => { //////////////////////////// ////////////// console.log(object[key])});
       //array = Object.keys(object).map((key) => [Number(key), object[key]]);
 
       array = Object.keys(object).map((key) => object[key]);
@@ -1302,7 +1200,7 @@ async validarHoraCargue():Promise<boolean>{
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////////////////////////////// ////////////console.log(arrayFiltrar);
+    //////////////////////////////// ////////////// console.log(arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -1327,7 +1225,7 @@ async validarHoraCargue():Promise<boolean>{
 
     this.grabarCambios =true;
 
-    ////////////////////// ////////////console.log(this.transportadoraSeleccionada, this.vehiculoSeleccionado, this.conductorSeleccionado);
+    ////////////////////// ////////////// console.log(this.transportadoraSeleccionada, this.vehiculoSeleccionado, this.conductorSeleccionado);
 
 
     if(await this.validarFormulario()){
@@ -1354,7 +1252,7 @@ async validarHoraCargue():Promise<boolean>{
             peso_vacio:this.peso_bruto
           }
 
-          //////////////////////////// ////////////console.log(data);
+          //////////////////////////// ////////////// console.log(data);
           this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
           .subscribe({
                 next:(reuslt)=>{
@@ -1405,14 +1303,14 @@ async validarHoraCargue():Promise<boolean>{
  
   
   
-  historialTurno(){
+  historialTurno(idTutno?:any){
     //this.formHistorialTurno= true;
 
     const ref = this.dialogService.open(ListaHistorialTurnoComponent, {
       data: {
-          id: (this.turnoId)
+          id: (idTutno)
       },
-      header: `Historial Orden de cargue: ${this.turnoId}` ,
+      header: `Historial Orden de cargue: ${idTutno}` ,
       width: '70%',
       height:'auto',
       contentStyle: {"overflow": "auto"},
@@ -1422,7 +1320,7 @@ async validarHoraCargue():Promise<boolean>{
     ref.onClose.subscribe(() => {
       //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       //this.getCalendar();
-      //////////////////// ////////////console.log(("Refresh calendar");
+      //////////////////// ////////////// console.log(("Refresh calendar");
     });
 
 
@@ -1535,7 +1433,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   seleccionarTS(){
-    // ////////////console.log(this.solictudProduccionSeleccionada)
+    // ////////////// console.log(this.solictudProduccionSeleccionada)
   }
 
   cambiarEstadoTurno(){
@@ -1554,7 +1452,7 @@ async validarHoraCargue():Promise<boolean>{
         accept: async () => {
   
             let data:any = await this.configDataTurno();
-            //////console.log(data);
+            //////// console.log(data);
             this.updateTurno(data);
   
         },
@@ -1663,7 +1561,7 @@ async validarHoraCargue():Promise<boolean>{
             };
 
             if(this.estado===this.estadosTurno.SOLINVENTARIO){
-              //////// ////////////console.log(this.existeInventario);
+              //////// ////////////// console.log(this.existeInventario);
               data.historial.disponibilidad = this.existeInventario;
               data.historial.fechadisponibilidad = this.fechadisponibilidad;
             }
@@ -1699,7 +1597,7 @@ async validarHoraCargue():Promise<boolean>{
                 }
               
             }
-
+            
             console.log(data);
 
     return data;
@@ -1709,7 +1607,7 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
               .subscribe({
                     next:async (turno)=>{
-                        ////////// ////////////console.log(turno);
+                        ////////// ////////////// console.log(turno);
                         if(this.updateModulo){
                           this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
                         }
@@ -1784,7 +1682,7 @@ async validarHoraCargue():Promise<boolean>{
       let turnosCliente:any[] = []; 
 
       turno.detalle_solicitud_turnos_pedido.forEach((pedido: { CardCode: any; itemcode: string; cantidad: any; CardName: any; })=>{
-          ////////////////// ////////////console.log(turno.id, pedido.CardCode);
+          ////////////////// ////////////// console.log(turno.id, pedido.CardCode);
             let email_cliente = this.turno.solicitud.clientes.find((cliente: { CardCode: any; })=>cliente.CardCode === pedido.CardCode).EmailAddress;
             if(turnosCliente.filter(cliente=>cliente.codigo===pedido.CardCode).length === 0){
     
@@ -1821,7 +1719,7 @@ async validarHoraCargue():Promise<boolean>{
             }else{
                 
                 let indexCliente = turnosCliente.findIndex(cliente=>cliente.codigo === pedido.CardCode);
-                ////////////////// ////////////console.log(turnosCliente[indexCliente]);
+                ////////////////// ////////////// console.log(turnosCliente[indexCliente]);
     
                 if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
                   let turnoCliente:any;
@@ -1848,7 +1746,7 @@ async validarHoraCargue():Promise<boolean>{
                   turnosCliente[indexCliente].turnos.push(turnoCliente);
                 }else{
                   let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
-                  ////////////////// ////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                  ////////////////// ////////////// console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                   turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                   if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                     turnosCliente[indexCliente].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1860,7 +1758,7 @@ async validarHoraCargue():Promise<boolean>{
         });
 
         turnosCliente.forEach(async (cliente)=>{
-          ////////////// ////////////console.log('email cliente', cliente.email);
+          ////////////// ////////////// console.log('email cliente', cliente.email);
           //if(cliente.email!='' && cliente.email!=null){
       
             cliente.turnos.forEach(async (turnoCliente: any)=>{
@@ -1878,8 +1776,8 @@ async validarHoraCargue():Promise<boolean>{
                             
                 }         
               };
-              //////// ////////////console.log('objectMail Cliente',objectMail);
-              ////////// ////////////console.log(await this.functionsService.sendMail(objectMail));
+              //////// ////////////// console.log('objectMail Cliente',objectMail);
+              ////////// ////////////// console.log(await this.functionsService.sendMail(objectMail));
               await this.functionsService.sendMail(objectMail)
 
             });
@@ -1897,7 +1795,7 @@ async validarHoraCargue():Promise<boolean>{
    
       
       turno.detalle_solicitud_turnos_pedido.forEach((pedido: { email_vendedor: any; itemcode: string; cantidad: any; })=>{
-        ////////////////// ////////////console.log(turno.id, pedido.CardCode);
+        ////////////////// ////////////// console.log(turno.id, pedido.CardCode);
           if(turnosVendedor.filter(vendedor=>vendedor.codigo===pedido.email_vendedor).length === 0){
   
               let turnoVendedor:any;
@@ -1933,7 +1831,7 @@ async validarHoraCargue():Promise<boolean>{
           }else{
               
               let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.codigo === pedido.email_vendedor);
-              ////////////////// ////////////console.log(turnosCliente[indexCliente]);
+              ////////////////// ////////////// console.log(turnosCliente[indexCliente]);
   
               if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
                 let turnoVendedor:any;
@@ -1960,7 +1858,7 @@ async validarHoraCargue():Promise<boolean>{
                 turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
               }else{
                 let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
-                ////////////////// ////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                ////////////////// ////////////// console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                 turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                 if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                   turnosVendedor[indexVendedor].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -1972,7 +1870,7 @@ async validarHoraCargue():Promise<boolean>{
       
     
   
-    //////////////// ////////////console.log(turnosVendedor);
+    //////////////// ////////////// console.log(turnosVendedor);
   
     turnosVendedor.forEach(async (vendedor)=>{
       if(vendedor.email!='' && vendedor.email!=null){
@@ -1992,8 +1890,8 @@ async validarHoraCargue():Promise<boolean>{
                         
             }         
           };
-          //////// ////////////console.log('objectMail vendedor',objectMail);
-          ////////////// ////////////console.log(await this.functionsService.sendMail(objectMail));
+          //////// ////////////// console.log('objectMail vendedor',objectMail);
+          ////////////// ////////////// console.log(await this.functionsService.sendMail(objectMail));
           await this.functionsService.sendMail(objectMail)
         });
 
@@ -2011,7 +1909,7 @@ async validarHoraCargue():Promise<boolean>{
     let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:turno.estado,locacion}))
                       .map((email: { email_responsable: any; }) => {return email.email_responsable});
   
-    ////////////// ////////////console.log('emailsTurno',emailsTurno.join());
+    ////////////// ////////////// console.log('emailsTurno',emailsTurno.join());
   
     if(emailsTurno.join()!=''){
       emailBodega = emailsTurno.join();
@@ -2034,8 +1932,8 @@ async validarHoraCargue():Promise<boolean>{
                     
         }         
       };
-      //////// ////////////console.log('objectMail Bodega',objectMail);
-      ////////////// ////////////console.log(await this.functionsService.sendMail(objectMail));
+      //////// ////////////// console.log('objectMail Bodega',objectMail);
+      ////////////// ////////////// console.log(await this.functionsService.sendMail(objectMail));
       await this.functionsService.sendMail(objectMail)
   
     }
@@ -2055,8 +1953,8 @@ async validarHoraCargue():Promise<boolean>{
                   
       }         
     };
-    ////////////// ////////////console.log('objectMail Transporta sociedada',objectMail);
-    ////////////// ////////////console.log(await this.functionsService.sendMail(objectMail));
+    ////////////// ////////////// console.log('objectMail Transporta sociedada',objectMail);
+    ////////////// ////////////// console.log(await this.functionsService.sendMail(objectMail));
     await this.functionsService.sendMail(objectMail)
   }
 
@@ -2076,8 +1974,8 @@ async validarHoraCargue():Promise<boolean>{
                   
       }         
     };
-    ////////////// ////////////console.log('objectMail usuario creado',objectMail);
-    ////////////// ////////////console.log(await this.functionsService.sendMail(objectMail));
+    ////////////// ////////////// console.log('objectMail usuario creado',objectMail);
+    ////////////// ////////////// console.log(await this.functionsService.sendMail(objectMail));
     await this.functionsService.sendMail(objectMail)
 
   }
@@ -2085,7 +1983,7 @@ async validarHoraCargue():Promise<boolean>{
 
   async configEmails(dataTurno:any, mensaje:string): Promise<void>{
 
-    //////// ////////////console.log(dataTurno,mensaje);
+    //////// ////////////// console.log(dataTurno,mensaje);
 
     //await this.emailsClientes(dataTurno,mensaje);
     //await this.emailsVendedores(dataTurno,mensaje);
@@ -2104,7 +2002,7 @@ async validarHoraCargue():Promise<boolean>{
     if(event.target.value ===''){
       event.target.value =0;
     }
-    ////////////////// ////////////console.log(peso, this.peso_bruto);
+    ////////////////// ////////////// console.log(peso, this.peso_bruto);
     this.peso_neto = this.cantidad+parseFloat(event.target.value)
     if(this.pesomax < (this.peso_neto)){
       //error cantidad a cargar mayor a la capacidad del vehiculo
@@ -2125,7 +2023,7 @@ async validarHoraCargue():Promise<boolean>{
     if(event.target.value ===''){
       event.target.value =0;
     }
-    ////////////// ////////////console.log(peso, this.peso_bruto, parseFloat(event.target.value));
+    ////////////// ////////////// console.log(peso, this.peso_bruto, parseFloat(event.target.value));
     this.cantidad = parseFloat(event.target.value)-this.peso_bruto;
     if(this.pesomax < (parseFloat(event.target.value))){
       //error cantidad a cargar mayor a la capacidad del vehiculo
@@ -2148,7 +2046,7 @@ async validarHoraCargue():Promise<boolean>{
   async validarFormulario():Promise<boolean> {
       let valido:boolean = false;
 
-      //////// ////////////console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision != null).length);
+      //////// ////////////// console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision != null).length);
 
       if(!this.fechacargue || 
          !this.horacargue  || 
@@ -2176,7 +2074,7 @@ async validarHoraCargue():Promise<boolean>{
       this.horaaccion = new Date();
       this.comentario = "";
 
-      ////////////////// ////////////console.log(valido);
+      ////////////////// ////////////// console.log(valido);
 
       return valido;
   }
@@ -2207,13 +2105,13 @@ async validarHoraCargue():Promise<boolean>{
       accept: () => {
        
         event.map((linea:any)=>{
-          // ////////////console.log(linea);
+          // ////////////// console.log(linea);
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).estado = 'I';
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).lineaUpdate.update = true;
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).cantidadOld = parseFloat(this.pedidosTurno.find(item=>item.id === linea.index).cantidadOld);
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).cantidad  =0;
         });
-        // ////////////console.log(this.pedidosTurno);
+        // ////////////// console.log(this.pedidosTurno);
         this.configTablePedidosAlmacenCliente();
       },
         reject: (type: any) => {
@@ -2232,7 +2130,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   cambioValorCampo(arregloCambioCampo:any){
-   // ////////////console.log(arregloCambioCampo,arregloCambioCampo.itemData.docnum,arregloCambioCampo.itemData.itemcode,this.pedidosTurno,);
+   // ////////////// console.log(arregloCambioCampo,arregloCambioCampo.itemData.docnum,arregloCambioCampo.itemData.itemcode,this.pedidosTurno,);
 
    
    let indexLineaPedido = this.pedidosTurno.findIndex(item=>item.id === arregloCambioCampo.index 
@@ -2241,7 +2139,7 @@ async validarHoraCargue():Promise<boolean>{
                                                             //&& `${item.municipioentrega} - ${item.lugarentrega}` == arregloCambioCampo.itemData.lugarentrega
                                                             );
 
-  // ////////////console.log(indexLineaPedido);
+  // ////////////// console.log(indexLineaPedido);
    //this.pedidosTurno[indexLineaPedido].lineaUpdate.update = arregloCambioCampo.index==0?false:true;
    this.pedidosTurno[indexLineaPedido].lineaUpdate.update = true;
 
@@ -2268,7 +2166,7 @@ async validarHoraCargue():Promise<boolean>{
 
     }
 
-    //// ////////////console.log(this.pedidosTurno);
+    //// ////////////// console.log(this.pedidosTurno);
 
   }
 
@@ -2292,7 +2190,7 @@ async validarHoraCargue():Promise<boolean>{
   }
   
   seleccionarMunicipio(){
-   ////// ////////////console.log(this.municipioSeleccionado);
+   ////// ////////////// console.log(this.municipioSeleccionado);
     this.municipioentrega = this.municipioSeleccionado.label;
   }
 
@@ -2307,7 +2205,7 @@ async validarHoraCargue():Promise<boolean>{
     this.pedidosService.getSaldosPedidos(CardCode,locacion)
         .subscribe({
             next:async (saldosPedidos)=>{
-             ////// ////////////console.log('saldosPedidos',saldosPedidos);
+             ////// ////////////// console.log('saldosPedidos',saldosPedidos);
              
              let pedidosClientes:any[] = [];
              for(let indexPedido in saldosPedidos){
@@ -2375,7 +2273,7 @@ async validarHoraCargue():Promise<boolean>{
 
              this.pedidosCliente = await this.calcularCantidadesComprometidas(pedidosClientes);
 
-             //// ////////////console.log('pedidosCliente',this.pedidosCliente);
+             //// ////////////// console.log('pedidosCliente',this.pedidosCliente);
              this.configNewTablePedidosAlmacenCliente();
              
             },
@@ -2388,7 +2286,7 @@ async validarHoraCargue():Promise<boolean>{
   async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
     for(let pedido of pedidos){
-     ////// ////////////console.log(pedido);
+     ////// ////////////// console.log(pedido);
       let cantidadComprometida=0; 
       cantidadComprometida += await this.getCantidadComprometidaItemPedidoBodega(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
       //cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
@@ -2412,11 +2310,11 @@ async validarHoraCargue():Promise<boolean>{
  
   
   async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
-    ////////////////////// ////////////console.log(pedido, itemcode, bodega);
+    ////////////////////// ////////////// console.log(pedido, itemcode, bodega);
       let cantidadComprometida =0;
       /*for(let vehiculo of this.vehiculosEnSolicitud){
           for(let lineaPedido of vehiculo.pedidos){
-           //////////////////////// ////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
+           //////////////////////// ////////////// console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
               if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
                 
                 cantidadComprometida+=lineaPedido.cantidad;
@@ -2508,7 +2406,7 @@ async validarHoraCargue():Promise<boolean>{
         this.showItemsSelectedPedidosAlmacenCliente=false;
     }else{
       const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-      //// ////////////console.log('pedidos seleccionados',pedidosSeleccionados);
+      //// ////////////// console.log('pedidos seleccionados',pedidosSeleccionados);
     
       if(pedidosSeleccionados.length > 0){
           
@@ -2521,7 +2419,7 @@ async validarHoraCargue():Promise<boolean>{
             if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                 totalCarga+=parseFloat(pedido.cargada);
     
-                ////////////// ////////////console.log(pedido);
+                ////////////// ////////////// console.log(pedido);
        
                 if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
                   //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
@@ -2571,28 +2469,37 @@ async validarHoraCargue():Promise<boolean>{
               //Obtener pedidos asociados al vehiculo en la solicitud
               //let pdidosVehiculo:any[] = this.vehiculosEnSolicitud[indexVehiculo].pedidos;
               let pedidosTurno:any[] = this.pedidosTurno;
+
+              console.log('pedidosTurno',pedidosTurno);
               this.loadingPedidosTurno = true;
               
               for(let pedido of pedidosSeleccionados){
                 
-                ////////////// ////////////console.log('pedido seleccionado',pedido);
-    
-                if(pedidosTurno.find((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => linea.pedidonum == pedido.docnum && 
+                console.log('pedido seleccionado',pedido,this.municipioentrega, this.sitioentrega);
+                console.log(pedidosTurno.find((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any, linea:any }) => linea.pedidonum == pedido.docnum && 
+                linea.itemcode == pedido.itemcode && 
+                linea.municipioentrega == this.municipioentrega &&
+                linea.linea == pedido.linenum &&
+              linea.lugarentrega == this.sitioentrega));
+
+
+                
+                if(pedidosTurno.find((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any, linea:any }) => linea.pedidonum == pedido.docnum && 
                                                                                                                             linea.itemcode == pedido.itemcode && 
                                                                                                                             linea.municipioentrega == this.municipioentrega &&
-                                                                                                                            linea.linenum == pedido.linenum &&
+                                                                                                                            linea.linea == pedido.linenum &&
                                                                                                                           linea.lugarentrega == this.sitioentrega)!=undefined){
                                                                                                                             
                   if(!pedido.itemcode.toLowerCase().startsWith("sf")){
-                    let indexPedido = pedidosTurno.findIndex((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => linea.pedidonum == pedido.docnum && 
+                    let indexPedido = pedidosTurno.findIndex((linea: { pedidonum: any, itemcode:any, municipioentrega:any, lugarentrega:any, linea:any }) => linea.pedidonum == pedido.docnum && 
                                                                                                                                                       linea.itemcode == pedido.itemcode && 
                                                                                                                                                       linea.municipioentrega == this.municipioentrega &&
-                                                                                                                                                      linea.linenum == pedido.linenum &&
+                                                                                                                                                      linea.linea == pedido.linenum &&
                                                                                                                                                       linea.lugarentrega == this.sitioentrega);
                     pedidosTurno[indexPedido].cantidad += parseFloat(pedido.cargada);
                     
-                    pedidosTurno[indexPedido].lineaUpdate = {update:true}
-                    //// ////////////console.log(pedidosTurno[indexPedido].lineaUpdate);
+                    pedidosTurno[indexPedido].lineaUpdate = {update:true,create:false}
+                    //// ////////////// console.log(pedidosTurno[indexPedido].lineaUpdate);
                   }
                  
                 }else{
@@ -2634,17 +2541,17 @@ async validarHoraCargue():Promise<boolean>{
 
               this.envioLineaCarguePedido =false;
               this.dialogPedidosCliente = false;
-              //// ////////////console.log(pedidosTurno);
+              //// ////////////// console.log(pedidosTurno);
 
               this.pedidosTurno = await this.calcularDisponibilidadPedido(pedidosTurno);
-              //// ////////////console.log(this.pedidosTurno);
+              //// ////////////// console.log(this.pedidosTurno);
               this.configTablePedidosAlmacenCliente();
               /*
               this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
               this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
               
               this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-              //////////// ////////////console.log(this.vehiculosEnSolicitud);
+              //////////// ////////////// console.log(this.vehiculosEnSolicitud);
               this.configTablePedidosAlmacenCliente();
               this.generarTreeTable();
               */
@@ -2674,16 +2581,16 @@ async validarHoraCargue():Promise<boolean>{
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     
-     ////////////console.log(inventariosItemBodega);
+     ////////////// console.log(inventariosItemBodega);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
 
-    //////////console.log(arrayInventariosItemBodega);
+    //////////// console.log(arrayInventariosItemBodega);
 
     let almacenesConStockItem:any[] = [];
 
     for(let pedido of this.pedidosTurno){
-      //////////console.log(pedido);
-      // ////////////console.log(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
+      //////////// console.log(pedido);
+      // ////////////// console.log(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
       almacenesConStockItem = almacenesConStockItem.concat(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
     }
 
@@ -2691,22 +2598,22 @@ async validarHoraCargue():Promise<boolean>{
       item.label = `${item.Localidad_} - ${item.WhsCode} - ${item.WhsName}`
     });
 
-    //////////console.log(almacenesConStockItem);
+    //////////// console.log(almacenesConStockItem);
 
     almacenesConStockItem = await this.functionsService.groupArray(almacenesConStockItem,'label');
 
-    //////////console.log(almacenesConStockItem);
+    //////////// console.log(almacenesConStockItem);
 
     let bodegas:any[] =[];
 
     for(let almacen of almacenesConStockItem){
-      ////////////console.log(this.locaciones.find(item=>item.code == almacen.locacion_codigo2 ));
+      ////////////// console.log(this.locaciones.find(item=>item.code == almacen.locacion_codigo2 ));
       if(this.locaciones.find(item=>item.code == almacen.locacion_codigo2 )){
         bodegas.push(almacen);
       }
     }
 
-    //////////console.log(bodegas);
+    //////////// console.log(bodegas);
 
     //this.bodegas = almacenesConStockItem;
 
@@ -2718,7 +2625,7 @@ async validarHoraCargue():Promise<boolean>{
 /*
     this.pedidosCambioBodegaTurno = this.pedidosTurno;
     this.configTableCambioPedidosBodega();
-    // ////////////console.log(this.pedidosCambioBodegaTurno);
+    // ////////////// console.log(this.pedidosCambioBodegaTurno);
 */
 
   }
@@ -2748,12 +2655,12 @@ async validarHoraCargue():Promise<boolean>{
 
 
     this.loadingCambioBodegaPedidosTurno = true;
-    //////////console.log(bodegaSeleccionada);
+    //////////// console.log(bodegaSeleccionada);
     //this.pedidosCambioBodegaTurno = new Array() ;
 
     //this.pedidosCambioBodegaTurno= this.pedidosTurno;
  
-    ////////console.log(this.pedidosTurno);
+    ////////// console.log(this.pedidosTurno);
 
     let pedidosTurnoCambioBodegaTurno:any[] = [];
 
@@ -2791,7 +2698,7 @@ async validarHoraCargue():Promise<boolean>{
     
     this.pedidosCambioBodegaTurno = pedidosTurnoCambioBodegaTurno;
 
-    ////////console.log(this.pedidosCambioBodegaTurno);
+    ////////// console.log(this.pedidosCambioBodegaTurno);
 
     /*this.pedidosCambioBodegaTurno.map((item)=>{
       
@@ -2801,7 +2708,7 @@ async validarHoraCargue():Promise<boolean>{
 
     this.pedidosCambioBodegaTurno = await this.calcularDisponibilidadPedido(this.pedidosCambioBodegaTurno);
 
-    // ////////////console.log(this.pedidosCambioBodegaTurno);
+    // ////////////// console.log(this.pedidosCambioBodegaTurno);
     this.configTableCambioPedidosBodega();
     this.loadingCambioBodegaPedidosTurno = false;
   }
@@ -2815,9 +2722,9 @@ async validarHoraCargue():Promise<boolean>{
     this.horariosSeleccionadosCambioBodega = horariosSeleccionados;
 
     /*for(let horario of this.horariosLocacion){
-      //////////////// ////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+      //////////////// ////////////// console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
     }*/
-    //////////////// ////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+    //////////////// ////////////// console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
     if(this.horacargueCambioBodega){
       await this.cambioHoraCitaCambioBodega();
     }
@@ -2826,11 +2733,11 @@ async validarHoraCargue():Promise<boolean>{
 
 
  async cambioHoraCitaCambioBodega():Promise<void>{
-     //////////////// ////////////console.log(this.horacargue.toLocaleTimeString());
+     //////////////// ////////////// console.log(this.horacargue.toLocaleTimeString());
      if(await this.validarHoraCargueCambioBodega()){
-      //////////console.log('hora valida en horario ');
+      //////////// console.log('hora valida en horario ');
     }else{
-      //////////console.log('hora invalida en horario');
+      //////////// console.log('hora invalida en horario');
     }
   }
 
@@ -2844,9 +2751,9 @@ async validarHoraCargue():Promise<boolean>{
       let horacargue = new Date(new Date().setHours(parseInt(this.horacargueCambioBodega.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargueCambioBodega.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargueCambioBodega.toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
   
       if(horainicio<= horacargue && horafin >= horacargue){
-       //////////console.log('hora valida en horario id '+horario.id);
+       //////////// console.log('hora valida en horario id '+horario.id);
       }else{
-        //////////console.log('hora invalida en horario id '+horario.id);
+        //////////// console.log('hora invalida en horario id '+horario.id);
         horarioValido = false;
       }
     }
@@ -2865,15 +2772,15 @@ async validarHoraCargue():Promise<boolean>{
       accept: () => {
        
         event.map((linea:any)=>{
-          // ////////////console.log(linea);
+          // ////////////// console.log(linea);
           let indexLineaCambioBodega = this.pedidosCambioBodegaTurno.findIndex(item=> item.id === linea.index);
           this.pedidosCambioBodegaTurno.splice(indexLineaCambioBodega,1);
-          // ////////////console.log(this.pedidosCambioBodegaTurno.splice(indexLineaCambioBodega,1));
-          ////////console.log(this.pedidosTurno);
+          // ////////////// console.log(this.pedidosCambioBodegaTurno.splice(indexLineaCambioBodega,1));
+          ////////// console.log(this.pedidosTurno);
           this.configTableCambioPedidosBodega();
        
         });
-        // ////////////console.log(this.pedidosTurno);
+        // ////////////// console.log(this.pedidosTurno);
        
       },
         reject: (type: any) => {
@@ -2892,7 +2799,7 @@ async validarHoraCargue():Promise<boolean>{
 
   cambioValorCampoCambioBodega(arregloCambioCampo:any){
 
-    ////////console.log(arregloCambioCampo);
+    ////////// console.log(arregloCambioCampo);
 
     let indexLineaPedido = this.pedidosCambioBodegaTurno.findIndex(item=>item.id === arregloCambioCampo.index 
                                                              //&& item.pedidonum == arregloCambioCampo.itemData.docnum 
@@ -2918,7 +2825,7 @@ async validarHoraCargue():Promise<boolean>{
  
      }
 
-     ////////console.log(this.pedidosCambioBodegaTurno);
+     ////////// console.log(this.pedidosCambioBodegaTurno);
  
    }
 
@@ -2940,7 +2847,7 @@ async validarHoraCargue():Promise<boolean>{
         icon: 'pi pi-exclamation-triangle',
         accept: async () => {
   
-          //////console.log(this.turno.solicitud.clientes);
+          //////// console.log(this.turno.solicitud.clientes);
 
           this.displayModal= true;
           this.loadingCargue = true;
@@ -2954,7 +2861,7 @@ async validarHoraCargue():Promise<boolean>{
           for(let item of this.pedidosCambioBodegaTurno){
 
             //Llenar array de cliente para nueva solicitud
-            //////console.log(clientesTurnoActual.filter(cliente=>cliente.CardCode == item.CardCode))
+            //////// console.log(clientesTurnoActual.filter(cliente=>cliente.CardCode == item.CardCode))
             if(clientesNuevoTurno.filter(cliente=>cliente.CardCode == item.CardCode).length === 0){
               clientesNuevoTurno.push(clientesTurnoActual.filter(cliente=>cliente.CardCode == item.CardCode)[0]);
             }
@@ -2992,9 +2899,9 @@ async validarHoraCargue():Promise<boolean>{
             this.observacionesCargue.push(`Se realizará retiro de ${item.cantidad} TON por la bodega ${this.bodegaSeleccionada.WhsCode}`)
           }
 
-          //////console.log(this.pedidosTurno);
-          //////console.log(this.pedidosCambioBodegaTurno);
-          ////console.log(clientesNuevoTurno);
+          //////// console.log(this.pedidosTurno);
+          //////// console.log(this.pedidosCambioBodegaTurno);
+          ////// console.log(clientesNuevoTurno);
 
           //Crear nuevo turno,
           let detalle_solicitud:any[] = [{
@@ -3016,12 +2923,12 @@ async validarHoraCargue():Promise<boolean>{
             clientes: clientesNuevoTurno.map((cliente)=>{ return cliente.id}),
             detalle_solicitud
           }
-          ////console.log('newSolicitud',newSolicitud);
+          ////// console.log('newSolicitud',newSolicitud);
 
           this.solicitudTurnoService.create(newSolicitud)
               .subscribe({
                   next:async (result)=>{
-                    ////console.log('nueva solicitud',result);
+                    ////// console.log('nueva solicitud',result);
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud ${result.id}. y el turno ${result.detalle_solicitud_turnos[0].id}`});
                     this.messageComplete =`Actualizando información de pedidos del turno ${this.turnoId}`;
                     
@@ -3040,7 +2947,7 @@ async validarHoraCargue():Promise<boolean>{
                     }
 
                     let data:any = await this.configDataTurno();
-                    //////console.log(data);
+                    //////// console.log(data);
                     this.updateTurno(data);
                   },
                   error:(err)=>{

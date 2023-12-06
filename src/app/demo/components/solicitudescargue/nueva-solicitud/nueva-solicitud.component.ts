@@ -182,7 +182,7 @@ constructor(private pedidosService: PedidosService,
 
 async  ngOnInit(){
 
- 
+  
 
   this.getPermisosModulo();
   //this.getPermisosModulo2();
@@ -214,7 +214,8 @@ async  ngOnInit(){
   ];
 
  
-  
+  let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLINVENTARIO,locacion:'NITROCARIBE'}));
+  console.log(emailsTurno);
 
 }
 /*async getPermisosModulo2(){
@@ -442,7 +443,7 @@ getAlmacenes(){
   this.almacenesService.getAlmacenes()
       .subscribe({
           next:(almacenes)=>{
-            
+           
             let almacenesTMP:any[] = [];
              
             for(let index in almacenes){
@@ -454,7 +455,7 @@ getAlmacenes(){
            
             }
             this.almacenes = almacenesTMP.filter(almacen=>almacen.CorreoNoti !=null && almacen.CorreoNoti!='');
-            //////// //// //////console.log('almacenes',this.almacenes);
+            console.log('this.almacenes',this.almacenes);
             
           },
           error:(err)=>{
@@ -1874,7 +1875,8 @@ async emailsClientes(solicitud:any):Promise<void> {
                       id:clienteTurno.id,
                       turnos:cliente.turnos,
                       telefono:''
-                    }
+                    },
+                    origen:'mail_cliente'
         }         
       };
       //////// //// //////console.log('objectMail Cliente',objectMail);
@@ -1977,7 +1979,8 @@ async emailsVendedores(solicitud:any): Promise<void>{
                     locacion:this.almacenSeleccionado.label,
                     totalvehiculos:vendedor.turnos.length,
                     totaltoneladas:(await this.functionsService.sumColArray(vendedor.turnos,[{toneladas_turno:0}]))[0].toneladas_turno,
-                    turnos:vendedor.turnos
+                    turnos:vendedor.turnos,
+                    origen:this.domain=='localhost'?'mail_vendedor':''
                     //cliente:solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === vendedor.code)
         }         
       };
@@ -1991,14 +1994,65 @@ async emailsVendedores(solicitud:any): Promise<void>{
 
 async emailBodegaEstado(solicitud:any): Promise<void>{
 
+  let infoUsuario = await this.usuariosService.infoUsuario();
+
   let emailBodega!:string;
   let locacion:any = this.almacenSeleccionado.name;
 
-  let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLICITADO,locacion}))
-                    .map((email: { email_responsable: any; }) => {return email.email_responsable});
+  /*let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLICITADO,locacion}))
+                    .map((email: { email_responsable: any; }) => {return email.email_responsable});*/
+
+  let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLICITADO,locacion}));
+
+  emailsTurno.forEach(async (flujoAP:any)=>{
+
+    if(infoUsuario.email != flujoAP.email_responsable){
+        let totaltoneladas =0;
+
+        solicitud.detalle_solicitud_turnos.forEach((turno:any)=>{
+          let fechacita:any = new Date(turno.fechacita).toLocaleDateString(); 
+          let horacita:any = new Date(turno.horacita).toLocaleTimeString();
+          turno.fechacita = fechacita;
+          turno.horacita= horacita;
+          turno.detalle_solicitud_turnos_pedido.forEach((pedido:any)=>{
+            if(!pedido.itemcode.toLowerCase().startsWith("sf")){
+              totaltoneladas+= parseFloat(pedido.cantidad);
+            }
+            
+          });
+          
+        });
+
+
+        let objectMail = {
+      
+          to:this.domain=='localhost'?'ralbor@nitrofert.com.co':flujoAP.email_responsable,
+          //to:'ralbor@nitrofert.com.co',
+          subject:`Solicitud de cargue # ${solicitud.id}`,
+          template:'./notificacion_solicitud2',
+          context:{
+                      name:flujoAP.nombre_responsable,
+                      solicitud_num:solicitud.id,
+                      fechasolicitud: new Date(solicitud.createdAt).toLocaleDateString(),
+                      locacion,
+                      totalvehiculos:solicitud.detalle_solicitud_turnos.length,
+                      totaltoneladas,
+                      turnos:solicitud.detalle_solicitud_turnos,
+                      origen:this.domain=='localhost'?'mail_estado_locacion':''
+          }         
+        };
+        //////// //// //////console.log('objectMail Bodega',objectMail);
+        ////////// //// //////console.log(await this.functionsService.sendMail(objectMail));
+        await this.functionsService.sendMail(objectMail)
+
+
+    }
+
+  });
+      
 
   //////////// //// //////console.log('emailsTurno',emailsTurno.join());
-
+  /*
   if(emailsTurno.join()!=''){
     emailBodega = emailsTurno.join();
   }
@@ -2042,7 +2096,7 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
     await this.functionsService.sendMail(objectMail)
 
   }
-
+  */
 
 }
 
@@ -2075,7 +2129,8 @@ async emailTransp(solicitud:any): Promise<void>{
                 locacion:this.almacenSeleccionado.label,
                 totalvehiculos:solicitud.detalle_solicitud_turnos.length,
                 totaltoneladas,
-                turnos:solicitud.detalle_solicitud_turnos
+                turnos:solicitud.detalle_solicitud_turnos,
+                origen:this.domain=='localhost'?'mail_transportasociedad':''
                 
     }         
   };
@@ -2117,7 +2172,8 @@ async emailCreador(solicitud:any): Promise<void>{
                 locacion:this.almacenSeleccionado.label,
                 totalvehiculos:solicitud.detalle_solicitud_turnos.length,
                 totaltoneladas,
-                turnos:solicitud.detalle_solicitud_turnos
+                turnos:solicitud.detalle_solicitud_turnos,
+                origen:this.domain=='localhost'?'mail_creador':''
                 
     }         
   };
