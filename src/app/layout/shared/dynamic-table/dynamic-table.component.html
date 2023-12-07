@@ -10,7 +10,8 @@
 					 [paginator]="paginator"
 					 [globalFilterFields]="globalFilterFields" 
 					 [selectionMode]="selectionMode" 
-					 [(selection)]="selectedItem" 
+					 [(selection)]="selectedItem"
+					 (selectionChange)="selectedLine()" 
 					 responsiveLayout="scroll">
 				<ng-template pTemplate="caption">
 					<div class="flex justify-content-between flex-column sm:flex-row">

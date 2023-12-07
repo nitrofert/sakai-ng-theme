@@ -223,6 +223,9 @@ diasNoAtencionCambioBodega:any[] = [];
 horariosLocacionCambioBodega:any[] = [];
 horariosSeleccionadosCambioBodega:any[] = [];
 
+
+selectedLinesPedidosAlmacenCliente!:any
+
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private ordenesCargueService: OrdenesCargueService, 
@@ -2395,6 +2398,10 @@ async validarHoraCargue():Promise<boolean>{
       return dataTable;
   }
 
+  async selectedLinesPedidosClientes(event:any){
+    this.selectedLinesPedidosAlmacenCliente = event
+  }
+
   async seleccionarPedidosAlmacenCliente(event:any){
  
     
@@ -2421,13 +2428,13 @@ async validarHoraCargue():Promise<boolean>{
     
                 ////////////// ////////////// console.log(pedido);
        
-                if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
+                if(parseFloat(pedido.cargada)> Math.round(parseFloat(pedido.disponible)) ){
                   //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
                   this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad disponible (${pedido.disponible} TON) del pedio - item`}); 
                   error = true;
                 }
                
-                if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
+                if(parseFloat(pedido.cargada)> Math.round(parseFloat(pedido.pendiente)) ){
                   //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad pendiente del pedio - item`});
                   this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad pendiente (${pedido.pendiente} TON) del pedio - item`});
                   error = true;
@@ -2577,6 +2584,8 @@ async validarHoraCargue():Promise<boolean>{
 
   async cambioBodega(){
     this.dialogCambioBodega = true
+
+    console.log(this.selectedLinesPedidosAlmacenCliente);
     
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);

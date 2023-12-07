@@ -771,7 +771,7 @@
                              [viewCheckselectedItem] ="true"
                              nameExport="pedidos_almacen_cliente"
                              [showSelectedItems]="showItemsSelectedPedidosAlmacenCliente"
-                             
+                             (onSelectedLines)="selectedLinesPedidosClientes($event)"
                              [showBtnNew]="false"
                              (onSelectedItems)="seleccionarPedidosAlmacenCliente($event)">
           </app-dynamic-table>

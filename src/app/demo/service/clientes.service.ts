@@ -28,7 +28,13 @@ import { lastValueFrom } from 'rxjs';
         const infoClientes = await lastValueFrom(infoClientes$);
         //////////console.log(infoClientes)
         return infoClientes;
-    } 
+    }
+    
+    getClientesSAP():Observable<any> {
+        const url:string = `${this.api_url}/api/sb1xe/clientes?compania=${this.urlApiService.companySAP}`;
+        return this.http.get<any>(url);
+    }
+
 
    
 }

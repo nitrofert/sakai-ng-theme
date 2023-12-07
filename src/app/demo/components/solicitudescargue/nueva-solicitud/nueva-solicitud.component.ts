@@ -1209,13 +1209,13 @@ async seleccionarPedidosAlmacenCliente(event:any){
 
               
      
-              if(parseFloat(pedido.cargada)> parseFloat(pedido.disponible) ){
+              if(parseFloat(pedido.cargada)> Math.round(parseFloat(pedido.disponible)) ){
                 
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad disponible (${pedido.disponible} TON) del pedio - item`});
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad disponible (${Math.round(pedido.disponible)} TON) del pedio - item`});
                 error = true;
               }
              
-              if(parseFloat(pedido.cargada)> parseFloat(pedido.pendiente) ){
+              if(parseFloat(pedido.cargada)> Math.round(parseFloat(pedido.pendiente)) ){
                 
                 this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad pendiente (${pedido.pendiente} TON) del pedio - item`});
                 error = true;
