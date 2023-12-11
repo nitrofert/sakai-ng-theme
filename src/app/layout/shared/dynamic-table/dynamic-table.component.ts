@@ -36,6 +36,7 @@ export class DynamicTableComponent implements OnInit {
   
   @Input() permisosUsuarioPagina!:any[];
   @Input() showSelectedItems:boolean = false;
+ 
   @Input() loading:boolean = false;
 
   @Output() onNewAccion: EventEmitter<any> = new EventEmitter();
@@ -44,7 +45,7 @@ export class DynamicTableComponent implements OnInit {
   @Output() onDeleteAccion: EventEmitter<any> = new EventEmitter();
   @Output() onChangeState: EventEmitter<any> = new EventEmitter();
   @Output() onViewAccion: EventEmitter<any> = new EventEmitter();
-  @Output() onSelectedLines: EventEmitter<any> = new EventEmitter();
+  
 
   @Output() onChangeValue: EventEmitter<any> = new EventEmitter();
 
@@ -85,7 +86,7 @@ export class DynamicTableComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    //////////console.log(changes);
+    //console.log(changes);
 
     if(changes['showSelectedItems']!=undefined){
       if(changes['showSelectedItems'].currentValue ==true){
@@ -95,6 +96,7 @@ export class DynamicTableComponent implements OnInit {
       }else{
         this.selectedItem = [];
       }
+
       
     }
     if(changes['colsSum']){
@@ -196,14 +198,6 @@ export class DynamicTableComponent implements OnInit {
     return bgColor
   }
 
-  selectedLine(){
-    if(this.selectedItem.length>0){
-      //console.log(this.selectedItem)
-      this.onSelectedLines.emit(this.selectedItem)
-    }else{
-      this.onSelectedLines.emit([])
-    }
-    
-  }
+ 
 
 }

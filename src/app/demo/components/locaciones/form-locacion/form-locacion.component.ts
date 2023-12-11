@@ -19,6 +19,7 @@ export class FormLocacionComponent implements  OnInit {
   locacion2:string = "";
   locacionesSAP:any[] = [];
   locacionesMySQL:any[] = [];
+  locacionCode:string = "";
 
   email_bodega:string = '';
   direccion:any = '';
@@ -101,6 +102,7 @@ ngOnInit() {
 
  ////////console.log(this.horainicio.toLocaleTimeString('en-US',{ hour12: false }));
  ////////console.log(this.horafin.toLocaleTimeString('en-US',{ hour12: false }));
+
   this.getLocacionesMySQL();
 
  
@@ -166,8 +168,9 @@ getLocacionByCode(code:any){
               this.email_bodega = locacion.email;
               this.direccion = locacion.direccion;
               this.ubicacion = locacion.ubicacion;
-
+              this.locacion2 = locacion.locacion2;
               this.dataTable = locacion.horarios_locacion;
+              this.locacionCode = locacion.code;
             },
             error:(err)=>{
               console.error(err);
@@ -267,14 +270,14 @@ grabarHorario(){
 
 grabarLocacion(){
   this.submitLocacion = true;
-    if(!this.locacionSeleccionada || this.locacionSeleccionada.length ==0 || !this.email_bodega){
+    if( (!this.editLocacion && (!this.locacionSeleccionada || this.locacionSeleccionada.length ==0)) || !this.email_bodega){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Los campos resaltados en rojo deben ser diligenciados"});
     }else if(this.dataTable.length==0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe adicionar por lo menos un horario de atención para la locación"});
     }else{
         let data = {
-          code: this.locacionSeleccionada.code,
-          locacion: this.locacionSeleccionada.name,
+          code: this.editLocacion? this.locacionCode :this.locacionSeleccionada.code,
+          locacion: this.editLocacion?this.locacion :this.locacionSeleccionada.name,
           locacion2: this.locacion2,
           email: this.email_bodega,
           direccion:this.direccion,
@@ -283,19 +286,37 @@ grabarLocacion(){
         }
 
        ////////console.log(data);
-
+       if(!this.editLocacion){
+        //Registro de locacion
         this.almacenesService.setLocacion(data)
-            .subscribe({
-                next:(locacion)=>{
-                 ////////console.log(locacion);
-                  this.messageService.add({severity:'success', summary: '!Error¡', detail: `Se ha realizado correctamente el registro de la locación ${locacion.locacion}.`});
-                  this.cerrar();                
-                },
-                error:(error)=>{
-                  console.error(error.error);
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  error.error.message});
-                }
-            });
+        .subscribe({
+            next:(locacion)=>{
+             ////////console.log(locacion);
+              this.messageService.add({severity:'success', summary: '!Error¡', detail: `Se ha realizado correctamente el registro de la locación ${locacion.locacion}.`});
+              this.cerrar();                
+            },
+            error:(error)=>{
+              console.error(error.error);
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  error.error.message});
+            }
+        });
+       }else{
+          //Actualización de locacion
+          this.almacenesService.updateLocacion(data,this.locacionId)
+        .subscribe({
+            next:(locacion)=>{
+             ////////console.log(locacion);
+              this.messageService.add({severity:'success', summary: '!Error¡', detail: `Se ha actualizado correctamente el registro de la locación ${locacion.locacion}.`});
+              this.cerrar();                
+            },
+            error:(error)=>{
+              console.error(error.error);
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  error.error.message});
+            }
+        });
+       }
+
+        
     }
 }
 

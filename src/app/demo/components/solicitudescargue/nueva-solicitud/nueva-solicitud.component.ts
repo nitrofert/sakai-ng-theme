@@ -214,8 +214,8 @@ async  ngOnInit(){
   ];
 
  
-  let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLINVENTARIO,locacion:'NITROCARIBE'}));
-  console.log(emailsTurno);
+  //let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:EstadosDealleSolicitud.SOLINVENTARIO,locacion:'NITROCARIBE'}));
+  //console.log(emailsTurno);
 
 }
 /*async getPermisosModulo2(){
@@ -357,6 +357,12 @@ getSaldosPedidos(){
                 
               }*/
 
+              if(parseFloat(saldosPedidos[indexPedido].SALDO)<1){
+                console.log(saldosPedidos[indexPedido]);
+                console.log(saldosPedidos[indexPedido].SALDO);
+                console.log(parseFloat(saldosPedidos[indexPedido].SALDO));
+              }
+
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
                 
@@ -455,7 +461,7 @@ getAlmacenes(){
            
             }
             this.almacenes = almacenesTMP.filter(almacen=>almacen.CorreoNoti !=null && almacen.CorreoNoti!='');
-            console.log('this.almacenes',this.almacenes);
+            //console.log('this.almacenes',this.almacenes);
             
           },
           error:(err)=>{
@@ -1207,17 +1213,18 @@ async seleccionarPedidosAlmacenCliente(event:any){
   
               this.mostrarLogs?console.log('Linea pedido',pedido):null;
 
-              
+              console.log('pedido.cargada',parseFloat(pedido.cargada).toFixed(2))
+              console.log('pedido.disponible',parseFloat(pedido.disponible.toFixed(2)))            
      
-              if(parseFloat(pedido.cargada)> Math.round(parseFloat(pedido.disponible)) ){
+              if(parseFloat(pedido.cargada).toFixed(2)> parseFloat(pedido.disponible).toFixed(2) ){
                 
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad disponible (${Math.round(pedido.disponible)} TON) del pedio - item`});
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad disponible (${pedido.disponible.toFixed(2)} TON) del pedio - item`});
                 error = true;
               }
              
-              if(parseFloat(pedido.cargada)> Math.round(parseFloat(pedido.pendiente)) ){
+              if(parseFloat(pedido.cargada).toFixed(2)> parseFloat(pedido.pendiente).toFixed(2) ){
                 
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad pendiente (${pedido.pendiente} TON) del pedio - item`});
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar (${pedido.cargada} TON) de la linea ${pedido.index+1} supera la cantidad pendiente (${pedido.pendiente.toFixed(2)} TON) del pedio - item`});
                 error = true;
               }
      

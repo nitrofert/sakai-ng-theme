@@ -170,7 +170,8 @@ export class CalendarioTurnosComponent implements OnInit {
                               estado:turno.estado,
                               turnoid:turno.id
                             }),
-          date: new Date(`${turno.fechacita}${turno.horacita.substring(10)}`),
+          //date: new Date(`${turno.fechacita}${turno.horacita.substring(10)}`),
+          date: new Date(`${turno.horacita}`),
           allDay: false,
           textColor:this.setTextColor(turno.estado),
           backgroundColor:this.setBackgroundColor(turno.estado),
@@ -179,7 +180,7 @@ export class CalendarioTurnosComponent implements OnInit {
       })
     }
 
-    //////////// //////console.log((events);
+    console.log(events);
 
     this.ordenesdecargue = events;
 
@@ -406,7 +407,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad)
         .subscribe({
               next:async (turnosLocalidad)=>{
-                  //// //////console.log(turnosLocalidad);
+                  console.log(turnosLocalidad);
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                     this.displayModal = false;
