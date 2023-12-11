@@ -50,6 +50,7 @@ export class FormLocacionComponent implements  OnInit {
 
   editLocacion:boolean = false;
   editHorarios:boolean = false;
+  editIndexHorario:number = 0;
   horarioSelecionado!:number;
 
   dataTable:any[] = [];
@@ -194,12 +195,13 @@ cambioLocacion(){
 }
 
 editHorario(event:any){
- ////////console.log(event);
+ console.log(event);
   
   
   this.tituloFormHorario ="Editar horario";
   this.formHorarios = true;
   let indexHorario = this.dataTable.findIndex(horario=>horario.id === event);
+  this.editIndexHorario = indexHorario;
   this.horarioSelecionado = indexHorario;
   let diasSeleccionados = this.dataTable[indexHorario].dias_atencion.split(",");
   let dias:any = [];
@@ -242,7 +244,19 @@ grabarHorario(){
   }else{
 
       if(this.editHorarios){
-        
+        this.horarios[this.editIndexHorario] ={
+          dias_atencion:this.diasSeleccionados.map((dia)=>{ return dia.fullname}).join(','),
+          horainicio:this.horainicio.toLocaleTimeString('en-US',{ hour12: false }),
+          horafin:this.horafin.toLocaleTimeString('en-US',{ hour12: false })
+        }
+
+        this.dataTable[this.editIndexHorario] = {
+          id:this.dataTable[this.editIndexHorario].id,
+          dias_atencion:this.diasSeleccionados.map((dia)=>{ return dia.fullname}).join(','),
+          horainicio:this.horainicio.toLocaleTimeString(),
+          horafin:this.horafin.toLocaleTimeString()
+        }
+
       }else{
 
         this.horarios.push({
@@ -285,7 +299,7 @@ grabarLocacion(){
           horarios:this.horarios
         }
 
-       ////////console.log(data);
+       console.log(data);
        if(!this.editLocacion){
         //Registro de locacion
         this.almacenesService.setLocacion(data)
