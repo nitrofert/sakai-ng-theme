@@ -154,7 +154,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
                                                                                         linea.turnos_estado != EstadosDealleSolicitud.CANCELADO &&
                                                                                         linea.turnos_estado != EstadosDealleSolicitud.SOLINVENTARIO );
 
-    //// console.log('lineasProgramacionDiariaGerencia',this.lineasProgramacionDiariaGerencia);
+    console.log('lineasProgramacionDiariaGerencia',this.lineasProgramacionDiariaGerencia);
     
 
     this.gerencias =  (await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_dependencia')).map(gerencia=>{

@@ -857,7 +857,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
     this.loadingCambioBodegaPedidosTurno = false;
   }
 
-  configSplitButton(estadoActual:string, permisosModulo:any){
+  async configSplitButton(estadoActual:string, permisosModulo:any){
     //////////////////////// ////////////// console.log(estadoActual,permisosModulo);
 
     this.arrayBtnTurnos = [];
@@ -873,8 +873,12 @@ horariosSeleccionadosCambioBodega:any[] = [];
         }
         
         if(this.updateModulo){
-          this.arrayBtnTurnos.push(this.btnUpdateInfo);
+         // this.arrayBtnTurnos.push(this.btnUpdateInfo);
           this.arrayBtnTurnos.push(this.btnCambioBodega);
+        }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
         }
         
       break;
@@ -897,8 +901,12 @@ horariosSeleccionadosCambioBodega:any[] = [];
         }
         
         if(this.updateModulo){
-          this.arrayBtnTurnos.push(this.btnUpdateInfo);
+          //this.arrayBtnTurnos.push(this.btnUpdateInfo);
           this.arrayBtnTurnos.push(this.btnCambioBodega);
+        }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
         }
         
       break;
@@ -907,11 +915,19 @@ horariosSeleccionadosCambioBodega:any[] = [];
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Pesar en bascula').valor){
           this.arrayBtnTurnos.push(this.btnPeso);
         }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
+        }
       break;
 
       case this.estadosTurno.PESADO:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Inicio cargue').valor){
           this.arrayBtnTurnos.push(this.btnCargue);
+        }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
         }
       break;
 
@@ -919,17 +935,29 @@ horariosSeleccionadosCambioBodega:any[] = [];
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Fin cargue').valor){
           this.arrayBtnTurnos.push(this.btnFinCargue);
         }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
+        }
       break;
       
       case this.estadosTurno.CARGADO:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Pesaje final').valor){
             this.arrayBtnTurnos.push(this.btnPesoFinal);
         }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
+        }
       break;
 
       case this.estadosTurno.PESADOF:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Despachar').valor){
             this.arrayBtnTurnos.push(this.btnDespachar);
+        }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
         }
       break;
 
@@ -939,6 +967,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
       if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Pausar turno').valor){
         this.arrayBtnTurnos.push(this.btnPausar);
       }
+      
     }
 
     if(estadoActual!=this.estadosTurno.CANCELADO && estadoActual!= this.estadosTurno.SOLINVENTARIO){
@@ -1612,6 +1641,11 @@ async validarHoraCargue():Promise<boolean>{
               .subscribe({
                     next:async (turno)=>{
                         ////////// ////////////// console.log(turno);
+                        this.pedidosTurno.map((pedido)=>{
+                          pedido.lineaUpdate = {update:false, create:false};
+                          
+                        });
+
                         if(this.updateModulo){
                           this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
                         }
@@ -1638,6 +1672,7 @@ async validarHoraCargue():Promise<boolean>{
                             .subscribe({
                                   next:async (turno)=>{
                                     this.estado = turno.estado
+                                   
                                   },  
                                   error:(err)=> {
                                     this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});

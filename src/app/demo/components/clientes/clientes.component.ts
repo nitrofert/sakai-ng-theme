@@ -27,7 +27,7 @@ export class ClientesComponent implements  OnInit{
   dataTable:any[] = [];
   headersTable:any[] = [
                           {
-                              'CardCode':{ 
+                                'id':{ 
                                     label:'Código', 
                                     type:'text',
                                     sizeCol:'6rem',
@@ -109,13 +109,13 @@ getClientes(){
     this.clientesService.getClientes()
         .subscribe({
             next:(clientes)=>{
-              console.log(clientes)
+              //console.log(clientes)
 
               let dataClientes:any[] = [];
                   for(let cliente of clientes){
                     
                     dataClientes.push({
-                      CardCode:cliente.CardCode,
+                      id:cliente.CardCode,
                       CardName:cliente.CardName,
                       FederalTaxID:cliente.FederalTaxID,
                       EmailAddress:cliente.EmailAddress
@@ -130,10 +130,10 @@ getClientes(){
 }
 
 editCliente(event: any){
-  ////////console.log(event);
+  console.log(event);
    const ref = this.dialogService.open(FormClienteComponent, {
      data: {
-         id: event
+      id: event
      },
      header: `Editar Cliente` ,
      width: '70%',
@@ -153,7 +153,7 @@ editCliente(event: any){
  nuevoCliente(event: any){
    const ref = this.dialogService.open(FormClienteComponent, {
      data: {
-         id: parseInt('0')
+      id: ''
      },
      header: `Nuevo cliente` ,
      width: '70%',

@@ -1213,8 +1213,8 @@ async seleccionarPedidosAlmacenCliente(event:any){
   
               this.mostrarLogs?console.log('Linea pedido',pedido):null;
 
-              console.log('pedido.cargada',parseFloat(pedido.cargada).toFixed(2))
-              console.log('pedido.disponible',parseFloat(pedido.disponible.toFixed(2)))            
+              //console.log('pedido.cargada',parseFloat(pedido.cargada).toFixed(2))
+              //console.log('pedido.disponible',parseFloat(pedido.disponible.toFixed(2)))            
      
               if(parseFloat(parseFloat(pedido.cargada).toFixed(2))> parseFloat(parseFloat(pedido.disponible).toFixed(2)) ){
                 
@@ -1770,6 +1770,8 @@ return filtered.slice(0,10);
 
 async emailsClientes(solicitud:any):Promise<void> {
 
+  let infoUsuario = await this.usuariosService.infoUsuario();
+
   let turnosCliente:any[] = []; 
   solicitud.detalle_solicitud_turnos.forEach((turno: {
     conductor: any;
@@ -1860,7 +1862,7 @@ async emailsClientes(solicitud:any):Promise<void> {
 
       //clienteTurno.turnos = cliente.turnos;
       let objectMail = {
-        to:'ralbor@nitrofert.com.co',
+        to:`<ralbor@nitrofert.com.co>,<${infoUsuario.email}>`,
         //to:this.domain=='localhost'?'ralbor@nitrofert.com.co':cliente.email,
         subject:`Solicitud de cargue # ${solicitud.id}`,
         template:'./notificacion_solicitud',

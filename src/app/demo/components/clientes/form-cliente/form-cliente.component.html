@@ -25,8 +25,60 @@
                     </span>
                 </div>
 
+                <div  class="field col-12  md:col-6  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="CardCode" 
+                               type="text" 
+                               disabled="true"
+                               [(ngModel)]="CardCode"/>
+                        <label for="email"><h6>Código SN</h6></label>
+                    </span>
+                </div>
+
+                <div  class="field col-12  md:col-6  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="CardName" 
+                               type="text" 
+                               disabled="true"
+                               [(ngModel)]="CardName"/>
+                        <label for="email"><h6>Nombre</h6></label>
+                    </span>
+                </div>
+
+                <div  class="field col-12  md:col-6  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="FederalTaxID" 
+                               type="text" 
+                               disabled="true"
+                               [(ngModel)]="FederalTaxID"/>
+                        <label for="email"><h6>NIT</h6></label>
+                    </span>
+                </div>
+
+                <div  class="field col-12  md:col-6  ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="EmailAddress" 
+                               type="text" 
+                              
+                               [(ngModel)]="EmailAddress"/>
+                        <label for="email"><h6>Correo electrónico</h6></label>
+                    </span>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
     
+<div class="grid">
+    <div class="col-12">
+        <div class="flex justify-content-end">
+            <button type="button" (click)="grabarCliente()" pButton icon="pi pi-save" label="Grabar cambios" ></button>
+            <button type="button" (click)="cerrar()" pButton icon="pi pi-times" label="Cerrar" class="p-button-secondary ml-3"></button>
+        </div>
+    </div>
+</div>

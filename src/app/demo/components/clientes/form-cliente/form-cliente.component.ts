@@ -14,6 +14,7 @@ import { UsuarioService } from 'src/app/demo/service/usuario.service';
 })
 export class FormClienteComponent  implements  OnInit {
 
+  idCliente!:number;
   CardCode:string ="";
   CardName:string ="";
   FederalTaxID:string ="";
@@ -25,6 +26,7 @@ export class FormClienteComponent  implements  OnInit {
   clienteSeleccionado!:any;
   clientessFiltrados:any[] = [];
   submitCliente:boolean =false;
+  clientesNuevos:any[] = [];
 
 
   constructor( private messageService: MessageService,
@@ -38,11 +40,12 @@ export class FormClienteComponent  implements  OnInit {
     public functionsService:FunctionsService) { }
 
   async ngOnInit() {
-    this.CardCode = this.config.data.CardCode;
+    this.CardCode = this.config.data.id;
     if(this.CardCode!=''){
       this.editCliente =true;
+      this.getInfoCliente(this.CardCode);
     }else{
-      await this.getClientesSAP();
+       this.getClientesSAP();
     }
   }
 
@@ -73,14 +76,97 @@ export class FormClienteComponent  implements  OnInit {
     });
   }
   async setClientes(clientesMysql:any[], clientesSAP:any[]):Promise<void>{
+      console.log('clientesMysql',clientesMysql);
+      console.log('clientesSAP',clientesSAP);
 
+      let nuevosClientes:any[] = [];
+
+      for(let clienteSAP of clientesSAP){
+        clienteSAP.label = `${clienteSAP.CardCode} - ${clienteSAP.CardName}`;
+        if(!clientesMysql.find(clienteMysql=>clienteMysql.CardCode === clienteSAP.CardCode)){
+          nuevosClientes.push(clienteSAP);
+        }
+      }
+
+      console.log('nuevosClientes',nuevosClientes);
+      this.clientesNuevos = nuevosClientes;
   }
 
   async filtrarCliente(event:any){
-    this.clientessFiltrados = await this.functionsService.filter(event,this.clientesSAP);
+    this.clientessFiltrados = await this.functionsService.filter(event,this.clientesNuevos);
   }
 
   seleccionarCliente(clienteSeleccionado:any){
+      console.log('clienteSeleccionado',clienteSeleccionado);
+      this.CardCode = clienteSeleccionado.CardCode;
+      this.CardName = clienteSeleccionado.CardName;
+      this.FederalTaxID = clienteSeleccionado.ADDID;
+      this.EmailAddress = clienteSeleccionado.E_Mail;
 
+  }
+
+  async getInfoCliente(CardCode:any){
+    let infoClientes = await this.clientesService.infoClientes();
+    let infoCliente = infoClientes.find((cliente: { CardCode: any; })=>cliente.CardCode === CardCode);
+    console.log(infoCliente);
+    this.idCliente = infoCliente.id;
+    this.CardName = infoCliente.CardName;
+    this.EmailAddress = infoCliente.EmailAddress;
+    this.FederalTaxID = infoCliente.FederalTaxID
+  }
+
+  grabarCliente(){
+    this.submitCliente = true;
+
+    if( (!this.editCliente && (!this.clienteSeleccionado || this.clienteSeleccionado.length ==0)) || !this.EmailAddress){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Los campos resaltados en rojo deben ser diligenciados"});
+    }else{
+
+        let data = {
+          CardCode: this.CardCode,
+          CardName: this.CardName,
+          FederalTaxID: this.FederalTaxID,
+          EmailAddress: this.EmailAddress,
+       
+        }
+
+       //console.log(data);
+       if(!this.editCliente){
+        //Registro de locacion
+        this.clientesService.setCliente(data)
+        .subscribe({
+            next:(cliente)=>{
+             console.log(cliente);
+              this.messageService.add({severity:'success', summary: '!Ok¡', detail: `Se ha realizado correctamente el registro del cliente ${cliente.CardName}.`});
+              //this.cerrar();                
+            },
+            error:(error)=>{
+              console.error(error.error);
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  error.error.message});
+            }
+        });
+       }else{
+          //Actualización de locacion
+          this.clientesService.updateCliente(data,this.idCliente)
+        .subscribe({
+            next:(cliente)=>{
+             //////////console.log(locacion);
+              this.messageService.add({severity:'success', summary: '!Ok¡', detail: `Se ha actualizado correctamente el registro del cliente ${cliente.CardName}.`});
+              //this.cerrar();                
+            },
+            error:(error)=>{
+              console.error(error.error);
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  error.error.message});
+            }
+        });
+       }
+
+        
+    }
+
+  }
+
+  cerrar(){
+    this.ref.close();
   }
 }

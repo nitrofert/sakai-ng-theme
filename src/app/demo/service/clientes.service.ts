@@ -35,6 +35,21 @@ import { lastValueFrom } from 'rxjs';
         return this.http.get<any>(url);
     }
 
+    setCliente(data:any):Observable<any>{
+         
+        const url:string = `${this.api_url}/api/clientes`;
+        return this.http.post<any>(url,data);
+
+    }
+
+    updateCliente
+    (data:any,id:any):Observable<any>{
+         
+        const url:string = `${this.api_url}/api/clientes/${id}`;
+        return this.http.patch<any>(url,data);
+
+    }
+
 
    
 }
