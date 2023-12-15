@@ -159,6 +159,7 @@ export class CalendarioTurnosComponent implements OnInit {
   
   getEvents(){
     
+    console.log(this.turnosLocalidad);
 
     let events:any[] = [];
     for(let turno of this.turnosLocalidad){

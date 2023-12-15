@@ -1862,7 +1862,7 @@ async emailsClientes(solicitud:any):Promise<void> {
 
       //clienteTurno.turnos = cliente.turnos;
       let objectMail = {
-        to:`<ralbor@nitrofert.com.co>,<${infoUsuario.email}>`,
+        to:infoUsuario.email,
         //to:this.domain=='localhost'?'ralbor@nitrofert.com.co':cliente.email,
         subject:`Solicitud de cargue # ${solicitud.id}`,
         template:'./notificacion_solicitud',
