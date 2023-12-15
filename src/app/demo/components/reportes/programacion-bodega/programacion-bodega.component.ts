@@ -283,7 +283,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     //////////////////////////////////// console.log(this.fechaProgramacion);
 
     let programacionBodega = await this.solicitudTurnoService.turnosExtendido(params);
-    //// console.log(programacionBodega);
+    console.log('programacionBodega',programacionBodega);
 
     programacionBodega.raw.forEach((solicitud: {
      
@@ -302,7 +302,8 @@ export class ProgramacionBodegaComponent implements OnInit {
     });
 
     //// console.log(programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false));
-    let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false);
+    let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; pedidos_turno_estado:string })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false && item.pedidos_turno_estado === 'A');
+    //let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; pedidos_turno_estado:string })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false);
     //return programacionBodega.raw;
     return programacionBodegaSinFlete;
   }
