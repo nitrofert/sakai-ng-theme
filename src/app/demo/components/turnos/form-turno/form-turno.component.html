@@ -319,7 +319,7 @@
                                    (keydown.enter)="presionarEnterPesoNeto($event,peso_neto)"
                                    (blur)="cambioPesoNeto($event,peso_neto)"
 
-                                   [value]="peso_neto"
+                                   [(ngModel)]="peso_neto"
                                    [ngClass]="{'ng-invalid ng-dirty' :  (pesomax < (peso_neto))}"/>
                             <label for="peso_neto"><h6>Peso Neto vehículo</h6></label>
                         </span>

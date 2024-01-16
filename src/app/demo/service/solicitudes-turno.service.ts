@@ -112,6 +112,13 @@ export class SolicitudTurnoService {
         return this.http.get<any>(url);
     }
 
+    async infoTurno(id?:any):Promise<any> {
+        const turno$ = this.getTurnosByID(id);
+        const turno = await lastValueFrom(turno$);
+        return turno;
+    }
+
+
 
     updateInfoTruno(id:number,data:any):Observable<any> {
         const url:string = `${this.api_url}/api/solicitud-turnos/turno/${id}`;

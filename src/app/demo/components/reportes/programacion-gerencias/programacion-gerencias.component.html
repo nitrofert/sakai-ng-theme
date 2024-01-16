@@ -11,6 +11,163 @@
                     </span>
                 </div>
 
+                <!--<div class="field col-12 ">
+                    <span class="p-float-label">
+                        
+                        <p-skeleton *ngIf="gerencias.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="conductor"
+                               *ngIf="gerencias.length>0" 
+                               [(ngModel)]="gerenciaSeleccionada" 
+                               
+                               [suggestions]="gerenciasFiltradas" 
+                               (completeMethod)="filtrarGerencia($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               
+                               (ngModelChange)="seleccionarGerencia(gerenciaSeleccionada)">
+                        </p-autoComplete>
+                       
+                        <label for="conductor"><h6>Gerencia</h6></label>
+                    </span>
+                </div>-->
+
+                <!--
+
+                <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locaciones.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="conductor"
+                               *ngIf="locaciones.length>0" 
+                               [(ngModel)]="locacionSeleccionada" 
+                               
+                               [suggestions]="locacionesFiltradas" 
+                               (completeMethod)="filtrarLocacion($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               (onSelect)="seleccionarLocacion(locacionSeleccionada)">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Locación</h6></label>
+                    </span>
+                </div>
+    
+                <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locaciones.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete 
+                                *ngIf="locaciones.length>0"
+                                id="conductor" 
+                               [(ngModel)]="bodegaSeleccionada" 
+                               
+                               [suggestions]="bodegasFiltradas" 
+                               (completeMethod)="filtrarBodega($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               (onSelect)="seleccionarBodega(bodegaSeleccionada)">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Bodega</h6></label>
+                    </span>
+                </div>
+
+                --->
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="w-full flex">
+        <div class="flex col-12  xl:col-6">
+            <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+                <div class="text-center mb-3"><h1>Consolidado Gerencias</h1></div>
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 ">
+                        <app-dynamic-table [dataTable]="tablaToneladasGerencias.data" 
+                                    [headersTable]="tablaToneladasGerencias.header"
+                                    [colsSum]="tablaToneladasGerencias.colsSum"
+                                    dataKey="index" 
+                                    [rows]="10" 
+                                    [paginator]="true"
+                                    [selectionMode]="'multiple'"
+                                    [loading]="loadingPDG"
+                                    [showBtnExp]="true"
+                                    class="min-w-full"
+                                    nameExport="consolidado_gerncias">
+                        </app-dynamic-table>
+                    </div>  
+                </div>
+            </div>
+        </div>   
+    
+        <div class="flex justify-content-center col-12  xl:col-6">
+            <div class="card min-w-full">
+                
+                <!--<app-pie-chart *ngIf="this.tablaToneladasZona.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoZona"></app-pie-chart>-->
+                <app-doughnut-chart  *ngIf="this.tablaToneladasGerencias.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoGerencias"></app-doughnut-chart>
+                <ng-template #elseBlock>
+                    <div class="flex align-items-center justify-content-center">
+                        <i class="pi pi-chart-pie" style="font-size: 5rem"></i>
+                        
+                    </div>
+                    <div class="mt-5 text-center">
+                        Grafica no disponible
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full flex">
+        <div class="flex col-12  xl:col-6">
+            <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+                <div class="text-center mb-3"><h1>Consolidado Zonas</h1></div>
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 ">
+                        <app-dynamic-table [dataTable]="tablaToneladasZona.data" 
+                                    [headersTable]="tablaToneladasZona.header"
+                                    [colsSum]="tablaToneladasZona.colsSum"
+                                    dataKey="index" 
+                                    [rows]="10" 
+                                    [paginator]="true"
+                                    [selectionMode]="'multiple'"
+                                    [loading]="loadingPDG"
+                                    [showBtnExp]="true"
+                                    class="min-w-full"
+                                    nameExport="consolidado_zona">
+                        </app-dynamic-table>
+                    </div>  
+                </div>
+            </div>
+        </div>   
+    
+        <div class="flex justify-content-center col-12  xl:col-6">
+            <div class="card min-w-full">
+                
+                <!--<app-pie-chart *ngIf="this.tablaToneladasZona.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoZona"></app-pie-chart>-->
+                <app-doughnut-chart  *ngIf="this.tablaToneladasZona.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoZona"></app-doughnut-chart>
+                <ng-template #elseBlock>
+                    <div class="flex align-items-center justify-content-center">
+                        <i class="pi pi-chart-pie" style="font-size: 5rem"></i>
+                        
+                    </div>
+                    <div class="mt-5 text-center">
+                        Grafica no disponible
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+		<div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="p-fluid p-formgrid grid">
+
+                <!--<div class="field col-12 ">
+                    <span class="p-float-label">
+                        
+                        <p-calendar [(ngModel)]="fechaProgramacion" [showIcon]="true" dateFormat="DD, dd MM yy"  (ngModelChange)="seleccionarFecha()"></p-calendar>
+                        <label for="conductor"><h6>Fecha pogramación</h6></label>
+                    </span>
+                </div>-->
+
                 <div class="field col-12 ">
                     <span class="p-float-label">
                         
@@ -73,6 +230,8 @@
             
         </div>
     </div>
+
+
 
     <div class="w-full" *ngFor="let dependencia of dependencias">
         <div class=" col-12">
@@ -174,89 +333,35 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="w-full flex">
+            <div class=" col-12">
+                <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+                    <div class="text-center mb-3"><h1>Consolidado Turnos con novedad</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dependencia.consolidadoNovedadesProgramacionDiariaDependencia" 
+                                                    [headersTable]="tablaConsolidadoNovedadesGerencia.header"
+                                                    [colsSum]="dependencia.colSumConsolidadoNovedades"
+                                                    dataKey="index" 
+                                                    [rows]="10" 
+                                                    [paginator]="true"
+                                                    [selectionMode]="'multiple'"
+                                                    [loading]="loadingPDG"
+                                                    [showBtnExp]="true"
+                                                    class="min-w-full"
+                                                    nameExport="consolidado_novedades">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
             
 
     </div>
     
-    <div class="w-full flex">
-        <div class="flex col-12  xl:col-6">
-            <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-                <div class="text-center mb-3"><h1>Consolidado Gerencias</h1></div>
-                <div class="p-fluid p-formgrid grid">
-                    <div class="field col-12 ">
-                        <app-dynamic-table [dataTable]="tablaToneladasGerencias.data" 
-                                    [headersTable]="tablaToneladasGerencias.header"
-                                    [colsSum]="tablaToneladasGerencias.colsSum"
-                                    dataKey="index" 
-                                    [rows]="10" 
-                                    [paginator]="true"
-                                    [selectionMode]="'multiple'"
-                                    [loading]="loadingPDG"
-                                    [showBtnExp]="true"
-                                    class="min-w-full"
-                                    nameExport="consolidado_gerncias">
-                        </app-dynamic-table>
-                    </div>  
-                </div>
-            </div>
-        </div>   
     
-        <div class="flex justify-content-center col-12  xl:col-6">
-            <div class="card min-w-full">
-                
-                <!--<app-pie-chart *ngIf="this.tablaToneladasZona.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoZona"></app-pie-chart>-->
-                <app-doughnut-chart  *ngIf="this.tablaToneladasGerencias.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoGerencias"></app-doughnut-chart>
-                <ng-template #elseBlock>
-                    <div class="flex align-items-center justify-content-center">
-                        <i class="pi pi-chart-pie" style="font-size: 5rem"></i>
-                        
-                    </div>
-                    <div class="mt-5 text-center">
-                        Grafica no disponible
-                    </div>
-                </ng-template>
-            </div>
-        </div>
-    </div>
 
-    <div class="w-full flex">
-        <div class="flex col-12  xl:col-6">
-            <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-                <div class="text-center mb-3"><h1>Consolidado Zonas</h1></div>
-                <div class="p-fluid p-formgrid grid">
-                    <div class="field col-12 ">
-                        <app-dynamic-table [dataTable]="tablaToneladasZona.data" 
-                                    [headersTable]="tablaToneladasZona.header"
-                                    [colsSum]="tablaToneladasZona.colsSum"
-                                    dataKey="index" 
-                                    [rows]="10" 
-                                    [paginator]="true"
-                                    [selectionMode]="'multiple'"
-                                    [loading]="loadingPDG"
-                                    [showBtnExp]="true"
-                                    class="min-w-full"
-                                    nameExport="consolidado_zona">
-                        </app-dynamic-table>
-                    </div>  
-                </div>
-            </div>
-        </div>   
-    
-        <div class="flex justify-content-center col-12  xl:col-6">
-            <div class="card min-w-full">
-                
-                <!--<app-pie-chart *ngIf="this.tablaToneladasZona.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoZona"></app-pie-chart>-->
-                <app-doughnut-chart  *ngIf="this.tablaToneladasZona.data.length>0 ;else elseBlock"  [chartData]="chartDataConsolidadoZona"></app-doughnut-chart>
-                <ng-template #elseBlock>
-                    <div class="flex align-items-center justify-content-center">
-                        <i class="pi pi-chart-pie" style="font-size: 5rem"></i>
-                        
-                    </div>
-                    <div class="mt-5 text-center">
-                        Grafica no disponible
-                    </div>
-                </ng-template>
-            </div>
-        </div>
-    </div>
 </div>

@@ -356,6 +356,8 @@ getSaldosPedidos(){
                 }
                 
               }*/
+            
+              console.log(saldosPedidos[indexPedido]);
 
               if(parseFloat(saldosPedidos[indexPedido].SALDO)<1){
                 console.log(saldosPedidos[indexPedido]);

@@ -83,7 +83,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     this.infousuario = await this.usuariosService.infoUsuario();
 
     this.estadosTurno = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno,'order','ASC') ;
-    //// console.log(this.estadosTurno)
+    //// //console.log(this.estadosTurno)
 
    
     this.getLocalidades();
@@ -103,6 +103,8 @@ export class ProgramacionBodegaComponent implements OnInit {
       'conductor': { label:'Conductor',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"conductor"},
       'cedula': { label:'Cedula',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"cedula"},
       'telefono': { label:'Teléfono',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"telefono"},
+      'condiciontpt': { label:'Tipo TPT',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"condiciontpt"},
+      'comercial': { label:'Comercial',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"comercial"},
 
     }];
 
@@ -130,7 +132,7 @@ export class ProgramacionBodegaComponent implements OnInit {
       
     }];
 
-   // // console.log('headersTable',headersTable);
+   // // //console.log('headersTable',headersTable);
 
     return headersTable;
   }
@@ -185,11 +187,11 @@ export class ProgramacionBodegaComponent implements OnInit {
                 locacion.label = locacion.locacion
               })
               //this.locaciones = locaciones;
-            // ////////////////////////////////////// console.log(locaciones);
+            // ////////////////////////////////////// //console.log(locaciones);
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               this.locacionSeleccionada = this.locaciones[0];
               this.seleccionarLocacion(this.locacionSeleccionada);
-              //////////////////////////////////////// console.log();
+              //////////////////////////////////////// //console.log();
             },
             error:(err)=>{
               console.error(err);
@@ -218,16 +220,16 @@ export class ProgramacionBodegaComponent implements OnInit {
   }
 
   seleccionarLocacion(locacion:any){
-    ////// console.log('allbodegas',this.allbodegas);
-    ////// console.log('locacion',locacion);
+    ////// //console.log('allbodegas',this.allbodegas);
+    ////// //console.log('locacion',locacion);
 
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
-    ////////////////// console.log(bodegas_locacion);
+    ////////////////// //console.log(bodegas_locacion);
     if(bodegas_locacion.length==0){
       //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La locación ${locacion.label} no tiene bodegas asociadas`});
-      //////////// console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
+      //////////// //console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
     }else{
-      ////////////////// console.log(bodegas_locacion);
+      ////////////////// //console.log(bodegas_locacion);
       this.bodegas = bodegas_locacion;
       this.bodegaSeleccionada = this.bodegas[0];
       this.seleccionarBodega(this.bodegaSeleccionada);
@@ -236,13 +238,13 @@ export class ProgramacionBodegaComponent implements OnInit {
   }
 
   seleccionarBodega(bodega:any){
-    ////////////// console.log(bodega);
+    ////////////// //console.log(bodega);
    this.setReporte();
   }
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////////////////////////////////////////////////// console.log((arrayFiltrar);
+    //////////////////////////////////////////////////// //console.log((arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -261,7 +263,7 @@ export class ProgramacionBodegaComponent implements OnInit {
   }
 
   async seleccionarFecha(){
-    //////////////////////////////////// console.log(this.fechaProgramacion)
+    //////////////////////////////////// //console.log(this.fechaProgramacion)
     this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
     this.setReporte();
   }
@@ -275,15 +277,15 @@ export class ProgramacionBodegaComponent implements OnInit {
     }
 
     if(this.infousuario.roles.find((rol: { nombre: any; })=>rol.nombre === TipoRol.CLIENTELOGISTICA)){
-      ////////////// console.log(this.infousuario.clientes);
+      ////////////// //console.log(this.infousuario.clientes);
       let clientes:any = this.infousuario.clientes.map((cliente: { id: any; })=>{return cliente.id;});
-      ////////////// console.log(clientes);
+      ////////////// //console.log(clientes);
       params.clientes = JSON.stringify(clientes);
     }
-    //////////////////////////////////// console.log(this.fechaProgramacion);
+    //////////////////////////////////// //console.log(this.fechaProgramacion);
 
     let programacionBodega = await this.solicitudTurnoService.turnosExtendido(params);
-    console.log('programacionBodega',programacionBodega);
+    //console.log('programacionBodega',programacionBodega);
 
     programacionBodega.raw.forEach((solicitud: {
      
@@ -301,7 +303,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     //return solicitud
     });
 
-    //// console.log(programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false));
+    //// //console.log(programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false));
     let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; pedidos_turno_estado:string })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false && item.pedidos_turno_estado === 'A');
     //let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; pedidos_turno_estado:string })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false);
     //return programacionBodega.raw;
@@ -312,20 +314,20 @@ export class ProgramacionBodegaComponent implements OnInit {
     this.loadingPDB = true;
     this.lineasProgramacionDiariaBodega = await this.functionsService.clonObject(this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && 
                                                                                     linea.turnos_estado != EstadosDealleSolicitud.CANCELADO));
-
+    console.log(this.lineasProgramacionDiariaBodega );
     this.configTablaProgramacionDiaria();
 
     this.lineasConsolidadoProgramacionDiariaBodega = (await this.getInfoTablaConsolidadoProgramacionDiaria()).consolidadoItems;
     this.configTablaConsolidadoProgramacionDiaria();
 
     await this.configTablaGestionBodega();
-    //// console.log('tablaGestionBodega',this.tablaGestionBodega.data);
+    //// ////console.log('tablaGestionBodega',this.tablaGestionBodega.data);
     let bgcolorChart:any = this.tablaGestionBodega.data.map((linea: { estado: string; })=>{
       return this.estadosTurno.find((estado:{name:string}) => estado.name === linea.estado).backgroundColor;
     })
-    console.log('bgcolorChart',bgcolorChart);
+    //console.log('bgcolorChart',bgcolorChart);
     this.chartDataGestionBodega = await this.functionsService.setDataBasicChart(this.tablaGestionBodega.data,{label:'estado',value:'cantidad'});
-    // console.log('chartDataGestionBodega',this.chartDataGestionBodega);
+    // //console.log('chartDataGestionBodega',this.chartDataGestionBodega);
   }
 
   configTablaProgramacionDiaria(){
@@ -357,7 +359,9 @@ export class ProgramacionBodegaComponent implements OnInit {
           placa:linea.vehiculos_placa,
           conductor:linea.conductores_nombre,
           cedula:linea.conductores_cedula,
-          telefono:linea.conductores_numerocelular
+          telefono:linea.conductores_numerocelular,
+          condiciontpt:linea.turnos_condiciontpt,
+          comercial:linea.pedidos_turno_email_vendedor
         });
     }
 
@@ -369,7 +373,7 @@ export class ProgramacionBodegaComponent implements OnInit {
 
     let consolidadoItems:any = await this.functionsService.groupArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaBodega),'pedidos_turno_itemcode',[{pedidos_turno_cantidad:0}]);
     let totalToneladas:number = (await this.functionsService.sumColArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaBodega),[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
-    ////////////////////////////////////// console.log('consolidadoItems',consolidadoItems);
+    ////////////////////////////////////// //console.log('consolidadoItems',consolidadoItems);
     
     await consolidadoItems.map(async (linea:any)=>{
         
@@ -377,8 +381,8 @@ export class ProgramacionBodegaComponent implements OnInit {
         linea.totalToneladas = totalToneladas;
         linea.prcItemBodega = prcItemBodega;
 
-        //////////////////////////////////////// console.log('itemcode',linea.pedidos_turno_itemcode);
-        //////////////////////////////////////// console.log(this.lineasProgramacionDiariaBodega.filter(item=>item.pedidos_turno_itemcode === linea.pedidos_turno_itemcode));
+        //////////////////////////////////////// //console.log('itemcode',linea.pedidos_turno_itemcode);
+        //////////////////////////////////////// //console.log(this.lineasProgramacionDiariaBodega.filter(item=>item.pedidos_turno_itemcode === linea.pedidos_turno_itemcode));
     });
 
     let consolidadoProgramacionBodega:any = {
@@ -387,7 +391,7 @@ export class ProgramacionBodegaComponent implements OnInit {
 
     };
 
-    ////////////////////////////////////// console.log(consolidadoProgramacionBodega);
+    ////////////////////////////////////// //console.log(consolidadoProgramacionBodega);
     
     return consolidadoProgramacionBodega;
   }
@@ -412,36 +416,36 @@ export class ProgramacionBodegaComponent implements OnInit {
     this.chartPieData = await this.functionsService.setDataPieDoughnutChart(tabla.data,{label:'itemname',value:'cantidad'});
     
    
-    ////////////////////////////////// console.log(this.tablaConsolidadoProgramacionDiariaBodega.data.length);
+    ////////////////////////////////// //console.log(this.tablaConsolidadoProgramacionDiariaBodega.data.length);
 
   }
 
   async configSumTabla(headersTable:any[],dataTable:any[]):Promise<any>{
     let colsSum:any[] = [];
-    //////////////////////////// console.log(dataTable);
-    //////////////////////////////// console.log(Object.keys(headersTable[0]));
+    //////////////////////////// //console.log(dataTable);
+    //////////////////////////////// //console.log(Object.keys(headersTable[0]));
     let objString:string = "";
     let colsSumSwitch:boolean = false;
     for(let key of Object.keys(headersTable[0])){
       objString+=`"${key}":`
       if(headersTable[0][key].sum){
-        //////////////////////////////// console.log(key);
+        //////////////////////////////// //console.log(key);
         colsSumSwitch = true;
         let total = await this.functionsService.sumColArray(dataTable,JSON.parse(`[{"${key}":0}]`));
-        //////////////////////////////// console.log(total[0][key]);
+        //////////////////////////////// //console.log(total[0][key]);
         objString+=`${parseFloat(total[0][key])},`
       }else{
         objString+=`"",`
       }
     }
     objString = `{${objString.substring(0,objString.length-1)}}`;
-    //////////////////////////////// console.log(objString);
+    //////////////////////////////// //console.log(objString);
     if(colsSumSwitch){
       colsSum.push(JSON.parse(objString));
     }
     
 
-    //////////////////////////////// console.log(colsSum);
+    //////////////////////////////// //console.log(colsSum);
 
     return colsSum;
 
@@ -469,7 +473,7 @@ export class ProgramacionBodegaComponent implements OnInit {
   async configTablaGestionBodega():Promise<void> {
 
     let lineasGestionBodega = await this.functionsService.groupArray(await this.functionsService.clonObject(this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code)),'turnos_estado',[{pedidos_turno_cantidad:0}]);
-     console.log(lineasGestionBodega);
+     //console.log(lineasGestionBodega);
     let tabla:any = {
       header:  this.configHeaderTablaGestionBodega(),
       data:  this.configDataTablaGestionBodega(lineasGestionBodega),
@@ -478,7 +482,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     
     this.tablaGestionBodega = tabla;
 
-   // // console.log(tabla.data);
+   // // //console.log(tabla.data);
 
     let colsSum = await this.configSumTabla(tabla.header,tabla.data);
 

@@ -530,7 +530,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF')),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);
                   this.cantidad = totalesTabla[0].cantidad;
                   this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
-                  this.peso_neto = this.peso_bruto+this.cantidad;
+                  //this.peso_neto = this.peso_bruto+this.cantidad;
+                  this.peso_neto = turno.peso_neto==0?this.peso_bruto+this.cantidad:turno.peso_neto;
                   this.totalCarga = totalesTabla[0].cantidad;
                   this.displayModal = false;
                   this.loadingCargue = false;
@@ -2249,7 +2250,7 @@ async validarHoraCargue():Promise<boolean>{
              let pedidosClientes:any[] = [];
              for(let indexPedido in saldosPedidos){
               
-                
+                console.log(saldosPedidos[indexPedido]);
   
                   
                   pedidosClientes.push({
@@ -2265,7 +2266,7 @@ async validarHoraCargue():Promise<boolean>{
                     comentarios:saldosPedidos[indexPedido].Comments,
                     condicion_pago:saldosPedidos[indexPedido].PymntGroup,
                     condicion_tpt:saldosPedidos[indexPedido].U_NF_CONDTRANS,
-                    dependencia:'',
+                    dependencia:saldosPedidos[indexPedido].DEPENDENCIA,
                     descuento:0,
                     dias:0,
                     direccion_ea:'',
@@ -2284,7 +2285,7 @@ async validarHoraCargue():Promise<boolean>{
                     //locacion:saldosPedidos[indexPedido].Location,
                     locacioncode: saldosPedidos[indexPedido].locacion_codigo2,
                     locacion:saldosPedidos[indexPedido].locacion2,
-                    localidad:'',
+                    localidad:saldosPedidos[indexPedido].LOCALIDAD,
                     moneda:'',
                     nit:'',
                     nombre_referencia:'',
@@ -2300,8 +2301,9 @@ async validarHoraCargue():Promise<boolean>{
                     total_documento:saldosPedidos[indexPedido].LineTotal,
                     total_impuesto:0,
                     total_linea_siniva:0,
-                    vicepresidencia:'',
-                    email_vendedor:saldosPedidos[indexPedido].Email
+                    vicepresidencia:saldosPedidos[indexPedido].DEPENDENCIA,
+                    email_vendedor:saldosPedidos[indexPedido].Email,
+                    tipoprod:saldosPedidos[indexPedido].TipoProd
                     
                   })
   
@@ -2545,6 +2547,14 @@ async validarHoraCargue():Promise<boolean>{
                 }else{
 
                   let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
+
+                        console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia)
+
+                  let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
+        
+                  let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
+
+                  let tipoproducto = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].tipoprod;
                   
                       pedidosTurno.push({
                             id:`${pedido.docnum}${pedido.itemcode}${this.municipioentrega}${this.sitioentrega}`,
@@ -2570,6 +2580,9 @@ async validarHoraCargue():Promise<boolean>{
                             disponible:0,
                             lineaUpdate:{update:false,create:true},
                             cantidadOld:0,
+                            dependencia,
+                            localidad,
+                            tipoproducto
                             //cliente:this.clienteSeleccionado.CardName,
                       });
                       
@@ -2946,10 +2959,11 @@ async validarHoraCargue():Promise<boolean>{
           ////// console.log(clientesNuevoTurno);
 
           //Crear nuevo turno,
+          let horacargueCambioBodega = `${this.fechacargueCambioBodega.toISOString().split("T")[0]}T${this.horacargueCambioBodega.toISOString().split("T")[1]}`;
           let detalle_solicitud:any[] = [{
             
-              fechacita:this.fechacargueCambioBodega,
-              horacita:this.horacargueCambioBodega,
+              fechacita:new Date(this.fechacargueCambioBodega),
+              horacita:new Date(horacargueCambioBodega),
               lugarentrega:'',
               municipioentrega:'',
               observacion:`Turno generado automaticamente por cambio de bodega. basado en turno ${this.turnoId}`,
@@ -2965,8 +2979,8 @@ async validarHoraCargue():Promise<boolean>{
             clientes: clientesNuevoTurno.map((cliente)=>{ return cliente.id}),
             detalle_solicitud
           }
-          ////// console.log('newSolicitud',newSolicitud);
-
+           console.log('newSolicitud',newSolicitud);
+          
           this.solicitudTurnoService.create(newSolicitud)
               .subscribe({
                   next:async (result)=>{
@@ -3001,7 +3015,7 @@ async validarHoraCargue():Promise<boolean>{
               });
           //Actualizar el turno actual
 
-
+              
 
           
 
