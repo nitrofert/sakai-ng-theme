@@ -552,7 +552,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
         });
     }
 
-    return dataTable;
+    return await this.functionsService.sortArrayObject(dataTable,'zona','ASC');
 
   }
 
