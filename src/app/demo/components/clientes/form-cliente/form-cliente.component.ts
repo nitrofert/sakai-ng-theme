@@ -53,7 +53,7 @@ export class FormClienteComponent  implements  OnInit {
       this.clientesService.getClientesSAP()
           .subscribe({
               next:async (clientesSAP)=>{
-
+                
                 this.clientesSAP = await this.functionsService.objectToArray(clientesSAP)
 
                 this.getClientes();

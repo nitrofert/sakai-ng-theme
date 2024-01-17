@@ -60,7 +60,7 @@ export class VistaEstadosTurnoComponent implements  OnInit{
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad)
         .subscribe({
               next:async (turnosLocalidad)=>{
-                 ////////console.log(turnosLocalidad);
+                 console.log(turnosLocalidad);
                   this.turnosLocalidad = turnosLocalidad;
                   let boxEstados =await this.setBoxEstadosDate(this.fechaEstados,this.estadosTurno, turnosLocalidad);
                   this.estadosTurno = boxEstados;
@@ -117,6 +117,15 @@ export class VistaEstadosTurnoComponent implements  OnInit{
 
     //////console.log(infoEvent);
     this.onSelect.emit(infoEvent)
+  }
+
+   bufferToString(buffer:any){
+   
+    let dataString:string = String.fromCharCode(...buffer)
+   
+
+
+    return dataString;
   }
 
 }

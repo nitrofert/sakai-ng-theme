@@ -345,7 +345,7 @@
 
                 
 
-                <div class="field col-12">
+                <div class="field col-12 md:col-6">
                     <div class="p-inputgroup">
                         <span class="p-float-label">
                             <!--<p-autoComplete id="almacen" 
@@ -371,6 +371,10 @@
                         </span>
                     </div>
                     
+                </div>
+
+                <div class="field col-12 md:col-6 ">
+                         <p-selectButton id="adicional" [options]="adicionalOptions" [(ngModel)]="adicional" optionLabel="label" optionValue="value" [disabled]="updateModulo && estado != estadosTurno.SOLICITADO"></p-selectButton>
                 </div>
 
                 <!--<div class="field col-3">

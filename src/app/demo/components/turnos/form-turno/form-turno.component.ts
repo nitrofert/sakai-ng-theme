@@ -52,6 +52,10 @@ export class FormTurnoComponent implements  OnInit {
   estado:string ='';
   remision:string = '';
 
+  adicionalOptions: any[] = [{label: 'Vehículo adicional', value: true}, {label: 'Programado', value: false}];
+
+  adicional!: boolean;
+
   arrayBtnTurnos!: MenuItem[];
   btnAprobar: MenuItem =   {label: 'Aprobar', icon: 'pi pi-check', command: () => { this.aprobarTurno();}};
   btnPausar: MenuItem =   {label: 'Pausar', icon: 'pi pi-pause', command: () => { this.pausarTurno();}};
@@ -467,7 +471,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                  //////// console.log('turno',turno);
+                  console.log('turno',turno);
                   
                   this.turno = turno;
                   
@@ -493,6 +497,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   ////////////////// ////////////// console.log(this.vehiculoSeleccionado);
                   this.pesomax = this.vehiculoSeleccionado.pesomax;
                   this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
+
+                 this.adicional = turno.adicional;
 
                   this.observaciones = turno.observacion;
                   this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
@@ -1618,6 +1624,7 @@ async validarHoraCargue():Promise<boolean>{
                 data.conductor = this.conductorSeleccionado.id;
                 data.peso_vacio = this.peso_bruto;
                 data.peso_neto = this.peso_neto;
+                data.adicional = this.adicional;
                 
                 //data.pedidos_detalle_solicitud = this.tablaPedidosTurno.data;
                 data.pedidos_detalle_solicitud = this.pedidosTurno;

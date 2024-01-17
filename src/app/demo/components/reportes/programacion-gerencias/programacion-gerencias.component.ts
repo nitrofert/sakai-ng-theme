@@ -62,6 +62,14 @@ export class ProgramacionGerenciasComponent implements OnInit {
     colsSum:[]
   };
 
+  tablaToneladasLocacion:any = {
+    header:this.configHeaderTablaToneladasZona(),
+    data:[],
+    colsSum:[]
+  };
+
+  chartDataConsolidadoLocacion!:any;
+
   chartDataConsolidadoZona!:any;
 
   chartDataConsolidadoGerencias!:any;
@@ -190,6 +198,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
     this.configTablaConsolidadoZona();
 
     this.configTablaConsolidadoGerencias();
+
+    this.configTablaConsolidadoLocacion();
 
    
 
@@ -486,6 +496,57 @@ export class ProgramacionGerenciasComponent implements OnInit {
     for(let linea of data){
         dataTable.push({
           zona:linea.pedidos_turno_localidad==null?'SIN ZONA':linea.pedidos_turno_localidad_label,
+          cantidad:linea.pedidos_turno_cantidad,
+          porcentaje:(linea.pedidos_turno_cantidad*100)/total
+        });
+    }
+
+    return dataTable;
+
+  }
+
+
+  async configTablaConsolidadoLocacion(){
+    let toneladasLocacionPedido = await this.functionsService.groupArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaGerencia),'locacion_locacion',[{pedidos_turno_cantidad:0}]);
+
+    //// //////console.log(toneladasZonaPedido);
+   
+
+    let tablaToneladasLocacionPedido:any = {
+      header:  this.configHeaderTablaToneladasLocacion(),
+      data:  await this.configDataTablaToneladasLocacion(toneladasLocacionPedido)
+    };
+
+    let colsSum = await this.configSumTabla(tablaToneladasLocacionPedido.header,tablaToneladasLocacionPedido.data);
+    this.tablaToneladasLocacion = tablaToneladasLocacionPedido;
+    this.tablaToneladasLocacion.colsSum = colsSum;
+
+    this.chartDataConsolidadoLocacion = await this.functionsService.setDataPieDoughnutChart(this.tablaToneladasLocacion.data,{label:'locacion',value:'cantidad'});
+  }
+
+  configHeaderTablaToneladasLocacion(){
+    let headersTable:any[] =  [{
+      'zona': {label:'Zona',type:'text', sizeCol:'6rem', align:'center',field:"zona"},
+      'locacion': {label:'Locacion',type:'text', sizeCol:'6rem', align:'center',field:"locacion"},
+      'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
+      'porcentaje': {label:'%',type:'number', sizeCol:'6rem', align:'center',currency:"%",side:"rigth", editable:false,"sum":true,},
+
+      
+    }];
+
+    return headersTable;
+  }
+
+   async configDataTablaToneladasLocacion(data:any[]):Promise<any>{
+
+    let dataTable:any[] = [];
+    let total = (await this.functionsService.sumColArray(data,[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;    
+    //////console.log('total',total)
+
+    for(let linea of data){
+        dataTable.push({
+          zona:linea.locacion_zona,
+          locacion:linea.locacion_locacion==null?'SIN ZONA':linea.locacion_locacion,
           cantidad:linea.pedidos_turno_cantidad,
           porcentaje:(linea.pedidos_turno_cantidad*100)/total
         });

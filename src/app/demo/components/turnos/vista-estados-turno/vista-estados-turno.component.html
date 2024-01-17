@@ -34,6 +34,22 @@
                                     <div class="mb-2"><span class="font-bold">Placa:</span> {{turno.vehiculo.placa}}</div>
                                     <div class="mb-2"><span class="font-bold">Conductor:</span> {{turno.conductor.nombre | titlecase}}</div>
                                     <div class="mb-2"><span class="font-bold">Transportadora:</span> {{turno.transportadora.nombre | titlecase}}</div>
+                                    <div *ngIf="turno.estado== enumEstadosTurno.CANCELADO || turno.estado== enumEstadosTurno.PAUSADO" class="mb-2">
+                                        <div>
+                                            <span class="font-bold">Fecha novedad:</span> {{ turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].fecha_accion }}
+                                        </div>
+                                        <!--<div>
+                                            <span class="font-bold">Comentario:</span>{{ bufferToString(turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].comentario) }} 
+                                        </div>-->
+                                        <div>
+                                            <span class="font-bold">Novedades:</span>
+                                            <div *ngFor="let novedad of turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].novedades">
+                                                {{novedad.novedad}}
+                                            </div>
+                                        </div>
+                                         
+                                    </div>
+
                                     <div *ngIf="turno.remision" class="mb-2"><span class="font-bold">Remisión:</span> {{turno.remision }}</div>
                                     <ng-template pTemplate="footer">
                                         Hora cita: {{ turno.horacita | date:'mediumTime' }}
