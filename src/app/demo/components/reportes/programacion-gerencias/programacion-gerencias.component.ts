@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, TreeNode } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
@@ -95,6 +95,16 @@ export class ProgramacionGerenciasComponent implements OnInit {
     header:this.configHeaderConsolidadoNovedades(),
 
   };
+ 
+
+  tablaConsolidadoAdicionales:any = {
+    header:this.configHeaderTablaConsolidadoAdicionales(),
+
+  };
+
+
+
+  dataTreeTableProgramacionDiariaGerencias!: TreeNode[] ;
 
   constructor(private almacenesService:AlmacenesService,
     private messageService: MessageService,
@@ -109,6 +119,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
   async ngOnInit() {
     this.infousuario = await this.usuariosService.infoUsuario();
     this.getLocalidades();
+    
   }
 
   async getLocalidades(){
@@ -183,7 +194,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
       return {code:gerencia.pedidos_turno_dependencia, name:gerencia.pedidos_turno_dependencia_label, label:gerencia.pedidos_turno_dependencia_label}
     });
     
-    //// //////console.log('gerencias',this.gerencias);
+    console.log('gerencias',this.gerencias);
     
 
 
@@ -202,11 +213,49 @@ export class ProgramacionGerenciasComponent implements OnInit {
     this.configTablaConsolidadoLocacion();
 
    
-
+    //await this.configTreeTableProgramacionDiariaGerencias();
    
 
    
 
+  }
+
+  async configTreeTableProgramacionDiariaGerencias():Promise<void>{
+      let gerencias = (await this.functionsService.groupArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaGerencia),'pedidos_turno_dependencia',[{pedidos_turno_cantidad:0}])).map((programacion)=>{return {dependencia:programacion.pedidos_turno_dependencia, cantidad:programacion.pedidos_turno_cantidad}});
+      console.log(gerencias);
+      let treeTable: any[] = [];
+      //gerencias.forEach(async (gerencia)=>{
+      for await(let gerencia of gerencias){
+         let lineasGerencia = (await this.functionsService.clonObject(this.lineasProgramacionDiariaGerencia)).filter((linea:{pedidos_turno_dependencia:string })=>linea.pedidos_turno_dependencia === gerencia.dependencia)
+         treeTable.push({
+                            data:{
+                              dependencia:gerencia.dependencia,
+                              locacion:'',
+                              estado:'',
+                              cliente:'',
+                              tipo:'',
+                              pedido:'',
+                              cantidad:gerencia.cantidad
+
+                            },
+                            children:lineasGerencia.map((lineaGerencia: { locacion_locacion: any; turnos_estado: any; pedidos_turno_CardName: any; turnos_condiciontpt: any; pedidos_turno_pedidonum: any; pedidos_turno_cantidad: any; })=>{ return {
+                                                                                    data:{
+                                                                                      dependencia:'',
+                                                                                      locacion:lineaGerencia.locacion_locacion,
+                                                                                      estado:lineaGerencia.turnos_estado,
+                                                                                      cliente:lineaGerencia.pedidos_turno_CardName,
+                                                                                      tipo:lineaGerencia.turnos_condiciontpt,
+                                                                                      pedido:lineaGerencia.pedidos_turno_pedidonum,
+                                                                                      cantidad:lineaGerencia.pedidos_turno_cantidad
+                                                                                    }
+                                                                                  }
+                                                                          })
+                        })
+    //  });
+    }
+
+    console.log(treeTable);
+    this.dataTreeTableProgramacionDiariaGerencias = treeTable as TreeNode[];
   }
 
   seleccionarGerencia(gerencia:any){
@@ -283,6 +332,9 @@ export class ProgramacionGerenciasComponent implements OnInit {
       //console.log('consolidadoNovedadesProgramacionDiariaDependencia',consolidadoNovedadesProgramacionDiariaDependencia);
 
       let colSumConsolidadoNovedades = await this.configSumTabla(this.tablaConsolidadoNovedadesGerencia.header,consolidadoNovedadesProgramacionDiariaDependencia)
+
+      let consolidadoAdicionalesDependencia = await this.configDataTablaConsolidadoAdicionales(await this.functionsService.clonObject(lineasProgramacionDiariaDependencia))
+
       
       this.dependencias.push({
         dependencia: dependencia.label,
@@ -295,7 +347,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
         colSumConsolidadoModTPT,
         chartDataConsolidadoModTPT,
         consolidadoNovedadesProgramacionDiariaDependencia,
-        colSumConsolidadoNovedades
+        colSumConsolidadoNovedades,
+        consolidadoAdicionalesDependencia
 
       })
       
@@ -537,7 +590,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
     return headersTable;
   }
 
-   async configDataTablaToneladasLocacion(data:any[]):Promise<any>{
+  async configDataTablaToneladasLocacion(data:any[]):Promise<any>{
 
     let dataTable:any[] = [];
     let total = (await this.functionsService.sumColArray(data,[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;    
@@ -555,7 +608,6 @@ export class ProgramacionGerenciasComponent implements OnInit {
     return await this.functionsService.sortArrayObject(dataTable,'zona','ASC');
 
   }
-
 
   async configTablaConsolidadoGerencias(){
     
@@ -663,6 +715,65 @@ export class ProgramacionGerenciasComponent implements OnInit {
     }];
 
     return headersTable;
+  }
+
+  configHeaderTablaConsolidadoAdicionales(){
+    let headersTable:any[] =  [{
+      
+      'zona': {label:'Zona',type:'text', sizeCol:'6rem', align:'center',field:"zona"},
+      'cantidadzona': {label:'Total zona',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidadzona"},
+      'cantidadprogramada': {label:'Toneladas programadas',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidadprogramada"},
+      'porcentajeprogramada': {label:'%',type:'number', sizeCol:'6rem', align:'center',currency:"%",side:"rigth", editable:false,"sum":true,},
+      'cantidadadcional': {label:'Toneladas adicinales',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidadadcional"},
+      'porcentajeadicional': {label:'%',type:'number', sizeCol:'6rem', align:'center',currency:"%",side:"rigth", editable:false,"sum":true,},
+      
+    }];
+
+    return headersTable;
+  }
+
+  async configDataTablaConsolidadoAdicionales(data:any[]):Promise<any>{
+
+    console.log(data);
+
+    let zonasDependencia = await this.functionsService.groupArray(await this.functionsService.clonObject(data),'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}])
+    
+
+    let dataTable:any[] = [];
+    let total = (await this.functionsService.sumColArray(await this.functionsService.clonObject(zonasDependencia),[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;    
+
+    for(let linea of zonasDependencia){
+        let arrayToneladasProgramadas =await this.functionsService.groupArray((await this.functionsService.clonObject(data)).filter((lineapedido: {turnos_adicional: number; pedidos_turno_localidad_label: any; })=> lineapedido.pedidos_turno_localidad_label==linea.pedidos_turno_localidad_label && lineapedido.turnos_adicional ==0),'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]);
+
+        console.log('toneladasProgramadas',arrayToneladasProgramadas);
+
+        let toneladasProgramadas = arrayToneladasProgramadas.length>0?arrayToneladasProgramadas[0].pedidos_turno_cantidad:0;
+
+        let arrayTtoneladasAdicionales =await this.functionsService.groupArray((await this.functionsService.clonObject(data)).filter((lineapedido: {turnos_adicional: number; pedidos_turno_localidad_label: any; })=> lineapedido.pedidos_turno_localidad_label==linea.pedidos_turno_localidad_label && lineapedido.turnos_adicional ==1),'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]);
+
+        console.log('toneladasAdicionales',arrayTtoneladasAdicionales);
+
+        let toneladasAdicionales = arrayTtoneladasAdicionales.length>0?arrayTtoneladasAdicionales[0].pedidos_turno_cantidad:0;
+
+        
+
+        
+        dataTable.push({
+          zona:linea.pedidos_turno_localidad_label==''?'SIN ZONA':linea.pedidos_turno_localidad_label,
+          cantidadzona:linea.pedidos_turno_cantidad,
+          cantidadprogramada:toneladasProgramadas,
+          porcentajeprogramada:(toneladasProgramadas/linea.pedidos_turno_cantidad)*100,
+          cantidadadcional:toneladasAdicionales,
+          porcentajeadicional:(toneladasAdicionales/linea.pedidos_turno_cantidad)*100,
+        });
+
+        
+    }
+    
+    console.log(dataTable);
+
+    return dataTable;
+
   }
 
  
