@@ -102,7 +102,7 @@ export class SolicitudTurnoService {
 
     async getListaTurnosLocacion(localidad:string):Promise<void>{
         this.turnosLocacion = await lastValueFrom(this.getTurnosPorLocalidad(localidad));
-       //////////console.log(this.turnosLocacion);
+       ////////////console.log(this.turnosLocacion);
         this.turnosLocacion$.next(this.turnosLocacion);
     }
 
