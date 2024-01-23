@@ -2646,15 +2646,17 @@ async validarHoraCargue():Promise<boolean>{
      ////////////// console.log(inventariosItemBodega);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
 
-    //////////// console.log(arrayInventariosItemBodega);
+    console.log(arrayInventariosItemBodega);
 
-    let almacenesConStockItem:any[] = [];
+    //let almacenesConStockItem:any[] = [];
 
-    for(let pedido of this.pedidosTurno){
+    let almacenesConStockItem:any[] = arrayInventariosItemBodega;
+
+    /*for(let pedido of this.pedidosTurno){
       //////////// console.log(pedido);
       // ////////////// console.log(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
       almacenesConStockItem = almacenesConStockItem.concat(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
-    }
+    }*/
 
     almacenesConStockItem.map((item)=>{
       item.label = `${item.Localidad_} - ${item.WhsCode} - ${item.WhsName}`
