@@ -346,7 +346,7 @@ getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
           next:(saldosPedidos)=>{
-            //console.log('saldosPedidos',saldosPedidos);
+            console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
             ////////////////////// //// //////console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
@@ -357,12 +357,12 @@ getSaldosPedidos(){
                 
               }*/
             
-              console.log(saldosPedidos[indexPedido]);
+              //console.log(saldosPedidos[indexPedido]);
 
               if(parseFloat(saldosPedidos[indexPedido].SALDO)<1){
-                console.log(saldosPedidos[indexPedido]);
-                console.log(saldosPedidos[indexPedido].SALDO);
-                console.log(parseFloat(saldosPedidos[indexPedido].SALDO));
+                //console.log(saldosPedidos[indexPedido]);
+                //console.log(saldosPedidos[indexPedido].SALDO);
+                //console.log(parseFloat(saldosPedidos[indexPedido].SALDO));
               }
 
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
@@ -440,12 +440,12 @@ getSaldosPedidos(){
       });
 }
 
-getPedidos(){
+/*getPedidos(){
 this.pedidosService.getPedidos().then(pedidos => {
   this.pedidos = pedidos;
-  //////////////////////////// //// //////console.log(this.pedidos[0]);
+  
 });
-}
+}*/
 
 getAlmacenes(){
   this.almacenesService.getAlmacenes()
@@ -539,7 +539,7 @@ this.clientesFiltrados = this.filter(event,this.clientes);
 
 
 
-seleccionarCliente(clienteSeleccionado:any){
+async seleccionarCliente(clienteSeleccionado:any){
   //////////////////////// //// //////console.log(clienteSeleccionado);
   //this.getPedidosPorCliente(clienteSeleccionado.code);
   /*////////////////////////// //// //////console.log(this.almacenSeleccionado);
@@ -549,11 +549,30 @@ seleccionarCliente(clienteSeleccionado:any){
     
     this.confirmAdicionCliente(clienteSeleccionado);
   }*/
+
+  console.log(clienteSeleccionado);
+
+  //let pedidosClientes = await this.getPedidosClientes(clienteSeleccionado);
+
   this.getPedidosPorCliente(clienteSeleccionado);
   this.almacenSeleccionado = [];
   this.vehiculosEnSolicitud = [];
   this.generarTreeTable();
   this.toggle(1);
+}
+
+async getPedidosClientes(clientesSeleccionados:any):Promise<any>{
+  let pedidosClientes:any[] = [];
+
+  for(let cliente of clientesSeleccionados){
+      if(pedidosClientes.filter(cliente=>cliente.CardCode === cliente.CardCode).length == 0){
+        let pedidosCliente$ = this.pedidosService.getSaldosPedidos(cliente.CardCode);
+        let pedidosCliente = await this.functionsService.objectToArray(await lastValueFrom(pedidosCliente$)) ;  
+        console.log('pedidosCliente',pedidosCliente);
+      }
+  }
+
+  return pedidosClientes;
 }
 
 
@@ -562,7 +581,7 @@ async getPedidosPorCliente(clientesSeleccionados:any){
  // console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
 
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-  console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
+  //console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
   this.getAlmacenesEnPedidos();
 }
 

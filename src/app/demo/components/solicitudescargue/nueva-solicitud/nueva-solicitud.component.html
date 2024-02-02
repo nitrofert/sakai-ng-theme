@@ -12,8 +12,9 @@
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 mt-3">
                             <span class="p-float-label">
-                                <p-skeleton *ngIf="clientes.length==0 || pedidos.length==0" height="2rem" styleClass="mb-2"></p-skeleton>
-                                <p-autoComplete id="cliente"
+                                <!--<p-skeleton *ngIf="clientes.length==0 || pedidos.length==0" height="2rem" styleClass="mb-2"></p-skeleton>-->
+                                <p-skeleton *ngIf="clientes.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                                <!--<p-autoComplete id="cliente"
                                                 *ngIf="clientes.length>0 && pedidos.length>0" 
                                                 [(ngModel)]="clienteSeleccionado" 
                                                 [suggestions]="clientesFiltrados" 
@@ -23,9 +24,23 @@
                                                 [multiple]="multiplesClientes"
                                                 (onSelect)="seleccionarCliente(clienteSeleccionado)"
                                                 (onUnselect)="seleccionarCliente(clienteSeleccionado)">
+                                </p-autoComplete>-->
+                                <p-autoComplete id="cliente"
+                                                *ngIf="clientes.length>0 " 
+                                                [(ngModel)]="clienteSeleccionado" 
+                                                [suggestions]="clientesFiltrados" 
+                                                (completeMethod)="filtrarCliente($event)" 
+                                                field="label" 
+                                                [dropdown]="true"
+                                                [multiple]="multiplesClientes"
+                                                (onSelect)="seleccionarCliente(clienteSeleccionado)"
+                                                (onUnselect)="seleccionarCliente(clienteSeleccionado)">
                                 </p-autoComplete>
-                                <label *ngIf="clientes.length==0  || pedidos.length==0" for="cliente"><h6>Cargando clientes y pedidos ...</h6></label>
-                                <label *ngIf="clientes.length>0 && pedidos.length>0" for="cliente"><h6>Seleccione un cliente</h6></label>
+                                <!--<label *ngIf="clientes.length==0  || pedidos.length==0" for="cliente"><h6>Cargando clientes y pedidos ...</h6></label>
+                                <label *ngIf="clientes.length>0 && pedidos.length>0" for="cliente"><h6>Seleccione un cliente</h6></label>-->
+
+                                <label *ngIf="clientes.length==0  " for="cliente"><h6>Cargando clientes y pedidos ...</h6></label>
+                                <label *ngIf="clientes.length>0 " for="cliente"><h6>Seleccione un cliente</h6></label>
                             </span>
                         </div>
                         <!--

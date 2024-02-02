@@ -16,17 +16,20 @@ export class PedidosService {
         }
 
     
-    getPedidos() {
+    /*getPedidos() {
         return this.http.get<any>('assets/demo/data/pedidos.json')
             .toPromise()
             .then(res => res.data as any[])
             .then(data => data);
-    }
+    }*/
 
     getSaldosPedidos(cliente?:string,locacion2?:string):Observable<any> {
         let options:string = "";
         if(cliente){
-            options+=`&cliente=${cliente}&locacion2=${locacion2}`;
+            options+=`&cliente=${cliente}`;
+        }
+        if(locacion2){
+            options+=`&locacion2=${locacion2}`;
         }
         const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos?compania=${this.urlApiService.companySAP}${options}`;
         return this.http.get<any>(url);

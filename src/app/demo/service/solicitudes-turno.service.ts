@@ -90,9 +90,9 @@ export class SolicitudTurnoService {
     }
 
     
-    getTurnosPorLocalidad(localidad:string):Observable<any> {
+    getTurnosPorLocalidad(localidad:string,fechaInicio?:any,fechaFin?:any):Observable<any> {
         const url:string = `${this.api_url}/api/solicitud-turnos/localidad`;
-        return this.http.get<any>(url, {params:{localidad}});
+        return this.http.get<any>(url, {params:{localidad,fechaInicio,fechaFin}});
     }
 
     getTurnosLcacion$(localidad:string):Observable<any> {

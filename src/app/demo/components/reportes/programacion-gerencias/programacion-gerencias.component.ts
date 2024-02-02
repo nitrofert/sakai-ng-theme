@@ -129,7 +129,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
 
   async getDependencias(){
     this.dependencias_all =  await this.dependenciasService.getDependencias();
-    
+    //console.log(this.dependencias_all);
     this.seleccionarFecha();
     
   }
@@ -156,7 +156,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
           pedidos_turno_localidad:string;
           pedidos_turno_localidad_label:string;
     })=>{
-
+          //console.log(this.dependencias_all.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.pedidos_turno_dependencia));
+          //console.log(this.dependencias_all.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.pedidos_turno_dependencia));
           solicitud.pedidos_turno_dependencia_label = this.dependencias_all.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.pedidos_turno_dependencia)?this.dependencias_all.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.pedidos_turno_dependencia).name:'';
           solicitud.pedidos_turno_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.pedidos_turno_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.pedidos_turno_localidad).name:'';
     });
@@ -283,7 +284,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
 
       let lineasProgramacionDiariaGerencia =  await this.functionsService.clonObject(this.lineasProgramacionDiariaGerencia);
       let lineasProgramacionDiariaDependencia = lineasProgramacionDiariaGerencia.filter((linea: { pedidos_turno_dependencia: any; })=>linea.pedidos_turno_dependencia === dependencia.code);
-      //console.log('lineasProgramacionDiariaDependencia',lineasProgramacionDiariaDependencia);
+      console.log('lineasProgramacionDiariaDependencia',lineasProgramacionDiariaDependencia);
 
       
       let lineasNovedadesProgramacionDiariaGerencia =  await this.functionsService.clonObject(this.lineasNovedadesProgramacionDiariaGerencia);
@@ -304,7 +305,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
       //// ////////console.log('colsSumDependencia',colsSumDependencia);
       
       let lineasProgramacionDiariaDependenciaTipoProducto = await this.functionsService.groupArray(await this.functionsService.clonObject(lineasProgramacionDiariaDependencia),'pedidos_turno_tipoproducto',[{pedidos_turno_cantidad:0}]);
-      //// ////////console.log('lineasProgramacionDiariaDependenciaTipoProducto',lineasProgramacionDiariaDependenciaTipoProducto);
+      console.log('lineasProgramacionDiariaDependenciaTipoProducto',lineasProgramacionDiariaDependenciaTipoProducto);
      
       let consolidadoTipoProductoDependencia = await this.configDataTablaConsolidadoTipoProducto(lineasProgramacionDiariaDependenciaTipoProducto);
       //// ////////console.log('consolidadoTipoProductoDependencia',consolidadoTipoProductoDependencia);
@@ -507,7 +508,16 @@ export class ProgramacionGerenciasComponent implements OnInit {
 
 
   async configTablaConsolidadoZona(){
-    let toneladasZonaPedido = await this.functionsService.groupArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaGerencia),'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]);
+    
+    let lineasProgramacionDiariaGerenciaZona = await (await this.functionsService.clonObject(this.lineasProgramacionDiariaGerencia)).map((linea: { gerenciaZona: any; pedidos_turno_dependencia: any; pedidos_turno_localidad: any; })=>{
+      linea.gerenciaZona = linea.pedidos_turno_dependencia+linea.pedidos_turno_localidad;
+      return linea
+    });
+
+    console.log('lineasProgramacionDiariaGerenciaZona',lineasProgramacionDiariaGerenciaZona);
+
+    let toneladasZonaPedido = await this.functionsService.sortArrayObject(await this.functionsService.groupArray(await this.functionsService.clonObject(lineasProgramacionDiariaGerenciaZona),'gerenciaZona',[{pedidos_turno_cantidad:0}]),'pedidos_turno_dependencia_label','ASC');
+    //let toneladasZonaPedido = await this.functionsService.groupArray(await this.functionsService.clonObject(this.lineasProgramacionDiariaGerencia),'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]);
 
     //// ////////console.log(toneladasZonaPedido);
    
@@ -529,7 +539,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
 
   configHeaderTablaToneladasZona(){
     let headersTable:any[] =  [{
-      
+      'gerencia': {label:'Gerencia',type:'text', sizeCol:'6rem', align:'center',field:"gerencia"},
       'zona': {label:'Zona',type:'text', sizeCol:'6rem', align:'center',field:"zona"},
       'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
       'porcentaje': {label:'%',type:'number', sizeCol:'6rem', align:'center',currency:"%",side:"rigth", editable:false,"sum":true,},
@@ -548,7 +558,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
 
     for(let linea of data){
         dataTable.push({
-          zona:linea.pedidos_turno_localidad==null?'SIN ZONA':linea.pedidos_turno_localidad_label,
+          gerencia:linea.pedidos_turno_dependencia_label==null?'SIN GERENCIA':linea.pedidos_turno_dependencia_label,
+          zona:linea.pedidos_turno_localidad_label==""?'SIN ZONA':linea.pedidos_turno_localidad_label,
           cantidad:linea.pedidos_turno_cantidad,
           porcentaje:(linea.pedidos_turno_cantidad*100)/total
         });

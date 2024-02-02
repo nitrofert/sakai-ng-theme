@@ -40,7 +40,8 @@
         {"id":"PROYECTO","name":"PROYECTOS"},
         {"id":"INNOVACI","name":"INNOVACION"},
         {"id":"ALMATERI","name":"ALMACEN DE MATERIALES"},
-        {"id":"PLANCIAL","name":"PLANIFICACION COMERCIAL"}
+        {"id":"PLANCIAL","name":"PLANIFICACION COMERCIAL"},
+        {"id":"VPCOCIAL","name":"VP COMERCIAL"}
 
     ]
 }

@@ -56,8 +56,18 @@ export class CalendarioTurnosComponent implements OnInit {
   infousuario!:any;
   boxEstados!:any[];
   permisosModulo!:any;
-  
 
+
+  semanaEnMilisegundos:number = 1000 * 60 * 60 * 24 * 7;  
+  
+  primerDia:Date = new Date(new Date().getTime() - (this.semanaEnMilisegundos*2));
+  ultimoDia:Date = new Date(new Date().getTime() + (this.semanaEnMilisegundos*2));
+  filtroRnagoFechas:Date[] = [this.primerDia,this.ultimoDia];
+
+
+
+ 
+  
 
   constructor(
     private messageService: MessageService,
@@ -159,7 +169,7 @@ export class CalendarioTurnosComponent implements OnInit {
   
   getEvents(){
     
-    console.log(this.turnosLocalidad);
+    //console.log(this.turnosLocalidad);
 
     let events:any[] = [];
     for(let turno of this.turnosLocalidad.filter(turnotmp=>turnotmp.estado != 'Cancelado')){
@@ -406,7 +416,9 @@ export class CalendarioTurnosComponent implements OnInit {
     //setTimeout(this.setTimer,2500);
     setTimeout(()=>{this.setTimer()},2500);
 
-    this.solicitudTurnoService.getTurnosPorLocalidad(localidad)
+    
+
+    this.solicitudTurnoService.getTurnosPorLocalidad(localidad,this.filtroRnagoFechas[0],this.filtroRnagoFechas[1])
         .subscribe({
               next:async (turnosLocalidad)=>{
                   //console.log(turnosLocalidad);
@@ -568,6 +580,12 @@ export class CalendarioTurnosComponent implements OnInit {
     //return String(this.eventGuid++);
   }
 
- 
+
+  cambioFecha(event:any){
+    
+    
+  
+  }
+
     
 }

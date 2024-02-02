@@ -1639,7 +1639,7 @@ async validarHoraCargue():Promise<boolean>{
               
             }
             
-            console.log(data);
+            console.log('Data update turno',data);
 
     return data;
   }
@@ -1648,7 +1648,7 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
               .subscribe({
                     next:async (turno)=>{
-                        ////////// ////////////// console.log(turno);
+                        console.log("turno actualizado",turno);
                         this.pedidosTurno.map((pedido)=>{
                           pedido.lineaUpdate = {update:false, create:false};
                           
