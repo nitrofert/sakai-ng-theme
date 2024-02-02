@@ -420,7 +420,7 @@ getSaldosPedidos(){
                   email_vendedor:saldosPedidos[indexPedido].Email,
                   dependencia:saldosPedidos[indexPedido].DEPENDENCIA,
                   localidad:saldosPedidos[indexPedido].LOCALIDAD,
-                  tipoprod:saldosPedidos[indexPedido].TipoProd
+                  tipoprod:saldosPedidos[indexPedido].TIPOPROD
                   
                 })
 
@@ -432,7 +432,7 @@ getSaldosPedidos(){
            // //////console.log(pedidosClientes.filter(pedido =>pedido.docnum ===290000003));
            // //// //////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
            this.pedidos = pedidosClientes;
-           ////// //// //////console.log(this.pedidos);
+           console.log(this.pedidos);
           },
           error:(err)=>{
             console.error(err);
@@ -1323,7 +1323,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
               
             }
 
-            ////// //// //////console.log(pdidosVehiculo);
+            console.log(pdidosVehiculo,this.pedidosCliente);
   
             this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
             this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
