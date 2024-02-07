@@ -579,6 +579,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                         this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
                       }
                   }
+                  
                 
 
                   ////////////////// ////////////// console.log(this.estado);
@@ -899,6 +900,16 @@ horariosSeleccionadosCambioBodega:any[] = [];
       case this.estadosTurno.PAUSADO:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Activar turno').valor){
           this.arrayBtnTurnos.push(this.btnActivar);
+        }
+
+        console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length);
+        console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length);
+
+        if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length >0 &&
+           this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length == 0){
+            if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Activar turno APNI').valor){
+              this.arrayBtnTurnos.push(this.btnActivar);
+            }
         }
       break;
 
