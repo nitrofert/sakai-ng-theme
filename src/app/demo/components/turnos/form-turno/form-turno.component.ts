@@ -3018,7 +3018,9 @@ async validarHoraCargue():Promise<boolean>{
                       this.fechaaccion = new Date();
                       this.horaaccion = new Date();
                       this.comentario = "Cancelación automatica del turno por cambio de bodega";
-                      this.novedadesSeleccionadas = this.novedades.filter(novedad => novedad.id === 11);
+                      //this.novedadesSeleccionadas = this.novedades.filter(novedad => novedad.id === 11);
+                      this.novedadesSeleccionadas = this.novedades.filter(novedad => novedad.novedad === 'TURNO CANCELADO X CAMBIO BODEGA');
+
 
                     }
 
