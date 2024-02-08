@@ -475,6 +475,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
                   
                   this.turno = turno;
                   
+                  
                   this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
                   this.localidad = turno.locacion;
                   this.nombreLocalidad = turno.locacion;
