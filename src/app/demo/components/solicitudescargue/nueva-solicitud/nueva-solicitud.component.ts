@@ -156,6 +156,12 @@ envioAdicionVehiculo:boolean = false;
 
 mostrarLogs:boolean = false;
 
+verCondTPT:boolean = false;
+
+condicionesTPT:any[] = [{code:'RETIRA',label:'Retira cliente'},{code:'TRANSP',label:'Transporta sociedades'}];
+condicionSeleccionada!:any;
+condicionesFiltradas : any[] = [];
+
 
 constructor(private pedidosService: PedidosService,
             private almacenesService: AlmacenesService,
@@ -182,7 +188,7 @@ constructor(private pedidosService: PedidosService,
 
 async  ngOnInit(){
 
-  
+  console.log(this.verCondTPT,this.condicionSeleccionada);
 
   this.getPermisosModulo();
   //this.getPermisosModulo2();
@@ -256,6 +262,13 @@ getPermisosModulo(){
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor){
               this.condicion_tpt="TRANSP";
             }
+
+            if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor && this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='RETIRA').valor){
+              //this.condicion_tpt="ALL";
+              this.verCondTPT = true;
+            }
+
+            console.log(this.condicion_tpt);
             /*
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver logs').valor){
               this.mostrarLogs = true;
@@ -367,6 +380,9 @@ getSaldosPedidos(){
 
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
+                if(saldosPedidos[indexPedido].locacion_codigo2=='LADORADA'){
+                  console.log(saldosPedidos[indexPedido])
+                }
                 
                 pedidosClientes.push({
                   cantidad:saldosPedidos[indexPedido].Quantity,
@@ -537,7 +553,21 @@ filtrarCliente(event: any) {
 this.clientesFiltrados = this.filter(event,this.clientes);
 }
 
+filtrarCondicion(event: any) {
+  this.condicionesFiltradas = this.filter(event,this.condicionesTPT);
+  }
 
+
+seleccionarCondicion(condicionSeleccionada:any){
+  
+  console.log(this.verCondTPT,this.condicionSeleccionada);
+
+  this.condicion_tpt = condicionSeleccionada.code;
+this.clienteSeleccionado = [];
+  this.almacenSeleccionado = [];
+  this.vehiculosEnSolicitud = [];
+}
+  
 
 async seleccionarCliente(clienteSeleccionado:any){
   //////////////////////// //// //////console.log(clienteSeleccionado);
@@ -550,15 +580,23 @@ async seleccionarCliente(clienteSeleccionado:any){
     this.confirmAdicionCliente(clienteSeleccionado);
   }*/
 
-  console.log(clienteSeleccionado);
+  console.log(this.clienteSeleccionado);
+
+  if(this.verCondTPT && this.condicionSeleccionada.length == 0){
+    this.messageService.add({severity:'error', summary:'Error', detail:'Debe seleccionar primero una condición de transporte'});
+  }else{
+    this.getPedidosPorCliente(clienteSeleccionado);
+    this.almacenSeleccionado = [];
+    this.vehiculosEnSolicitud = [];
+    this.generarTreeTable();
+    this.toggle(1);
+  }
+
+ 
 
   //let pedidosClientes = await this.getPedidosClientes(clienteSeleccionado);
 
-  this.getPedidosPorCliente(clienteSeleccionado);
-  this.almacenSeleccionado = [];
-  this.vehiculosEnSolicitud = [];
-  this.generarTreeTable();
-  this.toggle(1);
+  
 }
 
 async getPedidosClientes(clientesSeleccionados:any):Promise<any>{
@@ -587,6 +625,7 @@ async getPedidosPorCliente(clientesSeleccionados:any){
 
 getAlmacenesEnPedidos(){
   let almacenesPedidosCliente: any[] = [];
+  console.log('almacenesPedidosCliente',this.almacenes,this.pedidosCliente);
   for(let pedido of this.pedidosCliente){
     
     if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode).length===0){

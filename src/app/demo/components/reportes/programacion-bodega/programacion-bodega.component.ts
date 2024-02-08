@@ -167,6 +167,7 @@ export class ProgramacionBodegaComponent implements OnInit {
               }
               
               this.allbodegas = almacenesTMP;
+              console.log(this.allbodegas);
               this.getLocaciones();
              
             },
@@ -187,7 +188,7 @@ export class ProgramacionBodegaComponent implements OnInit {
                 locacion.label = locacion.locacion
               })
               //this.locaciones = locaciones;
-            // ////////////////////////////////////// //console.log(locaciones);
+              console.log(locaciones);
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               this.locacionSeleccionada = this.locaciones[0];
               this.seleccionarLocacion(this.locacionSeleccionada);
@@ -224,7 +225,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     ////// //console.log('locacion',locacion);
 
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
-    ////////////////// //console.log(bodegas_locacion);
+    console.log(bodegas_locacion);
     if(bodegas_locacion.length==0){
       //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La locación ${locacion.label} no tiene bodegas asociadas`});
       //////////// //console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);

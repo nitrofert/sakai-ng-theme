@@ -10,7 +10,7 @@
             <p-accordion [multiple]="true">
                 <p-accordionTab [header]="!clienteSeleccionado.label?'Información del cliente: ':'Información del cliente: '+clienteSeleccionado.label" [(selected)]="activeStateTabs[0]">
                     <div class="p-fluid p-formgrid grid">
-                        <div class="field col-12 mt-3">
+                        <div *ngIf="verCondTPT" class="field col-12 mt-3">
                             <span class="p-float-label">
                                 <!--<p-skeleton *ngIf="clientes.length==0 || pedidos.length==0" height="2rem" styleClass="mb-2"></p-skeleton>-->
                                 <p-skeleton *ngIf="clientes.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
@@ -25,8 +25,42 @@
                                                 (onSelect)="seleccionarCliente(clienteSeleccionado)"
                                                 (onUnselect)="seleccionarCliente(clienteSeleccionado)">
                                 </p-autoComplete>-->
-                                <p-autoComplete id="cliente"
+                                <p-autoComplete id="condTPT"
                                                 *ngIf="clientes.length>0 " 
+                                                [(ngModel)]="condicionSeleccionada" 
+                                                [suggestions]="condicionesFiltradas" 
+                                                (completeMethod)="filtrarCondicion($event)" 
+                                                field="label" 
+                                                [dropdown]="true"
+                                                
+                                                (onSelect)="seleccionarCondicion(condicionSeleccionada)"
+                                               >
+                                </p-autoComplete>
+                                <!--<label *ngIf="clientes.length==0  || pedidos.length==0" for="cliente"><h6>Cargando clientes y pedidos ...</h6></label>
+                                <label *ngIf="clientes.length>0 && pedidos.length>0" for="cliente"><h6>Seleccione un cliente</h6></label>-->
+
+                                
+                                <label  for="condTPT"><h6>Seleccione una condicion de transporte</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-12 mt-3">
+                            <span class="p-float-label">
+                                <!--<p-skeleton *ngIf="clientes.length==0 || pedidos.length==0" height="2rem" styleClass="mb-2"></p-skeleton>-->
+                                <p-skeleton *ngIf="(clientes.length==0 && !verCondTPT) || (verCondTPT && !condicionSeleccionada)" height="2rem" styleClass="mb-2"></p-skeleton>
+                                <!--<p-autoComplete id="cliente"
+                                                *ngIf="clientes.length>0 && pedidos.length>0" 
+                                                [(ngModel)]="clienteSeleccionado" 
+                                                [suggestions]="clientesFiltrados" 
+                                                (completeMethod)="filtrarCliente($event)" 
+                                                field="label" 
+                                                [dropdown]="true"
+                                                [multiple]="multiplesClientes"
+                                                (onSelect)="seleccionarCliente(clienteSeleccionado)"
+                                                (onUnselect)="seleccionarCliente(clienteSeleccionado)">
+                                </p-autoComplete>-->
+                                <p-autoComplete id="cliente"
+                                                *ngIf="(!verCondTPT && clientes.length>0) || (verCondTPT && condicionSeleccionada) " 
                                                 [(ngModel)]="clienteSeleccionado" 
                                                 [suggestions]="clientesFiltrados" 
                                                 (completeMethod)="filtrarCliente($event)" 
@@ -43,6 +77,7 @@
                                 <label *ngIf="clientes.length>0 " for="cliente"><h6>Seleccione un cliente</h6></label>
                             </span>
                         </div>
+                        
                         <!--
                         <div class="field col-12 md:col-3">
                             <span class="p-float-label">
