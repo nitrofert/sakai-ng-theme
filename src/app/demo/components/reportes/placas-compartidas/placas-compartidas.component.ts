@@ -46,11 +46,11 @@ async ngOnInit() {
 }
 
 async seleccionarFecha(){
-  //////////////////////////////////console.log(this.fechaProgramacion)
-  this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
-  //console.log('turnosFehaSeleccionada',this.turnosFehaSeleccionada);
-  let turnosAutorizados:any = await this.functionsService.clonObject(this.turnosFehaSeleccionada.filter(turno=>turno.turnos_estado === EstadosDealleSolicitud.AUTORIZADO));
-  console.log('turnosAutorizados',turnosAutorizados);
+  ////////////////////////////////////console.log(this.fechaProgramacion)
+  this.turnosFehaSeleccionada = (await this.getInfoTablaProgramacionDiaria()).filter((linea: { pedidos_turno_estado: string; }) => linea.pedidos_turno_estado=='A');
+  ////console.log('turnosFehaSeleccionada',this.turnosFehaSeleccionada);
+  let turnosAutorizados:any = await this.functionsService.clonObject(this.turnosFehaSeleccionada.filter(turno=>turno.turnos_estado != EstadosDealleSolicitud.CANCELADO && turno.turnos_estado != EstadosDealleSolicitud.SOLICITADO));
+  ////console.log('turnosAutorizados',turnosAutorizados);
   
   await this.setTablaPlacasCompartidas(turnosAutorizados);
   
@@ -65,16 +65,16 @@ async getInfoTablaProgramacionDiaria():Promise<any> {
   }
 
   if(this.infousuario.roles.find((rol: { nombre: any; })=>rol.nombre === TipoRol.CLIENTELOGISTICA)){
-    ////////////console.log(this.infousuario.clientes);
+    //////////////console.log(this.infousuario.clientes);
     let clientes:any = this.infousuario.clientes.map((cliente: { id: any; })=>{return cliente.id;});
-    ////////////console.log(clientes);
+    //////////////console.log(clientes);
     params.clientes = JSON.stringify(clientes);
   }
 
   const programacionBodega = await this.solicitudTurnoService.turnosExtendido(params);
-  ////console.log(programacionBodega);
-  //console.log(programacionBodega.raw);
-  //console.log(programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false));
+  //////console.log(programacionBodega);
+  ////console.log(programacionBodega.raw);
+  ////console.log(programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false));
   let programacionBodegaSinFlete:any = programacionBodega.raw.filter((item: { pedidos_turno_itemcode: { toString: () => string; }; })=>item.pedidos_turno_itemcode.toString().startsWith('SF')==false);
   //return programacionBodega.raw;
   return programacionBodegaSinFlete;
@@ -82,11 +82,11 @@ async getInfoTablaProgramacionDiaria():Promise<any> {
 
 async setTablaPlacasCompartidas(turnosAutorizados:any[]):Promise<void> {
   
-  //console.log(turnosAutorizados);
+  ////console.log(turnosAutorizados);
 
   let configPlacasCompartidas = await this.configHeaderTablaPlacasCompartidasBodegas(turnosAutorizados);
     this.tablaPlacasCompartidasBodegas.header = configPlacasCompartidas.headersTable;
-    //////////////////////////////console.log(turnosFehaSeleccionadaConfirmados,configPlacasCompartidas);
+    ////////////////////////////////console.log(turnosFehaSeleccionadaConfirmados,configPlacasCompartidas);
 
     
     this.tablaPlacasCompartidasBodegas.data = await this.configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas,turnosAutorizados);
@@ -94,15 +94,15 @@ async setTablaPlacasCompartidas(turnosAutorizados:any[]):Promise<void> {
     let colsSum = await this.configSumTabla(configPlacasCompartidas.headersTable,this.tablaPlacasCompartidasBodegas.data);
 
     this.tablaPlacasCompartidasBodegas.colsSum = colsSum;
-    //////////////////////////console.log(this.tablaPlacasCompartidasBodegas.colsSum);
+    ////////////////////////////console.log(this.tablaPlacasCompartidasBodegas.colsSum);
     this.loadingPC = false;
 }
 
 async configHeaderTablaPlacasCompartidasBodegas(arrayTurnos:any[]):Promise<any>{
 
-  //console.log( (await this.functionsService.groupArray(await this.functionsService.clonObject(arrayTurnos),'vehiculos_placa')).map((linea)=>{return linea.vehiculos_placa}));
+  ////console.log( (await this.functionsService.groupArray(await this.functionsService.clonObject(arrayTurnos),'vehiculos_placa')).map((linea)=>{return linea.vehiculos_placa}));
   let placasTurnos = (await this.functionsService.groupArray(await this.functionsService.clonObject(arrayTurnos),'vehiculos_placa')).map((linea)=>{return linea.vehiculos_placa});  
-  console.log('placasTurnos',placasTurnos);
+  //console.log('placasTurnos',placasTurnos);
 
   let bodegas:any[] = [];
   let placas:any[] = [];
@@ -114,21 +114,21 @@ async configHeaderTablaPlacasCompartidasBodegas(arrayTurnos:any[]):Promise<any>{
  //placasTurnos.forEach(async (placa)=>{
   for await (let placa of placasTurnos){
     let turnosPlaca = arrayTurnos.filter((turno)=>turno.vehiculos_placa===placa);
-    console.log('turnosPlaca',turnosPlaca);
+    //console.log('turnosPlaca',turnosPlaca);
     let bodegasPlaca = (await this.functionsService.groupArray(await this.functionsService.clonObject(turnosPlaca),'pedidos_turno_bodega')).map((linea)=>{return linea.pedidos_turno_bodega});
-    console.log('bodegasPlaca.length',bodegasPlaca.length);
+    //console.log('bodegasPlaca.length',bodegasPlaca.length);
     
     if(bodegasPlaca.length >1){
-      console.log('bodegasPlaca',bodegasPlaca)
+      //console.log('bodegasPlaca',bodegasPlaca)
       bodegasPlaca.forEach((bodegatmp)=>{
 
-        console.log(bodegatmp);
+        //console.log(bodegatmp);
         if(!bodegas.find(bodega=>bodega.code === bodegatmp)){
 
           objString += `"bodega${idBodega}":{"label":"${bodegatmp}","type":"numeric","sizeCol":"6rem","align":"center","currency":"TON","side":"rigth","editable":false,"sum":true,"field":"bodega${idBodega}"},`;
-          console.log(objString);
+          //console.log(objString);
           bodegas.push({code: bodegatmp});
-          console.log(bodegas);
+          //console.log(bodegas);
           idBodega++;
         }
       })
@@ -156,7 +156,7 @@ async configHeaderTablaPlacasCompartidasBodegas(arrayTurnos:any[]):Promise<any>{
   //objString = objString.substring(0,objString.length-1);
   objString +='"total":{"label":"Total placa","type":"number","sizeCol":"6rem","align":"center","currency":"TON","side":"rigth","editable":false,"sum":true}}]'
 
-  //////////////////////////////console.log(objString)
+  ////////////////////////////////console.log(objString)
 
   let headersTable:any[] = JSON.parse(objString);
 
@@ -166,14 +166,14 @@ async configHeaderTablaPlacasCompartidasBodegas(arrayTurnos:any[]):Promise<any>{
     placas
   }
 
-  console.log(resultConfig);
+  //console.log(resultConfig);
 
   return resultConfig;
 }
 
 async configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas:any, turnos:any[]):Promise<any>{
 
-  //////console.log(configPlacasCompartidas);
+  ////////console.log(configPlacasCompartidas);
   this.loadingPC = true;
   let placas:any[] = configPlacasCompartidas.placas;
   let bodegas:any[] = configPlacasCompartidas.bodegas;
@@ -186,15 +186,15 @@ async configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas:any, turno
     let totalPlaca:number =0;
     for(let bodega of bodegas){
 
-      ////////////////////////////////console.log(headersTable[0]['bodega'+idBodega].label);
+      //////////////////////////////////console.log(headersTable[0]['bodega'+idBodega].label);
       let cantidadBodegaPlaca =0;
       let codeBodega = headersTable[0]['bodega'+idBodega].label;
       
       if(bodega.code === codeBodega && turnos.find(turno=>turno.vehiculos_placa === placa.code && turno.pedidos_turno_bodega === bodega.code)){
         let turnosPlacaBodega = turnos.filter(turno=>turno.vehiculos_placa === placa.code && turno.pedidos_turno_bodega === bodega.code);
-        //console.log('turnosPlacaBodega',turnosPlacaBodega);
+        ////console.log('turnosPlacaBodega',turnosPlacaBodega);
         let cantidadTotalTurnosPlacaBodega = await this.functionsService.sumColArray(turnosPlacaBodega,[{'pedidos_turno_cantidad':0}]);
-        //console.log(cantidadTotalTurnosPlacaBodega);
+        ////console.log(cantidadTotalTurnosPlacaBodega);
         cantidadBodegaPlaca = cantidadTotalTurnosPlacaBodega[0].pedidos_turno_cantidad;
       }
      
@@ -206,12 +206,12 @@ async configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas:any, turno
 
     objString +=`"total":"${totalPlaca}"}`
 
-    //////////////////////////////console.log(objString);
+    ////////////////////////////////console.log(objString);
     dataTable.push(JSON.parse(objString));
 
   }
   
-  ////////////////////////////console.log(dataTable);
+  //////////////////////////////console.log(dataTable);
 
 
   return dataTable;
@@ -221,30 +221,30 @@ async configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas:any, turno
 
 async configSumTabla(headersTable:any[],dataTable:any[]):Promise<any>{
   let colsSum:any[] = [];
-  //////////////////////////console.log(dataTable);
-  //////////////////////////////console.log(Object.keys(headersTable[0]));
+  ////////////////////////////console.log(dataTable);
+  ////////////////////////////////console.log(Object.keys(headersTable[0]));
   let objString:string = "";
   let colsSumSwitch:boolean = false;
   for(let key of Object.keys(headersTable[0])){
     objString+=`"${key}":`
     if(headersTable[0][key].sum){
-      //////////////////////////////console.log(key);
+      ////////////////////////////////console.log(key);
       colsSumSwitch = true;
       let total = await this.functionsService.sumColArray(dataTable,JSON.parse(`[{"${key}":0}]`));
-      //////////////////////////////console.log(total[0][key]);
+      ////////////////////////////////console.log(total[0][key]);
       objString+=`${parseFloat(total[0][key])},`
     }else{
       objString+=`"",`
     }
   }
   objString = `{${objString.substring(0,objString.length-1)}}`;
-  //////////////////////////////console.log(objString);
+  ////////////////////////////////console.log(objString);
   if(colsSumSwitch){
     colsSum.push(JSON.parse(objString));
   }
   
 
-  //////////////////////////////console.log(colsSum);
+  ////////////////////////////////console.log(colsSum);
 
   return colsSum;
 
