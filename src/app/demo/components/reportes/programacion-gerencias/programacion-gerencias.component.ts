@@ -170,8 +170,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
 
   async seleccionarFecha(){
     ////////////////////////////////////// ////////console.log(this.fechaProgramacion)
-    this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
-    //////console.log('turnosFehaSeleccionada',this.turnosFehaSeleccionada);
+    this.turnosFehaSeleccionada = (await this.getInfoTablaProgramacionDiaria()).filter((linea: { pedidos_turno_estado: string; }) => linea.pedidos_turno_estado=='A');
+    console.log('turnosFehaSeleccionada',this.turnosFehaSeleccionada);
     this.setReporte();
   }
 

@@ -24,7 +24,7 @@ export class UrlApiService {
     getUrlAPI():string{
        
         let url = this.url_ssl?`https://${this.url_api}`:`http://${this.url_api}`;
-        //console.log('url api:',url);
+        console.log('url api:',url);
         return url;
     }
 
