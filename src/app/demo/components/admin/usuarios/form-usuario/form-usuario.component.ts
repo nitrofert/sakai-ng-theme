@@ -91,13 +91,7 @@ export class FormUsuarioComponent implements  OnInit {
    ////////console.log(this.roles);
     
     this.getRoles();
-    this.getClientes();
-    this.getLocaciones();
-
-    if(this.config.data.id!=0){
-      //Buscar información  del usuario seleccionado
-      this.getInfoUsuario(this.config.data.id);
-    }
+   
   }
 
   async getInfoUsuario(idusuario:number){
@@ -119,7 +113,7 @@ export class FormUsuarioComponent implements  OnInit {
 
    ////////console.log(usuario);
     let clientesUsuario = await usuario.clientes.map((cliente: { code: any; id: any; name: any; CardName: any; CardCode: any;label: any; })=>{ cliente.code = cliente.id; cliente.name = cliente.CardName; cliente.label=cliente.CardCode+' - '+cliente.CardName; return cliente})
-   ////////console.log(clientesUsuario);
+    console.log(clientesUsuario);
     this.clientesSAPSeleccionados = clientesUsuario;
 
   }
@@ -137,6 +131,8 @@ export class FormUsuarioComponent implements  OnInit {
                   rol.label = rol.nombre;
               }
               this.roles = roles;
+              this.getClientes();
+              
             },
             error:(err)=>{
                 console.error(err);
@@ -183,6 +179,10 @@ export class FormUsuarioComponent implements  OnInit {
         });
 
         this.clientesSAP = clientes;
+        console.log(this.clientesSAP[0]);
+        this.getLocaciones();
+          
+             
   }
 
   async getLocaciones(){
@@ -199,6 +199,10 @@ export class FormUsuarioComponent implements  OnInit {
 
                 this.locaciones = locaciones;
                 
+                if(this.config.data.id!=0){
+                  //Buscar información  del usuario seleccionado
+                  this.getInfoUsuario(this.config.data.id);
+                }
             },
             error:(err)=>{
               console.error(err);
@@ -305,6 +309,8 @@ export class FormUsuarioComponent implements  OnInit {
     }else if(this.password!= this.password2){
       this.messageService.add({severity:'error', summary:'Error', detail:'Los passwords ingresados no coinciden'});
     }else{
+
+      //console.log(this.clientesSAPSeleccionados);
       
       let editarUsuario:any ={
         username:this.username,

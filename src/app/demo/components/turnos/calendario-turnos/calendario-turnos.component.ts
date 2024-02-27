@@ -414,7 +414,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.completeTimer = false;
 
     //setTimeout(this.setTimer,2500);
-    setTimeout(()=>{this.setTimer()},2500);
+   setTimeout(()=>{this.setTimer()},2500);
 
     
 

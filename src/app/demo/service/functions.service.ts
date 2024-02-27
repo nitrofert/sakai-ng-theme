@@ -5,6 +5,7 @@ import { Observable, lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UrlApiService } from './url-api.service';
 import { Buffer } from 'buffer';
+import * as FileSaver from 'file-saver';
 
 
 @Injectable({
@@ -363,6 +364,72 @@ async setDataBasicChart(data:any[],fields:any):Promise<any>{
 async clonObject(object:any): Promise<any>{
   const newObject:any = JSON.parse(JSON.stringify(object));
   return newObject;
+}
+
+
+async extraerCampos(data:any[], fields:any): Promise<any>{
+
+ 
+  let dataExport:any =   data.map((linea)=>{
+
+    let newLine:any = "{";
+
+    for(let field in fields){
+      //console.log(linea[field]);
+      let key = fields[field];
+      let value = linea[field]?linea[field].toString().trim().replace(/"/g,''):linea[field];
+      newLine+=`"${key}":"${value}",`;
+    }
+
+    newLine = newLine.substring(0,newLine.length-1)+"}"
+    //console.log(newLine);
+    //console.log(JSON.parse(newLine));
+    return JSON.parse(newLine);
+
+  });
+
+  //console.log(dataExport);
+
+  return dataExport;
+
+}
+
+async exportarXLS(data:any, docName:string):Promise<void> {
+
+  import("xlsx").then(xlsx => {
+    const worksheet = xlsx.utils.json_to_sheet(data);
+    const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, docName);
+});
+
+}
+
+  async saveAsExcelFile(buffer: any, fileName: string): Promise<void> {
+  let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  let EXCEL_EXTENSION = '.xlsx';
+  const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
+  });
+  FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+  await this.log(` ha exportado el archivo ${fileName}`)
+      
+}
+
+setLog(mensaje:string):Observable<any> {
+  console.log(mensaje);
+  let boody:any = {mensaje} 
+  //const requestOptions = this.urlApiService.getHeadersAPI();
+
+  const url:string = `${this.api_url}/api/log`;
+  //return this.http.get<any>(url, requestOptions);
+  return this.http.post<any>(url, boody);
+}
+
+async log(mensaje:string):Promise<any> {
+  const log$ = this.setLog(mensaje);
+  const log = await lastValueFrom(log$);
+  return log;
 }
 
   

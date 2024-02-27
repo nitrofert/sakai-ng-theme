@@ -1,0 +1,74 @@
+<p-toast></p-toast>
+<app-breadcrumb></app-breadcrumb>
+
+<div class="grid">
+	<div class="col-12">
+		<div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="p-fluid p-formgrid grid">
+
+                <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locaciones.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="conductor"
+                               *ngIf="locaciones.length>0" 
+                               [(ngModel)]="locacionSeleccionada" 
+                               
+                               [suggestions]="locacionesFiltradas" 
+                               (completeMethod)="filtrarLocacion($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               (onSelect)="seleccionarLocacion(locacionSeleccionada)">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Locación</h6></label>
+                    </span>
+                </div>
+    
+                <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locaciones.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete 
+                                *ngIf="locaciones.length>0"
+                                id="conductor" 
+                               [(ngModel)]="bodegaSeleccionada" 
+                               
+                               [suggestions]="bodegasFiltradas" 
+                               (completeMethod)="filtrarBodega($event)" 
+                               field="label" 
+                               [dropdown]="true"
+                               (onSelect)="seleccionarBodega(bodegaSeleccionada)">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Bodega</h6></label>
+                    </span>
+                </div>
+
+                
+            
+            </div>
+        </div>
+    </div>
+
+    <div class="flex  col-12 ">
+        <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+           
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 ">
+                    <app-dynamic-table [dataTable]="tablaInventarioBodega.data" 
+                                [headersTable]="tablaInventarioBodega.header"
+                                
+                                dataKey="index" 
+                                [rows]="10" 
+                                [rowsPerPageOptions]="[10,50,100]" 
+                                [paginator]="true"
+                                [selectionMode]="'multiple'"
+                                [loading]="loading"
+                                [showBtnExp]="true"
+                                class="min-w-full"
+                                nameExport="pdidos_abiertos">
+                    </app-dynamic-table>
+                </div>  
+                
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -75,7 +75,7 @@ export class DynamicTableComponent implements OnInit {
       tmpKeysHeader.push(key);
     }
     this.globalFilterFields = tmpKeysHeader;
-    //////////////////console.log( this.globalFilterFields);
+    //console.log( this.globalFilterFields);
 
     ////////////console.log('this.colsSum',this.colsSum);
 

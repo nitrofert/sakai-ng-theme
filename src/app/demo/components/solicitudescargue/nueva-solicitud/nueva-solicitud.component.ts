@@ -362,22 +362,12 @@ getSaldosPedidos(){
             console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
-            ////////////////////// //// //////console.log(saldosPedidos[indexPedido].CardCode,this.clientes);
-              /*if(saldosPedidos[indexPedido].U_NF_CONDTRANS==='TRANSP'){
-                if(saldosPedidos[indexPedido].ItemCode.toString().startsWith('SF')){
-                  console.log(saldosPedidos[indexPedido]);
-                }
-                
-              }*/
-            
-              //console.log(saldosPedidos[indexPedido]);
+           
 
-              if(parseFloat(saldosPedidos[indexPedido].SALDO)<1){
-                //console.log(saldosPedidos[indexPedido]);
-                //console.log(saldosPedidos[indexPedido].SALDO);
-                //console.log(parseFloat(saldosPedidos[indexPedido].SALDO));
+              if(saldosPedidos[indexPedido].DocNum == '121011980'){
+                //console.log('pedido 121011980',saldosPedidos[indexPedido]);
               }
-
+            
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
                 if(saldosPedidos[indexPedido].locacion_codigo2=='LADORADA'){
@@ -2460,53 +2450,7 @@ filtrarPedido(event:any){
 
 
 
-/*async registroLineaCargueVehiculoPedido(){
-  //Validar formulario con cajas rojas con los campos obligatorios placa, counductor, pedido, fecha y hora
-  //TODO: Validar que las cantidades a cargar no superen la cantidad disponible para cargar del vehiculo
-  this.envioLineaCarguePedido =true;
-  if(this.vehiculoSeleccionado.length ==0 || 
-     this.conductorSeleccionado.length ==0 ||
-     this.pedidoSeleccionado.length ==0 ||
-     this.cantidadCargue == 0 ){
 
-      this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
-
-  }else if(this.cantidadCargue> this.capacidadDisponibleVehiculo){
-    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los cantidad a cargar supera la cantidad disponible de carga del vehiculo'});
-  }else if(this.cantidadCargue> this.pedidoSeleccionado.disponible){
-    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los cantidad a cargar supera la cantidad disponible del pedido seleccionado'});
-  }else{
-    this.detalleSolictudCargue.push({
-        fechacargue:this.fechacargue,
-        horacargue:this.horacargue,
-        cliente: this.clienteSeleccionado.code,
-        estado: "pendiente",
-        placa:this.vehiculoSeleccionado.code,
-        capacidadvh:this.vehiculoSeleccionado.capacidad,
-        conductor:this.conductorSeleccionado.code,
-        conductor_nombre:this.conductorSeleccionado.name,
-        pedido:this.pedidoSeleccionado.name,
-        itemcode:this.pedidoSeleccionado.itemcode,
-        itemname:this.pedidoSeleccionado.itemname,
-        cantidad:this.cantidadCargue,
-        almacen:this.almacenSeleccionado.code,
-    });
-    this.envioLineaCarguePedido =false;
-    //////////////////////////// //// //////console.log(this.detalleSolictudCargue);
-    this.dialogCargueVehiculoPedido= false;
-    this.resetearForm();
-    
-    this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-    this.pedidosEnSolicitud = await this.calcularCantidadesComprometidas(this.pedidosEnSolicitud);
-    //////////////////////////// //// //////console.log(this.pedidosAlmacenCliente, this.pedidosEnSolicitud);
-
-    this.configTablaPedidosEnSolicitud();
-    this.configTablePedidosAlmacenCliente();
-    this.configComboSeleccionPedido();
-    this.generarTreeTable();
-  }
-
-}*/
 
 
 

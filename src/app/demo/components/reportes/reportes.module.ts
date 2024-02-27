@@ -23,6 +23,11 @@ import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynami
 import { LocalidadesService } from '../../service/localidades.service';
 import { DependenciasService } from '../../service/dependencias.service';
 import { ProgramacionGerenciasComponent } from './programacion-gerencias/programacion-gerencias.component';
+import { PedidosAbiertosComponent } from './pedidos-abiertos/pedidos-abiertos.component';
+import { PedidosService } from '../../service/pedidos.service';
+import { InventarioBodegaComponent } from './inventario-bodega/inventario-bodega.component';
+import { NovedadesComponent } from './novedades/novedades.component';
+import { NovedadesService } from '../../service/novedades.service';
 
 
 
@@ -34,7 +39,10 @@ import { ProgramacionGerenciasComponent } from './programacion-gerencias/program
     MatrizNotificacionComponent,
     PlacasCompartidasComponent,
     ProgramacionBodegaComponent,
-    ProgramacionGerenciasComponent
+    ProgramacionGerenciasComponent,
+    PedidosAbiertosComponent,
+    InventarioBodegaComponent,
+    NovedadesComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +62,9 @@ import { ProgramacionGerenciasComponent } from './programacion-gerencias/program
              AlmacenesService,
              UsuarioService,
              LocalidadesService,
-             DependenciasService
+             DependenciasService,
+             PedidosService,
+             NovedadesService,
             ]
 })
 export class ReportesModule { }

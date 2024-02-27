@@ -117,16 +117,15 @@
                     </span>
                 </div>
 
-                <div class="field col-12 mt-3">
+                <div class="field col-12">
                     <span class="p-float-label">
                         <p-skeleton *ngIf="!clientesSAP" height="2rem" styleClass="mb-2"></p-skeleton>
                         <p-multiSelect *ngIf="clientesSAP" 
                                         id="cliente"
                                         [options]="clientesSAP" 
                                         [(ngModel)]="clientesSAPSeleccionados" 
-                                      
                                         optionLabel="name" 
-                                        selectedItemsLabel="{0} clientes seleccionados">
+                                        styleClass="w-full">
                         </p-multiSelect>
                         <!--<p-listbox *ngIf="clientesSAP" 
                                     id="cliente"

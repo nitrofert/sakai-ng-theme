@@ -398,24 +398,42 @@ viewAccion(){
 deleteAccion(){}
 
 
-exportExcel() {
-  //////////console.log("ok")
-  import("xlsx").then(xlsx => {
+  async exportExcel() {
+
+    let fields = {
+    DocNum:'Número Documento',	
+    TIPOFAC:'Tipo Documento',	
+    PEDIDO:'Pedido de Venta',	
+    DocDate:'Fecha',	
+    DocDueDate:'Fecha de Vencimiento',	
+    diasvencimiento:'Dias de Vencimiento',	
+    PymntGroup:'Condición de pago',	
+    PAGADA:'¿Pagada?',	
+    DocTotal:'Total Documento',	
+    PAGADOAFECHA:'Pagado a la Fecha',	
+    creditCompany:'Empresa de Crédito'
+  };
+
+  let newData = await this.functionsService.extraerCampos(this.facturasClienteAgrupada,fields);
+
+  await this.functionsService.exportarXLS(newData,'Facturas-Notas');
+
+  /*import("xlsx").then(xlsx => {
       const worksheet = xlsx.utils.json_to_sheet(this.facturasClienteAgrupada);
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
       this.saveAsExcelFile(excelBuffer, `facturas`);
-  });
+  });*/
 }  
 
-saveAsExcelFile(buffer: any, fileName: string): void {
+/*saveAsExcelFile(buffer: any, fileName: string): void {
   let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   let EXCEL_EXTENSION = '.xlsx';
   const data: Blob = new Blob([buffer], {
       type: EXCEL_TYPE
   });
   FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-}
+}*/
 
 
 formatCurrency(value: number) {

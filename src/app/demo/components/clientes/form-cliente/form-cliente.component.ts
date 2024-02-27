@@ -27,6 +27,7 @@ export class FormClienteComponent  implements  OnInit {
   clientessFiltrados:any[] = [];
   submitCliente:boolean =false;
   clientesNuevos:any[] = [];
+  notificaciones:boolean =false;
 
 
   constructor( private messageService: MessageService,
@@ -112,7 +113,8 @@ export class FormClienteComponent  implements  OnInit {
     this.idCliente = infoCliente.id;
     this.CardName = infoCliente.CardName;
     this.EmailAddress = infoCliente.EmailAddress;
-    this.FederalTaxID = infoCliente.FederalTaxID
+    this.FederalTaxID = infoCliente.FederalTaxID;
+    this.notificaciones = infoCliente.notificaciones;
   }
 
   grabarCliente(){
@@ -127,6 +129,7 @@ export class FormClienteComponent  implements  OnInit {
           CardName: this.CardName,
           FederalTaxID: this.FederalTaxID,
           EmailAddress: this.EmailAddress,
+          notificaciones:this.notificaciones
        
         }
 

@@ -64,6 +64,15 @@ export class SolicitudTurnoService {
         return this.http.get<any>(url,{params:params});
     }
 
+    getNovedadesTurnoExtendido(params?:any):Observable<any> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/solicitud-turnos/novedades-extended`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url,{params:params});
+    }
+
     getTurnosExtendido(params?:any):Observable<any> {
 
         //const requestOptions = this.urlApiService.getHeadersAPI();

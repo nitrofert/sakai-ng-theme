@@ -71,6 +71,11 @@ export class PedidosService {
         return this.http.get<number>(url,{params:{itemcode,bodega,idPedido}});
     }
 
+    getCantidadesComprometidasBodegaItem(itemcode:string, bodega:string):Observable<number> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas-bodega-item`;
+        return this.http.get<number>(url,{params:{itemcode,bodega}});
+    }
+
     getInventarioItenBodega():Observable<any> {
         const url:string = `${this.api_url}/api/sb1xe/inventario?compania=${this.urlApiService.companySAP}`;
         return this.http.get<number>(url);

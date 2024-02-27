@@ -111,7 +111,7 @@
 					</tr>
 				</ng-template>
 				<ng-template pTemplate="body" let-itemData >
-					<tr [pSelectableRow]="itemData">
+					<tr [pSelectableRow]="itemData" [class]="itemData.bgcolor">
 						<td *ngIf="viewCheckselectedItem">
                             <p-tableCheckbox [value]="itemData" [id]="'selectRow'+itemData['index']" ></p-tableCheckbox>
                         </td>

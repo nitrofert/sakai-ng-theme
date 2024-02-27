@@ -314,6 +314,9 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
          ////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
          this.solicitudesExtendida = solicitudesTurnos.raw;
+         
+         
+         console.log('this.solicitudesExtendida',this.solicitudesExtendida);
          this.loading = false;
       },
       error:(err)=>{
@@ -519,23 +522,54 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
 
 
-  exportExcel() {
-    import("xlsx").then(xlsx => {
+  async exportExcel() {
+    
+    let fields = {
+      detalle_solicitudes_turnos_estado:'Estado Turno',	
+      locacion_locacion:'Locacion',	
+      detalle_solicitudes_turnos_fechacita:'Fecha Turno',	
+      detalle_solicitudes_turnos_horacita:'Hora Turno',	
+      detalle_solicitudes_turnos_id:'Turno',	
+      detalle_solicitudes_turnos_pedidos_pedidonum:'Pedido',	
+      cliente_CardCode:'Código Cliente',	
+      cliente_CardName:'Cliente',	
+      cliente_FederalTaxID:'Nit',	
+      detalle_solicitudes_turnos_pedidos_itemcode:'Código Item',	
+      detalle_solicitudes_turnos_pedidos_itemname:'Descripción Item',	
+      detalle_solicitudes_turnos_pedidos_tipoproducto:'Tipo Item',	
+      detalle_solicitudes_turnos_pedidos_cantidad:'Cantidad',	
+      detalle_solicitudes_turnos_pedidos_dependencia_label:'Dependencia',	
+      detalle_solicitudes_turnos_pedidos_localidad_label:'Localidad',	
+      detalle_solicitudes_turnos_pedidos_bodega:'Bodega',	
+      transportadoras_nombre:'Transportadora',	
+      vehiculos_placa:'Placa',	
+      conductores_nombre:'Conductor',	
+      conductores_numerocelular:'Télefono Conductor',	
+      detalle_solicitudes_turnos_condiciontpt:'Condición de transporte',	
+      lugarentrega:'Lugar Entrega',	
+      remision:'Remisión'
+    };
+
+    let newData = await this.functionsService.extraerCampos(this.solicitudesExtendida,fields);
+
+    await this.functionsService.exportarXLS(newData,'Solicitudes de cargue');
+
+    /*import("xlsx").then(xlsx => {
         const worksheet = xlsx.utils.json_to_sheet(this.solicitudesExtendida);
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, `Solicitudes de cargue`);
-    });
+    });*/
   }  
 
-  saveAsExcelFile(buffer: any, fileName: string): void {
+ /* saveAsExcelFile(buffer: any, fileName: string): void {
     let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     let EXCEL_EXTENSION = '.xlsx';
     const data: Blob = new Blob([buffer], {
         type: EXCEL_TYPE
     });
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-  }
+  }*/
 
 
   formatCurrency(value: number) {

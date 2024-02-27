@@ -251,7 +251,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
   ngOnInit() {
 
-    
+    this.displayModal = true;
+    this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
     this.getPermisosModulo();
@@ -465,8 +466,7 @@ horariosSeleccionadosCambioBodega:any[] = [];
   }
 
   async getTurno(id: number){
-    this.displayModal = true;
-    this.loadingCargue = true;
+    
     //let orden = await this.ordenesCargueService.getOrdenesByID(id);
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
@@ -1383,6 +1383,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'aprobar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Aprobar turno "+this.turnoId;
+      this.novedad = false;
     }
   }
 
@@ -1399,6 +1400,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'activar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Activar turno "+this.turnoId;
+      this.novedad = false;
     }
   }
   async cancelarTurno(){
@@ -1414,6 +1416,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'ingresar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Ingresar turno "+this.turnoId;
+      this.novedad = false;
     }
   }
   async pesarTurno(){
@@ -1421,6 +1424,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'pesar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Pesar turno "+this.turnoId;
+      this.novedad = false;
     }
   }
   async inicioCargueTurno(){
@@ -1428,6 +1432,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'cargar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Cargar turno "+this.turnoId;
+      this.novedad = false;
     }
   }
   async finalizarCargueTurno(){
@@ -1435,6 +1440,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'finalizar cargue de'
       this.formEstadoTurno = true;
       this.tituloEstado = "Finalizar cargue turno "+this.turnoId;
+      this.novedad = false;
     }
   }
   async pesarTurno2(){
@@ -1442,6 +1448,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'realizar pesaje final a'
       this.formEstadoTurno = true;
       this.tituloEstado = "Pesar turno "+this.turnoId;
+      this.novedad = false;
     }
   }
 
@@ -1450,6 +1457,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'despachar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Despachar turno "+this.turnoId;
+      this.novedad = false;
     }
   }
 
@@ -1458,6 +1466,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'solicitud produccion'
       this.formEstadoTurno = true;
       this.tituloEstado = "Solicitud producción items turno "+this.turnoId;
+      this.novedad = false;
     }
   }
 
@@ -1466,6 +1475,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'validar revision inventario'
       this.formEstadoTurno = true;
       this.tituloEstado = "Validar revisión de inventario items turno "+this.turnoId;
+      this.novedad = false;
     }
   }
 
@@ -1474,7 +1484,7 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'actualizar la información del turno y reestablecer el estado  de '
       //this.formEstadoTurno = true;
       this.tituloEstado = "actualizar la información del turno y reestablecer el estado  de ";
-      
+      this.novedad = false;
       this.cambiarEstadoTurno();
     }
   }
@@ -1666,6 +1676,8 @@ async validarHoraCargue():Promise<boolean>{
                           
                         });
 
+                        this.novedadesSeleccionadas = [];
+
                         if(this.updateModulo){
                           this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
                         }
@@ -1703,6 +1715,8 @@ async validarHoraCargue():Promise<boolean>{
                                   }
                             });
                         }
+
+                        this.configTablePedidosAlmacenCliente();
       
                         this.configSplitButton(this.estado,this.permisosModulo);
 
@@ -2105,7 +2119,12 @@ async validarHoraCargue():Promise<boolean>{
   async validarFormulario():Promise<boolean> {
       let valido:boolean = false;
 
-      //////// ////////////// ////console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision != null).length);
+      console.log(this.tablaPedidosTurno.data);
+      if(this.tablaPedidosTurno.data[0].remision==undefined){
+        console.log('remisión no definida');
+      }
+    
+      console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length);
 
       if(!this.fechacargue || 
          !this.horacargue  || 
@@ -2113,25 +2132,27 @@ async validarHoraCargue():Promise<boolean>{
          this.vehiculoSeleccionado.id==0 || 
          this.conductorSeleccionado.id==0 ){
         this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe deiligenciar los campos resaltados en rojo"});
-      }else if(this.capacidadvh<this.cantidad){
-        this.messageService.add({severity:'warn', summary: '!Error¡', detail:`La cantidad a cargar es mayor a la capacidad del vehículo`});
-        valido = true;
-      }else if(this.pesomax<this.cantidad+this.peso_bruto){
-        this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});
-        valido = true;
-      }else if(!(await this.validarHoraCargue())){
-        this.messageService.add({severity:'warn', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
-        valido = true;
-      }else if((this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision != null).length==0 && this.estado === this.estadosTurno.PESADOF)){
-        this.messageService.add({severity:'warn', summary: '!Error¡', detail: 'Debe ingresar el numero de remisión para cada linea de producto-destino.'});
-        //valido = true;
-      }else{
+      }else if((this.tablaPedidosTurno.data[0].remision==undefined && this.estado === this.estadosTurno.PESADOF) || (this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length>0 && this.estado === this.estadosTurno.PESADOF)){
+        this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero de remisión para cada linea de producto-destino.'});
+      }else {
         valido = await this.validarCantidadesCarga();
       }
 
       this.fechaaccion= new Date();
       this.horaaccion = new Date();
       this.comentario = "";
+
+      if(this.capacidadvh<this.cantidad){
+        this.messageService.add({severity:'warn', summary: '!Error¡', detail:`La cantidad a cargar es mayor a la capacidad del vehículo`});
+        
+      }
+      if(this.pesomax<this.cantidad+this.peso_bruto){
+        this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});
+      
+      }
+      if(!(await this.validarHoraCargue())){
+        this.messageService.add({severity:'warn', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
+      }
 
       ////////////////// ////////////// ////console.log(valido);
 
