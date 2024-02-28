@@ -3018,7 +3018,7 @@ async validarHoraCargue():Promise<boolean>{
               horacita:new Date(horacargueCambioBodega),
               lugarentrega:'',
               municipioentrega:'',
-              observacion:`Turno generado automaticamente por cambio de bodega. Basado en turno ${this.turnoId}`,
+              observacion:`Turno generado automaticamente por cambio de bodega. Basado en turno # ${this.turnoId} asociado a ${this.nombreLocalidad}`,
               condiciontpt: this.condicion_tpt,
               transportadora:this.transportadoraSeleccionada.id,
               vehiculo:this.vehiculoSeleccionado.id,
@@ -3060,7 +3060,7 @@ async validarHoraCargue():Promise<boolean>{
                     this.tituloEstado = "actualizar la información del turno por cambio de bodega ";
                     this.fechaaccion = new Date();
                     this.horaaccion = new Date();
-                    this.comentario = `Se actualiza la información de los productos por cambio de locación. Turno relacionado ${result.detalle_solicitud_turnos[0].id}`;
+                    this.comentario = `Se actualiza la información del turno por cambio de bodega. Se genera el turno # ${result.detalle_solicitud_turnos[0].id} asociado a ${this.bodegaSeleccionada.WhsCode}`;
 
                     if(this.pedidosTurno.length == this.pedidosTurno.filter(pedido =>pedido.estado === 'I').length){
 
