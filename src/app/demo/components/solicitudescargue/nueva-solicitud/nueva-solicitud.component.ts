@@ -188,7 +188,7 @@ constructor(private pedidosService: PedidosService,
 
 async  ngOnInit(){
 
-  console.log(this.verCondTPT,this.condicionSeleccionada);
+  //console.log(this.verCondTPT,this.condicionSeleccionada);
 
   this.getPermisosModulo();
   //this.getPermisosModulo2();
@@ -371,7 +371,7 @@ getSaldosPedidos(){
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
                 if(saldosPedidos[indexPedido].locacion_codigo2=='LADORADA'){
-                  console.log(saldosPedidos[indexPedido])
+                  //console.log(saldosPedidos[indexPedido])
                 }
                 
                 pedidosClientes.push({
@@ -424,6 +424,7 @@ getSaldosPedidos(){
                   total_linea_siniva:0,
                   vicepresidencia:'',
                   email_vendedor:saldosPedidos[indexPedido].Email,
+                  vendedor:saldosPedidos[indexPedido].SlpName,
                   dependencia:saldosPedidos[indexPedido].DEPENDENCIA,
                   localidad:saldosPedidos[indexPedido].LOCALIDAD,
                   tipoprod:saldosPedidos[indexPedido].TIPOPROD
@@ -1635,6 +1636,7 @@ grabarSolicitud(){
        ////// //// //////console.log(pedido);
        ////// //// //////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
         let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
+        let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
         let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
         
         let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
@@ -1660,7 +1662,8 @@ grabarSolicitud(){
           lugarentrega:pedido.lugarentrega,
           dependencia,
           localidad,
-          tipoproducto
+          tipoproducto,
+          vendedor
 
         });
         
@@ -1979,7 +1982,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
 
             turnosVendedor.push({
               codigo:pedido.email_vendedor,
-              nombre:pedido.email_vendedor,
+              nombre:pedido.vendedor,
               email:pedido.email_vendedor,
               tipo:'vendedor',
               turnos:[turnoVendedor]

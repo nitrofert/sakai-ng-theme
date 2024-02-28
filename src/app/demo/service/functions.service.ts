@@ -369,7 +369,7 @@ async clonObject(object:any): Promise<any>{
 
 async extraerCampos(data:any[], fields:any): Promise<any>{
 
- 
+ //console.log(data);
   let dataExport:any =   data.map((linea)=>{
 
     let newLine:any = "{";
@@ -377,12 +377,12 @@ async extraerCampos(data:any[], fields:any): Promise<any>{
     for(let field in fields){
       //console.log(linea[field]);
       let key = fields[field];
-      let value = linea[field]?linea[field].toString().trim().replace(/"/g,''):linea[field];
+      let value = linea[field]?linea[field].toString().trim().replace(/"/g,'').replace(/(\r\n|\n|\r|\t)/gm, ""):linea[field];
       newLine+=`"${key}":"${value}",`;
     }
 
     newLine = newLine.substring(0,newLine.length-1)+"}"
-    //console.log(newLine);
+    console.log(newLine);
     //console.log(JSON.parse(newLine));
     return JSON.parse(newLine);
 

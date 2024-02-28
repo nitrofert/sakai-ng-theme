@@ -1606,6 +1606,12 @@ async validarHoraCargue():Promise<boolean>{
                     mensaje = `ha sido actualizado y se reestablecio su estado`;
                     this.comentario = mensaje;
                   break;
+
+                  case 'actualizar la información del turno por cambio de bodega ':
+                    nuevoEstado = this.estadosTurno.SOLICITADO;
+                    //mensaje = `ha sido actualizado y se reestablecio su estado`;
+                    //this.comentario = mensaje;
+                  break;
               }
   
            
@@ -1661,7 +1667,7 @@ async validarHoraCargue():Promise<boolean>{
               
             }
             
-           // ////console.log('Data update turno',data);
+           console.log('Data update turno',data);
 
     return data;
   }
@@ -2343,7 +2349,8 @@ async validarHoraCargue():Promise<boolean>{
                     total_linea_siniva:0,
                     vicepresidencia:saldosPedidos[indexPedido].DEPENDENCIA,
                     email_vendedor:saldosPedidos[indexPedido].Email,
-                    tipoprod:saldosPedidos[indexPedido].TIPOPROD
+                    tipoprod:saldosPedidos[indexPedido].TIPOPROD,
+                    vendedor:saldosPedidos[indexPedido].SlpName,
                     
                   })
   
@@ -2584,6 +2591,8 @@ async validarHoraCargue():Promise<boolean>{
 
                   let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
 
+                  let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
+
                         ////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia)
 
                   let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
@@ -2622,7 +2631,8 @@ async validarHoraCargue():Promise<boolean>{
                             cantidadOld:0,
                             dependencia,
                             localidad,
-                            tipoproducto
+                            tipoproducto,
+                            vendedor
                             //cliente:this.clienteSeleccionado.CardName,
                       });
                       
@@ -3008,7 +3018,7 @@ async validarHoraCargue():Promise<boolean>{
               horacita:new Date(horacargueCambioBodega),
               lugarentrega:'',
               municipioentrega:'',
-              observacion:`Turno generado automaticamente por cambio de bodega. basado en turno ${this.turnoId}`,
+              observacion:`Turno generado automaticamente por cambio de bodega. Basado en turno ${this.turnoId}`,
               condiciontpt: this.condicion_tpt,
               transportadora:this.transportadoraSeleccionada.id,
               vehiculo:this.vehiculoSeleccionado.id,
@@ -3029,16 +3039,34 @@ async validarHoraCargue():Promise<boolean>{
                     ////// ////console.log('nueva solicitud',result);
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud ${result.id}. y el turno ${result.detalle_solicitud_turnos[0].id}`});
                     this.messageComplete =`Actualizando información de pedidos del turno ${this.turnoId}`;
+
+                    this.solicitudTurnoService.sendNotification(result.detalle_solicitud_turnos[0].id)
+                    .subscribe({
+                        next:(result)=>{
+                          if(result){
+                            this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${result.detalle_solicitud_turnos[0].id}.`});
+                          }
+                        },
+                        error:(err)=>{
+                          console.error(err);
+                          this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                        }
+
+                    });
+
                     
-                    this.accion = 'actualizar la información del turno y reestablecer el estado  de '
-                    this.tituloEstado = "actualizar la información del turno y reestablecer el estado  de ";
+                    
+                    this.accion = 'actualizar la información del turno por cambio de bodega '
+                    this.tituloEstado = "actualizar la información del turno por cambio de bodega ";
+                    this.fechaaccion = new Date();
+                    this.horaaccion = new Date();
+                    this.comentario = `Se actualiza la información de los productos por cambio de locación. Turno relacionado ${result.detalle_solicitud_turnos[0].id}`;
 
                     if(this.pedidosTurno.length == this.pedidosTurno.filter(pedido =>pedido.estado === 'I').length){
 
                       this.accion = 'cancelar'
                       this.tituloEstado = "ha sido cancelado";
-                      this.fechaaccion = new Date();
-                      this.horaaccion = new Date();
+                      
                       this.comentario = "Cancelación automatica del turno por cambio de bodega";
                       //this.novedadesSeleccionadas = this.novedades.filter(novedad => novedad.id === 11);
                       this.novedadesSeleccionadas = this.novedades.filter(novedad => novedad.novedad === 'TURNO CANCELADO X CAMBIO BODEGA');

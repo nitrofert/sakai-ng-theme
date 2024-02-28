@@ -362,7 +362,8 @@ export class ProgramacionBodegaComponent implements OnInit {
           cedula:linea.conductores_cedula,
           telefono:linea.conductores_numerocelular,
           condiciontpt:linea.turnos_condiciontpt,
-          comercial:linea.pedidos_turno_email_vendedor
+          //comercial:linea.pedidos_turno_email_vendedor
+          comercial:linea.pedidos_turno_vendedor
         });
     }
 
