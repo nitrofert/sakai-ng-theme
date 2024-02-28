@@ -430,9 +430,9 @@ export class ProgramacionGerenciasComponent implements OnInit {
           porcentaje:(linea.pedidos_turno_cantidad*100)/total
         });
     }
-    
+   
 
-    return dataTable;
+    return  await this.functionsService.sortArrayObject(dataTable,'cantidad','DESC');
 
   }
 
@@ -453,7 +453,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
     }
     
 
-    return dataTable;
+    return await this.functionsService.sortArrayObject(dataTable,'cantidad','DESC');
 
   }
 
@@ -565,7 +565,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
         });
     }
 
-    return dataTable;
+    return await this.functionsService.sortArrayObject(dataTable,'cantidad','DESC');
 
   }
 
@@ -616,7 +616,7 @@ export class ProgramacionGerenciasComponent implements OnInit {
         });
     }
 
-    return await this.functionsService.sortArrayObject(dataTable,'zona','ASC');
+    return await this.functionsService.sortArrayObject(dataTable,'cantidad','DESC');
 
   }
 
@@ -668,7 +668,8 @@ export class ProgramacionGerenciasComponent implements OnInit {
         });
     }
 
-    return dataTable;
+
+    return await this.functionsService.sortArrayObject(dataTable,'cantidad','DESC');
 
   }
 

@@ -1917,6 +1917,7 @@ async emailsClientes(solicitud:any):Promise<void> {
       let objectMail = {
         to:infoUsuario.email,
         //to:this.domain=='localhost'?'ralbor@nitrofert.com.co':cliente.email,
+        from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
         subject:`Solicitud de cargue # ${solicitud.id}`,
         template:'./notificacion_solicitud',
         context:{
@@ -2032,6 +2033,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
       let objectMail = {
         to:this.domain=='localhost'?'ralbor@nitrofert.com.co':vendedor.email,
         //to:'ralbor@nitrofert.com.co',
+        from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
         subject:`Solicitud de cargue # ${solicitud.id}`,
         template:'./notificacion_solicitud2',
         context:{
@@ -2090,6 +2092,7 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
       
           to:this.domain=='localhost'?'ralbor@nitrofert.com.co':flujoAP.email_responsable,
           //to:'ralbor@nitrofert.com.co',
+          from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
           subject:`Solicitud de cargue # ${solicitud.id}`,
           template:'./notificacion_solicitud2',
           context:{
@@ -2182,6 +2185,7 @@ async emailTransp(solicitud:any): Promise<void>{
   let objectMail = {
     //to:'ralbor@nitrofert.com.co',
     to:this.domain=='localhost'?'ralbor@nitrofert.com.co':'turnostransporte@nitrofert.com.co',
+    from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
     subject:`Solicitud de cargue # ${solicitud.id}`,
     template:'./notificacion_solicitud2',
     context:{
@@ -2225,6 +2229,7 @@ async emailCreador(solicitud:any): Promise<void>{
   let objectMail = {
     to:infoUsuario.email,
     //to:usuarioCreador.email,
+    from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
     subject:`Solicitud de cargue # ${solicitud.id}`,
     template:'./notificacion_solicitud2',
     context:{

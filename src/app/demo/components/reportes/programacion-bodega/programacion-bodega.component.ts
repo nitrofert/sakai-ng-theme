@@ -83,7 +83,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     this.infousuario = await this.usuariosService.infoUsuario();
 
     this.estadosTurno = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno,'order','ASC') ;
-    //// //console.log(this.estadosTurno)
+    //console.log(this.estadosTurno)
 
    
     this.getLocalidades();
@@ -125,7 +125,7 @@ export class ProgramacionBodegaComponent implements OnInit {
 
   configHeaderTablaGestionBodega(){
     let headersTable:any[] =  [{
-      
+      'id': {label:'',type:'', sizeCol:'0rem', align:'center'},
       'estado': {label:'Estado',type:'text', sizeCol:'6rem', align:'center',field:"estado"},
       'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
       //'bgcolor': {label:'',type:'', sizeCol:'6rem', align:'center'}
@@ -402,7 +402,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     
     let tabla:any = {
       header:  this.configHeaderTablaConsolidadoProgramacionDiaria(),
-      data:  this.configDataTablaConsolidadoProgramacionDiaria(this.lineasConsolidadoProgramacionDiariaBodega)
+      data:  await this.functionsService.sortArrayObject(this.configDataTablaConsolidadoProgramacionDiaria(this.lineasConsolidadoProgramacionDiariaBodega),'cantidad','DESC') 
     };
 
     this.tablaConsolidadoProgramacionDiariaBodega = tabla;
@@ -478,7 +478,7 @@ export class ProgramacionBodegaComponent implements OnInit {
      //console.log(lineasGestionBodega);
     let tabla:any = {
       header:  this.configHeaderTablaGestionBodega(),
-      data:  this.configDataTablaGestionBodega(lineasGestionBodega),
+      data:  await this.functionsService.sortArrayObject(this.configDataTablaGestionBodega(lineasGestionBodega),'id','ASC'),
       //colsSum:[]
     };
     
@@ -502,7 +502,7 @@ export class ProgramacionBodegaComponent implements OnInit {
 
     for(let linea of data){
         dataTable.push({
-      
+          id: this.estadosTurno.filter((estado: { name: any; })=>estado.name === linea.turnos_estado)[0].order,
           estado:linea.turnos_estado,
           cantidad:linea.pedidos_turno_cantidad,
           //bgcolor:this.estadosTurno.find((estado: { name: any; })=>estado.name === linea.turnos_estado).backgroundColor
