@@ -1,8 +1,8 @@
-<p-toast></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-<app-breadcrumb></app-breadcrumb>
+<p-toast *ngIf="verEncabezado"></p-toast>
+<p-confirmDialog *ngIf="verEncabezado" [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<app-breadcrumb *ngIf="verEncabezado"></app-breadcrumb>
 
-<div class="grid">
+<div *ngIf="verEncabezado" class="grid">
 	<div class="col-12">
 		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
             <div class="field col-12 ">
@@ -22,7 +22,7 @@
         <div class="w-full flex">
             <div class="flex  col-12 ">
                 <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-                   
+                    <div *ngIf="!verEncabezado" class="text-center mb-3"><h1>Consolidado Novedades</h1></div>
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 ">
                             <app-dynamic-table [dataTable]="tablaNovedades.data" 

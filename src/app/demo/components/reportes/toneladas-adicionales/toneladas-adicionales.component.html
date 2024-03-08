@@ -1,0 +1,253 @@
+<p-toast *ngIf="verEncabezado"></p-toast>
+<p-confirmDialog *ngIf="verEncabezado" [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<app-breadcrumb *ngIf="verEncabezado"></app-breadcrumb>
+
+<div *ngIf="verEncabezado" class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="field col-12 ">
+                <span class="p-float-label">
+                    <p-calendar id="rangoFecha" [(ngModel)]="filtroRnagoFechas" selectionMode="range" [readonlyInput]="true" [showIcon]="true" [numberOfMonths]="1"  styleClass="w-full"  (ngModelChange)="cambioFecha($event)"  ></p-calendar>
+                    <label for="rangoFecha"><h6>Seleccionar rango de fecha</h6></label>
+                </span>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div *ngIf="!verEncabezado" class="text-center mb-3"><h1>Consolidado Toneladas adicionales</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTable.data" 
+                                        [headersTable]="dataTable.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="false"
+                                        class="min-w-full"
+                                        nameExport="rpt_novedades">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 ">
+                
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                [(ngModel)]="meta" 
+                                id="meta" 
+                                name="meta"
+                                type="text" required
+                                (ngModelChange)="seleccionarLocacion()"  />
+                                <label for="meta"><h6>Porcentaje de cumplimiento esperado</h6></label>
+                        </span>
+                        <span class="p-inputgroup-addon">
+                            <i class="pi pi-percentage"></i>
+                        </span>
+                    </div>
+                </div>
+                <!--
+                <div class="field col-6 ">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="locaciones.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="conductor"
+                                *ngIf="locaciones.length>0" 
+                                [(ngModel)]="locacionSeleccionada" 
+                                
+                                [suggestions]="locacionesFiltradas" 
+                                (completeMethod)="filtrarLocacion($event)" 
+                                field="label" 
+                                [dropdown]="true"
+                                (onSelect)="seleccionarLocacion()">
+                        </p-autoComplete>
+                        <label for="conductor"><h6>Locación</h6></label>
+                    </span>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Consolidado Toneladas adicionales {{locacionSeleccionada.label}}</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTableLocacion.data" 
+                                        [headersTable]="dataTableLocacion.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        nameExport="rpt_novedades">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+
+-->
+<!--
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Toneladas adicionales {{locacionSeleccionada.label}}</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTableLocacion2.data" 
+                                        [headersTable]="dataTableLocacion2.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        nameExport="rpt_novedades">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+-->
+
+<div *ngFor="let locacion of toneladasAdicionalLocaciones"  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Toneladas adicionales {{locacion.label}}</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="locacion.data" 
+                                        [headersTable]="locacion.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        [nameExport]="'rpt_toneladas_adicional_'+locacion.label">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+
+
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Consolidado Toneladas adicionales gerencias</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTableGerencias.data" 
+                                        [headersTable]="dataTableGerencias.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="false"
+                                        class="min-w-full"
+                                        nameExport="rpt_toneladas_adicional_gerencias">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+
+<div *ngFor="let gerencia of toneladasAdicionalGerencias"  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Toneladas adicionales {{gerencia.label}} x zona</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="gerencia.data" 
+                                        [headersTable]="gerencia.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        [nameExport]="'rpt_toneladas_adicional_zona_'+gerencia.label">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+<!--
+<div class="grid">
+	<div class="col-12">
+        <div class="w-full flex">
+            <div class="flex  col-12 ">
+                <div class="card min-w-full" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+                    <div *ngIf="!verEncabezado" class="text-center mb-3"><h1>Consolidado Toneladas adicionales</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTable2.data" 
+                                        [headersTable]="dataTable2.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        nameExport="rpt_novedades">
+                            </app-dynamic-table>
+                           
+
+                            
+                        </div>  
+                        
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->

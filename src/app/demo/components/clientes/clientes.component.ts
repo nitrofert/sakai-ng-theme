@@ -54,6 +54,13 @@ export class ClientesComponent implements  OnInit{
                                           sizeCol:'6rem', 
                                           align:'center',
                                           field:'EmailAddress'
+                                        },
+                        'notificaciones': {
+                                          label:'Notificaciones',
+                                          type:'text', 
+                                          sizeCol:'6rem', 
+                                          align:'center',
+                                          field:'notificaciones'
                                         }
                           }
                         ];
@@ -118,7 +125,9 @@ getClientes(){
                       id:cliente.CardCode,
                       CardName:cliente.CardName,
                       FederalTaxID:cliente.FederalTaxID,
-                      EmailAddress:cliente.EmailAddress
+                      EmailAddress:cliente.EmailAddress,
+                      notificaciones:cliente.notificaciones?'Si':'No'
+
                     });
                   }
                   this.dataTable = dataClientes;

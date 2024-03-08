@@ -164,6 +164,22 @@ export class SolicitudTurnoService {
     }
 
 
+
+    getAllInfoTurnos(params?:any):Observable<any> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/solicitud-turnos/all-info-turnos`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url,{params:params});
+    }
+
+    async allInfoTurnos(params?:any):Promise<any> {
+        const allInfoTurnoss$ = this.getAllInfoTurnos(params);
+        const allInfoTurnoss = await lastValueFrom(allInfoTurnoss$);
+        return allInfoTurnoss;
+    }
+
    
 
     

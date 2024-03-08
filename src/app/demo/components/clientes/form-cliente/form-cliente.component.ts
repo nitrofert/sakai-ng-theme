@@ -133,14 +133,14 @@ export class FormClienteComponent  implements  OnInit {
        
         }
 
-       //console.log(data);
+       console.log(data);
        if(!this.editCliente){
         //Registro de locacion
         this.clientesService.setCliente(data)
         .subscribe({
             next:(cliente)=>{
              console.log(cliente);
-              this.messageService.add({severity:'success', summary: '!Ok¡', detail: `Se ha realizado correctamente el registro del cliente ${cliente.CardName}.`});
+              this.messageService.add({severity:'success', summary: '!Ok¡', detail: `Se ha realizado correctamente el registro del cliente ${this.CardName}.`});
               //this.cerrar();                
             },
             error:(error)=>{

@@ -30,6 +30,7 @@
         {"id":"VICENCIO","name":"VILLAVICENCIO"},
         {"id":"AGUAZUL","name":"AGUAZUL"},
         {"id":"BASILIO","name":"SAN BASILIO"},
-        {"id":"PROCAMPO","name":"PROCAMPO"}
+        {"id":"PROCAMPO","name":"PROCAMPO"},
+        {"id":"VALLE","name":"VALLE"}
     ]
 }

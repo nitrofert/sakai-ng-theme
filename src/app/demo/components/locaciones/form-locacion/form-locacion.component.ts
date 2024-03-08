@@ -132,7 +132,7 @@ getLocacionesMySQL(){
   this.almacenesService.getAlmacenes()
   .subscribe({
       next:async (almacenes:any[])=>{
-       //////console.log('getLocacionesSAP',almacenes);
+       console.log('getLocacionesSAP',almacenes);
         let almacenesTMP:any[] = await this.functionsService.objectToArray(almacenes);
         almacenesTMP = almacenesTMP.filter((almacen: { CorreoNoti: string | null; }) => almacen.CorreoNoti!=null && almacen.CorreoNoti!="");
         

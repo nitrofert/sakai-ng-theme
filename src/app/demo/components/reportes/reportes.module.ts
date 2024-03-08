@@ -28,6 +28,9 @@ import { PedidosService } from '../../service/pedidos.service';
 import { InventarioBodegaComponent } from './inventario-bodega/inventario-bodega.component';
 import { NovedadesComponent } from './novedades/novedades.component';
 import { NovedadesService } from '../../service/novedades.service';
+import { ConsolidadosRangoFechaComponent } from './consolidados-rango-fecha/consolidados-rango-fecha.component';
+import { ToneladasAdicionalesComponent } from './toneladas-adicionales/toneladas-adicionales.component';
+import { IncumplimientosTurnosComponent } from './incumplimientos-turnos/incumplimientos-turnos.component';
 
 
 
@@ -42,7 +45,10 @@ import { NovedadesService } from '../../service/novedades.service';
     ProgramacionGerenciasComponent,
     PedidosAbiertosComponent,
     InventarioBodegaComponent,
-    NovedadesComponent
+    NovedadesComponent,
+    ConsolidadosRangoFechaComponent,
+    ToneladasAdicionalesComponent,
+    IncumplimientosTurnosComponent
   ],
   imports: [
     CommonModule,
@@ -65,6 +71,11 @@ import { NovedadesService } from '../../service/novedades.service';
              DependenciasService,
              PedidosService,
              NovedadesService,
-            ]
+            ],
+  exports:[
+    NovedadesComponent,
+    ToneladasAdicionalesComponent,
+    IncumplimientosTurnosComponent
+  ]
 })
 export class ReportesModule { }

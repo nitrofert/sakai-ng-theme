@@ -1,0 +1,72 @@
+<p-toast *ngIf="verEncabezado"></p-toast>
+<p-confirmDialog *ngIf="verEncabezado" [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<app-breadcrumb *ngIf="verEncabezado"></app-breadcrumb>
+
+<div *ngIf="verEncabezado" class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div class="field col-12 ">
+                <span class="p-float-label">
+                    <p-calendar id="rangoFecha" [(ngModel)]="filtroRnagoFechas" selectionMode="range" [readonlyInput]="true" [showIcon]="true" [numberOfMonths]="1"  styleClass="w-full"  (ngModelChange)="cambioFecha($event)"  ></p-calendar>
+                    <label for="rangoFecha"><h6>Seleccionar rango de fecha</h6></label>
+                </span>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Consolidado incumplimientos x zona</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTableIncumplimientoZonas.data" 
+                                        [headersTable]="dataTableIncumplimientoZonas.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        nameExport="rpt_novedades">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Consolidado incumplimientos x cliente</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTableIncumplimientoClientes.data" 
+                                        [headersTable]="dataTableIncumplimientoClientes.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        nameExport="rpt_toneladas_adicional_gerencias">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+

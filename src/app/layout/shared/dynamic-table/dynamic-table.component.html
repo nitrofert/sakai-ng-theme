@@ -143,8 +143,26 @@
 
 								<div *ngIf="headersTable[0][key].type==='list'">
 									<ul>
-										<li *ngFor="let novedad of itemData[key]">{{novedad}}</li>
+										<li *ngFor="let data of itemData[key]">{{data}}</li>
 									</ul>
+								</div>
+
+								<div *ngIf="headersTable[0][key].type==='table'">
+									<!--<div *ngFor="let data of itemData[key]" class="flex justify-content-between flex-column sm:flex-row">
+										<div *ngIf="data.label!=''">
+											{{ data.label }}
+										</div>
+										<div>
+											{{ data.value}}
+										</div>
+									</div>-->
+
+									<table>
+										<tr  *ngFor="let data of itemData[key]">
+											<td >{{ data.label }}</td>
+											<td>{{ data.value}}</td>
+										</tr>
+									</table>
 								</div>
 
 							</div>

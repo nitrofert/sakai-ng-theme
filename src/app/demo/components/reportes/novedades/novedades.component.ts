@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -16,7 +16,9 @@ import { UsuarioService } from 'src/app/demo/service/usuario.service';
   templateUrl: './novedades.component.html',
   styleUrls: ['./novedades.component.scss']
 })
-export class NovedadesComponent implements  OnInit {
+export class NovedadesComponent implements  OnInit, OnChanges {
+
+  @Input() rangoFechas!:any;
 
   hoy = new Date();
   primerDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
@@ -34,6 +36,7 @@ export class NovedadesComponent implements  OnInit {
   clasificaciones:any[] = [];
   locaciones:any[] = [];
   novedadesTurnos:any[] = [];
+  verEncabezado:boolean = true;
   //selectedNovedad!:any;
 
   /*@ViewChild('filter') filter!: ElementRef;
@@ -71,14 +74,24 @@ export class NovedadesComponent implements  OnInit {
     }
 
   async ngOnInit() {
+    if(this.rangoFechas){
+      this.filtroRnagoFechas = this.rangoFechas;
+      this.verEncabezado = false;
+    }
     this.getNovedades();
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    //console.log('changes',changes['rangoFechas'].currentValue)
+    this.filtroRnagoFechas = changes['rangoFechas'].currentValue
+    this.getNovedaesTurno();
   }
 
   cambioFecha(event:any){
     
     
     if(event[1]){
-      console.log(this.filtroRnagoFechas);
+      //console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.getNovedaesTurno();
   
@@ -89,12 +102,12 @@ export class NovedadesComponent implements  OnInit {
     this.novedadesService.getNovedades()
         .subscribe({
             next:async (novedades)=>{
-              console.log(novedades);
+              //console.log(novedades);
               this.novedades = novedades;
               this.clasificaciones = (await this.functionsService.groupArray(await this.functionsService.clonObject(novedades),'clase')).map((novedad)=>{
                 return {code: novedad.clase, name: novedad.clase, label: novedad.clase}
               });
-              console.log(this.clasificaciones);
+              //console.log(this.clasificaciones);
               this.getNovedaesTurno();
             },
             error:(err)=> {
@@ -112,13 +125,13 @@ export class NovedadesComponent implements  OnInit {
     this.solicitudTurnoService.getNovedadesTurnoExtendido(params)
         .subscribe({
             next:async (novedadesTurnos)=>{
-              //console.log(novedadesTurnos.raw.filter((novedad: { detalle_solicitudes_turnos_id: number; })=>novedad.detalle_solicitudes_turnos_id === 2449))
+              ////console.log(novedadesTurnos.raw.filter((novedad: { detalle_solicitudes_turnos_id: number; })=>novedad.detalle_solicitudes_turnos_id === 2449))
               console.log(novedadesTurnos.raw)
               this.novedadesTurnos = novedadesTurnos.raw;
               this.locaciones = (await this.functionsService.groupArray(await this.functionsService.clonObject(novedadesTurnos.raw),'locacion_label')).map((locacion)=>{
                 return {id: locacion.locacion_id,code:locacion.locacion_code,label: locacion.locacion_label}
               })
-              console.log(this.locaciones)
+              //console.log(this.locaciones)
               await this.setReporte();
             },
             error:(err)=> {
@@ -132,9 +145,9 @@ export class NovedadesComponent implements  OnInit {
 
   async setReporte():Promise<void>{
     let headerTable = await this.configHeaderTablaNovedades();
-    console.log(headerTable);
+    //console.log(headerTable);
     let dataTable = await this.configDataTablaNovedades();
-    console.log(dataTable);
+    //console.log(dataTable);
     /*let tmpKeysHeader:any[]=[];
     for(let key in headerTable){
       
@@ -174,11 +187,11 @@ export class NovedadesComponent implements  OnInit {
       objString = `{"novedad":"${clase.code}"`;
       for(let locacion of this.locaciones){
         let lineasClaseNovedadLocacion:any[] = this.novedadesTurnos.filter(novedadTurno => novedadTurno.novedades_historial_clase === clase.code && novedadTurno.locacion_code === locacion.code);
-        console.log('lineasClaseNovedadLocacion',clase.code,locacion.code,lineasClaseNovedadLocacion);
+        //console.log('lineasClaseNovedadLocacion',clase.code,locacion.code,lineasClaseNovedadLocacion);
         let novedadesClaseLocacion = (await this.functionsService.groupArray(await this.functionsService.clonObject(lineasClaseNovedadLocacion),'novedades_historial_novedad')).map((linea)=>{
           return {id: linea.novedades_historial_id,code:linea.novedades_historial_novedad,label: linea.novedades_historial_novedad}
         });
-        console.log('novedadesClaseLocacion',clase.code,locacion.code,novedadesClaseLocacion);
+        //console.log('novedadesClaseLocacion',clase.code,locacion.code,novedadesClaseLocacion);
         for(let novedaClaseLocacion of novedadesClaseLocacion){
           objString2 = `{"novedad":"${novedaClaseLocacion.code}"`;
         }

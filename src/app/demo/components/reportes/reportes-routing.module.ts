@@ -9,6 +9,9 @@ import { ProgramacionGerenciasComponent } from './programacion-gerencias/program
 import { PedidosAbiertosComponent } from './pedidos-abiertos/pedidos-abiertos.component';
 import { InventarioBodegaComponent } from './inventario-bodega/inventario-bodega.component';
 import { NovedadesComponent } from './novedades/novedades.component';
+import { ConsolidadosRangoFechaComponent } from './consolidados-rango-fecha/consolidados-rango-fecha.component';
+import { ToneladasAdicionalesComponent } from './toneladas-adicionales/toneladas-adicionales.component';
+import { IncumplimientosTurnosComponent } from './incumplimientos-turnos/incumplimientos-turnos.component';
 
 @NgModule({
     imports: [RouterModule.forChild([
@@ -20,7 +23,12 @@ import { NovedadesComponent } from './novedades/novedades.component';
         { path: 'programacion-gerencias', component: ProgramacionGerenciasComponent },
         { path: 'pedidos-abiertos', component: PedidosAbiertosComponent },
         { path: 'inventario-bodega', component: InventarioBodegaComponent },
+       
+        { path: 'consolidados-rango-fecha', component: ConsolidadosRangoFechaComponent },
         { path: 'novedades', component: NovedadesComponent },
+        { path: 'toneldas-adicionales', component: ToneladasAdicionalesComponent },
+        { path: 'incumplimientos-turnos', component: IncumplimientosTurnosComponent },
+
 
         //{ path: '**', redirectTo: '/notfound' }
     ])],
