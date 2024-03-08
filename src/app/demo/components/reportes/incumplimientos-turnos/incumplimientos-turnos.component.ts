@@ -269,7 +269,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
                                                    && turno.detalle_solicitud_turnos_pedido.filter(pedido=>pedido.CardCode === cliente.code).length>0
                                                 );
 
-      //console.log('turnosCumplidosCliente',turnosCumplidosCliente); 
+      //console.log('turnosCumplidosCliente',turnosCumplidosCliente);
 
       let toneladasCumplidasCliente = 0;
       await turnosCumplidosCliente.map((turno:any)=>{

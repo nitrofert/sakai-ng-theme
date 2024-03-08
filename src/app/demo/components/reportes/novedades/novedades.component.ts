@@ -132,7 +132,10 @@ export class NovedadesComponent implements  OnInit, OnChanges {
                 return {id: locacion.locacion_id,code:locacion.locacion_code,label: locacion.locacion_label}
               })
               //console.log(this.locaciones)
-              await this.setReporte();
+              if(novedadesTurnos.raw.length>0){
+                await this.setReporte();
+              }
+              
             },
             error:(err)=> {
               console.error(err);
