@@ -3,13 +3,21 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  
   production: false,
   env:'dev',
   url_backend:'localhost:5001',
   url_ssl:false,
-  //companySAP:'PRD_MARZO_2023',
   companySAP:'NITROFERT_PRD',
   companyMySQL:'nitrosap'
+  
+  /*production: true,
+  env:'calidad',
+  url_backend:'backend-test-autogestion.nitrofert.com.co',
+  url_ssl:false,
+  companySAP:'NITROFERT_PRD',
+  companyMySQL:'nitrosap'
+  */
 };
 
 /*

@@ -44,7 +44,7 @@ export class ConsolidadosRangoFechaComponent implements  OnInit{
     }
 
     async setReporte():Promise<void> {
-
+ 
     }
 
     async cambioFecha(event:any){

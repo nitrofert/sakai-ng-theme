@@ -551,7 +551,7 @@ filtrarCondicion(event: any) {
 
 seleccionarCondicion(condicionSeleccionada:any){
   
-  console.log(this.verCondTPT,this.condicionSeleccionada);
+  //console.log(this.verCondTPT,this.condicionSeleccionada);
 
   this.condicion_tpt = condicionSeleccionada.code;
 this.clienteSeleccionado = [];
@@ -571,7 +571,7 @@ async seleccionarCliente(clienteSeleccionado:any){
     this.confirmAdicionCliente(clienteSeleccionado);
   }*/
 
-  console.log(this.clienteSeleccionado);
+  //console.log(this.clienteSeleccionado);
 
   if(this.verCondTPT && this.condicionSeleccionada.length == 0){
     this.messageService.add({severity:'error', summary:'Error', detail:'Debe seleccionar primero una condición de transporte'});
@@ -610,13 +610,13 @@ async getPedidosPorCliente(clientesSeleccionados:any){
  // console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
 
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-  console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
+  //console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
   this.getAlmacenesEnPedidos();
 }
 
 getAlmacenesEnPedidos(){
   let almacenesPedidosCliente: any[] = [];
-  console.log('almacenesPedidosCliente',this.almacenes,this.pedidosCliente);
+  //console.log('almacenesPedidosCliente',this.almacenes,this.pedidosCliente);
   for(let pedido of this.pedidosCliente){
     
     if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode).length===0){
@@ -1016,7 +1016,7 @@ async adicionVehiculoSolicitud(){
               pedidos:[]
           });
 
-          console.log( this.vehiculosEnSolicitud);
+          //console.log( this.vehiculosEnSolicitud);
           //this.envioLineaCarguePedido =false;
           this.envioAdicionVehiculo = false;
           this.dialogCargueVehiculoPedido= false;
@@ -1262,7 +1262,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
           if(!pedido.itemcode.toLowerCase().startsWith("sf")){
               totalCarga+=parseFloat(pedido.cargada);
   
-              this.mostrarLogs?console.log('Linea pedido',pedido):null;
+              //this.mostrarLogs?console.log('Linea pedido',pedido):null;
 
               //console.log('pedido.cargada',parseFloat(pedido.cargada).toFixed(2))
               //console.log('pedido.disponible',parseFloat(pedido.disponible.toFixed(2)))            
@@ -1438,21 +1438,21 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-          this.mostrarLogs?console.log('Accion para remover linea de pedido asociado a un vehiculo'):null;
-          this.mostrarLogs?console.log('Vehiculos en solicitud',this.vehiculosEnSolicitud):null;
+          //this.mostrarLogs?console.log('Accion para remover linea de pedido asociado a un vehiculo'):null;
+          //this.mostrarLogs?console.log('Vehiculos en solicitud',this.vehiculosEnSolicitud):null;
           
           let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
 
-          this.mostrarLogs?console.log(`Index array vehiculos de la placa ${placa}`,index):null;
+          //this.mostrarLogs?console.log(`Index array vehiculos de la placa ${placa}`,index):null;
           
           let pedidos = this.vehiculosEnSolicitud[index].pedidos;
 
-          this.mostrarLogs?console.log(`pedidos asociados al vehiculos de placa ${placa}`,pedidos):null;
+          //this.mostrarLogs?console.log(`pedidos asociados al vehiculos de placa ${placa}`,pedidos):null;
           
           //let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
           let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode == item);
 
-          this.mostrarLogs?console.log(`Index array pedidos del pedido ${pedido} item ${item}`,indexPedido):null;
+          //this.mostrarLogs?console.log(`Index array pedidos del pedido ${pedido} item ${item}`,indexPedido):null;
 
           ////////////////////////// //// //////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
           this.vehiculosEnSolicitud[index].cantidad =this.vehiculosEnSolicitud[index].cantidad-eval(this.vehiculosEnSolicitud[index].pedidos[indexPedido].cantidad);

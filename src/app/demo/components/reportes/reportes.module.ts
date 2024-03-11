@@ -31,6 +31,7 @@ import { NovedadesService } from '../../service/novedades.service';
 import { ConsolidadosRangoFechaComponent } from './consolidados-rango-fecha/consolidados-rango-fecha.component';
 import { ToneladasAdicionalesComponent } from './toneladas-adicionales/toneladas-adicionales.component';
 import { IncumplimientosTurnosComponent } from './incumplimientos-turnos/incumplimientos-turnos.component';
+import { ComportamientoBodegasComponent } from './comportamiento-bodegas/comportamiento-bodegas.component';
 
 
 
@@ -48,7 +49,8 @@ import { IncumplimientosTurnosComponent } from './incumplimientos-turnos/incumpl
     NovedadesComponent,
     ConsolidadosRangoFechaComponent,
     ToneladasAdicionalesComponent,
-    IncumplimientosTurnosComponent
+    IncumplimientosTurnosComponent,
+    ComportamientoBodegasComponent
   ],
   imports: [
     CommonModule,
@@ -75,7 +77,8 @@ import { IncumplimientosTurnosComponent } from './incumplimientos-turnos/incumpl
   exports:[
     NovedadesComponent,
     ToneladasAdicionalesComponent,
-    IncumplimientosTurnosComponent
+    IncumplimientosTurnosComponent,
+    ComportamientoBodegasComponent
   ]
 })
 export class ReportesModule { }

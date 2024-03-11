@@ -31,7 +31,7 @@ export class NovedadesComponent implements  OnInit, OnChanges {
     colsSum:[]
   };
 
-  loading:boolean = false;
+  loading:boolean = true;
   novedades:any[] = [];
   clasificaciones:any[] = [];
   locaciones:any[] = [];
@@ -82,7 +82,7 @@ export class NovedadesComponent implements  OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    //console.log('changes',changes['rangoFechas'].currentValue)
+    ////console.log('changes',changes['rangoFechas'].currentValue)
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.getNovedaesTurno();
   }
@@ -91,7 +91,7 @@ export class NovedadesComponent implements  OnInit, OnChanges {
     
     
     if(event[1]){
-      //console.log(this.filtroRnagoFechas);
+      ////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.getNovedaesTurno();
   
@@ -102,12 +102,12 @@ export class NovedadesComponent implements  OnInit, OnChanges {
     this.novedadesService.getNovedades()
         .subscribe({
             next:async (novedades)=>{
-              //console.log(novedades);
+              ////console.log(novedades);
               this.novedades = novedades;
               this.clasificaciones = (await this.functionsService.groupArray(await this.functionsService.clonObject(novedades),'clase')).map((novedad)=>{
                 return {code: novedad.clase, name: novedad.clase, label: novedad.clase}
               });
-              //console.log(this.clasificaciones);
+              ////console.log(this.clasificaciones);
               this.getNovedaesTurno();
             },
             error:(err)=> {
@@ -125,13 +125,13 @@ export class NovedadesComponent implements  OnInit, OnChanges {
     this.solicitudTurnoService.getNovedadesTurnoExtendido(params)
         .subscribe({
             next:async (novedadesTurnos)=>{
-              ////console.log(novedadesTurnos.raw.filter((novedad: { detalle_solicitudes_turnos_id: number; })=>novedad.detalle_solicitudes_turnos_id === 2449))
-              console.log(novedadesTurnos.raw)
+              //////console.log(novedadesTurnos.raw.filter((novedad: { detalle_solicitudes_turnos_id: number; })=>novedad.detalle_solicitudes_turnos_id === 2449))
+              //console.log(novedadesTurnos.raw)
               this.novedadesTurnos = novedadesTurnos.raw;
               this.locaciones = (await this.functionsService.groupArray(await this.functionsService.clonObject(novedadesTurnos.raw),'locacion_label')).map((locacion)=>{
                 return {id: locacion.locacion_id,code:locacion.locacion_code,label: locacion.locacion_label}
               })
-              //console.log(this.locaciones)
+              ////console.log(this.locaciones)
               if(novedadesTurnos.raw.length>0){
                 await this.setReporte();
               }
@@ -148,9 +148,9 @@ export class NovedadesComponent implements  OnInit, OnChanges {
 
   async setReporte():Promise<void>{
     let headerTable = await this.configHeaderTablaNovedades();
-    //console.log(headerTable);
+    ////console.log(headerTable);
     let dataTable = await this.configDataTablaNovedades();
-    //console.log(dataTable);
+    ////console.log(dataTable);
     /*let tmpKeysHeader:any[]=[];
     for(let key in headerTable){
       
@@ -160,6 +160,8 @@ export class NovedadesComponent implements  OnInit, OnChanges {
 
     this.tablaNovedades.header = headerTable;
     this.tablaNovedades.data = dataTable;
+
+    this.loading = false;
   }
 
   async configHeaderTablaNovedades():Promise<any>{
@@ -190,11 +192,11 @@ export class NovedadesComponent implements  OnInit, OnChanges {
       objString = `{"novedad":"${clase.code}"`;
       for(let locacion of this.locaciones){
         let lineasClaseNovedadLocacion:any[] = this.novedadesTurnos.filter(novedadTurno => novedadTurno.novedades_historial_clase === clase.code && novedadTurno.locacion_code === locacion.code);
-        //console.log('lineasClaseNovedadLocacion',clase.code,locacion.code,lineasClaseNovedadLocacion);
+        ////console.log('lineasClaseNovedadLocacion',clase.code,locacion.code,lineasClaseNovedadLocacion);
         let novedadesClaseLocacion = (await this.functionsService.groupArray(await this.functionsService.clonObject(lineasClaseNovedadLocacion),'novedades_historial_novedad')).map((linea)=>{
           return {id: linea.novedades_historial_id,code:linea.novedades_historial_novedad,label: linea.novedades_historial_novedad}
         });
-        //console.log('novedadesClaseLocacion',clase.code,locacion.code,novedadesClaseLocacion);
+        ////console.log('novedadesClaseLocacion',clase.code,locacion.code,novedadesClaseLocacion);
         for(let novedaClaseLocacion of novedadesClaseLocacion){
           objString2 = `{"novedad":"${novedaClaseLocacion.code}"`;
         }
@@ -225,24 +227,31 @@ export class NovedadesComponent implements  OnInit, OnChanges {
       
     }*/
 
+    //console.log('clasificaciones',this.clasificaciones);
+
     let lineaClase:string ="";
     let lineaNovedad:string ="";
     for(let clase of this.clasificaciones){
-      lineaClase = `{"novedad":"${clase.code}"`;
+      let nombreClase = clase.code.replace(/(?:\\[rn]|[\r\n]+)+/g, "");
+      lineaClase = `{"novedad":"${nombreClase}"`;
       for(let locacion of this.locaciones){
         let lineasClaseNovedadLocacion:any[] = this.novedadesTurnos.filter(novedadTurno => novedadTurno.novedades_historial_clase === clase.code && novedadTurno.locacion_code === locacion.code);
         lineaClase+=`,"locacion${locacion.id}":${lineasClaseNovedadLocacion.length}`;
       }
       lineaClase+=`,"bgcolor":"bg-bluegray-200 font-bold"}`;
+      //console.log('lineaClase',lineaClase);
       dataTable.push(JSON.parse(lineaClase));
       let novedadesClase:any = this.novedades.filter(novedad=>novedad.clase === clase.code);
+      //console.log('novedadesClase',novedadesClase);
       for(let novedad of novedadesClase){
-        lineaNovedad = `{"novedad":"${novedad.novedad}"`;
+        let nombreNovedad = novedad.novedad.replace(/(?:\\[rn]|[\r\n]+)+/g, "");
+        lineaNovedad = `{"novedad":"${nombreNovedad}"`;
         for(let locacion of this.locaciones){
           let lineasNovedadLocacion = this.novedadesTurnos.filter(novedadTurno => novedadTurno.novedades_historial_novedad === novedad.novedad && novedadTurno.locacion_code === locacion.code);
           lineaNovedad+=`,"locacion${locacion.id}":${lineasNovedadLocacion.length}`;
         }
         lineaNovedad+=',"bgcolor":"bg-white font-normal"}';
+        //console.log('lineaNovedad',lineaNovedad);
         dataTable.push(JSON.parse(lineaNovedad));
       }
 
