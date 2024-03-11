@@ -14,7 +14,7 @@ import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 
 @Component({
-  selector: 'app-incumplimientos-turnos',
+  selector: 'app-comportamiento-bodegas',
   providers:[ConfirmationService,MessageService],
   templateUrl: './comportamiento-bodegas.component.html',
   styleUrls: ['./comportamiento-bodegas.component.scss']
