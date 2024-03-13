@@ -9,7 +9,8 @@ export const environment = {
   url_backend:'localhost:5001',
   url_ssl:false,
   companySAP:'NITROFERT_PRD',
-  companyMySQL:'nitrosap'
+  companyMySQL:'nitrosap',
+  ID_google_analytis:''
   
   /*production: true,
   env:'calidad',

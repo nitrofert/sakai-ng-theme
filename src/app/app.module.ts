@@ -16,6 +16,8 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AuthIterceptorToken } from './demo/components/auth/interceptor/auth.interceptor';
+import { environment } from 'src/environments/environment';
+import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 
 
@@ -37,7 +39,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             }
-        })
+        }),
+        NgxGoogleAnalyticsModule.forRoot(environment.ID_google_analytis),
+        NgxGoogleAnalyticsRouterModule
         
     ],
     providers: [

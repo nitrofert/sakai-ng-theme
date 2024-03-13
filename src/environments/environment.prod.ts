@@ -5,5 +5,6 @@ export const environment = {
   url_ssl:true,
   //url_backend:'https://fixed-packages.d39j6qsi811pio.amplifyapp.com',
   companySAP:'NITROFERT_PRD',
-  companyMySQL:'nitrosap'
+  companyMySQL:'nitrosap',
+  ID_google_analytis:'G-DE17ZYMHJ1'
 };

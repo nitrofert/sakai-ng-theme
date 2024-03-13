@@ -215,7 +215,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
     this.seleccionarEstadoFinal();
 
   }
-
+ 
   async seleccionarEstadoFinal(){
     
     ////////console.log(this.locacionSeleccionada);

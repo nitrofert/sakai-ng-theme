@@ -4,6 +4,7 @@ export const environment = {
     url_backend:'backend-test-autogestion.nitrofert.com.co',
     url_ssl:false,
     companySAP:'NITROFERT_PRD',
-    companyMySQL:'nitrosap'
+    companyMySQL:'nitrosap',
+    ID_google_analytis:''
   };
   
