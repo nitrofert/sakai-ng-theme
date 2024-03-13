@@ -2,6 +2,7 @@ import { Component, Inject, Injectable, OnInit } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent implements OnInit {
 
     lang: string = "en";
     subscription: Subscription;
+    IDgoogleAnalytics!:string;
     
     constructor(private primengConfig: PrimeNGConfig,
                 @Inject(TranslateService)
@@ -27,6 +29,7 @@ export class AppComponent implements OnInit {
                 this.subscription = this.translate.stream('primeng').subscribe(data => {
                     this.primengConfig.setTranslation(data);
                 });
+                this.IDgoogleAnalytics = environment.ID_google_analytis;
     }
 
     ngOnInit() {

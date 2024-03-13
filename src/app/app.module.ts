@@ -40,8 +40,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 deps: [HttpClient]
             }
         }),
-        NgxGoogleAnalyticsModule.forRoot(environment.ID_google_analytis),
-        NgxGoogleAnalyticsRouterModule
+        //NgxGoogleAnalyticsModule.forRoot(environment.ID_google_analytis),
+        //NgxGoogleAnalyticsRouterModule
         
     ],
     providers: [
