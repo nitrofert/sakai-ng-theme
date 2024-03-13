@@ -6,31 +6,46 @@
 	<div class="col-12">
 		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
             <div class="p-fluid p-formgrid grid">
-                <div  *ngIf="verEncabezado" [class]="verEncabezado?'field col-6':'field col-12' ">
+                <div  *ngIf="verEncabezado" class="field col-12 ">
                     <span class="p-float-label">
                         <p-calendar id="rangoFecha" [(ngModel)]="filtroRnagoFechas" selectionMode="range" [readonlyInput]="true" [showIcon]="true" [numberOfMonths]="1"  styleClass="w-full"  (ngModelChange)="cambioFecha($event)"  ></p-calendar>
                         <label for="rangoFecha"><h6>Seleccionar rango de fecha</h6></label>
                     </span>
                 </div>
     
-                <div [class]="verEncabezado?'field col-6':'field col-12' ">
+                <div class="field col-6 ">
                     <span class="p-float-label">
-                        <p-skeleton *ngIf="estados.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
-                        <p-autoComplete id="conductor"
+                        <p-skeleton *ngIf="estadoSeleccionadoInicial.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="estado1"
                                     *ngIf="estados.length>0" 
-                                    [(ngModel)]="estadoSeleccionado" 
+                                    [(ngModel)]="estadoSeleccionadoInicial" 
                                     
-                                    [suggestions]="estadosFiltradas" 
-                                    (completeMethod)="filtrarEstado($event)" 
+                                    [suggestions]="estadosFiltradasInicial" 
+                                    (completeMethod)="filtrarEstadoInicial($event)" 
                                     field="label" 
                                     [dropdown]="true"
-                                    (onSelect)="seleccionarEstado()">
+                                    (onSelect)="seleccionarEstadoInicial()">
                         </p-autoComplete>
-                        <label for="rangoFecha"><h6>Estados bodega</h6></label>
+                        <label for="rangoFecha"><h6>Estado inicial</h6></label>
                     </span>
                 </div>
 
-                
+                <div class="field col-6">
+                    <span class="p-float-label">
+                        <p-skeleton *ngIf="estadoSeleccionadoFinal.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
+                        <p-autoComplete id="estado2"
+                                    *ngIf="estados.length>0" 
+                                    [(ngModel)]="estadoSeleccionadoFinal" 
+                                    
+                                    [suggestions]="estadosFiltradasFinal" 
+                                    (completeMethod)="filtrarEstadoFinal($event)" 
+                                    field="label" 
+                                    [dropdown]="true"
+                                    (onSelect)="seleccionarEstadoFinal()">
+                        </p-autoComplete>
+                        <label for="rangoFecha"><h6>Estado final</h6></label>
+                    </span>
+                </div>
             </div>
             
             
@@ -42,7 +57,7 @@
 <div  class="grid">
 	<div class="col-12">
 		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-            <div  class="text-center mb-3"><h1>Comportamiento Locaciones x estado {{estadoSeleccionado.name}}</h1></div>
+            <div  class="text-center mb-3"><h1>Tiempo promedio Locaciones entre {{estadoSeleccionadoInicial.name}}-{{estadoSeleccionadoFinal.name}}</h1></div>
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 ">
                             <app-dynamic-table [dataTable]="dataTableComprtamientoBodegas.data" 
@@ -63,18 +78,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="dataChart" class="grid">
-	<div class="col-12">
-		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-            <div  class="text-center mb-3"><h1>Comportamiento Locaciones x estado {{estadoSeleccionado.name}}</h1></div>
-            <div class="p-fluid p-formgrid grid">
-                <div class="field col-12 ">
-                    <p-chart type="line" [data]="dataChart" [options]="optionsDataChart"></p-chart>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
 

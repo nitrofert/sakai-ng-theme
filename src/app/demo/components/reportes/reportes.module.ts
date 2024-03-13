@@ -32,6 +32,7 @@ import { ConsolidadosRangoFechaComponent } from './consolidados-rango-fecha/cons
 import { ToneladasAdicionalesComponent } from './toneladas-adicionales/toneladas-adicionales.component';
 import { IncumplimientosTurnosComponent } from './incumplimientos-turnos/incumplimientos-turnos.component';
 import { ComportamientoBodegasComponent } from './comportamiento-bodegas/comportamiento-bodegas.component';
+import { TiempoAccionesTurnoComponent } from './tiempo-acciones-turno/tiempo-acciones-turno.component';
 
 
 
@@ -50,7 +51,8 @@ import { ComportamientoBodegasComponent } from './comportamiento-bodegas/comport
     ConsolidadosRangoFechaComponent,
     ToneladasAdicionalesComponent,
     IncumplimientosTurnosComponent,
-    ComportamientoBodegasComponent
+    ComportamientoBodegasComponent,
+    TiempoAccionesTurnoComponent
   ],
   imports: [
     CommonModule,

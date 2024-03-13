@@ -13,6 +13,7 @@ import { ConsolidadosRangoFechaComponent } from './consolidados-rango-fecha/cons
 import { ToneladasAdicionalesComponent } from './toneladas-adicionales/toneladas-adicionales.component';
 import { IncumplimientosTurnosComponent } from './incumplimientos-turnos/incumplimientos-turnos.component';
 import { ComportamientoBodegasComponent } from './comportamiento-bodegas/comportamiento-bodegas.component';
+import { TiempoAccionesTurnoComponent } from './tiempo-acciones-turno/tiempo-acciones-turno.component';
 
 @NgModule({
     imports: [RouterModule.forChild([
@@ -30,6 +31,7 @@ import { ComportamientoBodegasComponent } from './comportamiento-bodegas/comport
         { path: 'toneldas-adicionales', component: ToneladasAdicionalesComponent },
         { path: 'incumplimientos-turnos', component: IncumplimientosTurnosComponent },
         { path: 'comportamiento-bodegas', component: ComportamientoBodegasComponent },
+        { path: 'tiempo-acciones-turno', component: TiempoAccionesTurnoComponent },
 
 
         //{ path: '**', redirectTo: '/notfound' }
