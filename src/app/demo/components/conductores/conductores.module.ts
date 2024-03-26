@@ -8,6 +8,10 @@ import { PrimengModule } from '../../../layout/shared/primeng/primeng.module';
 import { BreadCrumbModule } from '../../../layout/shared/breadcrumb/app.breadcrumb.module';
 import { ApplicationPipesModule } from '../../pipes/pipes.module';
 import { ConductoresRoutingModule } from './conductores-routing.module';
+import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-table.module';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConductoresService } from '../../service/conductores.service';
 
 
 
@@ -24,8 +28,10 @@ import { ConductoresRoutingModule } from './conductores-routing.module';
     PrimengModule,
     ReactiveFormsModule,
     FormsModule,
-    ApplicationPipesModule
-  ]
+    ApplicationPipesModule,
+    DynamicTableModule
+  ],
+  providers:[DialogService,ConfirmationService,MessageService,ConductoresService]
     
 })
 export class ConductoresModule { }

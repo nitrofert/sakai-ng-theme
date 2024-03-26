@@ -52,7 +52,24 @@ export class TransportadorasService {
 
     }
 
-    
+
+    inactivar(infoTransportadoras:any[]):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+        const url:string = `${this.api_url}/api/transportadoras/inactivar`;
+        //return this.http.post<any>(url, nuevaTransportadora, requestOptions);
+        return this.http.post<any>(url, infoTransportadoras);
+
+    }
+
+    activar(infoTransportadoras:any[]):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+        const url:string = `${this.api_url}/api/transportadoras/activar`;
+        //return this.http.post<any>(url, nuevaTransportadora, requestOptions);
+        return this.http.post<any>(url, infoTransportadoras);
+
+    }
 
    
 

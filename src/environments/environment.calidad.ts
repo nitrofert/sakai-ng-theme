@@ -5,6 +5,7 @@ export const environment = {
     url_ssl:false,
     companySAP:'NITROFERT_PRD',
     companyMySQL:'nitrosap',
-    ID_google_analytis:''
+    ID_google_analytis:'',
+    ID_google_tag:''
   };
   

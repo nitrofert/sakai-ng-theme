@@ -6,6 +6,17 @@ import { environment } from 'src/environments/environment';
 import { UrlApiService } from './url-api.service';
 import { Buffer } from 'buffer';
 import * as FileSaver from 'file-saver';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as Handlebars from "handlebars";
+
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+
+//import { readFileSync } from 'fs'
+//const fs = require('fs-extra')
+
+const htmlToPdfmake = require('html-to-pdfmake');
+
 
 
 @Injectable({
@@ -27,6 +38,8 @@ export class FunctionsService {
     {id:11,fullname:'NOVIEMBRE', shortName:'NOV',fullnameEN:'NOVEMBER', shortNameEN:'NOV'},
     {id:12,fullname:'DICIEMBRE', shortName:'DIC',fullnameEN:'DECEMBER', shortNameEN:'DEC'},
  ];
+
+ public windowScreen:any = window.screen;
 
  public dias:any[] = [
     {id:1,fullname:'LUNES', shortName:'LUN',fullnameEN:'MONDAY', shortNameEN:'MON'},
@@ -432,6 +445,173 @@ async log(mensaje:string):Promise<any> {
   return log;
 }
 
+
+
+
+getTamplateHTML(path:string):Observable<string>  {
+    let template =  this.http.get('assets/demo/templates/'+path+'.template.html',{responseType:'text'})
+    return template;
+}
+
+async compileHandlebarTemplate(templateHTML:string,data:any):Promise<any> {
+  
+  let compilarTemplate = Handlebars.compile(templateHTML);
+  let templateHTMLCompilado =  compilarTemplate(data);
+
+  return templateHTMLCompilado;
+ 
+}
+
+async getImgsTemplate(templateHTML:string):Promise<any[]> {
+
+  let findTag:boolean = true;
+    let imgs:any[] = [];
+    let textoBusqueda:string = templateHTML;
+    let pathSrc:string = "";
+    let idImg =0;
+    while(findTag){
+      let indexImg = textoBusqueda.indexOf(`<img src="`);
+      if(indexImg<0){
+        findTag=false;
+        
+      }else{
+        pathSrc = textoBusqueda.substring((indexImg+`<img src="`.length),textoBusqueda.indexOf(`"`,(indexImg+`<img src="`.length)));
+        //console.log(`{"img${idImg}":"${pathSrc}"}`);
+        imgs.push(JSON.parse(`{"img${idImg}":"${pathSrc}"}`));
+        idImg++;
+        textoBusqueda = textoBusqueda.substring(textoBusqueda.indexOf(`"`,(indexImg+`<img src="`.length)),textoBusqueda.length);
+      }
+    }
+
+    //console.log('imgs',imgs);
+
+  return imgs;
+}
+
+async replaceImgPathIdImg(imgsTemplate:any[],html:string):Promise<any>{
+
+  let newHTML = html;
+  
+  for await (let img of imgsTemplate){
+    //console.log(Object.keys(img)[0]);
+    //console.log(img[Object.keys(img)[0]]);
+    //console.log(html.indexOf(`"${img[Object.keys(img)[0]]}"`));
+    let regex = new RegExp('"' + img[Object.keys(img)[0]] + '"', 'g');
+    //console.log('regex',regex);
+    newHTML = newHTML.replace(regex,`"${Object.keys(img)[0]}"`);
+  }
+
+  //let newHtml = html.replace(/nitrofert/g,"intefert");
+  
+  return newHTML;
+
+}
+
+async convertHTMLtoPDF(html:any,propertiesPDF?:any):Promise<any> {
+  let pdfDefinition:any ={};
+  if(propertiesPDF){
+    pdfDefinition = propertiesPDF;
+  }
+  let imgsTemplate = await this.getImgsTemplate(html);
+  if(imgsTemplate.length > 0){  
+    html = await this.replaceImgPathIdImg(imgsTemplate,html);
+    let images:any = {}
+    for(let img of imgsTemplate){
+      //console.log('img',img);   
+    
+
+      //let image = await this.convertImagenLocalToBase64(img[Object.keys(img)[0]]) // Cambiar en el src el  path a ruta local !!!!work¡¡¡
+
+      let image = await this.convertImagenLocalToBase64(img[Object.keys(img)[0]]);
+      //console.log('image',image);
+      let newKey:any = `{"${Object.keys(img)[0]}":"${image}"}`; 
+      //console.log('newKey',newKey);
+      Object.assign(images,JSON.parse(newKey));
+      
+      //let image = await this.getBase64ImageFromURL(img[Object.keys(img)[0]]); //Error canvas no exported
+
+      //let image = await this.convertImageToBase64(img[Object.keys(img)[0]],console.log()) //Error 
+
+      
+      //Object.assign(images,img);
+    }
+    //console.log('images',images);
+    pdfDefinition.images = images;
+  }
+  let htmlDefinition = htmlToPdfmake(html,{tableAutoSize:true});     
+  //console.log(htmlDefinition[0]);
+  
+
+ 
+
+  pdfDefinition.content = htmlDefinition[0];
+
+
+
+  /*pdfDefinition = {
+    content:htmlDefinition[0]
+  }*/
+
+  return pdfDefinition;
+}
+
+
+async createPDF(pdfDefinition:any):Promise<void>{
+  const pdf = pdfMake.createPdf(pdfDefinition);
+  pdf.open();
+}
+
+
+
+
+
+convertImagenLocalToBase64(url:any) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();       
+    xhr.open("GET", url, true); 
+    xhr.responseType = "blob";
+
+    xhr.onload = function (e) {
+      //console.log(this.response);
+      var reader = new FileReader();
+      reader.onload = function(event:any) {
+         var res = event.target.result;
+         //console.log(res)
+         resolve(res)
+      }
+      var file = this.response;
+      reader.readAsDataURL(file)
+    };
+    xhr.send();
+    xhr.onerror = error => {
+      reject(error);
+    };
+    //img.src = url;
+  });
+}
+
+getBase64ImageFromURL(url:any) {
+  return new Promise((resolve, reject) => {
+    var img = new Image();
+    //img.setAttribute("crossOrigin", "anonymous");
+    img.crossOrigin='anonymous';    
+    //img.setAttribute('crossorigin', 'anonymous');
+    img.setAttribute("Access-Control-Allow-Origin", "*");
+    img.onload = () => {
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var ctx:any = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      var dataURL = canvas.toDataURL("image/png");
+      resolve(dataURL);
+    };
+    img.onerror = error => {
+      reject(error);
+    };
+    img.src = url;
+  });
+}
   
 
 }

@@ -207,9 +207,9 @@ export class ToneladasAdicionalesComponent implements  OnInit, OnChanges {
     
     ////console.log('infoTurnos',infoTurnos);
 
-    //return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
+    return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
 
-    return infoTurnos;  
+    //  return infoTurnos;  
   }
 
  

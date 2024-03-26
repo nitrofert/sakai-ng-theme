@@ -1,0 +1,252 @@
+<table  style="width: 100%; border-spacing: 1px; padding: 1px;  color: black; font-size: 10px;">
+    <tr>
+        <td>
+            <table style="width: 100%; ">
+                <tr>
+                    <td colspan="2" style="justify-content: center; align-items: center; width: 33%;">
+                        <div style="align-items: center; text-align: center;">
+                            <img src="assets/demo/images/logos/nitrofert.png" width="300px" alt="">
+                        </div>
+                        
+                        
+                    </td>
+                    <td colspan="2" style="display: block; justify-content: center; width: 33%; text-align: center; align-items: cener; vertical-align: middle;">
+                        <h1>ORDEN DE CARGUE</h1>
+                    </td>
+                    <td colspan="2" style="justify-content: center; align-items: center;width: 34%;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td><strong>Código:</strong></td>
+                                <td>FOR-COM-002</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Versión:</strong></td>
+                                <td>1.0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fecha aprobación:</strong></td>
+                                <td>06-02-2023</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <table style="width: 100%; ">
+                <tr>
+                    <td style="width: 66%;">
+                        <table style="width: 100%; text-align: LEFT; " >
+                            <tr>
+                                <td  style="background-color:green;color: antiquewhite;">
+                                    <strong>Señores</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>NITROFERT S.A.S</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Oficina de despachos</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 34%;">
+                        <table style="width: 100%; text-align: center;" >
+                            <tr>
+                                <td style="background-color:green;color: antiquewhite;" colspan="3"><strong>FEHA EMISIÓN SOLICITUD DE CARGUE</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>DIA</strong></td>
+                                <td><strong>MES</strong></td>
+                                <td><strong>AÑO</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>{{diaSolicitud}}</strong></td>
+                                <td><strong>{{mesSolicitud}}</strong></td>
+                                <td><strong>{{anioSolicitud}}</strong></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; text-align: center;" >
+                <tr>
+                    <td style="background-color:green;color: antiquewhite; width: 40%;" colspan="5"><strong>INFORMACIÓN DEL CLIENTE</strong></td>
+                    
+                </tr>
+                <tr>
+                    <td style="background-color:green;color: antiquewhite; width: 40%;" colspan="2"><strong>INFORMACIÓN DEL CLIENTE</strong></td>
+                    <td style="background-color:green;color: antiquewhite; width: 60%;" colspan="3"><strong>FUNCIONARIO DE CONTACTO</strong></td>
+                </tr>
+                <tr style="background-color:green;color: antiquewhite;">
+                    <td style="background-color:green;color: antiquewhite; width: 25%;"><strong>NOMBRE / RAZON SOCIAL</strong></td>
+                    <td style="background-color:green;color: antiquewhite; width: 15%;"><strong>NIT</strong></td>
+                    <td style="background-color:green;color: antiquewhite; width: 20%;"><strong>NOMBRE</strong></td>
+                    <td style="background-color:green;color: antiquewhite; width: 20%;"><strong>TELEFONO / CELULAR</strong></td>
+                    <td style="background-color:green;color: antiquewhite; width: 10%;"><strong>E-MAIL</strong></td>
+                    
+                </tr>
+                <tr>
+                    <td><strong>{{cliente.nombre}}</strong></td>
+                    <td><strong>{{cliente.nit}}</strong></td>
+                    <td><strong>{{cliente.contacto}}</strong></td>
+                    <td><strong>{{cliente.contactotelefono}}</strong></td>
+                    <td><strong>{{cliente.contatoemail}}</strong></td>
+                    
+                </tr>
+            </table>    
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; text-align: center; " >
+                <tr>
+                    <td style="background-color:green;color: antiquewhite; width: 50%;">
+                        <strong>NOMBRE FUNCIONARIO COMERCIAL NITROFERT</strong>
+                    </td>
+                    <td>
+                        {{comercial.nombre}}
+                    </td>
+                </tr>
+            </table>    
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <table style="width: 100%; text-align: center; " >
+                <tr>
+                    <td colspan="6" style="text-align: left; padding-left: 5px;"><strong>Autorizamos a entregar al:</strong></td>
+                </tr>
+                <tr>
+
+                    <td style="background-color:green;color: antiquewhite; width: 25%;">
+                        <strong>EMPRESA TRANSPORTADORA</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 15%;">
+                        <strong>NIT TRANSPORTADORA</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 10%;">
+                        <strong>PLACA VEHICULO</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 25%;">
+                        <strong>NOMBRE COMPLETO CONDUCTOR</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 10%;">
+                        <strong>CEDULA</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 15%;">
+                        <strong>CELULAR</strong>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td>{{trasnportadora.nombre}}</td>
+                    <td>{{trasnportadora.nitt}}</td>
+                    <td>{{vehiculo.placa}}</td>
+                    <td>{{conductor.nombre}}</td>
+                    <td>{{conductor.cedula}}</td>
+                    <td>{{conductor.telefono}}</td>
+                </tr>
+            </table>    
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <table style="width: 100%; text-align: center; " >
+                <tr>
+                    <td colspan="6" style="text-align: left; padding-left: 5px;">
+                        <strong>Los siguientes productos:</strong>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td style="background-color:green;color: antiquewhite; width: 30%;">
+                        <strong>LUGAR DE RETIRO MERCANCIA</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 10%;">
+                        <strong>PEDIDO DE VENTA</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 25%;">
+                        <strong>PRODUCTO (Nombre Especifíco/Grados)</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 25%;">
+                        <strong>PRESENTACIÓN / ESPECIFICACIONES</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 5%;">
+                        <strong>CANTIDAD (TONELADAS)</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 5%;">
+                        <strong>DESTINO DE MERCANCIA</strong>
+                    </td>
+                    
+                </tr>
+                {{#each productos as |producto|}}
+                <tr>
+                    <td>{{producto.locacion}}</td>
+                    <td>{{producto.pedidonum}}</td>
+                    <td>{{producto.itemname}}</td>
+                    <td>{{producto.presentacion}}</td>
+                    <td>{{producto.cantidad}}</td>
+                    <td>{{producto.destino}}</td>
+                </tr>
+                {{/each}}
+            </table>    
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <table style="width: 100%; text-align: center; " >
+                <tr>
+                    <td colspan="6" style="text-align: left; padding-left: 5px;">
+                        <strong>Autorizado por:</strong>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td style="background-color:green;color: antiquewhite; width: 30%;">
+                        <strong>NOMBRE DE LA PERSONA AUTORIZADA</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 10%;">
+                        <strong>No. IDENTIFICACIÓN</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 25%;">
+                        <strong>CARGO</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 25%;">
+                        <strong>TELEFONO CONTACTO</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 5%;">
+                        <strong>E-MAIL</strong>
+                    </td>
+                    <td style="background-color:green;color: antiquewhite; width: 5%;">
+                        <strong>FIRMA</strong>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td>{{usuario.nombre}}-</td>
+                    <td>{{usuario.cedula}}-</td>
+                    <td>{{usuario.cargo}}-</td>
+                    <td>{{usuario.telefono}}-</td>
+                    <td>{{usuario.email}}-</td>
+                    <td>{{usuari.firma}}-</td>
+                </tr>
+            </table>    
+        </td>
+    </tr>
+    <tr style="text-align: center; font-style: oblique;;">
+        <td>
+            Nota: Este documento debe contener la firma digital de la persona autorizada y debe estar diligenciado en su totalidad
+        </td>
+    </tr>
+</table>

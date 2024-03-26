@@ -14,10 +14,12 @@ import { DetalleSolicitudTurno } from '../interface/solicitud.interface';
 import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
 import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
+import { lastValueFrom } from 'rxjs';
+import { header, images, content, footer, permissions } from '../config-pdf/solicitud-cargue'
 
 @Component({
   selector: 'app-listado-solicitudes',
-  providers:[ConfirmationService,MessageService],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './listado-solicitudes.component.html',
   styleUrls: ['./listado-solicitudes.component.scss'],
   styles: [`
@@ -37,294 +39,296 @@ import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 
 
 
-export class ListadoSolicitudesComponent  implements  OnInit{
+export class ListadoSolicitudesComponent implements OnInit {
 
   @ViewChild('filter') filter!: ElementRef;
 
   hoy = new Date();
-  primerDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
-  ultimoDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth() + 1, 0);
-  filtroRnagoFechas:Date[] = [this.primerDiaMes,this.ultimoDiaMes];
-  permisosModulo!:any[];
+  primerDiaMes: Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
+  ultimoDiaMes: Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth() + 1, 0);
+  filtroRnagoFechas: Date[] = [this.primerDiaMes, this.ultimoDiaMes];
+  permisosModulo!: any[];
 
-  showBtnNew:boolean =false;
-  showBtnEdit:boolean = false;
-  showBtnExp:boolean = false;
-  showBtnDelete:boolean = false;
-  infoUsuario!:any;
+  showBtnNew: boolean = false;
+  showBtnEdit: boolean = false;
+  showBtnExp: boolean = false;
+  showBtnDelete: boolean = false;
+  infoUsuario!: any;
 
 
 
-  dataTable:any[] = [{id: 1, docdate:'2023-02-01', clienteid:'CL900123098',pedidos:1, vehiculos:1,toneladas:20},
-                     {id: 2, docdate:'2023-02-01', clienteid:'CL800123098',pedidos:2, vehiculos:1,toneladas:30},
-                     {id: 3, docdate:'2023-02-01', clienteid:'CL900123098',pedidos:1, vehiculos:2,toneladas:30} ];
-  headersTable:any[] = [
-                          {
-                              'id':{ 
-                                    label:'Id Solicitud', 
-                                    type:'text',
-                                    sizeCol:'6rem',
-                                    align:'center'
-                                  }, 
-                              'docdate': {
-                                    label:'Fecha Solicitud',
-                                    type:'date', 
-                                    sizeCol:'6rem', 
-                                    align:'center'
-                                  }, 
-                              'clienteid': {
-                                        label:'Id Cliente',
-                                        type:'text', 
-                                        sizeCol:'6rem', 
-                                        align:'center'
-                                      }, 
-                              'pedidos': {
-                                                label:'# artículos',
-                                                type:'number', 
-                                                sizeCol:'6rem', 
-                                                align:'center'
-                                              },
-                              'vehiculos': {
-                                                label:'Cantidad vehiculos',
-                                                type:'number', 
-                                                sizeCol:'6rem', 
-                                                align:'center'
-                                              },
-                              'toneladas': {
-                                                label:'Cantidad toneladas',
-                                                type:'number', 
-                                                sizeCol:'6rem', 
-                                                align:'center',
-                                                currency:"TON"
-                                           }
-                          }
-                        ];
-  
-  permisosUsuarioPagina:any[] = [{ read_accion:true,create_accion:true, update_accion:false, delete_accion:false}];
+  dataTable: any[] = [{ id: 1, docdate: '2023-02-01', clienteid: 'CL900123098', pedidos: 1, vehiculos: 1, toneladas: 20 },
+  { id: 2, docdate: '2023-02-01', clienteid: 'CL800123098', pedidos: 2, vehiculos: 1, toneladas: 30 },
+  { id: 3, docdate: '2023-02-01', clienteid: 'CL900123098', pedidos: 1, vehiculos: 2, toneladas: 30 }];
+  headersTable: any[] = [
+    {
+      'id': {
+        label: 'Id Solicitud',
+        type: 'text',
+        sizeCol: '6rem',
+        align: 'center'
+      },
+      'docdate': {
+        label: 'Fecha Solicitud',
+        type: 'date',
+        sizeCol: '6rem',
+        align: 'center'
+      },
+      'clienteid': {
+        label: 'Id Cliente',
+        type: 'text',
+        sizeCol: '6rem',
+        align: 'center'
+      },
+      'pedidos': {
+        label: '# artículos',
+        type: 'number',
+        sizeCol: '6rem',
+        align: 'center'
+      },
+      'vehiculos': {
+        label: 'Cantidad vehiculos',
+        type: 'number',
+        sizeCol: '6rem',
+        align: 'center'
+      },
+      'toneladas': {
+        label: 'Cantidad toneladas',
+        type: 'number',
+        sizeCol: '6rem',
+        align: 'center',
+        currency: "TON"
+      }
+    }
+  ];
 
-  columnsTable:number = 19;
-  dataKey:string = "solicitudes_turno_id";
-  loading:boolean = true;
-  globalFilterFields:any[]=['solicitudes_turno_id',
-                            'label_cliente',
-                            'detalle_solicitudes_turnos_id',
-                            'detalle_solicitudes_turnos_estado',
-                            'locacion_label',
-                            'transportadoras_nombre',
-                            'vehiculos_placa',
-                            'tipovehiculos_tipo',
-                            'label_conductor',
-                            'telefonos_conductor',
-                            'detalle_solicitudes_turnos_pedidos_pedidonum',
-                            'material',
-                            'detalle_solicitudes_turnos_pedidos_cantidad',
-                            'detalle_solicitudes_turnos_pedidos_bodega',
-                            'remision',
-                            'lugarentrega'
-                          ];
-  selectionMode:string = "multiple";
-  selectedItem:any[] = [];
-  estadosTurno:any[] = [];
+  permisosUsuarioPagina: any[] = [{ read_accion: true, create_accion: true, update_accion: false, delete_accion: false }];
 
-  solicitudesExtendida:any[] = [];
+  columnsTable: number = 19;
+  dataKey: string = "dataKey";
+  loading: boolean = true;
+  globalFilterFields: any[] = ['solicitudes_turno_id',
+    'label_cliente',
+    'detalle_solicitudes_turnos_id',
+    'detalle_solicitudes_turnos_estado',
+    'locacion_label',
+    'transportadoras_nombre',
+    'vehiculos_placa',
+    'tipovehiculos_tipo',
+    'label_conductor',
+    'telefonos_conductor',
+    'detalle_solicitudes_turnos_pedidos_pedidonum',
+    'material',
+    'detalle_solicitudes_turnos_pedidos_cantidad',
+    'detalle_solicitudes_turnos_pedidos_bodega',
+    'remision',
+    'lugarentrega'
+  ];
+  selectionMode: string = "multiple";
+  selectedItem: any[] = [];
+  estadosTurno: any[] = [];
+
+  solicitudesExtendida: any[] = [];
 
   documentStyle = getComputedStyle(document.documentElement);
   textColor = this.documentStyle.getPropertyValue('--text-color');
   textColorSecondary = this.documentStyle.getPropertyValue('--text-color-secondary');
   surfaceBorder = this.documentStyle.getPropertyValue('--surface-border');
 
-  pieChart:any;
-  optionsPieChart:any;
-  barStackChart:any;
-  optionsBarStackChart:any;
+  pieChart: any;
+  optionsPieChart: any;
+  barStackChart: any;
+  optionsBarStackChart: any;
 
-  filtroLocaciones:any[]=[];
-  localidades:any;
-  dependencias:any;
+  filtroLocaciones: any[] = [];
+  localidades: any;
+  dependencias: any;
+
+  htmlDoc: any;
 
 
+  constructor(private router: Router,
+    public dialogService: DialogService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+    private usuariosService: UsuarioService,
+    private solicitudTurnoService: SolicitudTurnoService,
+    public functionsService: FunctionsService,
+    private sB1SLService: SB1SLService,
+    private localidadesService: LocalidadesService,
+    private dependenciasService: DependenciasService) { }
 
-
-  constructor(private router:Router,
-              public dialogService: DialogService,
-              private confirmationService: ConfirmationService,
-              private  messageService: MessageService,
-              private usuariosService:UsuarioService,
-              private solicitudTurnoService:SolicitudTurnoService,
-              public functionsService:FunctionsService,
-              private sB1SLService:SB1SLService,
-              private localidadesService:LocalidadesService,
-              private dependenciasService:DependenciasService){}
-              
 
 
   ngOnInit() {
     this.getLocalidades();
-    
+
     Calendar.prototype.getDateFormat = () => 'dd/mm/yy';
     this.estadosTurno = this.solicitudTurnoService.estadosTurno;
-    
+
   }
 
-  async getLocalidades(){
-    this.localidades =  await this.localidadesService.getLocalidades();
+  async getLocalidades() {
+    this.localidades = await this.localidadesService.getLocalidades();
     ////console.log(this.localidades); 
-    this.getDependencias();   
+    this.getDependencias();
   }
 
-  async getDependencias(){
-    this.dependencias =  await this.dependenciasService.getDependencias();
+  async getDependencias() {
+    this.dependencias = await this.dependenciasService.getDependencias();
     ////console.log(this.dependencias);    
-    this.getPermisosModulo(); 
+    this.getPermisosModulo();
   }
 
-  getPermisosModulo(){
+  getPermisosModulo() {
     const modulo = this.router.url;
+    console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
-        .subscribe({
-            next: async (permisos)=>{
-              ////////////////////console.log(permisos);
-              if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
-                this.router.navigate(['/auth/access']);
-              }
+      .subscribe({
+        next: async (permisos) => {
+          ////////////////////console.log(permisos);
+          if (!permisos.find((permiso: { accion: string; }) => permiso.accion === 'leer')) {
+            this.router.navigate(['/auth/access']);
+          }
 
-              if(permisos.find((permiso: { accion: string; })=>permiso.accion==='leer').valor===0){
-                this.router.navigate(['/auth/access']);
-              }
-              this.permisosModulo = permisos;
-              this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
-              this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
-              this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
-              this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
-
-              
-              this.infoUsuario = await this.usuariosService.infoUsuario();
-              //////////////////console.log(this.infoUsuario);
-              this.getSolicitudesTurno();
-
-            },
-            error:(err)=>{
-                console.error(err);
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                
-            }
-        });
-        
-}
+          if (permisos.find((permiso: { accion: string; }) => permiso.accion === 'leer').valor === 0) {
+            this.router.navigate(['/auth/access']);
+          }
+          this.permisosModulo = permisos;
+          this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'crear').valor;
+          this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'actualizar').valor;
+          this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'exportar').valor;
+          this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'borrar').valor;
 
 
-  async getSolicitudesTurno(){
+          this.infoUsuario = await this.usuariosService.infoUsuario();
+          //////////////////console.log(this.infoUsuario);
+          this.getSolicitudesTurno();
 
-   
-    let params:any = {
-      fechainicio:this.filtroRnagoFechas[0],
-      fechafin:this.filtroRnagoFechas[1],
+        },
+        error: (err) => {
+          console.error(err);
+          this.messageService.add({ severity: 'error', summary: '!Error¡', detail: err.error.message });
+
+        }
+      });
+
+  }
+
+
+  async getSolicitudesTurno() {
+
+
+    let params: any = {
+      fechainicio: this.filtroRnagoFechas[0],
+      fechafin: this.filtroRnagoFechas[1],
     }
 
     this.solicitudTurnoService.getSolicitudesTurnoExtendido(params)
-    .subscribe({
-      next: async (solicitudesTurnos)=>{
-     
-         let dataPieChart:any[] = [];
-         let dataBarStackChart:any[any] = [];
-        
-         
-         solicitudesTurnos.raw.forEach((solicitud: {
-                                                              locacion_label: any;
-                                                              filtroLocacion: { name: any; };
-                                                              detalle_solicitudes_turnos_fechacita: Date; 
-                                                              solicitudes_turno_created_at: Date;
-                                                              detalle_solicitudes_turnos_horacita: Date; 
-                                                              detalle_solicitudes_turnos_horacita2:Date;
-                                                              detalle_solicitudes_turnos_estado:string;
-                                                              bgColor:string;
-                                                              txtColor:string;
-                                                              detalle_solicitudes_turnos_pedidos_cantidad:number;
-                                                              detalle_solicitudes_turnos_pedidos_dependencia:string;
-                                                              detalle_solicitudes_turnos_pedidos_dependencia_label:string;
-                                                              detalle_solicitudes_turnos_pedidos_localidad:string;
-                                                              detalle_solicitudes_turnos_pedidos_localidad_label:string;
-                                                    })=>{
-                                                              
+      .subscribe({
+        next: async (solicitudesTurnos) => {
+
+          let dataPieChart: any[] = [];
+          let dataBarStackChart: any[any] = [];
 
 
-                                                              solicitud.solicitudes_turno_created_at = new Date(solicitud.solicitudes_turno_created_at);
-                                                              solicitud.detalle_solicitudes_turnos_fechacita = new Date(solicitud.detalle_solicitudes_turnos_fechacita);
-                                                              solicitud.detalle_solicitudes_turnos_horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita);
-                                                              let horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita).toLocaleTimeString("en-US", { hour12: false });
-                                                              let hoy = new Date();
-                                                              hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
-                                                              solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
-                                                              ////////console.log(solicitud.detalle_solicitudes_turnos_estado);
-                                                              if(this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado)){
-                                                                solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
-                                                                solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
-                                                              }else{
-                                                                //console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
-                                                                solicitud.bgColor = 'indigo-50';
-                                                                solicitud.txtColor = 'primary-900';
-                                                              }
-                                                             
-                                                             
-                                                             
-                                                              solicitud.filtroLocacion = { name:solicitud.locacion_label}
-                                                              if(this.filtroLocaciones.filter(filtro=>filtro.name === solicitud.locacion_label).length===0){
-                                                                this.filtroLocaciones.push({name:solicitud.locacion_label})
-                                                              }
-                                                                                                                          
+          solicitudesTurnos.raw.forEach((solicitud: {
+            locacion_label: any;
+            filtroLocacion: { name: any; };
+            detalle_solicitudes_turnos_fechacita: Date;
+            solicitudes_turno_created_at: Date;
+            detalle_solicitudes_turnos_horacita: Date;
+            detalle_solicitudes_turnos_horacita2: Date;
+            detalle_solicitudes_turnos_estado: string;
+            bgColor: string;
+            txtColor: string;
+            detalle_solicitudes_turnos_pedidos_cantidad: number;
+            detalle_solicitudes_turnos_pedidos_dependencia: string;
+            detalle_solicitudes_turnos_pedidos_dependencia_label: string;
+            detalle_solicitudes_turnos_pedidos_localidad: string;
+            detalle_solicitudes_turnos_pedidos_localidad_label: string;
+          }) => {
 
-                                                              if(dataPieChart.filter(label=>label.name === solicitud.detalle_solicitudes_turnos_estado).length===0){
-                                                                dataPieChart.push({name:solicitud.detalle_solicitudes_turnos_estado, 
-                                                                                  value:solicitud.detalle_solicitudes_turnos_pedidos_cantidad,
-                                                                                  backgroundColor:this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
-                                                                                })
-                                                              }else{
-                                                                let index = dataPieChart.findIndex(label=>label.name === solicitud.detalle_solicitudes_turnos_estado);
-                                                                dataPieChart[index].value+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
-                                                              } 
 
-                                                              if(dataBarStackChart.filter((label: { label: string; })=>label.label === solicitud.detalle_solicitudes_turnos_estado).length===0){
-                                                                dataBarStackChart.push({
-                                                                    //type: 'bar',
-                                                                    label:solicitud.detalle_solicitudes_turnos_estado,
-                                                                    backgroundColor:this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
-                                                                    borderColor:this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
-                                                                    //data:[solicitud.detalle_solicitudes_turnos_pedidos_cantidad]
-                                                                    data:solicitud.detalle_solicitudes_turnos_pedidos_cantidad
-                                                                });
-                                                              }else{
-                                                              
-                                                                let index = dataBarStackChart.findIndex((label: { label: string; })=>label.label === solicitud.detalle_solicitudes_turnos_estado);
-                                                                //dataBarStackChart[index].data.push(solicitud.detalle_solicitudes_turnos_pedidos_cantidad);
-                                                                //dataBarStackChart[index].data[0]+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
-                                                                dataBarStackChart[index].data+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
-                                                                
-                                                              }
 
-                                                              solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia)?this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name:'';
-                                                              solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
-                                                              ////console.log(solicitud);
-                                                              
+            solicitud.solicitudes_turno_created_at = new Date(solicitud.solicitudes_turno_created_at);
+            solicitud.detalle_solicitudes_turnos_fechacita = new Date(solicitud.detalle_solicitudes_turnos_fechacita);
+            solicitud.detalle_solicitudes_turnos_horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita);
+            let horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita).toLocaleTimeString("en-US", { hour12: false });
+            let hoy = new Date();
+            hoy.setHours(parseInt(horacita.split(":")[0]), parseInt(horacita.split(":")[1]), parseInt(horacita.split(":")[2]));
+            solicitud.detalle_solicitudes_turnos_horacita2 = hoy;
+            ////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+            if (this.estadosTurno.find(estado => estado.name === solicitud.detalle_solicitudes_turnos_estado)) {
+              solicitud.bgColor = this.estadosTurno.find(estado => estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
+              solicitud.txtColor = this.estadosTurno.find(estado => estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
+            } else {
+              //console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+              solicitud.bgColor = 'indigo-50';
+              solicitud.txtColor = 'primary-900';
+            }
 
-          //return solicitud
-        })
 
-        await this.configPieChart(dataPieChart);
-        await this.configBarSatckChart(dataBarStackChart);
 
-         ////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
-         this.solicitudesExtendida = solicitudesTurnos.raw;
-         
-         
-         console.log('this.solicitudesExtendida',this.solicitudesExtendida);
-         this.loading = false;
-      },
-      error:(err)=>{
-        
-        this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-        console.error(err);
-      }
-    });
+            solicitud.filtroLocacion = { name: solicitud.locacion_label }
+            if (this.filtroLocaciones.filter(filtro => filtro.name === solicitud.locacion_label).length === 0) {
+              this.filtroLocaciones.push({ name: solicitud.locacion_label })
+            }
+
+
+            if (dataPieChart.filter(label => label.name === solicitud.detalle_solicitudes_turnos_estado).length === 0) {
+              dataPieChart.push({
+                name: solicitud.detalle_solicitudes_turnos_estado,
+                value: solicitud.detalle_solicitudes_turnos_pedidos_cantidad,
+                backgroundColor: this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
+              })
+            } else {
+              let index = dataPieChart.findIndex(label => label.name === solicitud.detalle_solicitudes_turnos_estado);
+              dataPieChart[index].value += solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
+            }
+
+            if (dataBarStackChart.filter((label: { label: string; }) => label.label === solicitud.detalle_solicitudes_turnos_estado).length === 0) {
+              dataBarStackChart.push({
+                //type: 'bar',
+                label: solicitud.detalle_solicitudes_turnos_estado,
+                backgroundColor: this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
+                borderColor: this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
+                //data:[solicitud.detalle_solicitudes_turnos_pedidos_cantidad]
+                data: solicitud.detalle_solicitudes_turnos_pedidos_cantidad
+              });
+            } else {
+
+              let index = dataBarStackChart.findIndex((label: { label: string; }) => label.label === solicitud.detalle_solicitudes_turnos_estado);
+              //dataBarStackChart[index].data.push(solicitud.detalle_solicitudes_turnos_pedidos_cantidad);
+              //dataBarStackChart[index].data[0]+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
+              dataBarStackChart[index].data += solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
+
+            }
+
+            solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; }) => denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia) ? this.dependencias.find((denpendencia: { id: any; }) => denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name : '';
+            solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; }) => localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad) ? this.localidades.find((localidad: { id: any; }) => localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name : '';
+            ////console.log(solicitud);
+
+
+            //return solicitud
+          })
+
+          await this.configPieChart(dataPieChart);
+          await this.configBarSatckChart(dataBarStackChart);
+
+          ////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+          this.solicitudesExtendida = solicitudesTurnos.raw;
+
+
+          console.log('this.solicitudesExtendida', this.solicitudesExtendida);
+          this.loading = false;
+        },
+        error: (err) => {
+
+          this.messageService.add({ severity: 'error', summary: '!Error¡', detail: err.error.message });
+          console.error(err);
+        }
+      });
 
     /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
         .subscribe({
@@ -339,25 +343,25 @@ export class ListadoSolicitudesComponent  implements  OnInit{
                 console.error(error);
             }
     });*/
-    
+
   }
 
 
-  async configPieChart(dataPieChart:any):Promise<void>{
+  async configPieChart(dataPieChart: any): Promise<void> {
 
     ////console.log(dataPieChart);
 
-    let totalToneladas:number = (await this.functionsService.sumColArray(dataPieChart,[{value:0}]))[0].value;
+    let totalToneladas: number = (await this.functionsService.sumColArray(dataPieChart, [{ value: 0 }]))[0].value;
 
-    let dataPieChartOrder:any[] = [];
-    let estados = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno,'order','ASC');
-    
-    for(let estado of  estados){
-      let data = dataPieChart.filter((item: { name: any; })=>item.name === estado.name);
-      
-      if(data.length > 0){
+    let dataPieChartOrder: any[] = [];
+    let estados = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno, 'order', 'ASC');
+
+    for (let estado of estados) {
+      let data = dataPieChart.filter((item: { name: any; }) => item.name === estado.name);
+
+      if (data.length > 0) {
         ////console.log('estado',estado.name);
-       // //console.log('data',data);
+        // //console.log('data',data);
         dataPieChartOrder = dataPieChartOrder.concat(data);
       }
     }
@@ -365,12 +369,12 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     ////console.log(dataPieChartOrder);
 
     this.pieChart = {
-      labels: dataPieChartOrder.map((item: { name: any; })=>item.name),
-      datasets:[
+      labels: dataPieChartOrder.map((item: { name: any; }) => item.name),
+      datasets: [
         {
-          data:dataPieChartOrder.map((item: { value: any; })=>(item.value*100)/totalToneladas),
-          backgroundColor:dataPieChartOrder.map((item: { backgroundColor: any; })=>item.backgroundColor),
-          hoverBackgroundColor:dataPieChartOrder.map((item: { backgroundColor: any; })=>item.backgroundColor),
+          data: dataPieChartOrder.map((item: { value: any; }) => (item.value * 100) / totalToneladas),
+          backgroundColor: dataPieChartOrder.map((item: { backgroundColor: any; }) => item.backgroundColor),
+          hoverBackgroundColor: dataPieChartOrder.map((item: { backgroundColor: any; }) => item.backgroundColor),
         }
       ]
     }
@@ -378,17 +382,17 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.optionsPieChart = {
       plugins: {
         legend: {
-            labels: {
-                usePointStyle: true,
-                color: this.textColor
-            }
+          labels: {
+            usePointStyle: true,
+            color: this.textColor
+          }
         }
       }
     }
 
-  } 
+  }
 
-  async configBarSatckChart(dataBarStackChart:any):Promise<void>{
+  async configBarSatckChart(dataBarStackChart: any): Promise<void> {
     /////console.log(dataBarStackChart)
     /*let dataBarStackChartOrder:any[] = await this.functionsService.sortArrayObject(dataBarStackChart,'data','ASC');
     
@@ -397,39 +401,82 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     dataBarStackChartOrder.forEach((item)=>{
       item.data = [item.data];
     })*/
-    
-    let dataBarStackChartOrder:any[] = [];
-    let estados = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno,'order','ASC');
-    
-    for(let estado of  estados){
-      let data = dataBarStackChart.filter((item: { label: any; })=>item.label === estado.name);
-      
-      if(data.length > 0){
+
+    let dataBarStackChartOrder: any[] = [];
+    let estados = await this.functionsService.sortArrayObject(this.solicitudTurnoService.estadosTurno, 'order', 'ASC');
+
+    for (let estado of estados) {
+      let data = dataBarStackChart.filter((item: { label: any; }) => item.label === estado.name);
+
+      if (data.length > 0) {
         ////console.log('estado',estado.name);
         ////console.log('data',data);
         dataBarStackChartOrder = dataBarStackChartOrder.concat(data);
       }
     }
 
-    dataBarStackChartOrder.forEach((item)=>{
+    dataBarStackChartOrder.forEach((item) => {
       item.data = [item.data];
     })
-    
+
     ////console.log('ordenado',dataBarStackChartOrder);
 
 
-    
+
     this.barStackChart = {
-        labels:['Estados'],
-        //datasets:dataBarStackChart
-        datasets:dataBarStackChartOrder
+      labels: ['Estados'],
+      //datasets:dataBarStackChart
+      datasets: dataBarStackChartOrder
     }
-      
+
     this.optionsBarStackChart = {
       indexAxis: 'y',
       maintainAspectRatio: false,
       aspectRatio: 0.8,
       plugins: {
+        legend: {
+          labels: {
+            color: this.textColor
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: {
+            color: this.textColorSecondary,
+            font: {
+              weight: 500
+            }
+          },
+          grid: {
+            color: this.surfaceBorder,
+            drawBorder: false
+          }
+        },
+        y: {
+          stacked: true,
+          ticks: {
+            color: this.textColorSecondary
+          },
+          grid: {
+            color: this.surfaceBorder,
+            drawBorder: false
+          }
+        }
+      }
+
+    }
+
+    /*
+    this.optionsBarStackChart = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+          tooltips: {
+              mode: 'index',
+              intersect: false
+          },
           legend: {
               labels: {
                   color: this.textColor
@@ -440,10 +487,7 @@ export class ListadoSolicitudesComponent  implements  OnInit{
           x: {
               stacked: true,
               ticks: {
-                  color: this.textColorSecondary,
-                  font: {
-                      weight: 500
-                  }
+                  color: this.textColorSecondary
               },
               grid: {
                   color: this.surfaceBorder,
@@ -461,61 +505,21 @@ export class ListadoSolicitudesComponent  implements  OnInit{
               }
           }
       }
-
-    }
-      
-      /*
-      this.optionsBarStackChart = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            tooltips: {
-                mode: 'index',
-                intersect: false
-            },
-            legend: {
-                labels: {
-                    color: this.textColor
-                }
-            }
-        },
-        scales: {
-            x: {
-                stacked: true,
-                ticks: {
-                    color: this.textColorSecondary
-                },
-                grid: {
-                    color: this.surfaceBorder,
-                    drawBorder: false
-                }
-            },
-            y: {
-                stacked: true,
-                ticks: {
-                    color: this.textColorSecondary
-                },
-                grid: {
-                    color: this.surfaceBorder,
-                    drawBorder: false
-                }
-            }
-        }
-      };*/
-}
-            
+    };*/
+  }
 
 
-  nuevaSolicitud(event: any){
+
+  nuevaSolicitud(event: any) {
     ////////////////////console.log(event);
     this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
   }
 
-  editSolicitud(event:any){
+  editSolicitud(event: any) {
 
   }
 
-  deleteSoliciturd(event:any){
+  deleteSoliciturd(event: any) {
 
   }
 
@@ -523,36 +527,36 @@ export class ListadoSolicitudesComponent  implements  OnInit{
 
 
   async exportExcel() {
-    
+
     let fields = {
-      detalle_solicitudes_turnos_estado:'Estado Turno',	
-      locacion_locacion:'Locacion',	
-      detalle_solicitudes_turnos_fechacita:'Fecha Turno',	
-      detalle_solicitudes_turnos_horacita:'Hora Turno',	
-      detalle_solicitudes_turnos_id:'Turno',	
-      detalle_solicitudes_turnos_pedidos_pedidonum:'Pedido',	
-      cliente_CardCode:'Código Cliente',	
-      cliente_CardName:'Cliente',	
-      cliente_FederalTaxID:'Nit',	
-      detalle_solicitudes_turnos_pedidos_itemcode:'Código Item',	
-      detalle_solicitudes_turnos_pedidos_itemname:'Descripción Item',	
-      detalle_solicitudes_turnos_pedidos_tipoproducto:'Tipo Item',	
-      detalle_solicitudes_turnos_pedidos_cantidad:'Cantidad',	
-      detalle_solicitudes_turnos_pedidos_dependencia_label:'Dependencia',	
-      detalle_solicitudes_turnos_pedidos_localidad_label:'Localidad',	
-      detalle_solicitudes_turnos_pedidos_bodega:'Bodega',	
-      transportadoras_nombre:'Transportadora',	
-      vehiculos_placa:'Placa',	
-      conductores_nombre:'Conductor',	
-      conductores_numerocelular:'Télefono Conductor',	
-      detalle_solicitudes_turnos_condiciontpt:'Condición de transporte',	
-      lugarentrega:'Lugar Entrega',	
-      remision:'Remisión'
+      detalle_solicitudes_turnos_estado: 'Estado Turno',
+      locacion_locacion: 'Locacion',
+      detalle_solicitudes_turnos_fechacita: 'Fecha Turno',
+      detalle_solicitudes_turnos_horacita: 'Hora Turno',
+      detalle_solicitudes_turnos_id: 'Turno',
+      detalle_solicitudes_turnos_pedidos_pedidonum: 'Pedido',
+      cliente_CardCode: 'Código Cliente',
+      cliente_CardName: 'Cliente',
+      cliente_FederalTaxID: 'Nit',
+      detalle_solicitudes_turnos_pedidos_itemcode: 'Código Item',
+      detalle_solicitudes_turnos_pedidos_itemname: 'Descripción Item',
+      detalle_solicitudes_turnos_pedidos_tipoproducto: 'Tipo Item',
+      detalle_solicitudes_turnos_pedidos_cantidad: 'Cantidad',
+      detalle_solicitudes_turnos_pedidos_dependencia_label: 'Dependencia',
+      detalle_solicitudes_turnos_pedidos_localidad_label: 'Localidad',
+      detalle_solicitudes_turnos_pedidos_bodega: 'Bodega',
+      transportadoras_nombre: 'Transportadora',
+      vehiculos_placa: 'Placa',
+      conductores_nombre: 'Conductor',
+      conductores_numerocelular: 'Télefono Conductor',
+      detalle_solicitudes_turnos_condiciontpt: 'Condición de transporte',
+      lugarentrega: 'Lugar Entrega',
+      remision: 'Remisión'
     };
 
-    let newData = await this.functionsService.extraerCampos(this.solicitudesExtendida,fields);
+    let newData = await this.functionsService.extraerCampos(this.solicitudesExtendida, fields);
 
-    await this.functionsService.exportarXLS(newData,'Solicitudes de cargue');
+    await this.functionsService.exportarXLS(newData, 'Solicitudes de cargue');
 
     /*import("xlsx").then(xlsx => {
         const worksheet = xlsx.utils.json_to_sheet(this.solicitudesExtendida);
@@ -560,45 +564,45 @@ export class ListadoSolicitudesComponent  implements  OnInit{
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, `Solicitudes de cargue`);
     });*/
-  }  
+  }
 
- /* saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-  }*/
+  /* saveAsExcelFile(buffer: any, fileName: string): void {
+     let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+     let EXCEL_EXTENSION = '.xlsx';
+     const data: Blob = new Blob([buffer], {
+         type: EXCEL_TYPE
+     });
+     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+   }*/
 
 
   formatCurrency(value: number) {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   }
 
-  filterTime(table: Table,value: any, field:string, other:any, other2:any){
+  filterTime(table: Table, value: any, field: string, other: any, other2: any) {
 
+
+    let filtro: any = table.filters[field];
+
+    /*let index = 0;
    
-   let filtro:any = table.filters[field];
-  
-   /*let index = 0;
-  
-   if(filtro.filter((item: { value: any | null ; })=>item.value === value).length>0){
-      index = filtro.findIndex((item: { value: any; })=>item.value === value);
-   }
-   if(index>0){
-    index+=1;
-   }
-   ////////////////console.log(index);
-
-   filtro[index].value = value;*/
-   ////////////////console.log(field,value, filtro,other,other2 );
-   //table.filter(value,field,filtro[0].matchMode);
+    if(filtro.filter((item: { value: any | null ; })=>item.value === value).length>0){
+       index = filtro.findIndex((item: { value: any; })=>item.value === value);
+    }
+    if(index>0){
+     index+=1;
+    }
+    ////////////////console.log(index);
  
+    filtro[index].value = value;*/
+    ////////////////console.log(field,value, filtro,other,other2 );
+    //table.filter(value,field,filtro[0].matchMode);
+
   }
 
   onGlobalFilter(table: Table, event: Event) {
-      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
   clear(table: Table) {
@@ -606,17 +610,193 @@ export class ListadoSolicitudesComponent  implements  OnInit{
     this.filter.nativeElement.value = '';
   }
 
-  cambioFecha(event:any){
-    
-    
-    if(event[1]){
+  cambioFecha(event: any) {
+
+
+    if (event[1]) {
       //console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.getSolicitudesTurno();
-  
+
     }
   }
 
+  async createPDF() {
+    //console.log('this.selectedItem',this.selectedItem);
+
+    let path = 'solicitud-cargue';
+
+    let templateHTML$ = this.functionsService.getTamplateHTML(path);
+    let templateHTML = await lastValueFrom(templateHTML$);
+
+    let lineasSolicitud = this.solicitudesExtendida.filter(linea => linea.dataKey == this.selectedItem[0].dataKey);
+
+    //console.log('lineasSolicitud',lineasSolicitud);
+
+    let dataPdf: any = {
+      diaSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getDate(),
+      mesSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getMonth() + 1,
+      anioSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getFullYear(),
+      cliente: {
+        nombre: this.selectedItem[0].cliente_CardName,
+        nit: this.selectedItem[0].cliente_FederalTaxID,
+        contacto: '',
+        contactotelefono: '',
+        contatoemail: ''
+      },
+      comercial: {
+        nombre: this.selectedItem[0].detalle_solicitudes_turnos_pedidos_vendedor
+      },
+      trasnportadora: {
+        nombre: this.selectedItem[0].transportadoras_nombre,
+        nitt: this.selectedItem[0].transportadoras_nit
+      },
+      vehiculo: {
+        placa: this.selectedItem[0].vehiculos_placa
+      },
+      conductor: {
+        nombre: this.selectedItem[0].conductores_nombre,
+        cedula: this.selectedItem[0].conductores_cedula,
+        telefono: this.selectedItem[0].conductores_numerocelular
+      },
+      productos: lineasSolicitud.map((linea) => {
+        return {
+          locacion: `${linea.locacion_locacion} -- Dirección: ${linea.locacion_direccion}`,
+          pedidonum: linea.detalle_solicitudes_turnos_pedidos_pedidonum,
+          itemname: linea.detalle_solicitudes_turnos_pedidos_itemname,
+          presentacion: '',
+          cantidad: linea.detalle_solicitudes_turnos_pedidos_cantidad,
+          destino: `${linea.detalle_solicitudes_turnos_pedidos_municipioentrega} ${linea.detalle_solicitudes_turnos_pedidos_lugarentrega}`
+        }
+      })
+    }
+
+    //console.log('dataPdf',dataPdf);
+
+    let templateCompilado = await this.functionsService.compileHandlebarTemplate(templateHTML, dataPdf);
+    //console.log('templateCompilado',templateCompilado);
+
+    /*let indexImg = templateCompilado.indexOf(`<img src="`);
+
+    console.log('first indexImg',indexImg);
+
+    console.log('substr indexImg',templateCompilado.substring(indexImg,(indexImg+`<img src="`.length)));
+
+    console.log('indexOf ultima " del src img ',templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length)))
+
+    console.log('path src img ',templateCompilado.substring((indexImg+`<img src="`.length),templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length))))
+
+    console.log('nueeva cadena busqueda src img ',templateCompilado.substring(templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length)),templateCompilado.length))*/
+
+
+    //let imgsTemplate = await this.functionsService.getImgsTemplate(templateCompilado);
+
+    //console.log('imgsTemplate',imgsTemplate);
+
+
+    //let replaceImgHTL = await this.functionsService.replaceImgPathIdImg(imgsTemplate,templateCompilado);
+
+    //console.log('replaceImgHTL',replaceImgHTL);
+
+    let propertiesPDF = {
+      pageSize: 'LEGAL',
+      pageOrientation: 'landscape',
+      pageMargins: [40, 40, 40, 40]
+    }
+
+
+
+
+    let pdfDefinition = await this.functionsService.convertHTMLtoPDF(templateCompilado, propertiesPDF)
+
+    console.log('pdfDefinition', pdfDefinition);
+
+    await this.functionsService.createPDF(pdfDefinition);
+
+    //console.log(templateHTML);
+
+
+
+  }
+
+  async createPDF2() {
+
+    let lineasSolicitud = this.solicitudesExtendida.filter(linea => linea.dataKey == this.selectedItem[0].dataKey);
+
+    let infoTurno$ = this.solicitudTurnoService.getTurnosByID(this.selectedItem[0].detalle_solicitudes_turnos_id);
+    let infoTurno = await lastValueFrom(infoTurno$);
+
+    let historialTurno = infoTurno.detalle_solicitud_turnos_historial
+
+    console.log(infoTurno);
+
+    let dataPdf: any = {
+      diaSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getDate(),
+      mesSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getMonth() + 1,
+      anioSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getFullYear(),
+      cliente: {
+        nombre: this.selectedItem[0].cliente_CardName,
+        nit: this.selectedItem[0].cliente_FederalTaxID,
+        contacto: '',
+        contactotelefono: '',
+        contatoemail: ''
+      },
+      comercial: {
+        nombre: this.selectedItem[0].detalle_solicitudes_turnos_pedidos_vendedor
+      },
+      trasnportadora: {
+        nombre: this.selectedItem[0].transportadoras_nombre,
+        nit: this.selectedItem[0].transportadoras_nit
+      },
+      vehiculo: {
+        placa: this.selectedItem[0].vehiculos_placa
+      },
+      conductor: {
+        nombre: this.selectedItem[0].conductores_nombre,
+        cedula: this.selectedItem[0].conductores_cedula,
+        telefono: this.selectedItem[0].conductores_numerocelular
+      },
+      productos: lineasSolicitud.map((linea) => {
+        return {
+          locacion: `${linea.locacion_locacion} -- Dirección: ${linea.locacion_direccion}`,
+          pedidonum: linea.detalle_solicitudes_turnos_pedidos_pedidonum,
+          itemname: linea.detalle_solicitudes_turnos_pedidos_itemname,
+          presentacion: '',
+          cantidad: linea.detalle_solicitudes_turnos_pedidos_cantidad,
+          destino: `${linea.detalle_solicitudes_turnos_pedidos_municipioentrega} ${linea.detalle_solicitudes_turnos_pedidos_lugarentrega}`
+        }
+      })
+    }
+
+    console.log(dataPdf)
+
+    let infoUsuario: any = {
+      nombre: 'Ronald Albor',
+      cedula: '8749392374',
+      cargo: 'Desarrollador FullStak',
+      celular: '3108602321',
+      email: 'ralbor@nitrofert.com.co',
+      firma: 'firmabase 64'
+    }
+
+    images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
+
+    let pdfDefinition = {
+      pageSize: 'LEGAL',
+      pageOrientation: 'landscape',
+      pageMargins: [40, 80, 40, 100],
+      permissions,
+      header,
+
+      content: content(dataPdf),
+      footer: footer(infoUsuario),
+      images
+    }
+
+    console.log(pdfDefinition);
+
+    await this.functionsService.createPDF(pdfDefinition);
+  }
 
 
 }

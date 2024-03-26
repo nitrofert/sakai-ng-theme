@@ -24,6 +24,7 @@ import { NovedadesService } from '../../service/novedades.service';
 import { VistaEstadosTurnoComponent } from './vista-estados-turno/vista-estados-turno.component';
 import { DashboardComponentTurno } from './dashboard/dashboard.component';
 import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynamic-charts.module';
+import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 
 
 
@@ -43,7 +44,7 @@ import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynami
     FullCalendarModule,
     ApplicationPipesModule,
     DynamicTableModule,
-    
+    DynamicPdfModule
     
   ],
   providers:[AlmacenesService, 

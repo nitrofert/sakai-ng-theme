@@ -131,6 +131,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
              * Config dashboard logistica
              */
             this.showDashBoardLogistica = true;
+          //await this.configDashboardLogistica();
         }
     }
 
@@ -440,6 +441,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
         };
     }
+
+   
 
 
 

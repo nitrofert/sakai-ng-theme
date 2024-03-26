@@ -240,7 +240,7 @@ deleteHorario(event:any){
   console.log(event);
   this.confirmationService.confirm({
     message: 'Esta seguro de eliminar las lineas de horario sele4cionadas. ¿Desea continuar?',
-    header: 'Confirmatción',
+    header: 'Confirmación',
     icon: 'pi pi-exclamation-triangle',
     accept: () => {
        for(let horario of event ){

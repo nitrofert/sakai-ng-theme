@@ -32,7 +32,9 @@ export class DynamicTableComponent implements OnInit {
   @Input() showBtnView:boolean = false;
   @Input() toolTipShowBtnExp:string = "Exportar";
   @Input() showBtnDelete:boolean = false;
+  @Input() showBtnActivate:boolean = false;
   @Input() toolTipShowBtnDelete:string = "Anular";
+  @Input() toolTipShowBtnActivate:string = "Activar";
   
   @Input() permisosUsuarioPagina!:any[];
   @Input() showSelectedItems:boolean = false;
@@ -43,6 +45,7 @@ export class DynamicTableComponent implements OnInit {
   @Output() onSelectedItems: EventEmitter<any> = new EventEmitter();
   @Output() onEditAccion: EventEmitter<any> = new EventEmitter();
   @Output() onDeleteAccion: EventEmitter<any> = new EventEmitter();
+  @Output() onActivateAccion: EventEmitter<any> = new EventEmitter();
   @Output() onChangeState: EventEmitter<any> = new EventEmitter();
   @Output() onViewAccion: EventEmitter<any> = new EventEmitter();
   
@@ -121,6 +124,10 @@ export class DynamicTableComponent implements OnInit {
 
   deleteAccion(){
     this.onDeleteAccion.emit(this.selectedItem);
+  }
+
+  activateAccion(){
+    this.onActivateAccion.emit(this.selectedItem);
   }
 
   changeState(key:any, valor:any,id:any){

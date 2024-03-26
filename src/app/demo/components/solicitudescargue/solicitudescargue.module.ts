@@ -23,6 +23,7 @@ import { ListaHistorialTurnoComponent } from './lista-historial-turno/lista-hist
 import { CiudadesService } from '../../service/ciudades.service';
 import { LocalidadesService } from '../../service/localidades.service';
 import { DependenciasService } from '../../service/dependencias.service';
+import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 
 
 
@@ -40,6 +41,7 @@ import { DependenciasService } from '../../service/dependencias.service';
     DynamicTableModule,
     PrimengModule,
     ReactiveFormsModule,
+    DynamicPdfModule
   ],
   providers:[ AlmacenesService,
               PedidosService,

@@ -273,8 +273,8 @@ horariosSeleccionadosCambioBodega:any[] = [];
 
   getPermisosModulo(){
   
-    const modulo = this.router.url;
-    //////////////////// ////////////// ////console.log(modulo);
+    const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
+    console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{

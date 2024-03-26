@@ -6,5 +6,6 @@ export const environment = {
   //url_backend:'https://fixed-packages.d39j6qsi811pio.amplifyapp.com',
   companySAP:'NITROFERT_PRD',
   companyMySQL:'nitrosap',
-  ID_google_analytis:'G-DE17ZYMHJ1'
+  ID_google_analytis:'G-DE17ZYMHJ1',
+  ID_google_tag:'G-DE17ZYMHJ1'
 };

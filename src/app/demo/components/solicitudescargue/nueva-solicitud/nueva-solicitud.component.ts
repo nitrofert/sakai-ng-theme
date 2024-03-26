@@ -1434,7 +1434,7 @@ confirmRemoveVehiculo(placa:string) {
 confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
   this.confirmationService.confirm({
       message: 'Esta seguro de proceder con la eliminación del item '+item+' asociado al vehículo de placas '+placa+'?',
-      header: 'Confirmatción',
+      header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
@@ -1480,7 +1480,7 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
  confirmAdicionCliente(clienteSeleccionado:any) {
   this.confirmationService.confirm({
       message: 'Esta agregando un nuevo cliente a la solicitud y tiene seleccionad una locación, por lo tanto se modificara la selección de las locaciones y se borraran los vhiculos y pedidos seleccionados previamente. ¿Desea continuar?',
-      header: 'Confirmatción',
+      header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
           this.getPedidosPorCliente(clienteSeleccionado);

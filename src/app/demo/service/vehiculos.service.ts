@@ -63,6 +63,23 @@ export class VehiculosService {
         //return this.http.post<any>(url, nuevoVehiculo, requestOptions);
     }
 
+    inactivar(infoVehiculos:any[]):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+        const url:string = `${this.api_url}/api/vehiculos/inactivar`;
+        //return this.http.post<any>(url, nuevaTransportadora, requestOptions);
+        return this.http.post<any>(url, infoVehiculos);
+
+    }
+
+    activar(infoVehiculos:any[]):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+        const url:string = `${this.api_url}/api/vehiculos/activar`;
+        //return this.http.post<any>(url, nuevaTransportadora, requestOptions);
+        return this.http.post<any>(url, infoVehiculos);
+
+    }
     
 
    

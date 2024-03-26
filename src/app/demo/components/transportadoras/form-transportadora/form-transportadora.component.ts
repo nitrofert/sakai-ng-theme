@@ -23,6 +23,7 @@ export class FormTransportadoraComponent implements  OnInit {
   envioLineaTransportadora:boolean = false;
   updateMode:boolean = false;
   permisosModulo!:any[];
+  notificaciones:boolean = false;
 
 
   constructor(
@@ -41,6 +42,8 @@ export class FormTransportadoraComponent implements  OnInit {
           this.getInfoTransportadora(this.config.data.id);
           this.updateMode = true;
       }
+
+      
     }
 
     getPermisosModulo(){
@@ -72,13 +75,14 @@ export class FormTransportadoraComponent implements  OnInit {
         this.transportadorasService.getTransportadoraById(id)
             .subscribe({
                 next:(infoTransportadora)=>{
-                   ////////console.log(infoTransportadora);
+                   console.log(infoTransportadora);
                     this.nit = infoTransportadora.nit;
                     this.nombre = infoTransportadora.nombre;
                     this.email  = infoTransportadora.email;
                     this.nombre_contacto  = infoTransportadora.nombre_contacto;
                     this.telefono_contacto = infoTransportadora.telefono_contacto;
                     this.email_contacto = infoTransportadora.email_contacto;
+                    this.notificaciones = infoTransportadora.notificaciones;
                 },
                 error:(err)=>{
                   console.error(err);
@@ -99,7 +103,8 @@ export class FormTransportadoraComponent implements  OnInit {
             email:this.email,
             nombre_contacto:this.nombre_contacto,
             telefono_contacto:this.telefono_contacto,
-            email_contacto:this.email_contacto
+            email_contacto:this.email_contacto,
+            notificaciones:this.notificaciones
             
           }
 

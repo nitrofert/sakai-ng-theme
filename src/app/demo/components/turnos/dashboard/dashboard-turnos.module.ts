@@ -12,6 +12,14 @@ import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.se
 import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynamic-charts.module';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 import { LocalidadesService } from 'src/app/demo/service/localidades.service';
+import { OrdenesCargueService } from 'src/app/demo/service/ordenes-cargue.service';
+import { PedidosService } from 'src/app/demo/service/pedidos.service';
+import { VehiculosService } from 'src/app/demo/service/vehiculos.service';
+import { TipoVehiculosService } from 'src/app/demo/service/tipo-vehiculo.service';
+import { ConductoresService } from 'src/app/demo/service/conductores.service';
+import { TransportadorasService } from 'src/app/demo/service/transportadoras.service';
+import { NovedadesService } from 'src/app/demo/service/novedades.service';
+import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 
 
 
@@ -28,10 +36,21 @@ import { LocalidadesService } from 'src/app/demo/service/localidades.service';
     FormsModule,
     FullCalendarModule,
     DynamicTableModule,
-    DynamicChartsModule
+    DynamicChartsModule,
+    DynamicPdfModule
     
   ],
-  providers:[AlmacenesService,SolicitudTurnoService,LocalidadesService,DependenciasService],
+  providers:[AlmacenesService,
+             SolicitudTurnoService,
+             LocalidadesService,
+             DependenciasService,
+             OrdenesCargueService, 
+             PedidosService,
+             VehiculosService,
+             TipoVehiculosService, 
+             ConductoresService,
+             TransportadorasService,
+             NovedadesService ],
   exports:[DashboardComponentTurno]
 })
 export class DashboardTurnosModule { }

@@ -1,1 +1,28 @@
-<p>vehiculos works!</p>
+<app-breadcrumb></app-breadcrumb>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+            <app-dynamic-table [dataTable]="dataTable" 
+                               [headersTable]="headersTable"
+                               dataKey="id" 
+                               [rows]="10" 
+                               [paginator]="true"
+                               [selectionMode]="'multiple'"
+                               [showBtnNew]="showBtnNew"
+                               [showBtnEdit]="showBtnEdit"
+                               [showBtnExp]="showBtnExp"
+                               [showBtnDelete]="showBtnDelete"
+                               [showBtnActivate]="showBtnActivate"
+                               [toolTipShowBtnDelete]="'Inactivar'"
+                               nameExport="transportadoras"
+                               (onEditAccion)="editar($event)"
+                               (onDeleteAccion)="borrar($event)"
+                               (onNewAccion)="nuevo($event)"
+                               (onActivateAccion)="activar($event)">
+            </app-dynamic-table>
+        </div>
+    </div>
+</div>
+

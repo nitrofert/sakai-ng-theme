@@ -9,6 +9,11 @@ import { ApplicationPipesModule } from '../../pipes/pipes.module';
 import { FormTipoVehiculoComponent } from './form-tipo-vehiculo/form-tipo-vehiculo.component';
 import { VehiculosRoutingModule } from './vehiculos-routing.module';
 import { TipoVehiculosService } from '../../service/tipo-vehiculo.service';
+import { DynamicTableModule } from 'src/app/layout/shared/dynamic-table/dynamic-table.module';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { VehiculosService } from '../../service/vehiculos.service';
+import { ConductoresService } from '../../service/conductores.service';
 
 
 
@@ -25,9 +30,9 @@ import { TipoVehiculosService } from '../../service/tipo-vehiculo.service';
     PrimengModule,
     ReactiveFormsModule,
     FormsModule,
-    ApplicationPipesModule
-
+    ApplicationPipesModule,
+    DynamicTableModule
   ],
-  providers:[TipoVehiculosService]
+  providers:[TipoVehiculosService,DialogService,ConfirmationService,MessageService,VehiculosService,ConductoresService]
 })
 export class VehiculosModule { }

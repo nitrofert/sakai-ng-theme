@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { FunctionsService } from 'src/app/demo/service/functions.service';
@@ -10,6 +10,9 @@ import { EstadosDealleSolicitud } from '../estados-turno.enum';
 import { TipoRol } from '../../admin/roles/roles.enum';
 import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
+import { Table } from 'primeng/table';
+import { FormTurnoComponent } from '../form-turno/form-turno.component';
+import * as Handlebars from 'handlebars';
 
 @Component({
   selector: 'app-dashboard-turnos',
@@ -31,7 +34,7 @@ export class DashboardComponentTurno implements OnInit {
   bodegasFiltradas:any[] = [];
 
   permisosModulo!:any;
-
+  /*
   tablaProgramacionDiariaBodega:any = {
     header: this.configHeaderTablaProgramacionDiaria(),
     data:[]
@@ -60,13 +63,13 @@ export class DashboardComponentTurno implements OnInit {
     data:[],
     colsSum:[]
   };
-
+*/
   loadingPC:boolean = true;
 
   dependencias:any[] = [];  
   lineasProgramacionDiariaGerencia:any[] = [];
   loadingPDG:boolean = true;
-
+/*
   tablaProgramacionDiariaGerencia:any = {
     header:this.configHeaderTablaProgramacionDiariaGerencia(),
     data:[],
@@ -91,11 +94,85 @@ export class DashboardComponentTurno implements OnInit {
     header:this.configHeaderTablaConsolidadoModTPT(),
 
   };
+  */
 
   localidades:any;
   dependencias_all:any;
 
+
+
+
+  /******
+   * Nuevo datos Dashboard logistica
+   */
+
+  @ViewChild('filter') filter!: ElementRef;
   
+  hoy = new Date();
+  primerDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
+  ultimoDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth() + 1, 0);
+  filtroRnagoFechas:Date[] = [this.primerDiaMes,this.ultimoDiaMes];
+
+  permisosUsuarioPagina:any[] = [{ read_accion:true,create_accion:true, update_accion:false, delete_accion:false}];
+
+  columnsTable:number = 19;
+  dataKey:string = "dataKey";
+  loading:boolean = true;
+  globalFilterFields:any[]=['solicitudes_turno_id',
+                            'label_cliente',
+                            'detalle_solicitudes_turnos_id',
+                            'detalle_solicitudes_turnos_estado',
+                            'locacion_label',
+                            'transportadoras_nombre',
+                            'vehiculos_placa',
+                            'tipovehiculos_tipo',
+                            'label_conductor',
+                            'telefonos_conductor',
+                            'detalle_solicitudes_turnos_pedidos_pedidonum',
+                            'material',
+                            'detalle_solicitudes_turnos_pedidos_cantidad',
+                            'detalle_solicitudes_turnos_pedidos_bodega',
+                            'remision',
+                            'lugarentrega'
+                          ];
+  selectionMode:string = "multiple";
+  selectedItem:any[] = [];
+  estadosTurno:any[] = [];
+
+  solicitudesExtendida:any[] = [];
+
+  documentStyle = getComputedStyle(document.documentElement);
+  textColor = this.documentStyle.getPropertyValue('--text-color');
+  textColorSecondary = this.documentStyle.getPropertyValue('--text-color-secondary');
+  surfaceBorder = this.documentStyle.getPropertyValue('--surface-border');
+
+  filtroLocaciones:any[]=[];
+
+  showBtnNew:boolean =false;
+  showBtnEdit:boolean = false;
+  showBtnExp:boolean = false;
+  showBtnDelete:boolean = false;
+  showBtnAdmin:boolean = false;
+  infoUsuario!:any;
+  
+
+  pdfDefinition:any =  {
+    content: [
+      'First paragraph',
+      'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+    ]
+  };
+
+  htmlDoc:any = `<div>
+  <h1>My title</h1>
+  <p>
+    This is a sentence with a <strong>bold word</strong>, <em>one in italic</em>,
+    and <u>one with underline</u>. And finally <a href="https://www.somewhere.com">a link</a>.
+  </p>
+</div>`;
+
+
+
 
   constructor(private almacenesService:AlmacenesService,
               private messageService: MessageService,
@@ -105,12 +182,13 @@ export class DashboardComponentTurno implements OnInit {
               private functionsService:FunctionsService,
               private router:Router,
               private localidadesService:LocalidadesService,
-              private dependenciasService:DependenciasService){}
+              private dependenciasService:DependenciasService,
+              private confirmationService: ConfirmationService,){}
 
 
   async ngOnInit() {
     this.infousuario = await this.usuariosService.infoUsuario();
-    this.getLocalidades();
+    this.getPermisosModulo();
     
    
    //////////console.log(this.infousuario);
@@ -119,19 +197,36 @@ export class DashboardComponentTurno implements OnInit {
     
     //this.configTablaConsolidadoProgramacionDiaria();
     
-   
+
 
   }
 
+  async getPermisosModulo(){
+    const modulo = this.router.url;
+    console.log(modulo);
+    
+
+    this.showBtnNew =  await this.usuariosService.permisoModuloAccion('/portal/solicitudes-de-cargue','crear');
+    this.showBtnEdit = await this.usuariosService.permisoModuloAccion('/portal/solicitudes-de-cargue','actualizar');
+    this.showBtnExp = await this.usuariosService.permisoModuloAccion('/portal/solicitudes-de-cargue','exportar');
+    this.showBtnDelete = await this.usuariosService.permisoModuloAccion('/portal/solicitudes-de-cargue','borrar');
+    this.showBtnAdmin = await this.usuariosService.permisoModuloAccion('/portal/turnos','Aprobar turno');
+
+    this.getLocalidades();
+    
+        
+}
+
   async getLocalidades(){
     this.localidades =  await this.localidadesService.getLocalidades();
+    
     this.getDependencias(); 
   }
 
   async getDependencias(){
     this.dependencias_all =  await this.dependenciasService.getDependencias();
-    this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
-    
+   // this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
+   
     this.getAlmacenes();
   }
 
@@ -156,6 +251,7 @@ export class DashboardComponentTurno implements OnInit {
               this.allbodegas = almacenesTMP;
               this.getLocaciones();
              
+             
             },
             error:(err)=>{
                 console.error(err);
@@ -178,6 +274,7 @@ export class DashboardComponentTurno implements OnInit {
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               this.locacionSeleccionada = this.locaciones[0];
               this.seleccionarLocacion(this.locacionSeleccionada);
+              console.log('aqui va');
               ////////////////////////////////////console.log();
             },
             error:(err)=>{
@@ -188,23 +285,19 @@ export class DashboardComponentTurno implements OnInit {
 
   async setLocaciones(locaciones:any[],locacionesUsuario:any[]):Promise<any[]>{
       
-      if(locacionesUsuario.length>0){
-        let loccionesUsuarioTMP:any[] = [];
-        for(let locacion of locaciones){
-            if(locacionesUsuario.find(item=>item.locacion === locacion.locacion)){
-              loccionesUsuarioTMP.push(locacion)
-            }
-        }
-        locaciones = loccionesUsuarioTMP;
+    if(locacionesUsuario.length>0){
+      let loccionesUsuarioTMP:any[] = [];
+      for(let locacion of locaciones){
+          if(locacionesUsuario.find(item=>item.locacion === locacion.locacion)){
+            loccionesUsuarioTMP.push(locacion)
+          }
       }
+      locaciones = loccionesUsuarioTMP;
+    }
 
-      return locaciones;
-  }
+    return locaciones;
+}
 
-
-  filtrarLocacion(event:any){
-    this.locacionesFiltradas = this.filter(event,this.locaciones);
-  }
 
   seleccionarLocacion(locacion:any){
     //////////////console.log(locacion);
@@ -219,10 +312,324 @@ export class DashboardComponentTurno implements OnInit {
       this.bodegaSeleccionada = this.bodegas[0];
       this.seleccionarBodega(this.bodegaSeleccionada);
     }
+
+    this.setDashboard();
     
   }
 
-  filter(event: any, arrayFiltrar:any[]) {
+  seleccionarBodega(bodega:any){
+    //////////console.log(bodega);
+   
+  }
+
+  async setDashboard():Promise<void>{
+   
+    this.getSolicitudesTurno();
+
+    /**
+     * COnfigurar tabla de programacion diaria bodega
+     */
+    
+    /*this.loadingPDB = true;
+    //this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && linea.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
+    this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code);
+    //////////console.log(this.lineasProgramacionDiariaBodega);
+    this.configTablaProgramacionDiaria();
+    this.lineasConsolidadoProgramacionDiariaBodega = (await this.getInfoTablaConsolidadoProgramacionDiaria()).consolidadoItems;
+    this.configTablaConsolidadoProgramacionDiaria();
+    this.getPlacasCompartidas();
+    this.lineasProgramacionDiariaGerencia = this.turnosFehaSeleccionada.filter(linea => linea.turnos_estado != EstadosDealleSolicitud.SOLICITADO && 
+                                                                                        linea.turnos_estado != EstadosDealleSolicitud.PAUSADO && 
+                                                                                        linea.turnos_estado != EstadosDealleSolicitud.CANCELADO &&
+                                                                                        linea.turnos_estado != EstadosDealleSolicitud.SOLINVENTARIO );
+    
+    //////////console.log(this.lineasProgramacionDiariaGerencia);
+    this.configTablaProgramacionGerencia();*/
+}
+
+async getSolicitudesTurno(){
+
+   
+  let params:any = {
+    fechainicio:this.filtroRnagoFechas[0],
+    fechafin:this.filtroRnagoFechas[1],
+  }
+
+  this.solicitudTurnoService.getSolicitudesTurnoExtendido(params)
+  .subscribe({
+    next: async (solicitudesTurnos)=>{
+   
+       let dataPieChart:any[] = [];
+       let dataBarStackChart:any[any] = [];
+      
+       
+       solicitudesTurnos.raw.forEach((solicitud: {
+                                                            locacion_label: any;
+                                                            filtroLocacion: { name: any; };
+                                                            detalle_solicitudes_turnos_fechacita: Date; 
+                                                            solicitudes_turno_created_at: Date;
+                                                            detalle_solicitudes_turnos_horacita: Date; 
+                                                            detalle_solicitudes_turnos_horacita2:Date;
+                                                            detalle_solicitudes_turnos_estado:string;
+                                                            bgColor:string;
+                                                            txtColor:string;
+                                                            detalle_solicitudes_turnos_pedidos_cantidad:number;
+                                                            detalle_solicitudes_turnos_pedidos_dependencia:string;
+                                                            detalle_solicitudes_turnos_pedidos_dependencia_label:string;
+                                                            detalle_solicitudes_turnos_pedidos_localidad:string;
+                                                            detalle_solicitudes_turnos_pedidos_localidad_label:string;
+                                                  })=>{
+                                                            
+
+
+                                                            solicitud.solicitudes_turno_created_at = new Date(solicitud.solicitudes_turno_created_at);
+                                                            solicitud.detalle_solicitudes_turnos_fechacita = new Date(solicitud.detalle_solicitudes_turnos_fechacita);
+                                                            solicitud.detalle_solicitudes_turnos_horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita);
+                                                            let horacita = new Date(solicitud.detalle_solicitudes_turnos_horacita).toLocaleTimeString("en-US", { hour12: false });
+                                                            let hoy = new Date();
+                                                            hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
+                                                            solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
+                                                            ////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+                                                            if(this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado)){
+                                                              solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
+                                                              solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
+                                                            }else{
+                                                              //console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+                                                              solicitud.bgColor = 'indigo-50';
+                                                              solicitud.txtColor = 'primary-900';
+                                                            }
+                                                           
+                                                           
+                                                           
+                                                            solicitud.filtroLocacion = { name:solicitud.locacion_label}
+                                                            if(this.filtroLocaciones.filter(filtro=>filtro.name === solicitud.locacion_label).length===0){
+                                                              this.filtroLocaciones.push({name:solicitud.locacion_label})
+                                                            }
+                                                                                                                        
+
+                                                            if(dataPieChart.filter(label=>label.name === solicitud.detalle_solicitudes_turnos_estado).length===0){
+                                                              dataPieChart.push({name:solicitud.detalle_solicitudes_turnos_estado, 
+                                                                                value:solicitud.detalle_solicitudes_turnos_pedidos_cantidad,
+                                                                                backgroundColor:this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
+                                                                              })
+                                                            }else{
+                                                              let index = dataPieChart.findIndex(label=>label.name === solicitud.detalle_solicitudes_turnos_estado);
+                                                              dataPieChart[index].value+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
+                                                            } 
+
+                                                            if(dataBarStackChart.filter((label: { label: string; })=>label.label === solicitud.detalle_solicitudes_turnos_estado).length===0){
+                                                              dataBarStackChart.push({
+                                                                  //type: 'bar',
+                                                                  label:solicitud.detalle_solicitudes_turnos_estado,
+                                                                  backgroundColor:this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
+                                                                  borderColor:this.documentStyle.getPropertyValue(`--${solicitud.bgColor}`),
+                                                                  //data:[solicitud.detalle_solicitudes_turnos_pedidos_cantidad]
+                                                                  data:solicitud.detalle_solicitudes_turnos_pedidos_cantidad
+                                                              });
+                                                            }else{
+                                                            
+                                                              let index = dataBarStackChart.findIndex((label: { label: string; })=>label.label === solicitud.detalle_solicitudes_turnos_estado);
+                                                              //dataBarStackChart[index].data.push(solicitud.detalle_solicitudes_turnos_pedidos_cantidad);
+                                                              //dataBarStackChart[index].data[0]+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
+                                                              dataBarStackChart[index].data+=solicitud.detalle_solicitudes_turnos_pedidos_cantidad;
+                                                              
+                                                            }
+
+                                                            solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia)?this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name:'';
+                                                            solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
+                                                            ////console.log(solicitud);
+                                                            
+
+        //return solicitud
+      })
+
+      //await this.configPieChart(dataPieChart);
+      //await this.configBarSatckChart(dataBarStackChart);
+
+       ////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+       this.solicitudesExtendida = solicitudesTurnos.raw.filter((data: { detalle_solicitudes_turnos_estado: EstadosDealleSolicitud; })=>data.detalle_solicitudes_turnos_estado===EstadosDealleSolicitud.SOLICITADO);
+       
+       
+       console.log('this.solicitudesExtendida',this.solicitudesExtendida);
+       this.loading = false;
+    },
+    error:(err)=>{
+      
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+      console.error(err);
+    }
+  });
+
+  /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
+      .subscribe({
+          next:(solicitud)=>{
+            //////////console.log(solicitud);
+
+           
+
+            
+          },
+          error:(error)=>{
+              console.error(error);
+          }
+  });*/
+  
+}
+
+
+  cambioFecha(event:any){
+    
+    
+    if(event[1]){
+      //console.log(this.filtroRnagoFechas);
+      //this.filtroRnagoFechas = event;
+      this.getSolicitudesTurno();
+  
+    }
+  }
+
+  formatCurrency(value: number) {
+    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  }
+
+  filterTime(table: Table,value: any, field:string, other:any, other2:any){
+
+   
+   let filtro:any = table.filters[field];
+  
+   /*let index = 0;
+  
+   if(filtro.filter((item: { value: any | null ; })=>item.value === value).length>0){
+      index = filtro.findIndex((item: { value: any; })=>item.value === value);
+   }
+   if(index>0){
+    index+=1;
+   }
+   ////////////////console.log(index);
+
+   filtro[index].value = value;*/
+   ////////////////console.log(field,value, filtro,other,other2 );
+   //table.filter(value,field,filtro[0].matchMode);
+ 
+  }
+
+  onGlobalFilter(table: Table, event: Event) {
+      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.filter.nativeElement.value = '';
+  }
+
+
+ 
+
+  async filtrarLocacion(event:any){
+    this.locacionesFiltradas = await this.functionsService.filter(event,this.locaciones);
+  }
+
+  
+  async filtrarBodega(event:any){
+    this.bodegasFiltradas = await this.functionsService.filter(event,this.bodegas);
+  }
+
+  nuevaSolicitud(event: any){
+    ////////////////////console.log(event);
+    //this.router.navigate(['/portal/solicitudes-de-cargue/nueva'],);
+    
+
+    const host: string =  location.origin;
+    const url: string = host + '/#/' + String(this.router.createUrlTree(['/portal/solicitudes-de-cargue/nueva']));
+    window.open(url, '_blank')
+
+  }
+
+  gestionarSolicitud(){
+    console.log(this.selectedItem);
+    this.confirmationService.confirm({
+      message: `Esta seguro de gestionar la solicitud No. ${this.selectedItem[0].solicitudes_turno_id} turno de cargue No. ${this.selectedItem[0].detalle_solicitudes_turnos_id}?`,
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+
+        const ref = this.dialogService.open(FormTurnoComponent, {
+          data: {
+              id: parseInt(this.selectedItem[0].detalle_solicitudes_turnos_id)
+          },
+          header: `Orden de cargue: ${this.selectedItem[0].detalle_solicitudes_turnos_id}` ,
+          width: '70%',
+          height:'auto',
+          contentStyle: {"overflow": "auto"},
+          maximizable:true, 
+        });
+    
+        ref.onClose.subscribe(() => {
+          //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+          //this.getCalendar();
+          //////////// ////////console.log(("Refresh calendar");
+          this.getSolicitudesTurno();
+          this.selectedItem=[];
+        });
+
+      },
+      
+        reject: (type: any) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+                break;
+                case ConfirmEventType.CANCEL:
+                    //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+                break;
+            }
+        }
+      });
+  }
+
+  async exportExcel() {
+    
+    let fields = {
+      detalle_solicitudes_turnos_estado:'Estado Turno',	
+      locacion_locacion:'Locacion',	
+      detalle_solicitudes_turnos_fechacita:'Fecha Turno',	
+      detalle_solicitudes_turnos_horacita:'Hora Turno',	
+      detalle_solicitudes_turnos_id:'Turno',	
+      detalle_solicitudes_turnos_pedidos_pedidonum:'Pedido',	
+      cliente_CardCode:'Código Cliente',	
+      cliente_CardName:'Cliente',	
+      cliente_FederalTaxID:'Nit',	
+      detalle_solicitudes_turnos_pedidos_itemcode:'Código Item',	
+      detalle_solicitudes_turnos_pedidos_itemname:'Descripción Item',	
+      detalle_solicitudes_turnos_pedidos_tipoproducto:'Tipo Item',	
+      detalle_solicitudes_turnos_pedidos_cantidad:'Cantidad',	
+      detalle_solicitudes_turnos_pedidos_dependencia_label:'Dependencia',	
+      detalle_solicitudes_turnos_pedidos_localidad_label:'Localidad',	
+      detalle_solicitudes_turnos_pedidos_bodega:'Bodega',	
+      transportadoras_nombre:'Transportadora',	
+      vehiculos_placa:'Placa',	
+      conductores_nombre:'Conductor',	
+      conductores_numerocelular:'Télefono Conductor',	
+      detalle_solicitudes_turnos_condiciontpt:'Condición de transporte',	
+      lugarentrega:'Lugar Entrega',	
+      remision:'Remisión'
+    };
+
+    let newData = await this.functionsService.extraerCampos(this.solicitudesExtendida,fields);
+
+    await this.functionsService.exportarXLS(newData,'Solicitudes de cargue');
+
+    /*import("xlsx").then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(this.solicitudesExtendida);
+        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, `Solicitudes de cargue`);
+    });*/
+  }  
+
+  
+
+  /*filter(event: any, arrayFiltrar:any[]) {
 
     ////////////////////////////////////////////////console.log((arrayFiltrar);
     const filtered: any[] = [];
@@ -234,18 +641,11 @@ export class DashboardComponentTurno implements OnInit {
         }
     }
     return filtered;
-  }
+  }*/
 
 
 
-  filtrarBodega(event:any){
-    this.bodegasFiltradas = this.filter(event,this.bodegas);
-  }
-
-  seleccionarBodega(bodega:any){
-    //////////console.log(bodega);
-   this.setDashboard();
-  }
+  /*
 
  async seleccionarFecha(){
     ////////////////////////////////console.log(this.fechaProgramacion)
@@ -254,27 +654,7 @@ export class DashboardComponentTurno implements OnInit {
   }
 
 
-  async setDashboard():Promise<void>{
-      /**
-       * COnfigurar tabla de programacion diaria bodega
-       */
-      
-      this.loadingPDB = true;
-      //this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && linea.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
-      this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code);
-      //////////console.log(this.lineasProgramacionDiariaBodega);
-      this.configTablaProgramacionDiaria();
-      this.lineasConsolidadoProgramacionDiariaBodega = (await this.getInfoTablaConsolidadoProgramacionDiaria()).consolidadoItems;
-      this.configTablaConsolidadoProgramacionDiaria();
-      this.getPlacasCompartidas();
-      this.lineasProgramacionDiariaGerencia = this.turnosFehaSeleccionada.filter(linea => linea.turnos_estado != EstadosDealleSolicitud.SOLICITADO && 
-                                                                                          linea.turnos_estado != EstadosDealleSolicitud.PAUSADO && 
-                                                                                          linea.turnos_estado != EstadosDealleSolicitud.CANCELADO &&
-                                                                                          linea.turnos_estado != EstadosDealleSolicitud.SOLINVENTARIO );
-      
-      //////////console.log(this.lineasProgramacionDiariaGerencia);
-      this.configTablaProgramacionGerencia();
-  }
+ 
 
   async getInfoTablaProgramacionDiaria():Promise<any> {
 
@@ -452,48 +832,7 @@ export class DashboardComponentTurno implements OnInit {
     return dataTable;
 
   }
-  /*
-  async setConsolidadoDataPieChart(data:any[]):Promise<any>{
-    let dataPieChart:any;
-    let labelsPieChart:any[] = [];
-    let valuesPieChart:any[] = [];
-    let backgroundColor:any[] = [];
-
-    for(let item of data){
-      let color = await this.functionsService.generarColorHex();
-      backgroundColor.push(color)
-    }
-    //////////////////console.log(backgroundColor);
-    let hoverBackgroundColor:any[] = backgroundColor;
-
-
-    for(let linea of data){
-       labelsPieChart.push(linea.itemname);
-       valuesPieChart.push(linea.cantidad);
-    }
-
-    dataPieChart ={
-      labels: labelsPieChart,
-
-      datasets: [
-          {
-              //label: 'First Dataset',
-              data: valuesPieChart,
-              //fill: false,
-              //backgroundColor: documentStyle.getPropertyValue('--bluegray-700'),
-              //borderColor: documentStyle.getPropertyValue('--bluegray-700'),
-              //tension: .4
-
-              backgroundColor: backgroundColor,
-              hoverBackgroundColor: hoverBackgroundColor
-          },
-        
-      ]
-  };
-
-    return dataPieChart;
-  }
-  */
+  
 
   async getPlacasCompartidas(){
     this.tablaPlacasCompartidasBodegas.data = [];
@@ -705,29 +1044,7 @@ export class DashboardComponentTurno implements OnInit {
 
     this.chartDataConsolidadoZona = await this.functionsService.setDataPieDoughnutChart(this.tablaToneladasZona.data,{label:'zona',value:'cantidad'});
 
-     /*
-
-
-    this.dependencias = await dependencias.map(async (dependencia)=>{
-      //////////////////console.log(dependencia);
-      let dataDependencia = await tabla.data.filter((linea: { dependencia: any; })=>linea.dependencia === dependencia.dependencia);
-      ////////////////console.log('dataDependencia',dataDependencia);
-      let colsSumDependencia = await this.configSumTabla(tabla.header,dataDependencia)
-      ////////////////console.log('colsSumDependencia',colsSumDependencia);
-      return {
-                'dependencia':dependencia.dependencia,
-                data: dataDependencia,
-                colsSum:  colsSumDependencia
-             }
-    })
-    ////////////////console.log(this.dependencias);
-
-    this.tablaProgramacionDiariaGerencia = tabla;
-
-    let colsSum = await this.configSumTabla(tabla.header,tabla.data);
-
-    this.tablaProgramacionDiariaGerencia.colsSum = colsSum;
-    */
+    
 
     this.loadingPDG = false;
 
@@ -810,50 +1127,7 @@ export class DashboardComponentTurno implements OnInit {
     return dataTable;
 
   }
-  /*
-  async setConsolidadoZonaDataChart(data:any[]):Promise<any>{
-    let dataPieChart:any;
-    let labelsPieChart:any[] = [];
-    let valuesPieChart:any[] = [];
-    //let backgroundColor:any[] =  ["#42A5F5","#FF0000",];
-
-    let backgroundColor:any[] = [];
-
-    for(let item of data){
-      let color = await this.functionsService.generarColorHex();
-      backgroundColor.push(color)
-    }
-    //////////////////console.log(backgroundColor);
-    let hoverBackgroundColor:any[] = backgroundColor;
-
-
-    for(let linea of data){
-       labelsPieChart.push(linea.zona);
-       valuesPieChart.push(linea.cantidad);
-    }
-
-    dataPieChart ={
-      labels: labelsPieChart,
-
-      datasets: [
-          {
-              //label: 'First Dataset',
-              data: valuesPieChart,
-              //fill: false,
-              //backgroundColor: documentStyle.getPropertyValue('--bluegray-700'),
-              //borderColor: documentStyle.getPropertyValue('--bluegray-700'),
-              //tension: .4
-
-              backgroundColor: backgroundColor,
-              hoverBackgroundColor: hoverBackgroundColor
-          },
-        
-      ]
-  };
-
-    return dataPieChart;
-  }
-  */
+  
 
   configHeaderTablaConsolidadoTipoProducto(){
     let headersTable:any[] =  [{
@@ -916,4 +1190,6 @@ export class DashboardComponentTurno implements OnInit {
     return dataTable;
 
   }
+  */
+
 }

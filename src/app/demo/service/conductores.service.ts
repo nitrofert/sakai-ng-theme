@@ -52,6 +52,25 @@ export class ConductoresService {
     }
 
     
+    inactivar(infoConductores:any[]):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+        const url:string = `${this.api_url}/api/conductores/inactivar`;
+        //return this.http.post<any>(url, nuevaTransportadora, requestOptions);
+        return this.http.post<any>(url, infoConductores);
+
+    }
+
+    activar(infoConductores:any[]):Observable<any>{
+      
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+        const url:string = `${this.api_url}/api/conductores/activar`;
+        //return this.http.post<any>(url, nuevaTransportadora, requestOptions);
+        return this.http.post<any>(url, infoConductores);
+
+    }
+
+    
 
     
 
