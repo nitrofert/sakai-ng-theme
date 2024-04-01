@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, 
 import * as FileSaver from 'file-saver';
 import { Checkbox } from 'primeng/checkbox';
 import { Table } from 'primeng/table';
+import { FunctionsService } from 'src/app/demo/service/functions.service';
 
 @Component({
   selector: 'app-dynamic-table',
@@ -41,6 +42,8 @@ export class DynamicTableComponent implements OnInit {
  
   @Input() loading:boolean = false;
 
+  @Input() fieldsToExport!:any[];
+
   @Output() onNewAccion: EventEmitter<any> = new EventEmitter();
   @Output() onSelectedItems: EventEmitter<any> = new EventEmitter();
   @Output() onEditAccion: EventEmitter<any> = new EventEmitter();
@@ -63,7 +66,7 @@ export class DynamicTableComponent implements OnInit {
   objectKeys = Object.keys;
   objectValues = Object.values;
   
-  constructor(){}
+  constructor(public functionsService: FunctionsService,){}
 
   ngOnInit(): void {
    
@@ -162,11 +165,24 @@ export class DynamicTableComponent implements OnInit {
     this.cambioValorCampo(index,valor,itemData,campo);
   }
 
+  async getDataToExport(data:any[]):Promise<any>{
+
+    let newData:any = [];
+    if(this.fieldsToExport){
+      newData = await this.functionsService.extraerCampos(data, this.fieldsToExport);
+    }else{
+      newData = data;
+    }
+
+    return newData;
+  }
 
 
-  exportExcel() {
+
+  async exportExcel() {
+    let dataToExport = await this.getDataToExport(this.dataTable);
     import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.dataTable);
+        const worksheet = xlsx.utils.json_to_sheet(dataToExport);
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, `${this.nameExport}`);

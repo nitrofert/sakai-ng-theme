@@ -37,6 +37,8 @@ export class NovedadesComponent implements  OnInit, OnChanges {
   locaciones:any[] = [];
   novedadesTurnos:any[] = [];
   verEncabezado:boolean = true;
+
+  fieldsToExport!:any;
   //selectedNovedad!:any;
 
   /*@ViewChild('filter') filter!: ElementRef;
@@ -169,11 +171,16 @@ export class NovedadesComponent implements  OnInit, OnChanges {
 
     let objString:string =`[{"novedad":{"label":"Novedad","type":"text","sizeCol":"6rem","align":"center","editable":false,"field":"novedad"}`;
     let idLocacion:number = 1;
-
+    let fieldsToExport:string =`{"novedad":"Novedad"`;
     if(this.locaciones.length > 0) {
       this.locaciones.forEach((locacion)=>{
-        objString += `,"locacion${locacion.id}":{"label":"${locacion.label}","type":"numeric","sizeCol":"6rem","align":"center","editable":false,"sum":true,"field":"locacion${locacion.id}"}`;
+        //objString += `,"locacion${locacion.id}":{"label":"${locacion.label}","type":"numeric","sizeCol":"6rem","align":"center","editable":false,"sum":true,"field":"locacion${locacion.id}"}`;
+        objString += `,"${locacion.label}":{"label":"${locacion.label}","type":"numeric","sizeCol":"6rem","align":"center","editable":false,"sum":true,"field":"locacion${locacion.id}"}`;
+        fieldsToExport+=`,"${locacion.label}":"${locacion.label}"`
+
       });
+      fieldsToExport+=`}`;
+      this.fieldsToExport = JSON.parse(fieldsToExport);
     }
 
     objString +=',"bgcolor":{"label":"","type":"","sizeCol":"0rem","align":"center","editable":false,"field":"bgcolor"}}]';
@@ -236,7 +243,7 @@ export class NovedadesComponent implements  OnInit, OnChanges {
       lineaClase = `{"novedad":"${nombreClase}"`;
       for(let locacion of this.locaciones){
         let lineasClaseNovedadLocacion:any[] = this.novedadesTurnos.filter(novedadTurno => novedadTurno.novedades_historial_clase === clase.code && novedadTurno.locacion_code === locacion.code);
-        lineaClase+=`,"locacion${locacion.id}":${lineasClaseNovedadLocacion.length}`;
+        lineaClase+=`,"${locacion.label}":${lineasClaseNovedadLocacion.length}`;
       }
       lineaClase+=`,"bgcolor":"bg-bluegray-200 font-bold"}`;
       //console.log('lineaClase',lineaClase);
@@ -248,7 +255,7 @@ export class NovedadesComponent implements  OnInit, OnChanges {
         lineaNovedad = `{"novedad":"${nombreNovedad}"`;
         for(let locacion of this.locaciones){
           let lineasNovedadLocacion = this.novedadesTurnos.filter(novedadTurno => novedadTurno.novedades_historial_novedad === novedad.novedad && novedadTurno.locacion_code === locacion.code);
-          lineaNovedad+=`,"locacion${locacion.id}":${lineasNovedadLocacion.length}`;
+          lineaNovedad+=`,"${locacion.label}":${lineasNovedadLocacion.length}`;
         }
         lineaNovedad+=',"bgcolor":"bg-white font-normal"}';
         //console.log('lineaNovedad',lineaNovedad);

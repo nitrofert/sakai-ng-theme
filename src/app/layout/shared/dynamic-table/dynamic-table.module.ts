@@ -4,6 +4,7 @@ import { DynamicTableComponent } from './dynamic-table.component';
 import { PrimengModule } from '../primeng/primeng.module';
 import { ApplicationPipesModule } from 'src/app/demo/pipes/pipes.module';
 import { FormsModule } from '@angular/forms';
+import { FunctionsService } from 'src/app/demo/service/functions.service';
 
 
 
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
 
   ],
+  providers:[FunctionsService],
   exports:[DynamicTableComponent]
 })
 export class DynamicTableModule { }
