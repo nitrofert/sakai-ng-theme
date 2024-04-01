@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { OrdenesCargueService } from 'src/app/demo/service/ordenes-cargue.service';
 import { PedidosService } from 'src/app/demo/service/pedidos.service';
@@ -20,6 +20,7 @@ import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { NovedadesService } from 'src/app/demo/service/novedades.service';
 import { ListaHistorialTurnoComponent } from '../../solicitudescargue/lista-historial-turno/lista-historial-turno.component';
 import { CiudadesService } from 'src/app/demo/service/ciudades.service';
+import { FileUpload } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-form-turno',
@@ -228,7 +229,13 @@ diasNoAtencionCambioBodega:any[] = [];
 horariosLocacionCambioBodega:any[] = [];
 horariosSeleccionadosCambioBodega:any[] = [];
 
+cambioEstado:boolean = false;
+file!: any ;
+fileTmp:any;
+uploadedFiles: any[] = [];
+filesToUpload: any[] = [];
 
+@ViewChild('uploaderFiles') uploaderFiles!:ElementRef;
 
 
   constructor( private messageService: MessageService,
@@ -1500,6 +1507,8 @@ async validarHoraCargue():Promise<boolean>{
 
   cambiarEstadoTurno(){
 
+    this.cambioEstado = true;
+
     if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para ${this.accion} el turno, debe seleccionar una novedad.` });
     }else if((this.accion == 'solicitud produccion' ) && ( this.solictudProduccionSeleccionada.length==0)){
@@ -1515,6 +1524,12 @@ async validarHoraCargue():Promise<boolean>{
   
             let data:any = await this.configDataTurno();
             //////// ////console.log(data);
+            //Validar adjuntos para el estado cargado
+            if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0){
+              this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
+              this.cambioEstado = false;
+              
+            }
             this.updateTurno(data);
   
         },
@@ -1676,7 +1691,31 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
               .subscribe({
                     next:async (turno)=>{
-                        //////console.log("turno actualizado",turno);
+                        console.log("turno actualizado",turno);
+                        
+                        if(this.filesToUpload.length > 0){
+                          for(let anexo of this.filesToUpload){
+                            let body = new FormData();
+                            body.append('file', anexo.file, anexo.file.name);
+                            body.append('entidad', 'turnos');
+                            body.append('id_relacion', turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].id);
+                            body.append('proceso', turno.estado);
+                            body.append('nombre', anexo.file.name);
+
+                            this.functionsService.uploadFile(body)
+                                .subscribe({
+                                  next:(result)=>{
+                                    console.log('Upload ok',result);
+                                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
+                                  },
+                                  error:(err)=>{
+                                    this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
+                                  }
+                                })
+                          }
+                          
+                        }
+
                         this.pedidosTurno.map((pedido)=>{
                           pedido.lineaUpdate = {update:false, create:false};
                           
@@ -3115,5 +3154,58 @@ async validarHoraCargue():Promise<boolean>{
     }
     
   }
+
+  clearUploader(uploaderFiles: FileUpload){
+    uploaderFiles.clear();
+    this.filesToUpload = [];
+  }
+
+  removeFile($event:any,uploaderFiles: FileUpload){
+      console.log('remove',$event,)
+      
+      let currentFiles = uploaderFiles.files.filter((file: any)=>file != $event.file);
+      //uploaderFiles.files = currentFiles;
+      this.loadFiles(currentFiles);
+  }
+
+  loadFiles(uploaderFiles: any ){
+    console.log('filesToUpload',uploaderFiles);
+    let currentFiles = uploaderFiles;
+    for(let currentFile of currentFiles){
+      console.log('currentFile',currentFile);
+      //const [file] = currentFile;
+      this.filesToUpload.push({
+        file:currentFile,
+        //name:file.name
+      })
+    }
+  }
+
+  onLoad($event:any){
+
+    const [ files ] = $event.currentFiles;
+    console.log('files',files);
+    console.log('$event.currentFiles',$event.currentFiles);
+    for(let currentFile of $event.currentFiles){
+      console.log('currentFile',currentFile);
+      //const [file] = currentFile;
+      this.filesToUpload.push({
+        file:currentFile,
+        //name:file.name
+      })
+    }
+    
+    /*this.filesToUpload = $event.currentFiles.map(([file])=>{
+      return {
+        fileRaw:file,
+        fileName:file.name
+      }
+    });*/
+    
+    
+
+   
+  }
+
 
 }

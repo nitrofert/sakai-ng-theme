@@ -460,7 +460,8 @@
           [style]="{width: '50vw'}" 
           [draggable]="false" 
           [resizable]="false"
-          [maximizable]="true">
+          [maximizable]="true"
+          (onHide)="clearUploader(uploaderFiles)">
 
             <div class="grid">
                 <div class="col-12">
@@ -546,6 +547,30 @@
                                         
                                         <label for="comentario"><h6>Comentario</h6></label>
                                 </span>
+                            </div>
+
+                            <div class="field col-12 ">
+                                <label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>
+                                <p-fileUpload #uploaderFiles   name="demo[]" 
+                                chooseLabel="Seleccionar"
+                                cancelLabel="Cancelar"
+                                
+                                [multiple]="true" 
+                                (onSelect)="loadFiles(uploaderFiles.files)"
+                                (onRemove)="removeFile($event, uploaderFiles)"
+                                
+                                
+                                [showUploadButton]="false"
+                                [maxFileSize]="50000000"
+                                styleClass="w-full"
+                                class="w-full"
+                                [ngClass]="{'ng-invalid ng-dirty' :  (cambioEstado && !filesToUpload ) || (cambioEstado && filesToUpload.length==0)}">
+                                    <ng-template pTemplate="content">
+                                        <ul *ngIf="uploadedFiles.length">
+                                            <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                                        </ul>
+                                    </ng-template>
+                                </p-fileUpload>
                             </div>
 
                         </div>

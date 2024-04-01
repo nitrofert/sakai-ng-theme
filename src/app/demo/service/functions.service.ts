@@ -379,7 +379,6 @@ async clonObject(object:any): Promise<any>{
   return newObject;
 }
 
-
 async extraerCampos(data:any[], fields:any): Promise<any>{
 
  //console.log(data);
@@ -444,9 +443,6 @@ async log(mensaje:string):Promise<any> {
   const log = await lastValueFrom(log$);
   return log;
 }
-
-
-
 
 getTamplateHTML(path:string):Observable<string>  {
     let template =  this.http.get('assets/demo/templates/'+path+'.template.html',{responseType:'text'})
@@ -555,15 +551,10 @@ async convertHTMLtoPDF(html:any,propertiesPDF?:any):Promise<any> {
   return pdfDefinition;
 }
 
-
 async createPDF(pdfDefinition:any):Promise<void>{
   const pdf = pdfMake.createPdf(pdfDefinition);
   pdf.open();
 }
-
-
-
-
 
 convertImagenLocalToBase64(url:any) {
   return new Promise((resolve, reject) => {
@@ -611,6 +602,11 @@ getBase64ImageFromURL(url:any) {
     };
     img.src = url;
   });
+}
+
+uploadFile(body:any):Observable<any>{
+  const url:string = `${this.api_url}/api/upload-files-s3/upload`;
+  return this.http.post<any[]>(url,body); 
 }
   
 
