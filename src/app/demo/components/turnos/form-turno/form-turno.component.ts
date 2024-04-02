@@ -81,7 +81,7 @@ export class FormTurnoComponent implements  OnInit {
   nuevoComentario:string = "";
 
   /****
-   * prueba de jerarquia de git develop - calidad
+   * prueba de jerarquia de git develop - calidad 2
    */
 
   /*btnAprobar: MenuItem =   {tooltip: 'Aprobar', tooltipPosition: 'top', icon: 'pi pi-check', command: () => { this.aprobarTurno();}};
