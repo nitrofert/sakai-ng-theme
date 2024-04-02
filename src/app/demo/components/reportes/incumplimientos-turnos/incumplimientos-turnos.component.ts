@@ -12,6 +12,7 @@ import { UsuarioService } from 'src/app/demo/service/usuario.service';
 import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
 import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-incumplimientos-turnos',
@@ -38,6 +39,16 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     data:[],
     colsSum:[]
   };
+
+  dataTableIncumplimientoLocacion:any = {
+    header:[{"locacion":{"label":"Locación","type":"text","sizeCol":"6rem","align":"center","editable":false},
+             "prcTonCUMP":{"label":"% Turnos cumplidos","type":"numeric","sizeCol":"6rem","align":"center","editable":false,"sum":true,currency:"%",side:"rigth"},
+             "prcTonINCU":{"label":"% Turnos incumplidos","type":"numeric","sizeCol":"6rem","align":"center","editable":false,"sum":true,currency:"%",side:"rigth"},
+           }],
+    data:[],
+    colsSum:[]
+  };
+
 
   dataTableIncumplimientoClientes:any = {
     header:[{"cliente":{"label":"Cliente","type":"text","sizeCol":"6rem","align":"center","editable":false},
@@ -93,7 +104,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     public usuariosService:UsuarioService,
     public functionsService:FunctionsService,
     private localidadesService:LocalidadesService,
-    private dependenciasService:DependenciasService
+    private dependenciasService:DependenciasService,
 
 
     ){
@@ -103,8 +114,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
 
   async ngOnInit() {
 
-    await this.getLocalidades();
-    await this.getDependencias();
+    
     
 
     if(this.rangoFechas){
@@ -112,8 +122,8 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
       this.verEncabezado = false;
     }
 
-    ////////console.log('this.filtroRnagoFechas[0]',this.filtroRnagoFechas[0]);
-    ////////console.log('this.filtroRnagoFechas[1]',this.filtroRnagoFechas[1]);
+    ////////////console.log('this.filtroRnagoFechas[0]',this.filtroRnagoFechas[0]);
+    ////////////console.log('this.filtroRnagoFechas[1]',this.filtroRnagoFechas[1]);
 
     await this.setReporte();
    
@@ -121,7 +131,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    //////////console.log('changes',changes['rangoFechas'].currentValue)
+    //////////////console.log('changes',changes['rangoFechas'].currentValue)
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.setReporte();
   }
@@ -130,41 +140,28 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     
     
     if(event[1]){
-      //////////console.log(this.filtroRnagoFechas);
+      //////////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       //this.setReporte();
   
     }
   }
 
-  async getLocalidades():Promise<void>{
-    this.localidades =  await this.localidadesService.getLocalidades();
-    console.log(this.localidades);
-    /*this.localidadesService.import(this.localidades)
-        .subscribe({
-            next:(result)=>{
-                console.log(result);
-            },error:(err)=>{
-                console.error(err);
-            }
-    })
-    */
+  async getLocalidades():Promise<any>{
+    let localidades =  await this.localidadesService.getLocalidades();
+
+   
+    //console.log('localidades',localidades);
+    return localidades;
+   
   }
   
 
-  async getDependencias():Promise<void>{
-    this.dependencias_all =  await this.dependenciasService.getDependencias();
-    //console.log(this.dependencias_all);
-    /*
-    this.dependenciasService.import(this.dependencias_all)
-        .subscribe({
-            next:(result)=>{
-                console.log(result);
-            },error:(err)=>{
-                console.error(err);
-            }
-    })
-    */
+  async getDependencias():Promise<any>{
+    let dependencias_all =  await this.dependenciasService.getDependencias();
+    //console.log('dependencias_all',dependencias_all);
+    return dependencias_all ;
+   
         
         
   }
@@ -182,18 +179,34 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
 
     let infoTurnos = await this.solicitudTurnoService.allInfoTurnos(params);
     
-    ////console.log('infoTurnos',infoTurnos);
+    ////////console.log('infoTurnos',infoTurnos);
 
     //return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
 
     return infoTurnos;  
   }
 
+  async getLocaciones(): Promise<any>{
+    let locaciones$ = this.almacenesService.getLocaciones();
+    let locaciones = await lastValueFrom(locaciones$);
+
+    
+
+     //console.log('locaciones',locaciones);
+
+     return locaciones;
+  }
+
  
 
   async setReporte():Promise<void>{
 
+    this.localidades = await this.getLocalidades();
+    this.dependencias_all = await this.getDependencias();
+    this.locaciones = await this.getLocaciones();
+
     let infoTurnos = await this.getInfoTurnos();
+    //console.log('infoTurnos incumplimientos',infoTurnos);
     this.infoTurnos = infoTurnos;
 
 
@@ -205,20 +218,25 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
                                         (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length==0
                                         && turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 )
                                       )
-    //console.log('turnosApCn',turnosApCn);
+    //////console.log('turnosApCn',turnosApCn);
 
    
 
     let zonas:any[] = [];
+    let locaciones:any[] = [];
     let clientes:any[] = [];
     await turnosApCn.map((turno:any)=>{
         turno.detalle_solicitud_turnos_pedido.map((pedido:any)=>{
+          ////console.log('pedido.localidad',pedido.localidad);
+          ////console.log('this.localidades',this.localidades);
           if(zonas.filter(zona=>zona.code === pedido.localidad).length==0){
             zonas.push({
                 code:pedido.localidad,
                 label: this.localidades.filter((localidad: { id: any; })=>localidad.id === pedido.localidad).length ==0?'SIN ZONA':this.localidades.filter((localidad: { id: any; })=>localidad.id === pedido.localidad)[0].name
             })
           }
+         
+
 
           if(clientes.filter(cliente=>cliente.code === pedido.CardCode).length==0){
             clientes.push({
@@ -227,7 +245,18 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
           })
           }
         })
+        ////console.log('turno.localidad',turno.locacion);
+        if(locaciones.filter(locacion=>locacion.code === turno.locacion).length==0){
+          locaciones.push({
+              code:turno.locacion,
+              label: this.locaciones.filter((locacion: { code: any; })=>locacion.code === turno.locacion)[0].locacion
+          })
+        }
+
+        
     });
+
+    //console.log('locaciones turnos',locaciones);
 
     let objString:string = "";
 
@@ -266,6 +295,43 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
 
     dataTable = [];
 
+    for(let locacion of locaciones){
+      //console.log('locacion',locacion);
+      let turnosIncumplidosLocacion = turnosApCn.filter((turno: { detalle_solicitud_turnos_historial: any[]; detalle_solicitud_turnos_pedido:any[]; locacion:any }) => 
+                                                    (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length>0 
+                                                     && (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO))[0].novedades.filter((novedad: { novedad: string; })=> novedad.novedad ==='VEHÍCULO NO SE PRESENTA').length>0)
+                                                     && turno.locacion === locacion.code
+                                                   );
+      let turnosCumplidosLocacion = turnosApCn.filter((turno: { detalle_solicitud_turnos_historial: any[]; detalle_solicitud_turnos_pedido:any[]; locacion:any }) => 
+                                                  (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length==0 && turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 )
+                                                   && turno.locacion === locacion.code
+                                                );
+                                                locacion.incumplidos=turnosIncumplidosLocacion.length;
+                                                locacion.cumplidos=turnosCumplidosLocacion.length;
+
+      let totalTurnosLocacion= turnosIncumplidosLocacion.length+turnosCumplidosLocacion.length;
+      let prcTonINCU = totalTurnosLocacion==0?0:(turnosIncumplidosLocacion.length/totalTurnosLocacion*100);
+      let prcTonCUMP = totalTurnosLocacion==0?0:(turnosCumplidosLocacion.length/totalTurnosLocacion*100);
+
+      
+
+      objString=`{"locacion":"${locacion.label}","prcTonCUMP":${prcTonCUMP},"prcTonINCU":${prcTonINCU}}`;
+      dataTable.push(JSON.parse(objString));
+
+  }
+
+  dataTable = await this.functionsService.sortArrayObject(dataTable.filter(data=>data.prcTonINCU >0),'prcTonINCU','DESC');
+  //console.log('this.dataTableIncumplimientoLocacion',dataTable);
+
+
+  this.dataTableIncumplimientoLocacion.data=dataTable;
+
+  
+
+  objString = "";
+
+  dataTable = [];
+
     for(let cliente of clientes){
       let turnosIncumplidosCliente = turnosApCn.filter((turno: { detalle_solicitud_turnos_historial: any[]; detalle_solicitud_turnos_pedido:any[] }) => 
                                                     (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length>0 
@@ -274,7 +340,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
                                                    );
        
 
-      //console.log('turnosIncumplidosCliente',turnosIncumplidosCliente);
+      //////console.log('turnosIncumplidosCliente',turnosIncumplidosCliente);
       let toneladasIncumplidasCliente = 0;
       await turnosIncumplidosCliente.map((turno:any)=>{
           //turno.detalle_solicitud_turnos_pedido.filter((pedido: { CardCode: any; })=>pedido.CardCode === cliente.code)
@@ -285,14 +351,14 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
           })
       })
 
-      ////console.log('toneladasIncumplidasCliente',toneladasIncumplidasCliente);
+      ////////console.log('toneladasIncumplidasCliente',toneladasIncumplidasCliente);
 
       let turnosCumplidosCliente = turnosApCn.filter((turno: { detalle_solicitud_turnos_historial: any[]; detalle_solicitud_turnos_pedido:any[] }) => 
                                                   (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length==0 && turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 )
                                                    && turno.detalle_solicitud_turnos_pedido.filter(pedido=>pedido.CardCode === cliente.code).length>0
                                                 );
 
-      ////console.log('turnosCumplidosCliente',turnosCumplidosCliente);
+      ////////console.log('turnosCumplidosCliente',turnosCumplidosCliente);
 
       let toneladasCumplidasCliente = 0;
       await turnosCumplidosCliente.map((turno:any)=>{
@@ -314,7 +380,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
       let nombreCliente = cliente.label.replace(/"/g, "");;
 
       objString=`{"cliente":"${nombreCliente}","tonCUMP":${toneladasCumplidasCliente},"prcTonCUMP":${prcTonCUMP},"tonINCU":${toneladasIncumplidasCliente},"prcTonINCU":${prcTonINCU}}`;
-      //console.log(objString);
+      //////console.log(objString);
 
       dataTable.push(JSON.parse(objString));
 

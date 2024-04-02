@@ -88,7 +88,7 @@ export class CalendarioTurnosComponent implements OnInit {
     
     let estadosTurno2:any[]  = this.solicitudTurnoService.estadosTurno;
     this.estadosTurno2 = estadosTurno2.filter(estado=>estado.name !== EstadosDealleSolicitud.ACTIVADO);
-    //// ////////console.log(this.estadosTurno2);
+    //// //////////console.log(this.estadosTurno2);
 
     this.hoy = await this.functionsService.formatDate(new Date(), 'DDDD, dd MMMMM YYYY');
     //this.hoy = new Date()
@@ -101,7 +101,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////// ////////console.log(permisos);
+              ////////////// //////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -111,7 +111,7 @@ export class CalendarioTurnosComponent implements OnInit {
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////// ////////console.log(this.multiplesClientes);
+              ////////////////////////// //////////console.log(this.multiplesClientes);
   
              
               /*
@@ -121,9 +121,9 @@ export class CalendarioTurnosComponent implements OnInit {
               this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
               */
          
-              ////////////// ////////console.log(this.condicion_tpt);
+              ////////////// //////////console.log(this.condicion_tpt);
               this.infousuario = await this.usuariosService.infoUsuario();
-              //// ////////console.log(this.infousuario);
+              //// //////////console.log(this.infousuario);
               this.getLocaciones();
               
   
@@ -169,12 +169,12 @@ export class CalendarioTurnosComponent implements OnInit {
   
   getEvents(){
     
-    //console.log(this.turnosLocalidad);
+    ////console.log(this.turnosLocalidad);
 
     let events:any[] = [];
     for(let turno of this.turnosLocalidad.filter(turnotmp=>turnotmp.estado != 'Cancelado')){
     //for(let turno of this.turnosLocalidad){
-     //////// ////////console.log(turno);
+     //////// //////////console.log(turno);
       events.push({
         id:`${turno.id}`,
         title:JSON.stringify({placa:turno.vehiculo.placa,
@@ -192,7 +192,7 @@ export class CalendarioTurnosComponent implements OnInit {
       })
     }
 
-    //console.log(events);
+    ////console.log(events);
 
     this.ordenesdecargue = events;
 
@@ -298,7 +298,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.almacenesService.getLocaciones()
         .subscribe({
             next:(locaciones)=>{
-               ////////console.log(locaciones);
+               //////////console.log(locaciones);
               this.locaciones = locaciones;
               this.getAlmacenes();
             },
@@ -324,7 +324,7 @@ export class CalendarioTurnosComponent implements OnInit {
              
               }
               this.almacenes = almacenesTMP;
-               ////////console.log(this.almacenes);
+               //////////console.log(this.almacenes);
               this.getLocalidades(this.almacenes);
             },
             error:(err)=>{
@@ -382,17 +382,17 @@ export class CalendarioTurnosComponent implements OnInit {
     }
 
     this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
-     ////////console.log(this.localidades);
+     //////////console.log(this.localidades);
     
 
     
-    ////// ////////console.log('localidades',this.localidades);
+    ////// //////////console.log('localidades',this.localidades);
   }
 
   seleccionarLocalidad(localidad:any){
 
     this.getTurnosPorLocalidad(localidad.code)
-   //////////// ////////console.log(localidad);
+   //////////// //////////console.log(localidad);
     
     //this.getCalendar();
     //this.showCalendar = true;
@@ -421,7 +421,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad,this.filtroRnagoFechas[0],this.filtroRnagoFechas[1])
         .subscribe({
               next:async (turnosLocalidad)=>{
-                  //console.log(turnosLocalidad);
+                  ////console.log(turnosLocalidad);
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                     this.displayModal = false;
@@ -438,7 +438,7 @@ export class CalendarioTurnosComponent implements OnInit {
                   this.turnosLocalidad = turnosLocalidad;
                   //this.getCalendar();
                   this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
-                  //// ////////console.log(this.boxEstados);
+                  //// //////////console.log(this.boxEstados);
               },
               error:(err)=>{
                 this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
@@ -452,12 +452,12 @@ export class CalendarioTurnosComponent implements OnInit {
         let a:any;
         await this.solicitudTurnoService.getListaTurnosLocacion(localidad);
         this.turnosLocalidad$ = this.solicitudTurnoService.getTurnosLcacion$(localidad);
-       //// ////////console.log(this.turnosLocalidad$);
+       //// //////////console.log(this.turnosLocalidad$);
         this.turnosLocalidad$.subscribe(turno=>a = turno);
-       //// ////////console.log(a);
+       //// //////////console.log(a);
         this.turnosLocalidad$.subscribe({
               next:async (turnosLocalidad)=>{
-               //// ////////console.log(turnosLocalidad);
+               //// //////////console.log(turnosLocalidad);
                 if(this.completeTimer){
                   this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                   this.displayModal = false;
@@ -503,7 +503,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////////////// ////////console.log((arrayFiltrar);
+    //////////////// //////////console.log((arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -538,13 +538,13 @@ export class CalendarioTurnosComponent implements OnInit {
     }*/
     //alert(clickInfo.event.title);
     
-    // ////////console.log(clickInfo.event.title);
+    // //////////console.log(clickInfo.event.title);
 
     
     let objectEvent = JSON.parse(clickInfo.event.title);
     let orden = clickInfo.event.id;
 
-    //////////// ////////console.log((clickInfo)
+    //////////// //////////console.log((clickInfo)
 
     
     const ref = this.dialogService.open(FormTurnoComponent, {
@@ -561,7 +561,7 @@ export class CalendarioTurnosComponent implements OnInit {
     ref.onClose.subscribe(() => {
       this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       this.getCalendar();
-      //////////// ////////console.log(("Refresh calendar");
+      //////////// //////////console.log(("Refresh calendar");
     });
 
 
@@ -573,7 +573,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   handleEventsDragStop(event:any){
-    //////////// ////////console.log((event);
+    //////////// //////////console.log((event);
   }
 
   createEventId(){

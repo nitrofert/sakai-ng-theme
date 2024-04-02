@@ -101,8 +101,8 @@ ngOnInit() {
   this.horainicio =new Date(new Date().setHours(8,0,0));
   this.horafin =new Date(new Date().setHours(16,30,0));
 
- //////////console.log(this.horainicio.toLocaleTimeString('en-US',{ hour12: false }));
- //////////console.log(this.horafin.toLocaleTimeString('en-US',{ hour12: false }));
+ ////////////console.log(this.horainicio.toLocaleTimeString('en-US',{ hour12: false }));
+ ////////////console.log(this.horafin.toLocaleTimeString('en-US',{ hour12: false }));
 
   this.getLocacionesMySQL();
 
@@ -114,7 +114,7 @@ getLocacionesMySQL(){
   this.almacenesService.getLocaciones()
   .subscribe({
       next:(locaciones)=>{
-         //////////console.log('locacionesMySQL',locaciones);
+         ////////////console.log('locacionesMySQL',locaciones);
           this.locacionesMySQL = locaciones;
           if(this.locacionId!=0){
             this.editLocacion = true;
@@ -132,7 +132,7 @@ getLocacionesMySQL(){
   this.almacenesService.getAlmacenes()
   .subscribe({
       next:async (almacenes:any[])=>{
-       console.log('getLocacionesSAP',almacenes);
+       //console.log('getLocacionesSAP',almacenes);
         let almacenesTMP:any[] = await this.functionsService.objectToArray(almacenes);
         almacenesTMP = almacenesTMP.filter((almacen: { CorreoNoti: string | null; }) => almacen.CorreoNoti!=null && almacen.CorreoNoti!="");
         
@@ -151,7 +151,7 @@ getLocacionesMySQL(){
 
         this.locacionesSAP=  await this.functionsService.sortArrayObject(locacionesSAP,'name','DESC')
 
-        //////////console.log('getLocacionesSAP',this.locacionesSAP);
+        ////////////console.log('getLocacionesSAP',this.locacionesSAP);
       },
       error:(err)=>{
           console.error(err);
@@ -164,7 +164,7 @@ getLocacionByCode(code:any){
   this.almacenesService.getLocacionByCode(code)
       .subscribe({
             next:async (locacion)=>{
-             //console.log(locacion);
+             ////console.log(locacion);
               let datatable = await (this.functionsService.clonObject(locacion.horarios_locacion));
               datatable.map((horario:any)=>{
                 let horaInicio = new Date();
@@ -183,7 +183,7 @@ getLocacionByCode(code:any){
               this.horarios = await this.functionsService.clonObject(locacion.horarios_locacion);
               this.locacionCode = locacion.code;
 
-              //console.log(this.dataTable,this.horarios);
+              ////console.log(this.dataTable,this.horarios);
             },
             error:(err)=>{
               console.error(err);
@@ -198,7 +198,7 @@ async filtrarLocacion(event: any){
 }
 
 seleccionarLocacion(locacionSeleccionada:any){
-//////console.log(locacionSeleccionada);
+////////console.log(locacionSeleccionada);
 this.email_bodega = locacionSeleccionada.CorreoNoti;
 }
 
@@ -207,7 +207,7 @@ cambioLocacion(){
 }
 
 editHorario(event:any){
- //console.log(event);
+ ////console.log(event);
   
   
   this.tituloFormHorario ="Editar horario";
@@ -237,7 +237,7 @@ editHorario(event:any){
 }
 
 deleteHorario(event:any){
-  console.log(event);
+  //console.log(event);
   this.confirmationService.confirm({
     message: 'Esta seguro de eliminar las lineas de horario sele4cionadas. ¿Desea continuar?',
     header: 'Confirmación',
@@ -274,7 +274,7 @@ nuevoHorario(event:any){
 }
 
 grabarHorario(){
- //////////console.log(this.diasSeleccionados, this.horainicio, this.horafin)
+ ////////////console.log(this.diasSeleccionados, this.horainicio, this.horafin)
   this.submitHorario = true;
   if(this.diasSeleccionados.length ==0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe seleccionar al menos un dia para la atención"});
@@ -282,7 +282,7 @@ grabarHorario(){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  "La fecha de inicio de la atención no puede ser mayor o igual a la fecha  de finalización"});
   }else{
 
-    ////console.log(this.editIndexHorario,this.dataTable[this.editIndexHorario].id);
+    //////console.log(this.editIndexHorario,this.dataTable[this.editIndexHorario].id);
     //let id = this.dataTable[this.editIndexHorario].id;
 
       if(this.editHorarios){
@@ -314,7 +314,7 @@ grabarHorario(){
       }
 
 
-      //console.log(this.dataTable,this.horarios);
+      ////console.log(this.dataTable,this.horarios);
 
       this.diasSeleccionados = [];
       this.formHorarios = false;
@@ -339,13 +339,13 @@ grabarLocacion(){
           ///horarios:this.dataTable
         }
 
-       //console.log(data);
+       ////console.log(data);
        if(!this.editLocacion){
         //Registro de locacion
         this.almacenesService.setLocacion(data)
         .subscribe({
             next:(locacion)=>{
-             //////////console.log(locacion);
+             ////////////console.log(locacion);
               this.messageService.add({severity:'success', summary: '!Error¡', detail: `Se ha realizado correctamente el registro de la locación ${locacion.locacion}.`});
               this.cerrar();                
             },
@@ -359,7 +359,7 @@ grabarLocacion(){
           this.almacenesService.updateLocacion(data,this.locacionId)
         .subscribe({
             next:(locacion)=>{
-             //////////console.log(locacion);
+             ////////////console.log(locacion);
               this.messageService.add({severity:'success', summary: '!Error¡', detail: `Se ha actualizado correctamente el registro de la locación ${locacion.locacion}.`});
               this.cerrar();                
             },

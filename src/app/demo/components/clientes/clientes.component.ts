@@ -85,7 +85,7 @@ getPermisosModulo(){
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-            //////////console.log(permisos);
+            ////////////console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -101,7 +101,7 @@ getPermisosModulo(){
 
             
             this.infoUsuario = await this.usuariosService.infoUsuario();
-            ////////console.log(this.infoUsuario);
+            //////////console.log(this.infoUsuario);
             this.getClientes();
 
           },
@@ -116,7 +116,7 @@ getClientes(){
     this.clientesService.getClientes()
         .subscribe({
             next:(clientes)=>{
-              //console.log(clientes)
+              ////console.log(clientes)
 
               let dataClientes:any[] = [];
                   for(let cliente of clientes){
@@ -139,7 +139,7 @@ getClientes(){
 }
 
 editCliente(event: any){
-  console.log(event);
+  //console.log(event);
    const ref = this.dialogService.open(FormClienteComponent, {
      data: {
       id: event

@@ -37,7 +37,7 @@ export class FormTransportadoraComponent implements  OnInit {
 
     ngOnInit() {
       this.getPermisosModulo();
-     ////////console.log(this.config.data.id);
+     //////////console.log(this.config.data.id);
       if(this.config.data.id!=0){
           this.getInfoTransportadora(this.config.data.id);
           this.updateMode = true;
@@ -53,7 +53,7 @@ export class FormTransportadoraComponent implements  OnInit {
       this.usuariosService.getPermisosModulo(modulo)
           .subscribe({
               next: async (permisos)=>{
-               ////////console.log(modulo,permisos);
+               //////////console.log(modulo,permisos);
                 this.permisosModulo = permisos;
                
                 /*
@@ -75,7 +75,7 @@ export class FormTransportadoraComponent implements  OnInit {
         this.transportadorasService.getTransportadoraById(id)
             .subscribe({
                 next:(infoTransportadora)=>{
-                   console.log(infoTransportadora);
+                   //console.log(infoTransportadora);
                     this.nit = infoTransportadora.nit;
                     this.nombre = infoTransportadora.nombre;
                     this.email  = infoTransportadora.email;
@@ -113,7 +113,7 @@ export class FormTransportadoraComponent implements  OnInit {
             this.transportadorasService.update(nuevoTransportadora,this.config.data.id)
               .subscribe({
                   next: (Transportadora)=>{
-                   ////////console.log(Transportadora);
+                   //////////console.log(Transportadora);
                     this.messageService.add({severity:'success', summary:'información', detail:`La Transportadora ${nuevoTransportadora.nombre} fue actualizada correctamente`});
                   },
                   error:(err)=> {
@@ -128,7 +128,7 @@ export class FormTransportadoraComponent implements  OnInit {
             this.transportadorasService.create(nuevoTransportadora)
               .subscribe({
                   next: (Transportadora)=>{
-                   ////////console.log(Transportadora);
+                   //////////console.log(Transportadora);
                     this.messageService.add({severity:'success', summary:'información', detail:`El Transportadora ${Transportadora.nombre} fue registrado correctamente`});
                   },
                   error:(err)=> {
@@ -157,7 +157,7 @@ export class FormTransportadoraComponent implements  OnInit {
     }
 
     keyPress(event:any){
-     ////////console.log(event);
+     //////////console.log(event);
       
       var key =  event.keyCode;
       let teclasFuncionales:any[] =[8,46,9,13];
@@ -169,7 +169,7 @@ export class FormTransportadoraComponent implements  OnInit {
          teclasFuncionales.includes(key)){
         
       }else{
-       ////////console.log(key);
+       //////////console.log(key);
         event.preventDefault();
       }
   }

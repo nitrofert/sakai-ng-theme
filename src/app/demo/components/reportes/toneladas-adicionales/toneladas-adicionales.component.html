@@ -223,8 +223,31 @@
             <div  class="text-center mb-3"><h1>Toneladas adicionales {{gerencia.label}} x zona</h1></div>
                     <div class="p-fluid p-formgrid grid">
                         <div class="field col-12 ">
-                            <app-dynamic-table [dataTable]="gerencia.data" 
-                                        [headersTable]="gerencia.header"
+                            <app-dynamic-table [dataTable]="gerencia.tablaGerenciaZona.data" 
+                                        [headersTable]="gerencia.tablaGerenciaZona.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        [nameExport]="'rpt_toneladas_adicional_zona_'+gerencia.label">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Toneladas adicionales {{gerencia.label}} x zona/locacion</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="gerencia.tablaGerenciaZonaLocacion.data" 
+                                        [headersTable]="gerencia.tablaGerenciaZonaLocacion.header"
                                         
                                         dataKey="index" 
                                         [rows]="10" 

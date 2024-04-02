@@ -77,8 +77,8 @@ export class FormClienteComponent  implements  OnInit {
     });
   }
   async setClientes(clientesMysql:any[], clientesSAP:any[]):Promise<void>{
-      console.log('clientesMysql',clientesMysql);
-      console.log('clientesSAP',clientesSAP);
+      //console.log('clientesMysql',clientesMysql);
+      //console.log('clientesSAP',clientesSAP);
 
       let nuevosClientes:any[] = [];
 
@@ -89,7 +89,7 @@ export class FormClienteComponent  implements  OnInit {
         }
       }
 
-      console.log('nuevosClientes',nuevosClientes);
+      //console.log('nuevosClientes',nuevosClientes);
       this.clientesNuevos = nuevosClientes;
   }
 
@@ -98,7 +98,7 @@ export class FormClienteComponent  implements  OnInit {
   }
 
   seleccionarCliente(clienteSeleccionado:any){
-      console.log('clienteSeleccionado',clienteSeleccionado);
+      //console.log('clienteSeleccionado',clienteSeleccionado);
       this.CardCode = clienteSeleccionado.CardCode;
       this.CardName = clienteSeleccionado.CardName;
       this.FederalTaxID = clienteSeleccionado.ADDID;
@@ -109,7 +109,7 @@ export class FormClienteComponent  implements  OnInit {
   async getInfoCliente(CardCode:any){
     let infoClientes = await this.clientesService.infoClientes();
     let infoCliente = infoClientes.find((cliente: { CardCode: any; })=>cliente.CardCode === CardCode);
-    console.log(infoCliente);
+    //console.log(infoCliente);
     this.idCliente = infoCliente.id;
     this.CardName = infoCliente.CardName;
     this.EmailAddress = infoCliente.EmailAddress;
@@ -133,13 +133,13 @@ export class FormClienteComponent  implements  OnInit {
        
         }
 
-       console.log(data);
+       //console.log(data);
        if(!this.editCliente){
         //Registro de locacion
         this.clientesService.setCliente(data)
         .subscribe({
             next:(cliente)=>{
-             console.log(cliente);
+             //console.log(cliente);
               this.messageService.add({severity:'success', summary: '!Ok¡', detail: `Se ha realizado correctamente el registro del cliente ${this.CardName}.`});
               //this.cerrar();                
             },
@@ -153,7 +153,7 @@ export class FormClienteComponent  implements  OnInit {
           this.clientesService.updateCliente(data,this.idCliente)
         .subscribe({
             next:(cliente)=>{
-             //////////console.log(locacion);
+             ////////////console.log(locacion);
               this.messageService.add({severity:'success', summary: '!Ok¡', detail: `Se ha actualizado correctamente el registro del cliente ${cliente.CardName}.`});
               //this.cerrar();                
             },

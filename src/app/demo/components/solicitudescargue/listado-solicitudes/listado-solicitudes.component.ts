@@ -170,23 +170,23 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   async getLocalidades() {
     this.localidades = await this.localidadesService.getLocalidades();
-    ////console.log(this.localidades); 
+    //////console.log(this.localidades); 
     this.getDependencias();
   }
 
   async getDependencias() {
     this.dependencias = await this.dependenciasService.getDependencias();
-    ////console.log(this.dependencias);    
+    //////console.log(this.dependencias);    
     this.getPermisosModulo();
   }
 
   getPermisosModulo() {
     const modulo = this.router.url;
-    console.log(modulo);
+    //console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
         next: async (permisos) => {
-          ////////////////////console.log(permisos);
+          //////////////////////console.log(permisos);
           if (!permisos.find((permiso: { accion: string; }) => permiso.accion === 'leer')) {
             this.router.navigate(['/auth/access']);
           }
@@ -202,7 +202,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
 
           this.infoUsuario = await this.usuariosService.infoUsuario();
-          //////////////////console.log(this.infoUsuario);
+          ////////////////////console.log(this.infoUsuario);
           this.getSolicitudesTurno();
 
         },
@@ -258,12 +258,12 @@ export class ListadoSolicitudesComponent implements OnInit {
             let hoy = new Date();
             hoy.setHours(parseInt(horacita.split(":")[0]), parseInt(horacita.split(":")[1]), parseInt(horacita.split(":")[2]));
             solicitud.detalle_solicitudes_turnos_horacita2 = hoy;
-            ////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+            //////////console.log(solicitud.detalle_solicitudes_turnos_estado);
             if (this.estadosTurno.find(estado => estado.name === solicitud.detalle_solicitudes_turnos_estado)) {
               solicitud.bgColor = this.estadosTurno.find(estado => estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
               solicitud.txtColor = this.estadosTurno.find(estado => estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
             } else {
-              //console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+              ////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
               solicitud.bgColor = 'indigo-50';
               solicitud.txtColor = 'primary-900';
             }
@@ -307,7 +307,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
             solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; }) => denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia) ? this.dependencias.find((denpendencia: { id: any; }) => denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name : '';
             solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; }) => localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad) ? this.localidades.find((localidad: { id: any; }) => localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name : '';
-            ////console.log(solicitud);
+            //////console.log(solicitud);
 
 
             //return solicitud
@@ -316,11 +316,11 @@ export class ListadoSolicitudesComponent implements OnInit {
           await this.configPieChart(dataPieChart);
           await this.configBarSatckChart(dataBarStackChart);
 
-          ////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+          //////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
           this.solicitudesExtendida = solicitudesTurnos.raw;
 
 
-          console.log('this.solicitudesExtendida', this.solicitudesExtendida);
+          //console.log('this.solicitudesExtendida', this.solicitudesExtendida);
           this.loading = false;
         },
         error: (err) => {
@@ -333,7 +333,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
         .subscribe({
             next:(solicitud)=>{
-              //////////console.log(solicitud);
+              ////////////console.log(solicitud);
 
              
 
@@ -349,7 +349,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   async configPieChart(dataPieChart: any): Promise<void> {
 
-    ////console.log(dataPieChart);
+    //////console.log(dataPieChart);
 
     let totalToneladas: number = (await this.functionsService.sumColArray(dataPieChart, [{ value: 0 }]))[0].value;
 
@@ -360,13 +360,13 @@ export class ListadoSolicitudesComponent implements OnInit {
       let data = dataPieChart.filter((item: { name: any; }) => item.name === estado.name);
 
       if (data.length > 0) {
-        ////console.log('estado',estado.name);
-        // //console.log('data',data);
+        //////console.log('estado',estado.name);
+        // ////console.log('data',data);
         dataPieChartOrder = dataPieChartOrder.concat(data);
       }
     }
 
-    ////console.log(dataPieChartOrder);
+    //////console.log(dataPieChartOrder);
 
     this.pieChart = {
       labels: dataPieChartOrder.map((item: { name: any; }) => item.name),
@@ -393,7 +393,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   async configBarSatckChart(dataBarStackChart: any): Promise<void> {
-    /////console.log(dataBarStackChart)
+    ///////console.log(dataBarStackChart)
     /*let dataBarStackChartOrder:any[] = await this.functionsService.sortArrayObject(dataBarStackChart,'data','ASC');
     
     
@@ -409,8 +409,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       let data = dataBarStackChart.filter((item: { label: any; }) => item.label === estado.name);
 
       if (data.length > 0) {
-        ////console.log('estado',estado.name);
-        ////console.log('data',data);
+        //////console.log('estado',estado.name);
+        //////console.log('data',data);
         dataBarStackChartOrder = dataBarStackChartOrder.concat(data);
       }
     }
@@ -419,7 +419,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       item.data = [item.data];
     })
 
-    ////console.log('ordenado',dataBarStackChartOrder);
+    //////console.log('ordenado',dataBarStackChartOrder);
 
 
 
@@ -511,7 +511,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
 
   nuevaSolicitud(event: any) {
-    ////////////////////console.log(event);
+    //////////////////////console.log(event);
     this.router.navigate(['/portal/solicitudes-de-cargue/nueva']);
   }
 
@@ -593,10 +593,10 @@ export class ListadoSolicitudesComponent implements OnInit {
     if(index>0){
      index+=1;
     }
-    ////////////////console.log(index);
+    //////////////////console.log(index);
  
     filtro[index].value = value;*/
-    ////////////////console.log(field,value, filtro,other,other2 );
+    //////////////////console.log(field,value, filtro,other,other2 );
     //table.filter(value,field,filtro[0].matchMode);
 
   }
@@ -614,7 +614,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
 
     if (event[1]) {
-      //console.log(this.filtroRnagoFechas);
+      ////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.getSolicitudesTurno();
 
@@ -622,7 +622,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   async createPDF() {
-    //console.log('this.selectedItem',this.selectedItem);
+    ////console.log('this.selectedItem',this.selectedItem);
 
     let path = 'solicitud-cargue';
 
@@ -631,7 +631,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     let lineasSolicitud = this.solicitudesExtendida.filter(linea => linea.dataKey == this.selectedItem[0].dataKey);
 
-    //console.log('lineasSolicitud',lineasSolicitud);
+    ////console.log('lineasSolicitud',lineasSolicitud);
 
     let dataPdf: any = {
       diaSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getDate(),
@@ -671,32 +671,32 @@ export class ListadoSolicitudesComponent implements OnInit {
       })
     }
 
-    //console.log('dataPdf',dataPdf);
+    ////console.log('dataPdf',dataPdf);
 
     let templateCompilado = await this.functionsService.compileHandlebarTemplate(templateHTML, dataPdf);
-    //console.log('templateCompilado',templateCompilado);
+    ////console.log('templateCompilado',templateCompilado);
 
     /*let indexImg = templateCompilado.indexOf(`<img src="`);
 
-    console.log('first indexImg',indexImg);
+    //console.log('first indexImg',indexImg);
 
-    console.log('substr indexImg',templateCompilado.substring(indexImg,(indexImg+`<img src="`.length)));
+    //console.log('substr indexImg',templateCompilado.substring(indexImg,(indexImg+`<img src="`.length)));
 
-    console.log('indexOf ultima " del src img ',templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length)))
+    //console.log('indexOf ultima " del src img ',templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length)))
 
-    console.log('path src img ',templateCompilado.substring((indexImg+`<img src="`.length),templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length))))
+    //console.log('path src img ',templateCompilado.substring((indexImg+`<img src="`.length),templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length))))
 
-    console.log('nueeva cadena busqueda src img ',templateCompilado.substring(templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length)),templateCompilado.length))*/
+    //console.log('nueeva cadena busqueda src img ',templateCompilado.substring(templateCompilado.indexOf(`"`,(indexImg+`<img src="`.length)),templateCompilado.length))*/
 
 
     //let imgsTemplate = await this.functionsService.getImgsTemplate(templateCompilado);
 
-    //console.log('imgsTemplate',imgsTemplate);
+    ////console.log('imgsTemplate',imgsTemplate);
 
 
     //let replaceImgHTL = await this.functionsService.replaceImgPathIdImg(imgsTemplate,templateCompilado);
 
-    //console.log('replaceImgHTL',replaceImgHTL);
+    ////console.log('replaceImgHTL',replaceImgHTL);
 
     let propertiesPDF = {
       pageSize: 'LEGAL',
@@ -709,11 +709,11 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     let pdfDefinition = await this.functionsService.convertHTMLtoPDF(templateCompilado, propertiesPDF)
 
-    console.log('pdfDefinition', pdfDefinition);
+    //console.log('pdfDefinition', pdfDefinition);
 
     await this.functionsService.createPDF(pdfDefinition);
 
-    //console.log(templateHTML);
+    ////console.log(templateHTML);
 
 
 
@@ -728,7 +728,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     let historialTurno = infoTurno.detalle_solicitud_turnos_historial
 
-    console.log(infoTurno);
+    //console.log(infoTurno);
 
     let dataPdf: any = {
       diaSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getDate(),
@@ -768,7 +768,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       })
     }
 
-    console.log(dataPdf)
+    //console.log(dataPdf)
 
     let infoUsuario: any = {
       nombre: 'Ronald Albor',
@@ -793,7 +793,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       images
     }
 
-    console.log(pdfDefinition);
+    //console.log(pdfDefinition);
 
     await this.functionsService.createPDF(pdfDefinition);
   }

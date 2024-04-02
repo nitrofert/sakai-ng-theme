@@ -105,7 +105,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
     
     
     this.estadoSeleccionado = this.estados[0]; 
-   ////console.log('this.estadoSeleccionado.name',this.estadoSeleccionado.name);
+   //////console.log('this.estadoSeleccionado.name',this.estadoSeleccionado.name);
 
     if(this.rangoFechas){
       this.filtroRnagoFechas = this.rangoFechas;
@@ -155,7 +155,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    ////////////console.log('changes',changes['rangoFechas'].currentValue)
+    //////////////console.log('changes',changes['rangoFechas'].currentValue)
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.setReporte();
   }
@@ -164,7 +164,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
     
     
     if(event[1]){
-      ////////////console.log(this.filtroRnagoFechas);
+      //////////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       //this.setReporte();
   
@@ -176,7 +176,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
         .subscribe({
             next:async (locaciones)=>{
 
-              ////console.log(locaciones);
+              //////console.log(locaciones);
               await locaciones.map((locacion:any)=>{
                 locacion.label = locacion.locacion
               })
@@ -203,7 +203,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
 
     let infoTurnos = await this.solicitudTurnoService.allInfoTurnos(params);
     
-    ////console.log('infoTurnos',infoTurnos);
+    //////console.log('infoTurnos',infoTurnos);
 
     //return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
 
@@ -216,7 +216,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
 
   async seleccionarEstado(){
     
-    //////console.log(this.locacionSeleccionada);
+    ////////console.log(this.locacionSeleccionada);
     //this.toneladasAdicionalLocaciones =[];
     //await this.setTablaLocacion(this.infoTurnos)
     this.dataTableComprtamientoBodegas.data = [];
@@ -231,11 +231,11 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
 
     let fechaInicio = new Date(this.filtroRnagoFechas[0].toISOString());
     let fechaFinal = new Date(this.filtroRnagoFechas[1].toISOString());
-   ////console.log('fecha inicio filtro',fechaInicio);
-   ////console.log('fecha fin filtro',fechaFinal);
+   //////console.log('fecha inicio filtro',fechaInicio);
+   //////console.log('fecha fin filtro',fechaFinal);
 
     let locacionesTurnos =(await this.functionsService.groupArray( (await this.functionsService.clonObject(this.infoTurnos.map((turno)=>{
-                                                                                                  ////console.log(turno.locacion, turno)
+                                                                                                  //////console.log(turno.locacion, turno)
                                                                                                   return {
                                                                                                     id: this.locaciones.filter(locacion=>locacion.code === turno.locacion).length==0?'':this.locaciones.filter(locacion=>locacion.code === turno.locacion)[0].id,
                                                                                                     code: turno.locacion,
@@ -244,7 +244,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
                                                                                                 })
                                                                   )),'id')).filter(locacion=>locacion.id!='');
 
-   //console.log('locacionesTurnos',locacionesTurnos);
+   ////console.log('locacionesTurnos',locacionesTurnos);
    
     let obectString:string ="";
 
@@ -256,7 +256,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
 
     for(let locacion of locacionesTurnos){
 
-     ////console.log('locacion',locacion.label);
+     //////console.log('locacion',locacion.label);
     
       obectString = `{"locacion":"${locacion.label}"`;
       
@@ -271,11 +271,11 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
                                                                                                       //&& new Date(historial.fecha_accion).getMonth() == new Date(this.filtroRnagoFechas[0].toISOString()).getMonth()
                                                                                                       //&& new Date(historial.fecha_accion).getFullYear() == new Date(this.filtroRnagoFechas[1].toISOString()).getFullYear()
                                                                                                       ));
-      ////console.log('turnosLocacionEstado',turnosLocacionEstado);
+      //////console.log('turnosLocacionEstado',turnosLocacionEstado);
       let dataChartLocacion:any[] =[];
 
       for await(let dia of this.functionsService.dias){
-       ////console.log('dia',dia.id,dia.fullname);
+       //////console.log('dia',dia.id,dia.fullname);
        
         let turnosDia = 0;  
         for await(let turnoLocacionEstado of turnosLocacionEstado){
@@ -283,22 +283,22 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
 
           let lineasHistorialEstadoTurno = turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado === this.estadoSeleccionado.name);
           if(lineasHistorialEstadoTurno.length>0){
-            ////console.log(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado === this.estadoSeleccionado.name));
+            //////console.log(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado === this.estadoSeleccionado.name));
             let historialEstadoTurno = (await this.functionsService.sortArrayObject(lineasHistorialEstadoTurno,'id','DESC'))[0];
             let fechaAccion = new Date(`${historialEstadoTurno.fecha_accion}T00:00:00`);
             let diaAccion =fechaAccion.getDay();
 
             if(dia.id === diaAccion && fechaAccion >= fechaInicio && fechaAccion <= fechaFinal ){
-             ////console.log('historialEstadoTurno',historialEstadoTurno);
-             ////console.log('fecha-accion',fechaAccion);
-             ////console.log('dia-fecha-accion',diaAccion);
-             ////console.log('dia-ciclo',dia.id)
-             ////console.log('coincidencia',dia.id,'=',diaAccion,fechaAccion, '>=', fechaInicio ,fechaAccion, '<=', fechaFinal);
+             //////console.log('historialEstadoTurno',historialEstadoTurno);
+             //////console.log('fecha-accion',fechaAccion);
+             //////console.log('dia-fecha-accion',diaAccion);
+             //////console.log('dia-ciclo',dia.id)
+             //////console.log('coincidencia',dia.id,'=',diaAccion,fechaAccion, '>=', fechaInicio ,fechaAccion, '<=', fechaFinal);
               turnosDia=turnosDia+1;
             }
           }
         }
-       ////console.log('turnosDia',turnosDia);
+       //////console.log('turnosDia',turnosDia);
 
         obectString+= `,"${(dia.fullname).toLowerCase()}":"${turnosDia}"`;
         dataChartLocacion.push(turnosDia);
@@ -308,7 +308,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
           totalTurnos:turnosDia
         });*/
 
-       ////console.log('objectDiasLocion',await this.functionsService.clonObject(objectDiasLocion));
+       //////console.log('objectDiasLocion',await this.functionsService.clonObject(objectDiasLocion));
 
       }
 
@@ -340,7 +340,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
   
     }
 
-    console.log(dataChart);
+    //console.log(dataChart);
     this.dataChart = dataChart;
     this.loading = false;
   }

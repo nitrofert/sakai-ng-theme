@@ -37,7 +37,7 @@ export class DynamicPdfComponent implements OnInit {
     if(this.html){
         let htmlDefinition = htmlToPdfmake(this.html);     
 
-        console.log(htmlDefinition[0]);
+        //console.log(htmlDefinition[0]);
         this.pdfDefinition = {
             content:htmlDefinition[0]
         }
@@ -48,7 +48,7 @@ export class DynamicPdfComponent implements OnInit {
  
 
   createPDF(){
-    console.log(this.pdfDefinition);
+    //console.log(this.pdfDefinition);
 
     if(!this.pdfDefinition){
         this.messageService.add({severity:'error', summary:'Error', detail:'no se ha definido el contenido del PDF'});
