@@ -618,6 +618,11 @@ async concatenarCamposArray(data:any[],camposConcatenar:any[]):Promise<any[]> {
 
   return newArray;
 }
+
+uploadFile(body:any):Observable<any>{
+  const url:string = `${this.api_url}/api/upload-files-s3/upload`;
+  return this.http.post<any[]>(url,body); 
+}
   
 
 }

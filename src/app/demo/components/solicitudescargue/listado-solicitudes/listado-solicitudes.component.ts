@@ -721,14 +721,33 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   async createPDF2() {
 
+    let infoUsuario: any = {
+      nombre: '',
+      cedula: '',
+      cargo: '',
+      celular: '',
+      email: '',
+      firma: ''
+    }
+
     let lineasSolicitud = this.solicitudesExtendida.filter(linea => linea.dataKey == this.selectedItem[0].dataKey);
 
     let infoTurno$ = this.solicitudTurnoService.getTurnosByID(this.selectedItem[0].detalle_solicitudes_turnos_id);
     let infoTurno = await lastValueFrom(infoTurno$);
 
-    let historialTurno = infoTurno.detalle_solicitud_turnos_historial
+    let historialTurno:any[] = infoTurno.detalle_solicitud_turnos_historial;
 
-    //console.log(infoTurno);
+    if(historialTurno.length > 0 && historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 ) {
+      let historialAprobaciones = historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO);
+      infoUsuario.nombre = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.nombrecompleto;
+      infoUsuario.cedula = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.id;
+      //infoUsuario.cargo = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.cargo;
+      infoUsuario.celular = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.numerotelefonico;
+      infoUsuario.email = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.email;
+      //infoUsuario.firma = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.firma;
+    }
+
+    console.log('infoTurno',infoTurno);
 
     let dataPdf: any = {
       diaSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getDate(),
@@ -770,14 +789,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     //console.log(dataPdf)
 
-    let infoUsuario: any = {
-      nombre: 'Ronald Albor',
-      cedula: '8749392374',
-      cargo: 'Desarrollador FullStak',
-      celular: '3108602321',
-      email: 'ralbor@nitrofert.com.co',
-      firma: 'firmabase 64'
-    }
+   
 
     images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
 

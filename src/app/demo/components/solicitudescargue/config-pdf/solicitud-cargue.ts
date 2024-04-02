@@ -105,51 +105,154 @@ export const permissions:any = {
 }
 
 export const content:any = (data:any)=>{
-  let detallProductos:any[] = [];
+ 
+   //Armar el detalle de los productos
+  let detalleProductos:any[] = [];
+  let bodyTableProductos:any[] = [];
+  let headerTableProductos:any ={
+    fila_0:{
+        col1:{
+            text:'LUGAR DE RETIRO DE MERCANCIA',
+            alignment:'center',
+            fontSize:8,
+            blod:true,
+            color:"antiquewhite",
+            fillColor:"green"
+        },
+        col2:{
+            text:'PEDIDO DE VENTA',
+            alignment:'center',
+            fontSize:8,
+            blod:true,
+            color:"antiquewhite",
+            fillColor:"green"
+        },
+        col3:{
+            text:'PRODUCTO (Nombre específico/Grados)',
+            alignment:'center',
+            fontSize:8,
+            blod:true,
+            color:"antiquewhite",
+            fillColor:"green"
+        },
+        col4:{
+            text:'PRESENTACIÓN / ESPECIFICACIONES',
+            alignment:'center',
+            fontSize:8,
+            blod:true,
+            color:"antiquewhite",
+            fillColor:"green"
+        },
+        col5:{
+            text:'CANTIDAD (TONELADAS)',
+            alignment:'center',
+            fontSize:8,
+            blod:true,
+            color:"antiquewhite",
+            fillColor:"green"
+        },
+        col6:{
+            text:'DESTINO DE MERCANCIA',
+            alignment:'center',
+            fontSize:8,
+            blod:true,
+            color:"antiquewhite",
+            fillColor:"green"
+        } 
+    }
+  }
 
-  //Armar el detalle de los productos
-  for(let producto of data.productos){
+  for (let key in headerTableProductos){
+    if (headerTableProductos.hasOwnProperty(key)){
+        let header = headerTableProductos[key];
+        let row = new Array();
+        row.push( header.col1 );
+        row.push( header.col2 );
+        row.push( header.col3 );
+        row.push( header.col4 );
+        row.push( header.col5 );
+        row.push( header.col6 );
+       
+        bodyTableProductos.push(row);
+    }
+  }
 
-    detallProductos.push(
-                    {
-                        text:producto.locacion,
-                        alignment:'center',
-                        fontSize:8,
-                        blod:true,
-                    },
-                    {
-                        text:producto.pedidonum,
-                        alignment:'center',
-                        fontSize:8,
-                        blod:true,
-                    },
-                    {
-                        text:producto.itemname,
-                        alignment:'center',
-                        fontSize:8,
-                        blod:true,
-                    },
-                    {
-                        text:producto.presentacion,
-                        alignment:'center',
-                        fontSize:8,
-                        blod:true,
-                    },
-                    {
-                        text:producto.cantidad,
-                        alignment:'center',
-                        fontSize:8,
-                        blod:true,
-                    },
-                    {
-                        text:producto.destino,
-                        alignment:'center',
-                        fontSize:8,
-                        blod:true,
-                    }
-    );
+  let rows =  data.productos;
+
+  for (let key in rows){
+    if (rows.hasOwnProperty(key)){
+        let producto = rows[key];
+        let row = new Array();
+
+        row.push(
+            {
+                text:producto.locacion,
+                alignment:'center',
+                fontSize:8,
+                blod:false,
+            }
+        );
+
+        row.push(
+        
+            {
+                text:producto.pedidonum,
+                alignment:'center',
+                fontSize:8,
+                blod:false,
+            },
+            
+        );
+    
+        row.push(
+            
+            {
+                text:producto.itemname,
+                alignment:'center',
+                fontSize:8,
+                blod:false,
+            }
+        );
+    
+        row.push(
+            
+            {
+                text:producto.presentacion,
+                alignment:'center',
+                fontSize:8,
+                blod:false,
+            }
+        );
+    
+        row.push(
+            
+            {
+                text:producto.cantidad,
+                alignment:'center',
+                fontSize:8,
+                blod:false,
+            }
+        );
+    
+        row.push(
+            
+            {
+                text:producto.destino,
+                alignment:'center',
+                fontSize:8,
+                blod:false,
+            }
+        );
+
+        bodyTableProductos.push(row);
+    
+    }
 
   }
+ 
+
+
+  
 
   
   return  [
@@ -274,6 +377,7 @@ export const content:any = (data:any)=>{
         },
         //Tabla de información del cleinte
         {
+            id:'table-info-cliente',
             table:{
                 widths: [ '35%','10%','20%','15%','20%' ],
                 body:[
@@ -380,6 +484,7 @@ export const content:any = (data:any)=>{
         },
         // Tabla de funcionario comercial
         {
+            id:'table-info-comercial',
             table:{
                 widths: [ '40%','60%' ],
                
@@ -407,6 +512,7 @@ export const content:any = (data:any)=>{
         },
         // Tabla autorización
         {
+            id:'table-label transportadora',
             table:{
                 widths: [ '100%' ],
                
@@ -427,6 +533,7 @@ export const content:any = (data:any)=>{
         },
         //Tabla de información empresa transportadora, vehiculo y conductor
         {
+            id:'table-info-transportadora',
             table:{
                 widths: [ '25%','10%','10%','20%','15%','20%' ],
                 body:[
@@ -532,6 +639,7 @@ export const content:any = (data:any)=>{
         },
         // Tabla informacion productos
         {
+            id:'table-label-productos',
             table:{
                 widths: [ '100%' ],
                
@@ -552,9 +660,10 @@ export const content:any = (data:any)=>{
         },
         //Tabla de información productos 2
         {
+            id:'table-info-productos',
             table:{
                 widths: [ '25%','10%','20%','10%','10%','25%' ],
-                body:[
+                body:/*[
                     [
                         {
                             text:'LUGAR DE RETIRO DE MERCANCIA',
@@ -609,8 +718,8 @@ export const content:any = (data:any)=>{
 
                         }
                     ],
-                    detallProductos
-                ]
+                    detalleProductos
+                ]*/bodyTableProductos
             },
             margin:[0,5,0,5],
         },
