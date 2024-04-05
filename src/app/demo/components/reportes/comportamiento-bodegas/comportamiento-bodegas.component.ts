@@ -156,6 +156,7 @@ export class ComportamientoBodegasComponent implements  OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges){
     //////////////console.log('changes',changes['rangoFechas'].currentValue)
+    this.loading = true;
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.setReporte();
   }

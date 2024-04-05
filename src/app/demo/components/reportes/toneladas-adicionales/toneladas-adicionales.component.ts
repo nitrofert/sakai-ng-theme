@@ -186,7 +186,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
   async ngOnChanges(changes: SimpleChanges){
     //////console.log('ngOnChanges');
-
+    this.loading = true;
     await this.getLocalidades();
     await this.getDependencias();
     //////////////console.log('changes',changes['rangoFechas'].currentValue)

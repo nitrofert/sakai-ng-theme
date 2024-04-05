@@ -79,6 +79,31 @@
     </div>
 </div>
 
+<div  class="grid">
+	<div class="col-12">
+		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+            <div  class="text-center mb-3"><h1>Detalle Tiempo promedio Locaciones entre {{estadoSeleccionadoInicial.name}}-{{estadoSeleccionadoFinal.name}}</h1></div>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 ">
+                            <app-dynamic-table [dataTable]="dataTableComprtamientoBodegasDetallado.data" 
+                                        [headersTable]="dataTableComprtamientoBodegasDetallado.header"
+                                        
+                                        dataKey="index" 
+                                        [rows]="10" 
+                                        [rowsPerPageOptions]="[10,50,100]" 
+                                        [paginator]="false"
+                                        [selectionMode]="'multiple'"
+                                        [loading]="loading"
+                                        [showBtnExp]="true"
+                                        class="min-w-full"
+                                        nameExport="rpt_novedades">
+                            </app-dynamic-table>
+                        </div>  
+                    </div>
+        </div>
+    </div>
+</div>
+
 
 
 

@@ -51,6 +51,26 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
     colsSum:[]
   };
 
+  dataTableComprtamientoBodegasDetallado:any = {
+    header:[{"locacion":{"label":"Locacion","type":"text","sizeCol":"6rem","align":"center","editable":false},
+             "turno":{"label":"Turno","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "horacita":{"label":"Fecha cita","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "vehiculo":{"label":"Placa","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "conductor":{"label":"Conductor","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "condiciontpt":{"label":"Tipo transporte","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "estado":{"label":"Estado","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "fechaaccion":{"label":"Fecha acción","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "horaaccion":{"label":"Hora acción","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "comentario":{"label":"Comentario","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "tiempoEstado":{"label":"Tiempo","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "horaAcumulada":{"label":"Horas acumulada","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             
+
+           }],
+    data:[],
+    colsSum:[]
+  };
+
   
 
 
@@ -128,6 +148,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges){
     ////////////////console.log('changes',changes['rangoFechas'].currentValue)
+    this.loading = true;
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.getLocaciones();
     //this.setReporte();
@@ -229,6 +250,12 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
   async setReporte():Promise<void>{
 
+
+    const minute = 1000 * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const year = day * 365;
+
     let infoTurnos = await this.getInfoTurnos();
     this.infoTurnos = infoTurnos;
 
@@ -244,7 +271,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
     let infoTurnosEstadosSeleccionados = this.infoTurnos.filter(turno=>turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado === this.estadoSeleccionadoInicial.name ).length>0
                                                                       && turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado  === this.estadoSeleccionadoFinal.name).length>0                                              
                                                               );
-    //console.log('infoTurnosEstadosSeleccionados',infoTurnosEstadosSeleccionados);
+    console.log('infoTurnosEstadosSeleccionados',infoTurnosEstadosSeleccionados);
 
     let locacionesTurnos =(await this.functionsService.groupArray( (await this.functionsService.clonObject(infoTurnosEstadosSeleccionados.map((turno)=>{
                                                                                                   ////////console.log(turno.locacion, turno)
@@ -262,6 +289,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
     
 
+    let detalle_historial_turnos:any[] = [];
 
     for(let locacion of locacionesTurnos){
 
@@ -276,7 +304,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
                                                                                                       //&& new Date(historial.fecha_accion).getMonth() == new Date(this.filtroRnagoFechas[0].toISOString()).getMonth()
                                                                                                       //&& new Date(historial.fecha_accion).getFullYear() == new Date(this.filtroRnagoFechas[1].toISOString()).getFullYear()
                                                                                                       ));
-      //////console.log('turnosLocacionEstado',turnosLocacionEstado);
+      console.log('turnosLocacionEstado',turnosLocacionEstado);
       let turnosValidados = 0; 
       let turnosNoValidados = 0; 
       let horas = 0 
@@ -289,12 +317,65 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
         //////console.log('lineasHistorialEstadoTurno',lineasHistorialEstadoTurno);
 
         let historialEstadoInicial = await this.functionsService.sortArrayObject(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  === this.estadoSeleccionadoInicial.name ),'id', 'ASC');
-
-        ////console.log('historialEstadoInicial',historialEstadoInicial);
+        //console.log('historialEstadoInicial',historialEstadoInicial);
         let historialEstadoFinal = await this.functionsService.sortArrayObject(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  ===  this.estadoSeleccionadoFinal.name),'id', 'DESC');
-        ////console.log('historialEstadoFinal',historialEstadoFinal);
+        //console.log('historialEstadoFinal',historialEstadoFinal);
 
         if(historialEstadoInicial.length>0 && historialEstadoFinal.length>0) {
+          let horaAcumulada = 0;
+          //console.log(`Historial locacion ${locacion.code} turno ${turnoLocacionEstado.id}:`,turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { id: any; })=>historial.id >= historialEstadoInicial[0].id && historial.id <= historialEstadoFinal[0].id ));
+          let historialEntreEstados = turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { id: any; })=>historial.id >= historialEstadoInicial[0].id && historial.id <= historialEstadoFinal[0].id );
+          historialEntreEstados.map((historial:any, index:number, array:any[])=>{
+
+            console.log('index',index);
+            console.log('array',array);
+            let tiempoEstado:string ="";
+
+            if(index !=0){
+              let horaInicialEstados:any  = array[index-1].hora_accion==null?"00:00:00":array[index-1].hora_accion;
+              let horaFinalEstados:any  = array[index].hora_accion==null?"00:00:00":array[index].hora_accion;
+
+              let fechaInicialAccionEstados = new Date(new Date(`${array[index-1].fecha_accion}T00:00:00`).setHours(horaInicialEstados.split(':')[0],horaInicialEstados.split(':')[1],horaInicialEstados.split(':')[2]));
+              let fechaFinalAccionEstados = new Date(new Date(`${array[index].fecha_accion}T00:00:00`).setHours(horaFinalEstados.split(':')[0],horaFinalEstados.split(':')[1],horaFinalEstados.split(':')[2]));
+
+              let diferenciaFechasEstados = fechaFinalAccionEstados.getTime() - fechaInicialAccionEstados.getTime();
+            
+              let diferenciaFechaHorasEstados = Math.round(diferenciaFechasEstados/(1000*60*60));
+
+              console.log('Años',Math.round(diferenciaFechasEstados/(year)))
+              console.log('dias',Math.round(diferenciaFechasEstados/(day)))
+              console.log('horas',Math.round(diferenciaFechasEstados/(hour)))
+              console.log('minutos',Math.round(diferenciaFechasEstados/(minute)))
+              console.log('segundos',Math.round(diferenciaFechasEstados/(1000)))
+
+              //tiempoEstado = `${Math.round(diferenciaFechasEstados/(hour))}:${Math.round(diferenciaFechasEstados/(minute))}:${Math.round(diferenciaFechasEstados/(1000))}`;
+              
+              tiempoEstado = Math.round(diferenciaFechasEstados/(hour))!=0?`${Math.round(diferenciaFechasEstados/(hour))} horas`: Math.round(diferenciaFechasEstados/(minute))!=0?`${Math.round(diferenciaFechasEstados/(minute))} min ${Math.round(diferenciaFechasEstados/(1000))} seg`:`${Math.round(diferenciaFechasEstados/(1000))} seg`;
+
+              
+              //horaAcumulada = horaAcumulada+(Math.round(diferenciaFechasEstados/(hour))+(Math.round(diferenciaFechasEstados/(minute))/60)+(Math.round(diferenciaFechasEstados/(1000))/3600))
+              horaAcumulada = horaAcumulada+(Math.round(diferenciaFechasEstados/(hour))!=0?Math.round(diferenciaFechasEstados/(hour)):(Math.round(diferenciaFechasEstados/(minute))/60)+(Math.round(diferenciaFechasEstados/(1000))/3600))
+            }
+
+            detalle_historial_turnos.push({
+              locacion:locacion.label,
+              turno:turnoLocacionEstado.id,
+              horacita:turnoLocacionEstado.fechacita,
+              vehiculo:turnoLocacionEstado.vehiculo.placa,
+              conductor:turnoLocacionEstado.conductor.nombre,
+              condiciontpt:turnoLocacionEstado.condiciontpt,
+              estado:historial.estado,
+              fechaaccion:historial.fecha_accion,
+              horaaccion:historial.hora_accion,
+              comentario:this.functionsService.bufferToString(historial.comentario),
+              tiempoEstado,
+              horaAcumulada,
+
+            })
+
+
+
+          })
           ////////console.log(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado === this.estadoSeleccionado.name));
 
           //let historialEstadoTurno = await this.functionsService.groupArray(await this.functionsService.sortArrayObject(lineasHistorialEstadoTurno,'id','DESC'),'estado');
@@ -335,6 +416,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
             turnosDia=turnosDia+1;
           }
           */
+
         }else{
           turnosNoValidados++;
         }
@@ -343,6 +425,8 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
       obectString+= `,"totalTurnos":"${turnosValidados}","totalHoras":"${horas}","tiempo":"${horas/turnosValidados}"}`;
       this.dataTableComprtamientoBodegas.data.push(JSON.parse(obectString));
     }
+    console.log('detalle_historial_turnos',detalle_historial_turnos);
+    this.dataTableComprtamientoBodegasDetallado.data = detalle_historial_turnos;
     this.loading = false;
   }
 
