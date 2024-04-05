@@ -237,7 +237,7 @@ fileTmp:any;
 uploadedFiles: any[] = [];
 filesToUpload: any[] = [];
 
-//@ViewChild('uploaderFiles') uploaderFiles!:ElementRef;
+@ViewChild('uploaderFiles') uploaderFiles!:ElementRef;
 
 
 
@@ -1529,13 +1529,13 @@ async validarHoraCargue():Promise<boolean>{
             //////// ////console.log(data);
             //Validar adjuntos para el estado cargado
 
-            //if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0){
-            //  this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
-            //  this.cambioEstado = false;
+            if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0){
+              this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
+              this.cambioEstado = false;
               
-            //}else{
+            }else{
               this.updateTurno(data);
-            //}
+            }
             
   
         },

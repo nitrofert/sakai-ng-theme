@@ -454,21 +454,15 @@
 
 
 <!-- Dialog cambio estado -->
-<!--<p-dialog [header]="tituloEstado" 
-          [(visible)]="formEstadoTurno" 
-          [modal]="true" 
-          [style]="{width: '50vw'}" 
-          [draggable]="false" 
-          [resizable]="false"
-          [maximizable]="true"
-          (onHide)="clearUploader(uploaderFiles)">-->
 <p-dialog [header]="tituloEstado" 
           [(visible)]="formEstadoTurno" 
           [modal]="true" 
           [style]="{width: '50vw'}" 
           [draggable]="false" 
           [resizable]="false"
-          [maximizable]="true">
+          [maximizable]="true"
+          (onHide)="clearUploader(uploaderFiles)">
+
 
             <div class="grid">
                 <div class="col-12">
@@ -556,7 +550,7 @@
                                 </span>
                             </div>
 
-                        <!--
+                        
                             <div class="field col-12 ">
                                 <label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>
                                 <p-fileUpload #uploaderFiles   name="demo[]" 
@@ -580,7 +574,7 @@
                                     </ng-template>
                                 </p-fileUpload>
                             </div>
-                        -->
+                        
                         </div>
                     </div>
                 </div>
