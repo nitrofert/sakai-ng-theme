@@ -15,7 +15,7 @@ import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
 import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 import { lastValueFrom } from 'rxjs';
-import { header, images, content, footer, permissions } from '../config-pdf/solicitud-cargue'
+import { PdfSolicitudCargue } from '../config-pdf/solicitud-cargue'
 
 @Component({
   selector: 'app-listado-solicitudes',
@@ -53,6 +53,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   showBtnEdit: boolean = false;
   showBtnExp: boolean = false;
   showBtnDelete: boolean = false;
+  showBtnPdf: boolean = false;
   infoUsuario!: any;
 
 
@@ -156,7 +157,8 @@ export class ListadoSolicitudesComponent implements OnInit {
     public functionsService: FunctionsService,
     private sB1SLService: SB1SLService,
     private localidadesService: LocalidadesService,
-    private dependenciasService: DependenciasService) { }
+    private dependenciasService: DependenciasService,
+    private pdfSolicitudCargue:PdfSolicitudCargue) { }
 
 
 
@@ -199,6 +201,7 @@ export class ListadoSolicitudesComponent implements OnInit {
           this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'actualizar').valor;
           this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'exportar').valor;
           this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'borrar').valor;
+          this.showBtnPdf = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'crearPdf').valor;
 
 
           this.infoUsuario = await this.usuariosService.infoUsuario();
@@ -721,6 +724,11 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   async createPDF2() {
 
+
+    console.log('orden seleccionada',this.selectedItem[0])
+
+    this.pdfSolicitudCargue.generarPDF(this.selectedItem[0]);
+    /*
     let infoUsuario: any = {
       nombre: '',
       cedula: '',
@@ -730,84 +738,97 @@ export class ListadoSolicitudesComponent implements OnInit {
       firma: ''
     }
 
-    let lineasSolicitud = this.solicitudesExtendida.filter(linea => linea.dataKey == this.selectedItem[0].dataKey);
+    let lineasSolicitud = this.solicitudesExtendida.filter(linea => linea.dataKey == this.selectedItem[0].dataKey && this.selectedItem[0].detalle_solicitudes_turnos_pedidos_cantidad>0);
 
-    let infoTurno$ = this.solicitudTurnoService.getTurnosByID(this.selectedItem[0].detalle_solicitudes_turnos_id);
-    let infoTurno = await lastValueFrom(infoTurno$);
+    if(lineasSolicitud.length>0){
 
-    let historialTurno:any[] = infoTurno.detalle_solicitud_turnos_historial;
+      let infoTurno$ = this.solicitudTurnoService.getTurnosByID(this.selectedItem[0].detalle_solicitudes_turnos_id);
+      let infoTurno = await lastValueFrom(infoTurno$);
+      console.log('infoTurno',infoTurno);
+      let historialTurno:any[] = infoTurno.detalle_solicitud_turnos_historial;
+  
+      if(historialTurno.length > 0 && historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 ) {
+        let historialAprobaciones = historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO);
+        infoUsuario.nombre = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.nombrecompleto;
+        infoUsuario.cedula = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.id;
+        //infoUsuario.cargo = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.cargo;
+        infoUsuario.celular = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.numerotelefonico;
+        infoUsuario.email = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.email;
+        //infoUsuario.firma = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.firma;
+      }
+  
+      
+  
+      let dataPdf: any = {
+        diaSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getDate(),
+        mesSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getMonth() + 1,
+        anioSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getFullYear(),
+        cliente: {
+          nombre: this.selectedItem[0].cliente_CardName,
+          nit: this.selectedItem[0].cliente_FederalTaxID,
+          contacto: '',
+          contactotelefono: '',
+          contatoemail: ''
+        },
+        comercial: {
+          nombre: this.selectedItem[0].detalle_solicitudes_turnos_pedidos_vendedor
+        },
+        trasnportadora: {
+          nombre: this.selectedItem[0].transportadoras_nombre,
+          nit: this.selectedItem[0].transportadoras_nit
+        },
+        vehiculo: {
+          placa: this.selectedItem[0].vehiculos_placa
+        },
+        conductor: {
+          nombre: this.selectedItem[0].conductores_nombre,
+          cedula: this.selectedItem[0].conductores_cedula,
+          telefono: this.selectedItem[0].conductores_numerocelular
+        },
+        productos: lineasSolicitud.map((linea) => {
+          return {
+            locacion: `${linea.locacion_locacion} -- Dirección: ${linea.locacion_direccion}`,
+            pedidonum: linea.detalle_solicitudes_turnos_pedidos_pedidonum,
+            itemname: linea.detalle_solicitudes_turnos_pedidos_itemname,
+            presentacion: '',
+            cantidad: linea.detalle_solicitudes_turnos_pedidos_cantidad,
+            destino: `${linea.detalle_solicitudes_turnos_pedidos_municipioentrega} ${linea.detalle_solicitudes_turnos_pedidos_lugarentrega}`
+          }
+        })
+      }
+  
+      //console.log(dataPdf)
+  
+     
+  
+      images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
+  
+      let pdfDefinition = {
+        pageSize: 'LEGAL',
+        pageOrientation: 'landscape',
+        pageMargins: [40, 80, 40, 100],
+        permissions,
+        header,
+  
+        content: content(dataPdf),
+        footer: footer(infoUsuario),
+        images
+      }
+  
+      //console.log(pdfDefinition);
+  
+      await this.functionsService.createPDF(pdfDefinition);
+  
+      this.selectedItem = [];
 
-    if(historialTurno.length > 0 && historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 ) {
-      let historialAprobaciones = historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO);
-      infoUsuario.nombre = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.nombrecompleto;
-      infoUsuario.cedula = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.id;
-      //infoUsuario.cargo = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.cargo;
-      infoUsuario.celular = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.numerotelefonico;
-      infoUsuario.email = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.email;
-      //infoUsuario.firma = historialAprobaciones[historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length-1].usuario.firma;
+    }else{
+      this.messageService.add({ severity: 'error', summary: '!Error¡', detail: `La orden de cargue seleccionada no posee lineas con cantidad a cargar. Verifique que la orden no este cancelada.` });
     }
+    */
 
-    console.log('infoTurno',infoTurno);
-
-    let dataPdf: any = {
-      diaSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getDate(),
-      mesSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getMonth() + 1,
-      anioSolicitud: new Date(this.selectedItem[0].solicitudes_turno_created_at).getFullYear(),
-      cliente: {
-        nombre: this.selectedItem[0].cliente_CardName,
-        nit: this.selectedItem[0].cliente_FederalTaxID,
-        contacto: '',
-        contactotelefono: '',
-        contatoemail: ''
-      },
-      comercial: {
-        nombre: this.selectedItem[0].detalle_solicitudes_turnos_pedidos_vendedor
-      },
-      trasnportadora: {
-        nombre: this.selectedItem[0].transportadoras_nombre,
-        nit: this.selectedItem[0].transportadoras_nit
-      },
-      vehiculo: {
-        placa: this.selectedItem[0].vehiculos_placa
-      },
-      conductor: {
-        nombre: this.selectedItem[0].conductores_nombre,
-        cedula: this.selectedItem[0].conductores_cedula,
-        telefono: this.selectedItem[0].conductores_numerocelular
-      },
-      productos: lineasSolicitud.map((linea) => {
-        return {
-          locacion: `${linea.locacion_locacion} -- Dirección: ${linea.locacion_direccion}`,
-          pedidonum: linea.detalle_solicitudes_turnos_pedidos_pedidonum,
-          itemname: linea.detalle_solicitudes_turnos_pedidos_itemname,
-          presentacion: '',
-          cantidad: linea.detalle_solicitudes_turnos_pedidos_cantidad,
-          destino: `${linea.detalle_solicitudes_turnos_pedidos_municipioentrega} ${linea.detalle_solicitudes_turnos_pedidos_lugarentrega}`
-        }
-      })
-    }
-
-    //console.log(dataPdf)
+    this.selectedItem = [];
 
    
-
-    images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
-
-    let pdfDefinition = {
-      pageSize: 'LEGAL',
-      pageOrientation: 'landscape',
-      pageMargins: [40, 80, 40, 100],
-      permissions,
-      header,
-
-      content: content(dataPdf),
-      footer: footer(infoUsuario),
-      images
-    }
-
-    //console.log(pdfDefinition);
-
-    await this.functionsService.createPDF(pdfDefinition);
   }
 
 

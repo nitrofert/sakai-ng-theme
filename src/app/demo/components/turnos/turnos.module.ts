@@ -25,6 +25,7 @@ import { VistaEstadosTurnoComponent } from './vista-estados-turno/vista-estados-
 import { DashboardComponentTurno } from './dashboard/dashboard.component';
 import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynamic-charts.module';
 import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
+import { PdfSolicitudCargue } from '../solicitudescargue/config-pdf/solicitud-cargue';
 
 
 
@@ -56,6 +57,7 @@ import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.
              TipoVehiculosService, 
              ConductoresService,
              TransportadorasService,
-             NovedadesService]
+             NovedadesService,
+             PdfSolicitudCargue]
 })
 export class TurnosModule { }

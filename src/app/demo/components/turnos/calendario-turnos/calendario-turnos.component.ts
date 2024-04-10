@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, DateSelectArg, EventApi, EventClickArg, EventSourceInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -15,7 +15,9 @@ import { Router } from '@angular/router';
 
 import esLocale from '@fullcalendar/core/locales/es'
 import { FunctionsService } from 'src/app/demo/service/functions.service';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
+import { Table } from 'primeng/table';
+import {   PdfSolicitudCargue } from '../../solicitudescargue/config-pdf/solicitud-cargue';
 
 @Component({
   selector: 'app-calendario-turnos',
@@ -46,6 +48,8 @@ export class CalendarioTurnosComponent implements OnInit {
   hoy:any ='';
   currentDay!:Date[];
 
+  tablaTurnosLocalidad:any[] = []
+
   turnosLocalidad:any[]=[];
   turnosLocalidad$!: Observable<any[]>;
 
@@ -65,7 +69,36 @@ export class CalendarioTurnosComponent implements OnInit {
   filtroRnagoFechas:Date[] = [this.primerDia,this.ultimoDia];
 
 
+  columnsTable: number = 11;
+  dataKey: string = "dataKey";
+  loading: boolean = true;
 
+  globalFilterFields: any[] = ['id',
+    'label_cliente',
+    'detalle_solicitudes_turnos_id',
+    'detalle_solicitudes_turnos_estado',
+    'locacion_label',
+    'transportadoras_nombre',
+    'vehiculos_placa',
+    'tipovehiculos_tipo',
+    'label_conductor',
+    'telefonos_conductor',
+    'detalle_solicitudes_turnos_pedidos_pedidonum',
+    'material',
+    'detalle_solicitudes_turnos_pedidos_cantidad',
+    'detalle_solicitudes_turnos_pedidos_bodega',
+    'remision',
+    'lugarentrega'
+  ];
+  selectionMode: string = "multiple";
+  selectedItem: any[] = [];
+  showBtnPdf: boolean = false;
+  showBtnExp: boolean = false;
+  showBtnAdmin:boolean = true;
+
+  @ViewChild('filter') filter!: ElementRef;
+
+  filtroLocaciones: any[] = [];
  
   
 
@@ -78,7 +111,8 @@ export class CalendarioTurnosComponent implements OnInit {
     public dialogService: DialogService,
     public usuariosService:UsuarioService,
     private router:Router,
-    private functionsService:FunctionsService
+    private functionsService:FunctionsService,
+    private pdfSolicitudCargue:PdfSolicitudCargue
 
     ){}
 
@@ -113,11 +147,13 @@ export class CalendarioTurnosComponent implements OnInit {
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
               ////////////////////////// //////////console.log(this.multiplesClientes);
   
-             
+             this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
+             this.showBtnPdf = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'crearPdf').valor;
+             //this.showBtnAdmin = await this.usuariosService.permisoModuloAccion('/portal/turnos','Aprobar turno');
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
-              this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
+              
               this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
               */
          
@@ -392,7 +428,7 @@ export class CalendarioTurnosComponent implements OnInit {
   seleccionarLocalidad(localidad:any){
 
     this.getTurnosPorLocalidad(localidad.code)
-   //////////// //////////console.log(localidad);
+  console.log(this.localidadSeleccionada);
     
     //this.getCalendar();
     //this.showCalendar = true;
@@ -421,7 +457,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad,this.filtroRnagoFechas[0],this.filtroRnagoFechas[1])
         .subscribe({
               next:async (turnosLocalidad)=>{
-                  ////console.log(turnosLocalidad);
+                  
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                     this.displayModal = false;
@@ -436,6 +472,9 @@ export class CalendarioTurnosComponent implements OnInit {
 
 
                   this.turnosLocalidad = turnosLocalidad;
+
+                  this.tablaTurnosLocalidad = await this.setTablaTurnosLocalidad(await this.functionsService.clonObject(turnosLocalidad));
+
                   //this.getCalendar();
                   this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
                   //// //////////console.log(this.boxEstados);
@@ -479,6 +518,72 @@ export class CalendarioTurnosComponent implements OnInit {
         });*/
   }
 
+  async setTablaTurnosLocalidad(turnos:any): Promise<any>{
+
+    console.log('turnos',turnos);
+    let turnosLocalidad:any[] = [];
+
+    await turnos.forEach(async (turno: {
+      estado: string;
+      horacita: string | number | Date;
+      horacita2: string | number | Date;
+      locacion_label: any;
+      filtroLocacion: { name: any; };
+      detalle_solicitudes_turnos_fechacita: Date;
+      solicitudes_turno_created_at: Date;
+      detalle_solicitudes_turnos_horacita: Date;
+      detalle_solicitudes_turnos_horacita2: Date;
+      detalle_solicitudes_turnos_estado: string;
+      detalle_solicitud_turnos_pedido:any;
+      bgColor: string;
+      txtColor: string;
+      id: number;
+      vehiculo:any;
+      solicitud:any
+    }) => {
+
+
+
+      //turno.solicitudes_turno_created_at = new Date(turno.solicitudes_turno_created_at);
+      turno.detalle_solicitudes_turnos_fechacita = new Date(turno.horacita);
+      turno.detalle_solicitudes_turnos_horacita = new Date(turno.horacita);
+      let horacita = new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false });
+      let hoy = new Date();
+      hoy.setHours(parseInt(horacita.split(":")[0]), parseInt(horacita.split(":")[1]), parseInt(horacita.split(":")[2]));
+      turno.horacita2 = hoy;
+      //////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+      if (this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado)) {
+        turno.bgColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).backgroundColor;
+        turno.txtColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).textColor;
+      } else {
+        ////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+        turno.bgColor = 'indigo-50';
+        turno.txtColor = 'primary-900';
+      }
+
+      let clientesTurno = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'CardCode',[{cantidad:0}]);
+
+      for(let clienteTurno of clientesTurno){
+        let lineaTurno = await this.functionsService.clonObject(turno);
+        lineaTurno.label_cliente = clienteTurno.CardName;
+        lineaTurno.CardCode = clienteTurno.CardCode;
+        lineaTurno.cantidad = clienteTurno.cantidad;
+        lineaTurno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.placa}-${clienteTurno.CardCode}`;
+
+        turnosLocalidad.push(lineaTurno);
+      }
+      
+    })
+
+    //turnosLocalidad = await this.functionsService.sortArrayObject(turnos,'id','DESC')
+
+    this.loading = false
+
+    console.log('turnosLocalidad',turnosLocalidad)
+
+    return turnosLocalidad;
+  }
+
   async setBoxEstadosDate(date:Date, estados:any, turnos:any):Promise<any>{
     let boxEstados:any[] = [];
 
@@ -497,11 +602,11 @@ export class CalendarioTurnosComponent implements OnInit {
     return boxEstados;
   }
 
-  filtrarLocalidad(event:any){
-    this.localidadesFiltradas = this.filter(event,this.localidades);
+  async filtrarLocalidad(event:any){
+    this.localidadesFiltradas = await this.functionsService.filter(event,this.localidades);
   }
 
-  filter(event: any, arrayFiltrar:any[]) {
+  /*filter(event: any, arrayFiltrar:any[]) {
 
     //////////////// //////////console.log((arrayFiltrar);
     const filtered: any[] = [];
@@ -513,7 +618,7 @@ export class CalendarioTurnosComponent implements OnInit {
         }
     }
     return filtered;
-  }
+  }*/
 
   handleDateSelect(selectInfo: DateSelectArg) {
     /*const title = prompt('Please enter a new title for your event');
@@ -585,6 +690,111 @@ export class CalendarioTurnosComponent implements OnInit {
     
     
   
+  }
+
+  
+
+  onGlobalFilter(table: Table, event: Event) {
+    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.filter.nativeElement.value = '';
+  }
+  async createPDF2() {
+
+    
+
+    let lineasSolicitud = this.selectedItem[0].detalle_solicitud_turnos_pedido;
+
+    console.log('orden seleccionada',this.selectedItem[0])
+
+    this.pdfSolicitudCargue.generarPDF(this.selectedItem[0]);
+
+    this.selectedItem = [];
+  }
+
+  async exportExcel() {
+
+    let fields = {
+      detalle_solicitudes_turnos_estado: 'Estado Turno',
+      locacion_locacion: 'Locacion',
+      detalle_solicitudes_turnos_fechacita: 'Fecha Turno',
+      detalle_solicitudes_turnos_horacita: 'Hora Turno',
+      detalle_solicitudes_turnos_id: 'Turno',
+      detalle_solicitudes_turnos_pedidos_pedidonum: 'Pedido',
+      cliente_CardCode: 'Código Cliente',
+      cliente_CardName: 'Cliente',
+      cliente_FederalTaxID: 'Nit',
+      detalle_solicitudes_turnos_pedidos_itemcode: 'Código Item',
+      detalle_solicitudes_turnos_pedidos_itemname: 'Descripción Item',
+      detalle_solicitudes_turnos_pedidos_tipoproducto: 'Tipo Item',
+      detalle_solicitudes_turnos_pedidos_cantidad: 'Cantidad',
+      detalle_solicitudes_turnos_pedidos_dependencia_label: 'Dependencia',
+      detalle_solicitudes_turnos_pedidos_localidad_label: 'Localidad',
+      detalle_solicitudes_turnos_pedidos_bodega: 'Bodega',
+      transportadoras_nombre: 'Transportadora',
+      vehiculos_placa: 'Placa',
+      conductores_nombre: 'Conductor',
+      conductores_numerocelular: 'Télefono Conductor',
+      detalle_solicitudes_turnos_condiciontpt: 'Condición de transporte',
+      lugarentrega: 'Lugar Entrega',
+      remision: 'Remisión'
+    };
+
+    let newData = await this.functionsService.extraerCampos(this.turnosLocalidad, fields);
+
+    await this.functionsService.exportarXLS(newData, 'Solicitudes de cargue');
+
+    /*import("xlsx").then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(this.solicitudesExtendida);
+        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, `Solicitudes de cargue`);
+    });*/
+  }
+
+  gestionarSolicitud(){
+    //console.log(this.selectedItem);
+    this.confirmationService.confirm({
+      message: `Esta seguro de gestionar el turno No. ${this.selectedItem[0].id} ?`,
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+
+        const ref = this.dialogService.open(FormTurnoComponent, {
+          data: {
+              id: parseInt(this.selectedItem[0].id)
+          },
+          header: `Orden de cargue: ${this.selectedItem[0].id}` ,
+          width: '70%',
+          height:'auto',
+          contentStyle: {"overflow": "auto"},
+          maximizable:true, 
+        });
+    
+        ref.onClose.subscribe(() => {
+          //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+          //this.getCalendar();
+          //////////// //////////console.log(("Refresh calendar");
+          this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+          this.selectedItem=[];
+        });
+
+      },
+      
+        reject: (type: any) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+                break;
+                case ConfirmEventType.CANCEL:
+                    //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+                break;
+            }
+        }
+      });
   }
 
     
