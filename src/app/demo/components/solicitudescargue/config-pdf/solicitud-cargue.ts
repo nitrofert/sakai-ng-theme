@@ -1884,8 +1884,8 @@ export class PdfSolicitudCargue {
 
         let dataPdf: any = {
             diaSolicitud: new Date(infoTurno.solicitud.createdAt).getDate(),
-            mesSolicitud: new Date(infoTurno.solicitud).getMonth() + 1,
-            anioSolicitud: new Date(infoTurno.solicitud).getFullYear(),
+            mesSolicitud: new Date(infoTurno.solicitud.createdAt).getMonth() + 1,
+            anioSolicitud: new Date(infoTurno.solicitud.createdAt).getFullYear(),
             cliente,
             comercial,
             trasnportadora,
