@@ -237,7 +237,9 @@ fileTmp:any;
 uploadedFiles: any[] = [];
 filesToUpload: any[] = [];
 
-//@ViewChild('uploaderFiles') uploaderFiles!:ElementRef;
+uploadActivo:boolean = true;
+
+@ViewChild('uploaderFiles') uploaderFiles!:ElementRef;
 
 
 
@@ -796,7 +798,7 @@ filesToUpload: any[] = [];
         'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,field:'comprometida'},
         'cantidadbodega': {label:'Cantidad en bodega',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false,field:'cantidadbodega'},
         'disponible': {label:'Disponible para cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false,field:'disponible'},
-        'lugarentrega':{label:'Lugar entrega',type:'text', sizeCol:'8rem', align:'left', editable:false,field:'lugarentrega'},
+        'lugarentrega':{label:'Lugar entrega',type:'text', sizeCol:'8rem', align:'left', editable:false,field:'lugarentrega',longText:30},
         
 
         //'remision':{label:'# Remision',type:'text', sizeCol:'8rem', align:'left', editable:false}, 
@@ -1528,14 +1530,15 @@ async validarHoraCargue():Promise<boolean>{
             let data:any = await this.configDataTurno();
             //////// ////console.log(data);
             //Validar adjuntos para el estado cargado
+             
 
-            //if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0){
-            //  this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
-            //  this.cambioEstado = false;
+            if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0 && this.uploadActivo){
+              this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
+               this.cambioEstado = false;
               
-            //}else{
+            }else{
               this.updateTurno(data);
-            //}
+            }
             
   
         },
@@ -1694,108 +1697,110 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   updateTurno(data:any){
+
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
-              .subscribe({
-                    next:async (turno)=>{
-                        console.log("turno actualizado",turno);
-                        
-                        if(this.filesToUpload.length > 0){
-                          for(let anexo of this.filesToUpload){
-                            let body = new FormData();
-                            body.append('file', anexo.file, anexo.file.name);
-                            body.append('entidad', 'turnos');
-                            body.append('id_relacion', turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].id);
-                            body.append('proceso', turno.estado);
-                            body.append('nombre', anexo.file.name);
+      .subscribe({
+            next:async (turno)=>{
+                console.log("turno actualizado",turno);
+                
+                if(this.filesToUpload.length > 0 && this.uploadActivo){
+                  for(let anexo of this.filesToUpload){
+                    let body = new FormData();
+                    body.append('file', anexo.file, anexo.file.name);
+                    body.append('entidad', 'turnos');
+                    body.append('id_relacion', turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].id);
+                    body.append('proceso', turno.estado);
+                    body.append('nombre', anexo.file.name);
 
-                            this.functionsService.uploadFile(body)
-                                .subscribe({
-                                  next:(result)=>{
-                                    console.log('Upload ok',result);
-                                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
-                                  },
-                                  error:(err)=>{
-                                    this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
-                                  }
-                                })
+                    this.functionsService.uploadFile(body)
+                        .subscribe({
+                          next:(result)=>{
+                            console.log('Upload ok',result);
+                            this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
+                          },
+                          error:(err)=>{
+                            this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
                           }
-                          
-                        }
+                        })
+                  }
+                  
+                }
 
-                        this.pedidosTurno.map((pedido)=>{
-                          pedido.lineaUpdate = {update:false, create:false};
-                          
-                        });
+                this.pedidosTurno.map((pedido)=>{
+                  pedido.lineaUpdate = {update:false, create:false};
+                  
+                });
 
-                        this.novedadesSeleccionadas = [];
+                this.novedadesSeleccionadas = [];
 
-                        if(this.updateModulo){
-                          this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
-                        }
+                if(this.updateModulo){
+                  this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
+                }
 
-                        this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
-                        this.displayModal = false;
-                        this.loadingCargue = false;
-                        this.formEstadoTurno = false;
-                        this.estado = turno.estado
+                this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
+                this.displayModal = false;
+                this.loadingCargue = false;
+                this.formEstadoTurno = false;
+                this.estado = turno.estado
 
-                        if(turno.estado===this.estadosTurno.VALINVENTARIO){
+                if(turno.estado===this.estadosTurno.VALINVENTARIO){
+                    
+
+                    let newEstado:any = {
+                      historial : {
+                                    estado:this.estadosTurno.SOLICITADO,
+                                    fechaaccion:this.fechaaccion,
+                                    horaaccion:this.horaaccion,
+                                    comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`
+                                  }
+                    };
+
+                    this.solicitudTurnoService.updateInfoTruno(this.turnoId,newEstado)
+                    .subscribe({
+                          next:async (turno)=>{
+                            this.estado = turno.estado
                             
+                          },  
+                          error:(err)=> {
+                            this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                              console.error(err);
+                              this.displayModal = false;
+                              this.loadingCargue = false;
+                              
+                          }
+                    });
+                }
 
-                            let newEstado:any = {
-                              historial : {
-                                            estado:this.estadosTurno.SOLICITADO,
-                                            fechaaccion:this.fechaaccion,
-                                            horaaccion:this.horaaccion,
-                                            comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`
-                                          }
-                            };
+                this.configTablePedidosAlmacenCliente();
 
-                            this.solicitudTurnoService.updateInfoTruno(this.turnoId,newEstado)
-                            .subscribe({
-                                  next:async (turno)=>{
-                                    this.estado = turno.estado
-                                   
-                                  },  
-                                  error:(err)=> {
-                                    this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                                      console.error(err);
-                                      this.displayModal = false;
-                                      this.loadingCargue = false;
-                                      
-                                  }
-                            });
+                this.configSplitButton(this.estado,this.permisosModulo);
+
+
+                this.solicitudTurnoService.sendNotification(turno.id)
+                    .subscribe({
+                        next:(result)=>{
+                          if(result){
+                            this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${turno.id}.`});
+                          }
+                        },
+                        error:(err)=>{
+                          console.error(err);
+                          this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
                         }
 
-                        this.configTablePedidosAlmacenCliente();
+                    });
+              
+
+            },
+            error:(err)=> {
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                console.error(err);
+                this.displayModal = false;
+                this.loadingCargue = false;
+                
+            }
+      });
       
-                        this.configSplitButton(this.estado,this.permisosModulo);
-
-
-                        this.solicitudTurnoService.sendNotification(turno.id)
-                            .subscribe({
-                                next:(result)=>{
-                                  if(result){
-                                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${turno.id}.`});
-                                  }
-                                },
-                                error:(err)=>{
-                                  console.error(err);
-                                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                                }
-
-                            });
-                      
-
-                    },
-                    error:(err)=> {
-                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                        console.error(err);
-                        this.displayModal = false;
-                        this.loadingCargue = false;
-                        
-                    }
-              });
               
   }
 
@@ -3162,13 +3167,13 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   clearUploader(uploaderFiles: FileUpload){
-    uploaderFiles.clear();
+    //uploaderFiles.clear();
     this.filesToUpload = [];
   }
 
   removeFile($event:any,uploaderFiles: FileUpload){
       console.log('remove',$event,)
-      
+      this.filesToUpload = [];
       let currentFiles = uploaderFiles.files.filter((file: any)=>file != $event.file);
       //uploaderFiles.files = currentFiles;
       this.loadFiles(currentFiles);
@@ -3185,6 +3190,8 @@ async validarHoraCargue():Promise<boolean>{
         //name:file.name
       })
     }
+
+    console.log('this.filesToUpload',this.filesToUpload);
   }
 
   onLoad($event:any){

@@ -8,6 +8,7 @@ import { OrdenesCargueService } from 'src/app/demo/service/ordenes-cargue.servic
 import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.service';
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
 import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
+import { lastValueFrom } from 'rxjs';
 
 
 @Component({
@@ -204,9 +205,46 @@ async setEventsTimeLine(data:any):Promise<void>{
 
   //////////console.log(data, this.estadosTurno2);
 
+
+
   let events:any[] =[];
+  let index:number = 0;
   for(let event of data){
-   //////////console.log(event);
+   console.log(event);
+   let id_relacion = eval(event.index);
+   let proceso = event.estado;
+   let entidad = 'turnos';
+
+   let filesAtach$ = this.functionsService.loadFiles({id_relacion,proceso,entidad});
+   let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
+
+   
+   await filesAtachByEstadoHistorialTurno.map((file)=>{
+    file.icon = 'file';
+    file.colorIcon = 'info';
+     if(file.extension === 'pdf'){
+        file.icon = 'file-pdf';
+        file.colorIcon = 'danger';
+     }
+     if(file.extension === 'xls' || file.extension === 'xlsx'){
+      file.icon = 'file-excel';
+      file.colorIcon = 'success';
+     }
+     if(file.extension === 'png' || file.extension === 'jpeg' || file.extension === 'gif'){
+      file.icon = 'image';
+      file.colorIcon = 'secondary';
+      
+     }
+     if(file.extension === 'doc' || file.extension === 'docx'){
+      file.icon = 'file-word';
+      file.colorIcon = 'primary';
+     }
+   });
+
+   console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno);
+
+   
+   
     //let dateEvent = new Date(new Date(event.fecha).getTime()+(60*60000*5));
     let dateEventTime = new Date(event.fecha+' '+event.hora);
     //////////console.log(event.fecha,dateEvent, dateEventTime);
@@ -221,9 +259,12 @@ async setEventsTimeLine(data:any):Promise<void>{
                   icon: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).icon, 
                   textColor: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).textColor, 
                   backgroundColor:this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).backgroundColor,
+                  filesAtachByEstadoHistorialTurno,
+                  index,
+                  alignFiles:index%2==0?'start':'end',
                   image: 'game-controller.jpg' })
       
-                
+                  index++;
   }
   /*this.events = [
     { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
@@ -235,6 +276,11 @@ async setEventsTimeLine(data:any):Promise<void>{
   this.events = events;
 
   ////////console.log(this.events);
+}
+
+download(link:string){
+  console.log(link);
+  window.open(link);
 }
 
 }

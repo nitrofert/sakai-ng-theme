@@ -64,6 +64,11 @@
                 <p *ngIf="event.comentario">
                     {{ event.comentario}}
                 </p>
+                <div *ngIf="event.filesAtachByEstadoHistorialTurno.length>0" class="font-medium text-700 line-height-1 "> <span class="font-bold">Documentos adjuntos</span></div>
+                <div *ngIf="event.filesAtachByEstadoHistorialTurno.length>0" [class]="'flex justify-content-'+event.alignFiles+' align-items-center'">
+                    <p-button *ngFor="let file of event.filesAtachByEstadoHistorialTurno" [icon]="'pi pi-'+file.icon" [styleClass]="'p-button-rounded  p-button-text p-button-raised  m-2 p-button-'+file.colorIcon" [pTooltip]="file.nombre" (click)="download(file.linkS3)"></p-button>
+                </div>
+
                 <span class="mt-5"> <span class="font-bold">Realizado por:</span> {{event.usuario}}</span>
                 
             </p-card>

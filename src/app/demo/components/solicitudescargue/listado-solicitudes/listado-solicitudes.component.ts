@@ -16,6 +16,7 @@ import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 import { lastValueFrom } from 'rxjs';
 import { PdfSolicitudCargue } from '../config-pdf/solicitud-cargue'
+import { ListaHistorialTurnoComponent } from '../lista-historial-turno/lista-historial-turno.component';
 
 @Component({
   selector: 'app-listado-solicitudes',
@@ -146,6 +147,10 @@ export class ListadoSolicitudesComponent implements OnInit {
   dependencias: any;
 
   htmlDoc: any;
+
+  dialogLongText:boolean = false; 
+  longText:string = "";
+  titleDialigLongText:string = "";
 
 
   constructor(private router: Router,
@@ -831,5 +836,34 @@ export class ListadoSolicitudesComponent implements OnInit {
    
   }
 
+  verLongText(text: string, title: string) {
+    this.titleDialigLongText = title;
+    this.dialogLongText = true;
+    this.longText = text;
+  }
+
+  verHistorial(){
+    console.log('orden seleccionada',this.selectedItem[0])
+
+    let idTurno = this.selectedItem[0].dataKey.split('-')[1];
+    
+    const ref = this.dialogService.open(ListaHistorialTurnoComponent, {
+      data: {
+          id: (idTurno)
+      },
+      header: `Historial Orden de cargue: ${idTurno}` ,
+      width: '70%',
+      height:'auto',
+      contentStyle: {"overflow": "auto"},
+      maximizable:true, 
+    });
+
+    ref.onClose.subscribe(() => {
+      //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+      //this.getCalendar();
+      //////////////////// ////////////// //////console.log(("Refresh calendar");
+    });
+    
+  }
 
 }
