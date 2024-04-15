@@ -454,21 +454,21 @@
 
 
 <!-- Dialog cambio estado -->
-<p-dialog [header]="tituloEstado" 
-          [(visible)]="formEstadoTurno" 
-          [modal]="true" 
-          [style]="{width: '50vw'}" 
-          [draggable]="false" 
-          [resizable]="false"
-          [maximizable]="true">
 <!--<p-dialog [header]="tituloEstado" 
           [(visible)]="formEstadoTurno" 
           [modal]="true" 
           [style]="{width: '50vw'}" 
           [draggable]="false" 
           [resizable]="false"
+          [maximizable]="true">-->
+<p-dialog [header]="tituloEstado" 
+          [(visible)]="formEstadoTurno" 
+          [modal]="true" 
+          [style]="{width: '50vw'}" 
+          [draggable]="false" 
+          [resizable]="false"
           [maximizable]="true"
-          (onHide)="clearUploader(uploaderFiles)">-->
+          (onHide)="clearUploader(uploaderFiles)">
 
 
             <div class="grid">
@@ -558,7 +558,7 @@
                             </div>
 
                         
-                            <!--<div class="field col-12 ">
+                            <div class="field col-12 ">
                                 <label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>
                                 <p-fileUpload #uploaderFiles   name="demo[]" 
                                 chooseLabel="Seleccionar"
@@ -567,7 +567,7 @@
                                 [multiple]="true" 
                                 (onSelect)="loadFiles(uploaderFiles.files)"
                                 (onRemove)="removeFile($event, uploaderFiles)"
-                                
+                                (onClear)="clearUploader(uploaderFiles)"
                                 
                                 [showUploadButton]="false"
                                 [maxFileSize]="50000000"
@@ -580,7 +580,7 @@
                                         </ul>
                                     </ng-template>
                                 </p-fileUpload>
-                            </div>-->
+                            </div>
                         
                         </div>
                     </div>

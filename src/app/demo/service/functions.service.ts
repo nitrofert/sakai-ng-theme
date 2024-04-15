@@ -623,6 +623,17 @@ uploadFile(body:any):Observable<any>{
   const url:string = `${this.api_url}/api/upload-files-s3/upload`;
   return this.http.post<any[]>(url,body); 
 }
+
+loadFiles(query:any):Observable<any[]> {
+  const url:string = `${this.api_url}/api/upload-files-s3/getFiles`;
+  return this.http.get<any>(url, {params:query});
+}
+
+filesToBase64(query:any):Observable<any[]> {
+  const url:string = `${this.api_url}/api/upload-files-s3/filesToBase64`;
+  return this.http.get<any>(url, {params:query});
+}
+
   
 
 }

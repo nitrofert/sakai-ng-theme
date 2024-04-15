@@ -43,52 +43,6 @@
 <div *ngIf="showCalendar" class="grid">
 	<div class="col-12">
 		<div class="card">
-            <div *ngIf="showCalendar" class="grid">
-                <div class="col-12">
-                    <div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-                        <div class="p-fluid p-formgrid grid align-items-center justify-content-center">
-            
-                            <!--<p-tag *ngFor="let estado of estadosTurno2" [value]="estado.name" [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'4px' }"></p-tag>-->
-            
-                            <p-chip *ngFor="let estado of estadosTurno2" 
-                                    [label]="estado.name" 
-                                    [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'2px' }"
-                                    [icon]="estado.icon">
-                            </p-chip>
-            
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <full-calendar *ngIf="showCalendar" [options]="calendarOptions">
-                <ng-template #eventContent let-arg>
-                    <div>
-                       Turno : <strong>{{ arg.event.title | objecrString:'turnoid'   }}</strong> 
-                       Placa : <strong>{{ arg.event.title | objecrString:'placa'   }}</strong> 
-                    </div>
-            
-                    <div>
-                        {{ (arg.event.title | objecrString:'cliente') | tooltips:20 }} 
-                    </div>
-                    <!--<div>
-                        Placa: {{ arg.event.title | objecrString:'placa'   }}
-                    </div>-->
-                    <!--<div>
-                        Placa: {{ arg.event.title | objecrString:'estado'   }}
-                    </div>-->
-                    
-                    
-                  </ng-template>
-            </full-calendar>
-
-           
-        </div>
-    </div>
-</div>
-
-<div *ngIf="showCalendar" class="grid">
-	<div class="col-12">
-		<div class="card">
             <div class="col-12">
                 <div class="card">
                     <p-table #dt1 
@@ -661,6 +615,54 @@
         </div>
     </div>
 </div>
+
+<div *ngIf="showCalendar" class="grid">
+	<div class="col-12">
+		<div class="card">
+            <div *ngIf="showCalendar" class="grid">
+                <div class="col-12">
+                    <div class="card"  style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+                        <div class="p-fluid p-formgrid grid align-items-center justify-content-center">
+            
+                            <!--<p-tag *ngFor="let estado of estadosTurno2" [value]="estado.name" [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'4px' }"></p-tag>-->
+            
+                            <p-chip *ngFor="let estado of estadosTurno2" 
+                                    [label]="estado.name" 
+                                    [style]="{ 'background': 'var(--'+estado.backgroundColor+')', 'color':'var(--'+estado.textColor+')', 'margin':'2px' }"
+                                    [icon]="estado.icon">
+                            </p-chip>
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <full-calendar *ngIf="showCalendar" [options]="calendarOptions">
+                <ng-template #eventContent let-arg>
+                    <div>
+                       Turno : <strong>{{ arg.event.title | objecrString:'turnoid'   }}</strong> 
+                       Placa : <strong>{{ arg.event.title | objecrString:'placa'   }}</strong> 
+                    </div>
+            
+                    <div>
+                        {{ (arg.event.title | objecrString:'cliente') | tooltips:20 }} 
+                    </div>
+                    <!--<div>
+                        Placa: {{ arg.event.title | objecrString:'placa'   }}
+                    </div>-->
+                    <!--<div>
+                        Placa: {{ arg.event.title | objecrString:'estado'   }}
+                    </div>-->
+                    
+                    
+                  </ng-template>
+            </full-calendar>
+
+           
+        </div>
+    </div>
+</div>
+
+
 
 <div *ngIf="showCalendar" class="grid">
     <!--

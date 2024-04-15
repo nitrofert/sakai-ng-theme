@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { FileUpload } from 'primeng/fileupload';
 import { lastValueFrom } from 'rxjs';
 import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
 import { ClientesService } from 'src/app/demo/service/clientes.service';
+import { FunctionsService } from 'src/app/demo/service/functions.service';
 import { RolesService } from 'src/app/demo/service/roles.service';
 import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
@@ -61,6 +63,12 @@ export class FormUsuarioComponent implements  OnInit {
   numerotelefonico:string ="";
   estado:string = "";
 
+  numeroid_responsable:string = "";
+  cargo_responsable:string = "";
+  nombre_responsable:string = "";
+  telefono_responsable:string = "";
+  email_responsable:string = "";
+
   roles!:any[];
   rolesSeleccionados:any[] = [];
   rolesFiltrados:any[] = [];
@@ -73,8 +81,19 @@ export class FormUsuarioComponent implements  OnInit {
   locacionesSeleccionados:any[] = [];
   locacionesFiltrados:any[] = [];
 
+  validarCamposClienteLogistica:boolean = false;
+
 
   envioLineaUsuario:boolean = false;
+
+  file!: any ;
+  fileTmp:any;
+  uploadedFile: any[] = [];
+  filesToUpload: any[] = [];
+
+  uploadActivo:boolean = true;
+
+  @ViewChild('uploaderFile') uploaderFile!:ElementRef;
 
   constructor(
     public ref: DynamicDialogRef, public config: DynamicDialogConfig,
@@ -85,6 +104,7 @@ export class FormUsuarioComponent implements  OnInit {
     private sb1SLService:SB1SLService,
     private clientesService:ClientesService,
     private almacenesService:AlmacenesService,
+    public functionsService:FunctionsService,
     ){}
 
   async ngOnInit() {
@@ -103,6 +123,18 @@ export class FormUsuarioComponent implements  OnInit {
     this.email = usuario.email;
     this.numerotelefonico = usuario.numerotelefonico;
     this.estado = this.estado;
+
+    this.nombre_responsable = usuario.nombre_responsable;
+
+    this.numeroid_responsable = usuario.numeroid_responsable;
+
+    this.telefono_responsable = usuario.telefono_responsable;
+
+    this.email_responsable = usuario.email_responsable;
+
+    this.cargo_responsable = usuario.cargo_responsable;
+
+    
     let rolesUsuario = await usuario.roles.map((rol: { code: any; id: any; name: any; nombre: any; label: any; })=>{ rol.code = rol.id; rol.name = rol.nombre; rol.label=rol.nombre; return rol})
     
     this.rolesSeleccionados = rolesUsuario;
@@ -225,8 +257,14 @@ export class FormUsuarioComponent implements  OnInit {
   }
 
 
-  seleccionaRrol(opcionPadre:any){
+  seleccionaRrol(roles:any){
+    console.log(roles)
 
+    if(roles.filter((opcion: { nombre: string; }) =>opcion.nombre === 'CLIENTE LOGISTICA').length >0){
+        this.validarCamposClienteLogistica = true;
+    }else{
+      this.validarCamposClienteLogistica = false;
+    }
   }
 
   filtrarClientes(event:any){
@@ -268,7 +306,8 @@ export class FormUsuarioComponent implements  OnInit {
 
    grabar(){
     this.envioLineaUsuario= true;
-    if(this.username=='' || this.password=='' || this.email=='' || this.nombrecompleto=='' || this.numerotelefonico=='' || this.rolesSeleccionados.length===0){
+    if(this.username=='' || this.password=='' || this.email=='' || this.nombrecompleto=='' || this.numerotelefonico=='' || 
+       this.rolesSeleccionados.length===0 ||  (this.rolesSeleccionados.filter(opcion=>opcion.nombre==='CLIENTE LOGISTICA').length>0 && (this.nombre_responsable=='' || this.telefono_responsable=='' || this.email_responsable==''))){
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else if(this.password!= this.password2){
@@ -281,6 +320,13 @@ export class FormUsuarioComponent implements  OnInit {
           email:this.email,
           nombrecompleto:this.nombrecompleto,
           numerotelefonico:this.numerotelefonico,
+          numeroid_responsable:this.numeroid_responsable,
+          cargo_responsable:this.cargo_responsable,
+          nombre_responsable:this.nombre_responsable,
+          telefono_responsable:this.telefono_responsable,
+          email_responsable:this.email_responsable,
+
+
           roles:  this.rolesSeleccionados.map((rol)=>{return rol.code}),
           clientes: this.clientesSAPSeleccionados.map((cliente)=>{ return {CardCode:cliente.CardCode,CardName:cliente.CardName,FederalTaxID:cliente.FederalTaxID,EmailAddress:cliente.EmailAddress}}),
           locaciones:this.locacionesSeleccionados.map((locacion)=>{ return locacion.id})
@@ -291,6 +337,28 @@ export class FormUsuarioComponent implements  OnInit {
                 next: (usuario)=>{
                  //////////console.log(usuario);
                   this.messageService.add({severity:'success', summary:'información', detail:`El usuario ${usuario.nombrecompleto} fue registrado correctamente`});
+                  if(this.filesToUpload.length > 0 && this.uploadActivo){
+                    for(let anexo of this.filesToUpload){
+                      let body = new FormData();
+                      body.append('file', anexo.file, anexo.file.name);
+                      body.append('entidad', 'usuario');
+                      body.append('id_relacion', usuario.id);
+                      body.append('proceso', '');
+                      body.append('nombre', anexo.file.name);
+  
+                      this.functionsService.uploadFile(body)
+                          .subscribe({
+                            next:(result)=>{
+                              console.log('Upload ok',result);
+                              this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
+                            },
+                            error:(err)=>{
+                              this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo de la firma del usuario :'+err});
+                            }
+                          })
+                    }
+                    
+                  }
                 },
                 error:(err)=> {
                     console.error(err);
@@ -303,7 +371,8 @@ export class FormUsuarioComponent implements  OnInit {
 
   editar(){
     this.envioLineaUsuario= true;
-    if(this.username=='' ||  this.email=='' || this.nombrecompleto=='' || this.numerotelefonico==''  || this.rolesSeleccionados.length===0 ){
+    if(this.username=='' ||  this.email=='' || this.nombrecompleto=='' || this.numerotelefonico==''  || 
+       this.rolesSeleccionados.length===0 ||  (this.rolesSeleccionados.filter(opcion=>opcion.nombre==='CLIENTE LOGISTICA').length>0 && (this.nombre_responsable=='' || this.telefono_responsable=='' || this.email_responsable=='')) ){
 
         this.messageService.add({severity:'error', summary:'Error', detail:'Los campos resaltados en rojo deben ser diligenciados'});
     }else if(this.password!= this.password2){
@@ -317,6 +386,11 @@ export class FormUsuarioComponent implements  OnInit {
         email:this.email,
         nombrecompleto:this.nombrecompleto,
         numerotelefonico:this.numerotelefonico,
+        numeroid_responsable:this.numeroid_responsable,
+          cargo_responsable:this.cargo_responsable,
+          nombre_responsable:this.nombre_responsable,
+          telefono_responsable:this.telefono_responsable,
+          email_responsable:this.email_responsable,
         roles:  this.rolesSeleccionados.map((rol)=>{return rol.code}),
         clientes: this.clientesSAPSeleccionados.map((cliente)=>{ return {CardCode:cliente.CardCode,CardName:cliente.CardName,FederalTaxID:cliente.FederalTaxID,EmailAddress:cliente.EmailAddress}}),
         locaciones:this.locacionesSeleccionados.map((locacion)=>{ return locacion.id})
@@ -331,6 +405,32 @@ export class FormUsuarioComponent implements  OnInit {
                 next: (usuario)=>{
                  //////////console.log(usuario);
                   this.messageService.add({severity:'success', summary:'información', detail:`El usuario ${this.nombrecompleto} fue actualizado correctamente`});
+                  if(this.filesToUpload.length > 0 && this.uploadActivo){
+
+                    //Borrar firma del usuario
+
+                    //registrar nueva firma
+                    for(let anexo of this.filesToUpload){
+                      let body = new FormData();
+                      body.append('file', anexo.file, anexo.file.name);
+                      body.append('entidad', 'usuario');
+                      body.append('id_relacion', usuario.id);
+                      body.append('proceso', 'firma');
+                      body.append('nombre', anexo.file.name);
+  
+                      this.functionsService.uploadFile(body)
+                          .subscribe({
+                            next:(result)=>{
+                              console.log('Upload ok',result);
+                              this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
+                            },
+                            error:(err)=>{
+                              this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo de la firma del usuario :'+err});
+                            }
+                          })
+                    }
+                    
+                  }
                 },
                 error:(err)=> {
                     console.error(err);
@@ -344,5 +444,32 @@ export class FormUsuarioComponent implements  OnInit {
 
   cancelar(){
     this.ref.close();
+  }
+
+
+  clearUploader(uploaderFile: FileUpload){
+    //uploaderFile.clear();
+    this.filesToUpload = [];
+  }
+
+  removeFile($event:any,uploaderFile: FileUpload){
+      //console.log('remove',$event,)
+      this.filesToUpload = [];
+      let currentFiles = uploaderFile.files.filter((file: any)=>file != $event.file);
+      //uploaderFiles.files = currentFiles;
+      this.loadFile(currentFiles);
+  }
+
+  loadFile(uploaderFile: any ){
+    //console.log('filesToUpload',uploaderFile);
+    let currentFiles = uploaderFile;
+    for(let currentFile of currentFiles){
+      //console.log('currentFile',currentFile);
+      //const [file] = currentFile;
+      this.filesToUpload.push({
+        file:currentFile,
+        //name:file.name
+      })
+    }
   }
 }

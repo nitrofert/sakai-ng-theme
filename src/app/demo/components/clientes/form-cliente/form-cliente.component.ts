@@ -19,6 +19,10 @@ export class FormClienteComponent  implements  OnInit {
   CardName:string ="";
   FederalTaxID:string ="";
   EmailAddress:string ="";
+  nombre_contacto:string ="";
+  telefono_contacto:string ="";
+  email_contacto:string ="";
+
 
   editCliente:boolean =false;
   clientesMysql!:any[];
@@ -28,6 +32,8 @@ export class FormClienteComponent  implements  OnInit {
   submitCliente:boolean =false;
   clientesNuevos:any[] = [];
   notificaciones:boolean =false;
+
+
 
 
   constructor( private messageService: MessageService,
@@ -109,12 +115,15 @@ export class FormClienteComponent  implements  OnInit {
   async getInfoCliente(CardCode:any){
     let infoClientes = await this.clientesService.infoClientes();
     let infoCliente = infoClientes.find((cliente: { CardCode: any; })=>cliente.CardCode === CardCode);
-    //console.log(infoCliente);
+    console.log(infoCliente);
     this.idCliente = infoCliente.id;
     this.CardName = infoCliente.CardName;
     this.EmailAddress = infoCliente.EmailAddress;
     this.FederalTaxID = infoCliente.FederalTaxID;
     this.notificaciones = infoCliente.notificaciones;
+    this.nombre_contacto = infoCliente.nombre_contacto;
+    this.telefono_contacto = infoCliente.telefono_contacto;
+    this.email_contacto = infoCliente.email_contacto;
   }
 
   grabarCliente(){
@@ -129,7 +138,10 @@ export class FormClienteComponent  implements  OnInit {
           CardName: this.CardName,
           FederalTaxID: this.FederalTaxID,
           EmailAddress: this.EmailAddress,
-          notificaciones:this.notificaciones
+          notificaciones:this.notificaciones,
+          nombre_contacto: this.nombre_contacto,
+          telefono_contacto :this.telefono_contacto,
+          email_contacto : this.email_contacto
        
         }
 

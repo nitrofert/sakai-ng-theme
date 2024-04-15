@@ -61,6 +61,10 @@ export class DynamicTableComponent implements OnInit {
   globalFilterFields!:string[];
   totalCols:any[] = [];
 
+  dialogLongText:boolean = false; 
+  longText:string = "";
+  titleDialigLongText:string = "";
+
   @ViewChild('filter') filter!: ElementRef;
 
   objectKeys = Object.keys;
@@ -219,6 +223,12 @@ export class DynamicTableComponent implements OnInit {
     ////console.log(bgColor);
 
     return bgColor
+  }
+
+  verLongText(text: string, title: string) {
+    this.titleDialigLongText = title;
+    this.dialogLongText = true;
+    this.longText = text;
   }
 
  

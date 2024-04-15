@@ -3,6 +3,7 @@ import { lastValueFrom } from "rxjs";
 import { AlmacenesService } from "src/app/demo/service/almacenes.service";
 import { FunctionsService } from "src/app/demo/service/functions.service";
 import { SolicitudTurnoService } from "src/app/demo/service/solicitudes-turno.service";
+import { UsuarioService } from "src/app/demo/service/usuario.service";
 
 export const  header = {
     margin: 8,
@@ -1740,36 +1741,45 @@ export class PdfSolicitudCargue {
                                                 alignment:'center',
                                                 fontSize:8,
                                                 blod:true,
+                                                margin: [5, 5]
                                             },
                                             {
                                                 text:infoUsuario.cedula,
                                                 alignment:'center',
                                                 fontSize:8,
                                                 blod:true,
+                                                margin: [5, 5]
                                             },
                                             {
                                                 text:infoUsuario.cargo,
                                                 alignment:'center',
                                                 fontSize:8,
                                                 blod:true,
+                                                margin: [5, 5]
                                             },
                                             {
                                                 text:infoUsuario.celular,
                                                 alignment:'center',
                                                 fontSize:8,
                                                 blod:true,
+                                                margin: [5, 5]
                                             },
                                             {
                                                 text:infoUsuario.email,
                                                 alignment:'center',
                                                 fontSize:8,
                                                 blod:true,
+                                                margin: [5, 5]
                                             },
                                             {
-                                                text:infoUsuario.firma,
+                                                /*text:infoUsuario.firma,
                                                 alignment:'center',
                                                 fontSize:8,
-                                                blod:true,
+                                                blod:true,*/
+                                                //image:'FirmaAutorizador',
+                                                image:infoUsuario.firma,
+                                                fit:[100,100],
+                                                alignment:'center'
                                             }
                                         ],
                                         [
@@ -1798,13 +1808,15 @@ export class PdfSolicitudCargue {
     }
 
     images:any = {
-        Logo: ''
+        Logo: '',
+        //FirmaAutorizador:''
     }
 
 
     constructor(private solicitudTurnoService:SolicitudTurnoService,
                 private functionsService:FunctionsService,
-                private almacenesService: AlmacenesService,){}
+                private almacenesService: AlmacenesService,
+                private usuarioService:UsuarioService){}
     
     async generarPDF(data:any):Promise<void>{
         console.log('datakey',data.dataKey);
@@ -1819,13 +1831,29 @@ export class PdfSolicitudCargue {
 
         console.log('infoTurno',infoTurno);
 
+        let filesAtach$ = this.functionsService.filesToBase64({id_relacion:infoTurno.solicitud.usuario.id,
+                                                           proceso:'firma',
+                                                           entidad:'usuario'});
+        let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
+
+        console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno)
+
+        if(filesAtachByEstadoHistorialTurno.length === 0){
+            filesAtachByEstadoHistorialTurno.push(`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQcAAABYCAIAAAB3ZqVmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAADfSURBVHhe7dMxAQAwEAOh+jedzn8awANvwGUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVsC1fUBYOJv6tIhuAAAAAElFTkSuQmCC`)
+        }
+        
+        this.images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
+       // this.images.FirmaAutorizador = filesAtachByEstadoHistorialTurno[0];
+       //console.log(filesAtachByEstadoHistorialTurno[0]);
+
+
         let infoUsuario: any = {
             nombre: infoTurno.solicitud.usuario.nombrecompleto,
-            cedula: '',
-            cargo: '',
-            celular:  infoTurno.solicitud.usuario.numerotelefonico,
-            email: infoTurno.solicitud.usuario.numerotelefonico,
-            firma: ''
+            cedula: infoTurno.solicitud.usuario.numeroid_responsable,
+            cargo: infoTurno.solicitud.usuario.cargo_responsable,
+            celular:  infoTurno.solicitud.usuario.telefono_responsable,
+            email: infoTurno.solicitud.usuario.email_responsable,
+            firma: filesAtachByEstadoHistorialTurno[0]
         }
         console.log('infoUsuario',infoUsuario);
 
@@ -1834,9 +1862,9 @@ export class PdfSolicitudCargue {
         let cliente: any = {
             nombre: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].CardName,
             nit: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].FederalTaxID,
-            contacto: '',
-            contactotelefono: '',
-            contatoemail: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].EmailAddress
+            contacto: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].nombre_contacto,
+            contactotelefono: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].telefono_contacto,
+            contatoemail: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].email_contacto
         }
         console.log('cliente',cliente);
 
@@ -1896,7 +1924,7 @@ export class PdfSolicitudCargue {
             observacion:infoTurno.observacion
         }
 
-        images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
+        
 
         let pdfDefinition = {
             pageSize: 'LEGAL',
@@ -1907,7 +1935,7 @@ export class PdfSolicitudCargue {
       
             content: this.content(dataPdf),
             footer: this.footer(infoUsuario),
-            images
+            images:this.images
         }
         
         await this.functionsService.createPDF(pdfDefinition);
