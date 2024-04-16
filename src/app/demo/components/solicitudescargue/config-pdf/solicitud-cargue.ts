@@ -885,8 +885,10 @@ export const images:any = {
 @Injectable()
 export class PdfSolicitudCargue {
 
-    header:any = {
-        margin: 8,
+    header:any = (turno:any)=> {
+        console.log('header');
+        return {
+            margin: 8,
         columns: [
             {
               margin:[20,0,30,0],
@@ -905,7 +907,7 @@ export class PdfSolicitudCargue {
                         //Columna titulo doc
                         {
                             margin:[0,10,0,0],
-                            text:'ORDEN DE CARGUE',
+                            text:'ORDEN DE CARGUE '+turno,
                             fontSize:16,
                             alignment:'center'
                         },
@@ -978,6 +980,7 @@ export class PdfSolicitudCargue {
             }
     
         ]
+        }
     }
 
     permissions:any = {
@@ -990,7 +993,7 @@ export class PdfSolicitudCargue {
         documentAssembly: true
     }
     content:any = (data:any)=>{
-
+        console.log('content');
         //Armar detalle observaciones
         let detalleObservaciones:any[] = [];
         let bodyTableObservaciones:any[] = [];
@@ -1654,6 +1657,7 @@ export class PdfSolicitudCargue {
     }
 
     footer:any =(infoUsuario:any)=> {
+        console.log('footer');
         return {
             
         margin: 8,
@@ -1846,13 +1850,19 @@ export class PdfSolicitudCargue {
        // this.images.FirmaAutorizador = filesAtachByEstadoHistorialTurno[0];
        //console.log(filesAtachByEstadoHistorialTurno[0]);
 
+        let nombreUsuario:string = infoTurno.solicitud.usuario.roles.filter((role: { nombre: string; })=>role.nombre==='CLIENTE LOGISTICA').length>0?infoTurno.solicitud.usuario.nombre_responsable:infoTurno.solicitud.usuario.nombrecompleto;       
+
+        let telefonoUsuario:string = infoTurno.solicitud.usuario.roles.filter((role: { nombre: string; })=>role.nombre==='CLIENTE LOGISTICA').length>0?infoTurno.solicitud.usuario.telefono_responsable:infoTurno.solicitud.usuario.numerotelefonico;       
+
+        let emailUsuario:string = infoTurno.solicitud.usuario.roles.filter((role: { nombre: string; })=>role.nombre==='CLIENTE LOGISTICA').length>0?infoTurno.solicitud.usuario.email_responsable:infoTurno.solicitud.usuario.email;       
+
 
         let infoUsuario: any = {
-            nombre: infoTurno.solicitud.usuario.nombrecompleto,
+            nombre: nombreUsuario,
             cedula: infoTurno.solicitud.usuario.numeroid_responsable,
             cargo: infoTurno.solicitud.usuario.cargo_responsable,
-            celular:  infoTurno.solicitud.usuario.telefono_responsable,
-            email: infoTurno.solicitud.usuario.email_responsable,
+            celular: telefonoUsuario,
+            email: emailUsuario,
             firma: filesAtachByEstadoHistorialTurno[0]
         }
         console.log('infoUsuario',infoUsuario);
@@ -1931,7 +1941,7 @@ export class PdfSolicitudCargue {
             pageOrientation: 'landscape',
             pageMargins: [40, 80, 40, 100],
             permissions:this.permissions,
-            header:this.header,
+            header:this.header(datakey[1]),
       
             content: this.content(dataPdf),
             footer: this.footer(infoUsuario),
