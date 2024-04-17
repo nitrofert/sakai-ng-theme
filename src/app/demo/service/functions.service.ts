@@ -634,6 +634,11 @@ filesToBase64(query:any):Observable<any[]> {
   return this.http.get<any>(url, {params:query});
 }
 
+deleteFiles(query:any):Observable<any[]> {
+  const url:string = `${this.api_url}/api/upload-files-s3/deleteFiles`;
+  return this.http.get<any>(url, {params:query});
+}
+
   
 
 }

@@ -402,12 +402,16 @@ export class FormUsuarioComponent implements  OnInit {
 
         this.usuariosService.update(editarUsuario,this.config.data.id)
             .subscribe({
-                next: (usuario)=>{
+                next: async (usuario)=>{
                  //////////console.log(usuario);
                   this.messageService.add({severity:'success', summary:'información', detail:`El usuario ${this.nombrecompleto} fue actualizado correctamente`});
                   if(this.filesToUpload.length > 0 && this.uploadActivo){
 
                     //Borrar firma del usuario
+                    let deleteFile$ = this.functionsService.deleteFiles({entidad:'usuario',id_relacion:usuario.id,proceso:'firma'});
+                    let deleteFile = await lastValueFrom(deleteFile$);
+
+                    console.log(deleteFile);
 
                     //registrar nueva firma
                     for(let anexo of this.filesToUpload){
