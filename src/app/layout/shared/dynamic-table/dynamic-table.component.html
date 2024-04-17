@@ -151,15 +151,31 @@
 							<div *ngIf="!headersTable[0][key].editable" [style]="'text-align:'+headersTable[0][key].align+';'">
 								
 								<div *ngIf="headersTable[0][key].type==='text'">
-									<div *ngIf="headersTable[0][key].longText &&  itemData[key].length > headersTable[0][key].longText" class="flex justify-content-between align-items-center">
+									<div *ngIf="headersTable[0][key].longText &&  itemData[key].length > headersTable[0][key].longText; then trueBlock else falseBlock"></div>
+
+									<ng-template #trueBlock>
+										<div  class="flex justify-content-between align-items-center">
+											<div> {{ itemData[key] | slice:0:30 }} . . . </div>
+											<div>
+												<p-button icon="pi pi-search" styleClass="p-button-rounded p-button-success p-button-text p-button-raised" [pTooltip]="headersTable[0][key].label" (click)="verLongText(itemData[key], headersTable[0][key].label)"></p-button>
+											</div>
+										</div>
+									</ng-template>
+									<ng-template #falseBlock>
+										<div>
+											{{ itemData[key] }} 
+										</div>
+									</ng-template>
+
+									<!--<div *ngIf="headersTable[0][key].longText &&  itemData[key].length > headersTable[0][key].longText" class="flex justify-content-between align-items-center">
 										<div> {{ itemData[key] | slice:0:30 }} . . . </div>
-                                <div>
-                                    <p-button icon="pi pi-search" styleClass="p-button-rounded p-button-success p-button-text p-button-raised" [pTooltip]="headersTable[0][key].label" (click)="verLongText(itemData[key], headersTable[0][key].label)"></p-button>
-                                </div>
+										<div>
+											<p-button icon="pi pi-search" styleClass="p-button-rounded p-button-success p-button-text p-button-raised" [pTooltip]="headersTable[0][key].label" (click)="verLongText(itemData[key], headersTable[0][key].label)"></p-button>
+										</div>
 									</div>
 									<div *ngIf="!headersTable[0][key].longText">
 										{{ itemData[key] }} 
-									</div>
+									</div>-->
 									
 								</div>
 

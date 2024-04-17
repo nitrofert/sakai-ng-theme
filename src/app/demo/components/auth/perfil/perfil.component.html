@@ -39,6 +39,76 @@
                     </span>
                 </div>
 
+                <div class="field col-12 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="cargo_responsable" 
+                               type="text" 
+                                
+                               [(ngModel)]="cargo_responsable"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && cargo_responsable==''}" />
+                        <label for="numerotelefonico"><h6>Cargo</h6></label>
+                    </span>
+                </div>
+
+
+                <div *ngIf="verCamposClientes" class="field col-12 md:col-4 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="nombre_responsable" 
+                               type="text" 
+                               
+                               [(ngModel)]="nombre_responsable"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && nombre_responsable==''}" />
+                        <label for="numerotelefonico"><h6>Nombre persona responsable</h6></label>
+                    </span>
+                </div>
+
+                <div *ngIf="verCamposClientes" class="field col-12 md:col-4 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="telefono_responsable" 
+                               type="text" 
+                               [(ngModel)]="telefono_responsable"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && telefono_responsable==''}" />
+                        <label for="numerotelefonico"><h6>Teléfono persona responsable</h6></label>
+                    </span>
+                </div>
+
+                <div *ngIf="verCamposClientes" class="field col-12 md:col-4 ">
+                    <span class="p-float-label">
+                        <input pInputText 
+                               id="email_responsable" 
+                               type="text" 
+                               [(ngModel)]="email_responsable"
+                               [ngClass]="{'ng-invalid ng-dirty' : envioLineaUsuario && email_responsable==''}" />
+                        <label for="numerotelefonico"><h6>Email persona responsable</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12 ">
+                    <label for="tipoanexo"><h6>Firma - archivo de tipo imagen</h6></label>
+                    <p-fileUpload #uploaderFile   name="demo[]" 
+                    chooseLabel="Seleccionar"
+                    cancelLabel="Cancelar"
+                    accept="image/*"
+                    [multiple]="false" 
+                    (onSelect)="loadFile(uploaderFile.files)"
+                    (onRemove)="removeFile($event, uploaderFile)"
+                    (onClear)="clearUploader(uploaderFile)"
+                    [showUploadButton]="false"
+                    [maxFileSize]="50000000"
+                    styleClass="w-full"
+                    class="w-full"
+                    [ngClass]="{'ng-invalid ng-dirty' :  (envioLineaUsuario && !filesToUpload ) || (envioLineaUsuario && filesToUpload.length==0)}">
+                        <ng-template pTemplate="content">
+                            <ul *ngIf="uploadedFile.length">
+                                <li *ngFor="let file of uploadedFile">{{file.name}} - {{file.size}} bytes</li>
+                            </ul>
+                        </ng-template>
+                    </p-fileUpload>
+                </div>
+
                 <div class="field col-12   ">
                     <span class="p-float-label">
                         <input pInputText 
