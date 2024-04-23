@@ -43,6 +43,7 @@ import {SpeedDialModule} from 'primeng/speeddial';
 import { StyleClassModule } from 'primeng/styleclass';
 import { TableModule } from 'primeng/table';
 import {TabMenuModule} from 'primeng/tabmenu';
+import { TabViewModule } from 'primeng/tabview';
 import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
 import { ToastModule } from 'primeng/toast';
@@ -102,6 +103,7 @@ import {InputMaskModule} from 'primeng/inputmask';
     StyleClassModule,
     TableModule,
     TabMenuModule,
+    TabViewModule,
     TagModule,
     ToastModule,
     ToggleButtonModule,

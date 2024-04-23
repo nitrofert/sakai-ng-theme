@@ -639,6 +639,19 @@ deleteFiles(query:any):Observable<any[]> {
   return this.http.get<any>(url, {params:query});
 }
 
+
+async setTImeToDate(date:Date, time:any ):Promise<any> {
+
+  let newDateTime!:any
+
+  let arrayDate:any[] = date.toISOString().split("T");
+  let arrayTime:any[] = time.split(":");
+
+  newDateTime = new Date(new Date(`${arrayDate[0]}T00:00:00`).setHours(arrayTime[0],arrayTime[1],arrayTime[2]));
+
+
+  return newDateTime;
+}
   
 
 }

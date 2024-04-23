@@ -241,7 +241,9 @@ uploadActivo:boolean = true;
 
 @ViewChild('uploaderFiles') uploaderFiles!:ElementRef;
 
+inspeccionTurno!:any;
 
+evidenciasCargue:any[] = [];
 
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
@@ -483,7 +485,7 @@ uploadActivo:boolean = true;
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                 // //////console.log('turno',turno);
+                 console.log('turno',turno);
                   
                   this.turno = turno;
                   
@@ -806,6 +808,18 @@ uploadActivo:boolean = true;
         
       }];
 
+      
+
+      if(this.estado === this.estadosTurno.CARGANDO || this.estado === this.estadosTurno.CARGADO || this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO ){
+        
+        headersTable[0].lote_produccion = {label:'Lote',type:'text', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'lote_produccion'};
+        headersTable[0].cantidad_sacos = {label:'Cantidad (Sacos)',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'cantidad_sacos'};
+        headersTable[0].toneladas_metircas = {label:'Toneladas Metricas',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'toneladas_metircas'};
+        headersTable[0].cubicacion = {label:'Cubicación',type:'text', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'cubicacion'}
+        headersTable[0].evidencias = {label:'Evidencias',type:'uploads', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'evidencias'}
+
+      }
+
       if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
         
         headersTable[0].remision = {label:'# Remision',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.PESADOF?true:false),field:'remision'}
@@ -825,6 +839,8 @@ uploadActivo:boolean = true;
       let dataTable:any[] = [];
       let index:number = 0;
       for (let pedido of arregloPedido){
+
+        console.log('linea pedido',pedido)
         
         if(pedido.estado === 'A'){
           let lineaPedido:any = {
@@ -844,6 +860,14 @@ uploadActivo:boolean = true;
             lugarentrega:`${pedido.municipioentrega} - ${pedido.lugarentrega}`,
           }
   
+         
+          if(this.estado === this.estadosTurno.CARGANDO || this.estado === this.estadosTurno.CARGADO || this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO ){
+            lineaPedido.lote_produccion =  pedido.lote_produccion;
+            lineaPedido.cantidad_sacos =  pedido.cantidad_sacos;
+            lineaPedido.toneladas_metircas =  pedido.toneladas_metircas;
+            lineaPedido.cubicacion =  pedido.cubicacion;
+          }
+
           if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
             lineaPedido.remision =  pedido.remision;
           }
@@ -1690,8 +1714,12 @@ async validarHoraCargue():Promise<boolean>{
                 }
               
             }
+
+            if(this.inspeccionTurno){
+              data.inspeccion = this.inspeccionTurno;
+            }
             
-           //console.log('Data update turno',data);
+           console.log('Data update turno',data);
 
     return data;
   }
@@ -1724,6 +1752,11 @@ async validarHoraCargue():Promise<boolean>{
                         })
                   }
                   
+                }
+
+                if(turno.estado===this.estadosTurno.CARGADO && this.evidenciasCargue.length >0){
+
+                    
                 }
 
                 this.pedidosTurno.map((pedido)=>{
@@ -2188,9 +2221,26 @@ async validarHoraCargue():Promise<boolean>{
          this.vehiculoSeleccionado.id==0 || 
          this.conductorSeleccionado.id==0 ){
         this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe deiligenciar los campos resaltados en rojo"});
-      }else if((this.tablaPedidosTurno.data[0].remision==undefined && this.estado === this.estadosTurno.PESADOF) || (this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length>0 && this.estado === this.estadosTurno.PESADOF)){
-        this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero de remisión para cada linea de producto-destino.'});
-      }else {
+      }else if((this.tablaPedidosTurno.data[0].remision==undefined && this.estado === this.estadosTurno.PESADOF) || 
+               (this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length>0 && this.estado === this.estadosTurno.PESADOF)){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero de remisión para cada linea de producto-destino.'});
+      }else if((this.tablaPedidosTurno.data[0].lote_produccion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
+                (this.tablaPedidosTurno.data.filter((linea: { lote_produccion: null; })=>linea.lote_produccion == null).length>0 && this.estado === this.estadosTurno.CARGANDO)){
+                  this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero del lote de producccion para cada linea de producto-destino.'});
+      }else if((this.tablaPedidosTurno.data[0].cantidad_sacos==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
+                (this.tablaPedidosTurno.data.filter((linea: { cantidad_sacos: null; })=>linea.cantidad_sacos == null).length>0 && this.estado === this.estadosTurno.CARGANDO)){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero del sacos para cada linea de producto-destino.'});
+      }else if((this.tablaPedidosTurno.data.filter((linea: { cantidad_sacos: any; })=>linea.cantidad_sacos === 0).length>0 && this.estado === this.estadosTurno.CARGANDO)){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La canitidad de sacos para cada linea de producto-destino debe ser mayor a cero.'});
+      }else if((this.tablaPedidosTurno.data[0].toneladas_metircas==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
+                (this.tablaPedidosTurno.data.filter((linea: { toneladas_metircas: null; })=>linea.toneladas_metircas == null).length>0 && this.estado === this.estadosTurno.CARGANDO)){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero toneladas metricas para cada linea de producto-destino.'});
+      }else if((this.tablaPedidosTurno.data.filter((linea: { toneladas_metircas: any; })=>linea.toneladas_metircas === 0).length>0 && this.estado === this.estadosTurno.CARGANDO)){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La canitidad de toneladas metricas para cada linea de producto-destino debe ser mayor a cero.'});
+      }else if((this.tablaPedidosTurno.data[0].cubicacion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
+                (this.tablaPedidosTurno.data.filter((linea: { cubicacion: null; })=>linea.cubicacion == null).length>0 && this.estado === this.estadosTurno.CARGANDO)){
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar la cubicación para cada linea de producto-destino.'});
+      }else{
         valido = await this.validarCantidadesCarga();
       }
 
@@ -2298,6 +2348,22 @@ async validarHoraCargue():Promise<boolean>{
         if(arregloCambioCampo.itemData.cantidad > arregloCambioCampo.itemData.disponible){
           this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:  `La cantidad a cargar (${arregloCambioCampo.itemData.cantidad} TON) es mayor a la cantidad disponible (${arregloCambioCampo.itemData.disponible} TON)`});
         }
+      break;
+
+      case 'lote_produccion':
+        this.pedidosTurno[indexLineaPedido].lote_produccion = parseFloat(arregloCambioCampo.itemData.lote_produccion);
+      break;
+
+      case 'cantidad_sacos':
+        this.pedidosTurno[indexLineaPedido].cantidad_sacos = parseFloat(arregloCambioCampo.itemData.cantidad_sacos);
+      break;
+
+      case 'toneladas_metircas':
+        this.pedidosTurno[indexLineaPedido].toneladas_metircas = parseFloat(arregloCambioCampo.itemData.toneladas_metircas);
+      break;
+
+      case 'cubicacion':
+        this.pedidosTurno[indexLineaPedido].cubicacion = parseFloat(arregloCambioCampo.itemData.cubicacion);
       break;
 
     }
@@ -3218,6 +3284,49 @@ async validarHoraCargue():Promise<boolean>{
     
 
    
+  }
+
+  setInsppeccion($event:any){
+    console.log($event);
+
+    this.inspeccionTurno = {
+      fecha_inspeccion: new Date($event.fecha_inspeccion),
+      estado_vehiculo:$event.estado_vehiculo,
+      olores:$event.dataTableChekVehiculo[0].estado,
+      obs_olores:$event.dataTableChekVehiculo[0].observacion,
+      carroceria:$event.dataTableChekVehiculo[1].estado,
+      obs_carroceria:$event.dataTableChekVehiculo[1].observacion,
+      carpa_filtraciones:$event.dataTableChekVehiculo[2].estado,
+      obs_carpa_filtraciones:$event.dataTableChekVehiculo[2].observacion,
+      plagas:$event.dataTableChekVehiculo[3].estado,
+      obs_plagas:$event.dataTableChekVehiculo[3].observacion,
+      humedad_grasa:$event.dataTableChekVehiculo[4].estado,
+      obs_humedad_grasa:$event.dataTableChekVehiculo[4].observacion,
+      estado_plancha:$event.dataTableChekVehiculo[5].estado,
+      obs_estado_plancha:$event.dataTableChekVehiculo[5].observacion,
+      plastico_polipropileno:$event.dataTableChekVehiculo[6].estado,
+      obs_plastico_polipropileno:$event.dataTableChekVehiculo[6].observacion,
+
+      registro_ica:$event.dataTableChekCarga[0].estado,
+      obs_registro_ica:$event.dataTableChekCarga[0].observacion,
+      lote_fabricacion:$event.dataTableChekCarga[1].estado,
+      obs_lote_fabricacion:$event.dataTableChekCarga[1].observacion,
+      peso_producto:$event.dataTableChekCarga[2].estado,
+      obs_peso_producto:$event.dataTableChekCarga[2].observacion,
+      producto_limpio:$event.dataTableChekCarga[3].estado,
+      obs_producto_limpio:$event.dataTableChekCarga[3].observacion,
+      empaques_rotura:$event.dataTableChekCarga[4].estado,
+      obs_empaques_rotura:$event.dataTableChekCarga[4].observacion,
+      producto_compactado:$event.dataTableChekCarga[5].estado,
+      obs_obs_producto_compactado:$event.dataTableChekCarga[5].observacion,
+      cantidad_unidades:$event.cantidad_unidades,
+      conforme_cantidades:$event.conforme_cantidades,
+      conforme_calidad:$event.conforme_calidad,
+      observaciones:$event.observaciones,
+      cedula_conductor:$event.cedula_conductor
+
+
+    }
   }
 
 

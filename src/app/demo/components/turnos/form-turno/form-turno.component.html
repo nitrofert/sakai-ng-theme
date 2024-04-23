@@ -409,7 +409,7 @@
 <div class="grid">
 	<div class="col-12">
 		<div class="card">
-            <div class="p-fluid p-formgrid grid">
+            <!--<div class="p-fluid p-formgrid grid">-->
 
                 <app-dynamic-table [dataTable]="tablaPedidosTurno.data" 
                              [headersTable]="tablaPedidosTurno.header"
@@ -429,7 +429,7 @@
                 </app-dynamic-table>
 
 
-            </div>
+            <!--</div>-->
         </div>
     </div>
 </div>
@@ -581,6 +581,12 @@
                                     </ng-template>
                                 </p-fileUpload>
                             </div>
+
+
+                            <div *ngIf="estado === estadosTurno.PESADO || estado === estadosTurno.CARGANDO || estado === estadosTurno.CARGADO || estado === estadosTurno.PESADOF" class="field col-12 ">
+                                <app-inspeccion-despacho [turno]="turno" (onChangeData)="setInsppeccion($event)"></app-inspeccion-despacho>
+                            </div>
+                            
                         
                         </div>
                     </div>

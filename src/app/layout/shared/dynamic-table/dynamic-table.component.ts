@@ -231,6 +231,10 @@ export class DynamicTableComponent implements OnInit {
     this.longText = text;
   }
 
+  verUploads(index: number){
+      console.log('index linea tabla',index);
+  }
+
  
 
 }

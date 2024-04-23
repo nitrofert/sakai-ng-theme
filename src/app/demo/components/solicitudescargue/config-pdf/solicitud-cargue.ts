@@ -5,6 +5,7 @@ import { FunctionsService } from "src/app/demo/service/functions.service";
 import { SolicitudTurnoService } from "src/app/demo/service/solicitudes-turno.service";
 import { UsuarioService } from "src/app/demo/service/usuario.service";
 
+/*
 export const  header = {
     margin: 8,
     columns: [
@@ -669,63 +670,7 @@ export const content:any = (data:any)=>{
             id:'table-info-productos',
             table:{
                 widths: [ '25%','10%','20%','10%','10%','25%' ],
-                body:/*[
-                    [
-                        {
-                            text:'LUGAR DE RETIRO DE MERCANCIA',
-                            alignment:'center',
-                            fontSize:8,
-                            blod:true,
-                            color:"antiquewhite",
-                            fillColor:"green"
-                        },
-                        {
-                            text:'PEDIDO DE VENTA',
-                            alignment:'center',
-                            fontSize:8,
-                            blod:true,
-                            color:"antiquewhite",
-                            fillColor:"green"
-
-                        },
-                        {
-                            text:'PRODUCTO (Nombre específico/Grados)',
-                            alignment:'center',
-                            fontSize:8,
-                            blod:true,
-                            color:"antiquewhite",
-                            fillColor:"green"
-                        },
-                        {
-                            text:'PRESENTACIÓN / ESPECIFICACIONES',
-                            alignment:'center',
-                            fontSize:8,
-                            blod:true,
-                            color:"antiquewhite",
-                            fillColor:"green"
-
-                        },
-                        {
-                            text:'CANTIDAD (TONELADAS)',
-                            alignment:'center',
-                            fontSize:8,
-                            blod:true,
-                            color:"antiquewhite",
-                            fillColor:"green"
-
-                        },
-                        {
-                            text:'DESTINO DE MERCANCIA',
-                            alignment:'center',
-                            fontSize:8,
-                            blod:true,
-                            color:"antiquewhite",
-                            fillColor:"green"
-
-                        }
-                    ],
-                    detalleProductos
-                ]*/bodyTableProductos
+                body:bodyTableProductos
             },
             margin:[0,5,0,5],
         },
@@ -881,6 +826,7 @@ export const footer:any =(infoUsuario:any)=> {
 export const images:any = {
     Logo: ''
 }
+*/
 
 @Injectable()
 export class PdfSolicitudCargue {

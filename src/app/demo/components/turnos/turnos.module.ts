@@ -26,6 +26,7 @@ import { DashboardComponentTurno } from './dashboard/dashboard.component';
 import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynamic-charts.module';
 import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 import { PdfSolicitudCargue } from '../solicitudescargue/config-pdf/solicitud-cargue';
+import { InspeccionDespachoComponent } from './inspeccion-despacho/inspeccion-despacho.component';
 
 
 
@@ -34,6 +35,7 @@ import { PdfSolicitudCargue } from '../solicitudescargue/config-pdf/solicitud-ca
     CalendarioTurnosComponent,
     FormTurnoComponent,
     VistaEstadosTurnoComponent,
+    InspeccionDespachoComponent,
   ],
   imports: [
     CommonModule,

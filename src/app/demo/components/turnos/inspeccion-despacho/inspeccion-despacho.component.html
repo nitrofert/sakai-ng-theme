@@ -1,0 +1,401 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<div class="grid">
+	<div class="col-12">
+		
+        
+    <div class="card">
+        <p-tabView styleClass="tabview-custom">
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <i class="pi pi-truck mr-2"></i>
+                    <span>Inspección del vehiculo</span>
+                </ng-template>
+                <p class="text-center">
+                    El objetivo de esta lista de chequeo es para garantizar las condiciones de la operación del despacho de un vehiculo con los procesos de calidad. Estos items son de obligatorio cumplimiento. En caso de presentar anomalía en el vehículo queda fuera de servicio inmediatamente y reportar al técnico de despacho encargado.
+                </p>
+                
+                <div class="col-12 flex justify-content-center">
+                    <span class="mr-2 pt-3">
+                        <strong>ESTADO DEL VEHÍCULO:</strong> 
+                    </span>
+                    <p-selectButton [options]="stateOptions" 
+                                    [(ngModel)]="estado_vehiculo" 
+                                    class="w-3" 
+                                    optionLabel="label" 
+                                    optionValue="value"
+                                    (onChange)="cambioValor()">
+                    </p-selectButton>
+                </div>
+                
+                <div class="col-12 card">
+                    <p-table #dt1 
+                            [value]="dataTableChekVehiculo" 
+                            
+                            [rows]="10" 
+                            [rowsPerPageOptions]="[10, 50, 100]"
+                            [loading]="loading" 
+                            [rowHover]="true" 
+                            [styleClass]="'p-datatable-gridlines p-datatable-sm  '" 
+                            [paginator]="false"
+                            responsiveLayout="scroll">
+				
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th colspan="4">
+                                    <div class="text-center h6">CHEQUEO VEHICULO</div>
+                                </th>
+                            </tr>
+                            <tr>
+                                
+
+                                <th  style="min-width:3rem">
+                                    <div class="text-center">ITEM</div>
+                                </th>
+
+                                <th  style="max-width:6rem">
+                                    <div class="text-center">CRITERIOS A EVALUAR</div>
+                                </th>
+
+                                <th  style="max-width:8rem">
+                                    <div class="text-center">ESTADO</div>
+                                </th>
+                                
+                                <th  style="min-width:15rem">
+                                    <div class="text-center">OBSERVACIONES</div>
+                                </th>
+
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-itemData >
+                            <tr>
+                                <td [class]="'text-center '">
+                                {{itemData.item}}
+                                </td>
+                                <td class="text-center">
+                                    {{itemData.label}}
+                                </td>
+                                <td class="text-center">
+                                    <p-selectButton [options]="stateOptions" 
+                                                    [(ngModel)]="itemData.estado" 
+                                                    class="w-3" 
+                                                    optionLabel="label" 
+                                                    optionValue="value"
+                                                    (onChange)="cambioValor()">
+                                    </p-selectButton>
+                                </td>
+                                <td style="min-width: 11rem;" pEditableColumn>
+                                    <p-cellEditor>
+                                        <ng-template  pTemplate="input">
+                                            <input pInputText type="text" 
+                                                    [(ngModel)]="itemData.observacion"
+                                                    (change)="cambioValor()">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{itemData.observacion}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                            </tr>
+
+                            
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td [colSpan]="4"  class="text-center">No se econtraron registros.</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="loadingbody">
+                            <tr>
+                                <td [colSpan]="4" class="text-center">Cargando registros. Por favor espere</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+
+            </p-tabPanel>
+            <p-tabPanel header="Header II">
+                <ng-template pTemplate="header">
+                    <i class="pi pi-box  mr-2"></i>
+                    <span>Inspección de la carga</span>
+                </ng-template>
+                <p class="text-center">
+                    El conductor debe estar presente al momento del cargue y verificar de igual manera el proceso de despacho validando conformidad y calidad.
+                </p>
+                
+                
+                
+                <div class="col-12 card">
+                    <p-table #dt2 
+                    [value]="dataTableChekCarga" 
+					 
+					 [rows]="10" 
+					 [rowsPerPageOptions]="[10, 50, 100]"
+					 [loading]="loading" 
+					 [rowHover]="true" 
+					 [styleClass]="'p-datatable-gridlines p-datatable-sm  '" 
+					 [paginator]="false"
+					 
+					
+					
+					 responsiveLayout="scroll">
+				
+				<ng-template pTemplate="header">
+                    <tr>
+                        <th colspan="4">
+                            <div class="text-center h6">CHEQUEO PRODUCTO</div>
+                        </th>
+                    </tr>
+					<tr>
+						
+
+                        <th  style="min-width:3rem">
+                            <div class="text-center">ITEM</div>
+                        </th>
+
+                        <th  style="max-width:6rem">
+                            <div class="text-center">CRITERIOS A EVALUAR</div>
+                        </th>
+
+                        <th  style="max-width:8rem">
+                            <div class="text-center">ESTADO</div>
+                        </th>
+                        
+                        <th  style="min-width:15rem">
+                            <div class="text-center">OBSERVACIONES</div>
+                        </th>
+
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-itemData >
+					<tr>
+                        <td [class]="'text-center '">
+                           {{itemData.item}}
+                        </td>
+                        <td class="text-center">
+                            {{itemData.label}}
+                        </td>
+                        <td class="text-center">
+                            <p-selectButton [options]="stateOptions" 
+                                            [(ngModel)]="itemData.estado" 
+                                            class="w-3" 
+                                            optionLabel="label" 
+                                            optionValue="value"
+                                            (onChange)="cambioValor()">
+                            </p-selectButton>
+                        </td>
+                        <td style="min-width: 11rem;" pEditableColumn>
+                            <p-cellEditor>
+                                <ng-template  pTemplate="input">
+                                    <input pInputText type="text" 
+                                            [(ngModel)]="itemData.observacion"
+                                            (onChange)="cambioValor()">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{itemData.observacion}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+					</tr>
+
+					
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td [colSpan]="4"  class="text-center">No se econtraron registros.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td [colSpan]="4" class="text-center">Cargando registros. Por favor espere</td>
+					</tr>
+				</ng-template>
+    		</p-table>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Header III" [disabled]="(turno.estado != estadosTurno.CARGADO && turno.estado != estadosTurno.CARGANDO)?true:false" >
+                <ng-template pTemplate="header">
+                    <i class="pi pi-check   mr-2"></i>
+                    <span>Aceptación - firma inspección</span>
+                    
+                </ng-template>
+
+                <div class="col-12 card">
+                    <table>
+                        <tr>
+                            <td style="min-width:11rem">
+                                <strong>Hora de llegada:</strong> 
+                            </td>
+                            <td style="min-width:11rem">
+                                {{ hora_llegada | date:'short'}}
+                            </td>
+                            <td style="min-width:11rem">
+                               <strong>Hora inicio cargue:</strong> 
+                            </td>
+                            <td style="min-width:11rem">
+                                {{ hora_inicio_cargue | date:'short'}}
+                            </td>
+                            <td style="min-width:11rem">
+                               <strong>Hora finalización cargue:</strong> 
+                            </td>
+                            <td style="min-width:11rem">
+                                {{ hora_fin_cargue | date:'short'}}
+                            </td>
+                            <td style="min-width:11rem">
+                               <strong>Tiempo de cargue:</strong> 
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               <strong>Placa:</strong> 
+                            </td>
+                            <td>
+                                {{ turno.vehiculo.placa }}
+                            </td>
+                            <td>
+                               <strong>Cedula conductor:</strong> 
+                            </td>
+                            <td>
+                                {{ turno.conductor.cedula}}
+                            </td>
+                            <td>
+                              <strong>Nombre de conductor:</strong> 
+                            </td>
+                            <td>
+                                {{turno.conductor.nombre}}
+                            </td>
+                            <td>
+                                <strong>No. Tiquete bascula:</strong>
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <p class="text-justify">
+                    Yo. <u><strong>{{turno.conductor.nombre }}</strong></u> identificado con cédula de ciudadania No. <u><strong>{{turno.conductor.cedula }}</strong></u> expedida en ___________ en mi condición de conductor del vehículo con placas <u><strong>{{turno.vehiculo.placa }}</strong></u>, certifico que el contenido de la presente carga se ajusta a lo declarado en la remisión No. _______ en cuanto cantidad, calidad y peso. De igual forma, manifiesto que <u><strong>Nitrocaribe</strong></u> dispuso las condiciones necesarias para la verificación a conformidad del proceso de cargue y despacho de la mencionada carga.
+                </p>
+
+                <div class="field col-12 ">
+                    <app-dynamic-table [dataTable]="dataTableProductosTurno.data" 
+                                [headersTable]="dataTableProductosTurno.header"
+                                
+                                dataKey="index" 
+                                [rows]="10" 
+                                [rowsPerPageOptions]="[10,50,100]" 
+                                [paginator]="false"
+                                [selectionMode]="'multiple'"
+                                [loading]="loading"
+                                [showBtnExp]="true"
+                                class="min-w-full"
+                                nameExport="rpt_novedades">
+                    </app-dynamic-table>
+                </div>  
+
+                <div class="col-12 card flex justify-content-center">
+                    <table>
+                        <tr>
+                            <td style="min-width:11rem" >
+                                <strong>Canitdad unidades:</strong> 
+                            </td>
+                            <td style="min-width:11rem">
+                                <input pInputText 
+                                id="peso_neto" 
+                                type="number" 
+                                [(ngModel)]="cantidad_unidades"
+                                (ngModelChange)="cambioValor()"
+                                [ngClass]="{'ng-invalid ng-dirty' :  (0 === cantidad_unidades)}"/>
+                            </td>
+                            <td style="min-width:11rem" class="w-6">
+                                <p-selectButton [options]="stateOptions" 
+                                                [(ngModel)]="conforme_cantidades" 
+                                                class="w-3" 
+                                                optionLabel="label" 
+                                                optionValue="value"
+                                                (onChange)="cambioValor()">
+                                </p-selectButton>
+                            </td>
+                            
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" style="min-width:11rem" class="w-6">
+                                <strong>Calidad:</strong> 
+                            </td>
+                            
+                            <td style="min-width:11rem">
+                                <p-selectButton [options]="stateOptions" 
+                                                [(ngModel)]="conforme_calidad" 
+                                                class="w-3" 
+                                                optionLabel="label" 
+                                                optionValue="value"
+                                                (onChange)="cambioValor()">
+                                </p-selectButton>
+                            </td>
+                            
+                        </tr>
+                        
+                    </table>
+                </div>
+
+                <div class="field col-12 ">
+                    <span class="p-float-label">
+                        <textarea rows="5" 
+                                    class="w-full" 
+                                    pInputTextarea 
+                                    (ngModelChange)="cambioValor()"
+                                    inputId="comentario" 
+                                    [(ngModel)]="observaciones">
+                        </textarea> 
+                        <label for="observaciones"><h6>observaciones</h6></label>
+                    </span>
+                </div>
+
+                <div class="col-12 text-center">
+                    <canvas></canvas>
+                    <div class="border-top-1 m-5"><h6>Firma y cedula conductor</h6></div>
+                </div>
+
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- Dialog loading -->
+<p-dialog header="Cargando" 
+          [(visible)]="displayModal" 
+          [modal]="true" 
+          [style]="{width: '50vw'}" 
+          [draggable]="false" 
+          [resizable]="false"
+          >
+    <p class="m-0">
+
+    </p>
+
+    <div *ngIf="loadingCargue" class="field col flex justify-content-center align-items-center">
+                    
+        <!--<p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>-->
+        <!--<p-progressSpinner></p-progressSpinner>-->
+        <img src="assets/layout/images/Rhombus.gif" alt="">
+    </div>
+    <div *ngIf="completeCargue" class="field col flex justify-content-center align-items-center animation-duration-1000 animation-ease-out">
+        <div class="text-center">
+            <span>{{ messageComplete }}</span>
+            <span>Esta ventana se cerrara automaticamente en unos segundos, si esto no ocurre puede cerrarla manualmente.</span>
+        </div>
+    </div>
+
+</p-dialog>
+<!--Fin Dialog loading-->
+
