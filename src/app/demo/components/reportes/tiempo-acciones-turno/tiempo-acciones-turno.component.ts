@@ -13,6 +13,7 @@ import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
 import { LocalidadesService } from 'src/app/demo/service/localidades.service';
 import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 
+
 @Component({
   selector: 'app-tiempo-acciones-turno',
   providers:[ConfirmationService,MessageService],
@@ -64,8 +65,10 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
              "producto":{"label":"Producto","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
              "cantidad":{"label":"Cantidad","type":"number","sizeCol":"6rem","align":"center","editable":false}, 
              "comentario":{"label":"Comentario","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
-             "tiempoEstado":{"label":"Tiempo","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
-             "horaAcumulada":{"label":"Horas acumulada","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "tiempoEstado":{"label":"Tiempo x producto","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             "tiempoAcumuladoProducto":{"label":"Tiempo acumulado x producto","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+             
+             "horaAcumulada":{"label":"Total tiempo acumulado","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
              
 
            }],
@@ -132,7 +135,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
     
     
     this.estadoSeleccionadoInicial = this.estados[0]; 
-    //////console.log('estadose',this.estados);
+    ////////console.log('estadose',this.estados);
     
     if(this.rangoFechas){
       this.filtroRnagoFechas = this.rangoFechas;
@@ -149,7 +152,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    //////////////////console.log('changes',changes['rangoFechas'].currentValue)
+    ////////////////////console.log('changes',changes['rangoFechas'].currentValue)
     this.loading = true;
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.getLocaciones();
@@ -160,7 +163,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
     
     
     if(event[1]){
-      //////console.log(this.filtroRnagoFechas);
+      ////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       //this.setReporte();
       //this.getLocaciones();
@@ -174,7 +177,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
         .subscribe({
             next:async (locaciones)=>{
 
-              //////////console.log(locaciones);
+              ////////////console.log(locaciones);
               await locaciones.map((locacion:any)=>{
                 locacion.label = locacion.locacion
               })
@@ -202,7 +205,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
     let infoTurnos = await this.solicitudTurnoService.allInfoTurnos(params);
     
-    //////////console.log('infoTurnos',infoTurnos);
+    ////////////console.log('infoTurnos',infoTurnos);
 
     //return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
 
@@ -210,38 +213,38 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
   }
 
   async filtrarEstadoInicial(event:any){
-    ////////console.log('filtrarEstadoInicial');
+    //////////console.log('filtrarEstadoInicial');
     this.estadosFiltradasInicial = await this.functionsService.filter(event,this.estados);
   }
 
   async filtrarEstadoFinal(event:any){
-    ////////console.log('filtrarEstadoFinal');
+    //////////console.log('filtrarEstadoFinal');
     this.estadosFiltradasFinal = await this.functionsService.filter(event,this.estadosFiltradasFinal);
   }
 
   async seleccionarEstadoInicial(){
     
-    //////console.log(this.estadoSeleccionadoInicial.name);
+    ////////console.log(this.estadoSeleccionadoInicial.name);
     //this.toneladasAdicionalLocaciones =[];
     //await this.setTablaLocacion(this.infoTurnos)
     //this.dataTableComprtamientoBodegas.data = [];
     //await this.setReporte();
     this.estadosFiltradasFinal = [];
 
-    ////////console.log('order estado inicial',this.estados.find(estado=>estado.name == this.estadoSeleccionadoInicial.name).order);
+    //////////console.log('order estado inicial',this.estados.find(estado=>estado.name == this.estadoSeleccionadoInicial.name).order);
     let estadosFiltradasFinal = this.estados.filter(estado=>estado.order > (this.estados.find(estado=>estado.name == this.estadoSeleccionadoInicial.name).order));
     this.estadosFiltradasFinal = await this.functionsService.clonObject(estadosFiltradasFinal);
-    ////////console.log(this.estadosFiltradasFinal);
+    //////////console.log(this.estadosFiltradasFinal);
 
     this.estadoSeleccionadoFinal = this.estadosFiltradasFinal[0];
-    ////////console.log(this.estadoSeleccionadoFinal);
+    //////////console.log(this.estadoSeleccionadoFinal);
     this.seleccionarEstadoFinal();
 
   }
  
   async seleccionarEstadoFinal(){
     
-    ////////////console.log(this.locacionSeleccionada);
+    //////////////console.log(this.locacionSeleccionada);
     //this.toneladasAdicionalLocaciones =[];
     //await this.setTablaLocacion(this.infoTurnos)
     this.dataTableComprtamientoBodegas.data = [];
@@ -250,7 +253,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
   }
 
-  async setReporte():Promise<void>{
+  async setReporte2():Promise<void>{
 
 
     const minute = 1000 * 60;
@@ -261,22 +264,22 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
     let infoTurnos = await this.getInfoTurnos();
     this.infoTurnos = infoTurnos;
 
-    console.log('infoTurnos',infoTurnos);
+    //console.log('infoTurnos',infoTurnos);
 
     let fechaInicio = new Date(this.filtroRnagoFechas[0].toISOString());
     let fechaFinal = new Date(this.filtroRnagoFechas[1].toISOString());
-    ////console.log('fecha inicio filtro',fechaInicio);
-    ////console.log('fecha fin filtro',fechaFinal);
+    //////console.log('fecha inicio filtro',fechaInicio);
+    //////console.log('fecha fin filtro',fechaFinal);
 
-    //////console.log(this.infoTurnos.filter(turno=>turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado === this.estadoSeleccionadoInicial.name ).length>0                                              && turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado  === this.estadoSeleccionadoFinal.name).length>0 ));
+    ////////console.log(this.infoTurnos.filter(turno=>turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado === this.estadoSeleccionadoInicial.name ).length>0                                              && turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado  === this.estadoSeleccionadoFinal.name).length>0 ));
 
     let infoTurnosEstadosSeleccionados = this.infoTurnos.filter(turno=>turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado === this.estadoSeleccionadoInicial.name ).length>0
                                                                       && turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado  === this.estadoSeleccionadoFinal.name).length>0                                              
                                                               );
-    console.log('infoTurnosEstadosSeleccionados',infoTurnosEstadosSeleccionados);
+    //console.log('infoTurnosEstadosSeleccionados',infoTurnosEstadosSeleccionados);
 
     let locacionesTurnos =(await this.functionsService.groupArray( (await this.functionsService.clonObject(infoTurnosEstadosSeleccionados.map((turno)=>{
-                                                                                                  //////////console.log(turno.locacion, turno)
+                                                                                                  ////////////console.log(turno.locacion, turno)
                                                                                                   return {
                                                                                                     id: this.locaciones.filter(locacion=>locacion.code === turno.locacion).length==0?'':this.locaciones.filter(locacion=>locacion.code === turno.locacion)[0].id,
                                                                                                     code: turno.locacion,
@@ -285,7 +288,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
                                                                                                 })
                                                                   )),'id')).filter(locacion=>locacion.id!='');
 
-   ////////console.log('locacionesTurnos',locacionesTurnos);
+   //////////console.log('locacionesTurnos',locacionesTurnos);
    
     let obectString:string ="";
 
@@ -295,7 +298,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
     for(let locacion of locacionesTurnos){
 
-      //////console.log('locacion',locacion.label);
+      ////////console.log('locacion',locacion.label);
       obectString = `{"locacion":"${locacion.label}"`;
       let objectDiasLocion:any[] = [];
       let  turnosLocacionEstado = infoTurnosEstadosSeleccionados.filter((turno: {detalle_solicitud_turnos_historial: any; locacion: any; })=>turno.locacion === locacion.code 
@@ -306,7 +309,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
                                                                                                       //&& new Date(historial.fecha_accion).getMonth() == new Date(this.filtroRnagoFechas[0].toISOString()).getMonth()
                                                                                                       //&& new Date(historial.fecha_accion).getFullYear() == new Date(this.filtroRnagoFechas[1].toISOString()).getFullYear()
                                                                                                       ));
-      //console.log('turnosLocacionEstado',turnosLocacionEstado);
+      ////console.log('turnosLocacionEstado',turnosLocacionEstado);
       let turnosValidados = 0; 
       let turnosNoValidados = 0; 
       let horas = 0 
@@ -315,26 +318,32 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
         
 
         let lineasHistorialEstadoTurno = turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  === this.estadoSeleccionadoInicial.name || historial.estado === this.estadoSeleccionadoFinal.name);
-        ////////console.log('turnoLocacionEstado',turnoLocacionEstado);
-        ////////console.log('lineasHistorialEstadoTurno',lineasHistorialEstadoTurno);
+        console.log('turnoLocacionEstado',turnoLocacionEstado.id);
+        //////////console.log('lineasHistorialEstadoTurno',lineasHistorialEstadoTurno);
 
         let historialEstadoInicial = await this.functionsService.sortArrayObject(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  === this.estadoSeleccionadoInicial.name ),'id', 'ASC');
-        ////console.log('historialEstadoInicial',historialEstadoInicial);
+        //////console.log('historialEstadoInicial',historialEstadoInicial);
         let historialEstadoFinal = await this.functionsService.sortArrayObject(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  ===  this.estadoSeleccionadoFinal.name),'id', 'DESC');
-        ////console.log('historialEstadoFinal',historialEstadoFinal);
+        //////console.log('historialEstadoFinal',historialEstadoFinal);
 
         if(historialEstadoInicial.length>0 && historialEstadoFinal.length>0) {
           let horaAcumulada = 0;
           let horaAcumuladaProducto = 0;
-          ////console.log(`Historial locacion ${locacion.code} turno ${turnoLocacionEstado.id}:`,turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { id: any; })=>historial.id >= historialEstadoInicial[0].id && historial.id <= historialEstadoFinal[0].id ));
+          //////console.log(`Historial locacion ${locacion.code} turno ${turnoLocacionEstado.id}:`,turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { id: any; })=>historial.id >= historialEstadoInicial[0].id && historial.id <= historialEstadoFinal[0].id ));
           let historialEntreEstados = turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { id: any; })=>historial.id >= historialEstadoInicial[0].id && historial.id <= historialEstadoFinal[0].id );
-          historialEntreEstados.map((historial:any, index:number, array:any[])=>{
+          //console.log('historialEntreEstados',historialEntreEstados);
+          let fechaInicioHistorialTurno = new Date(`${historialEntreEstados[0].fecha_accion}T${historialEntreEstados[0].hora_accion}`);
 
-            //console.log('index',index);
-            //console.log('array',array);
+
+          historialEntreEstados.map(async (historial:any, index:number, array:any[])=>{
+
+            ////console.log('index',index);
+            ////console.log('array',array);
             let tiempoEstado:string ="";
 
             let diferenciaFechasEstados = 0
+
+            let dif ='00:00:00';
 
             if(index !=0){
               let horaInicialEstados:any  = array[index-1].hora_accion==null?"00:00:00":array[index-1].hora_accion;
@@ -344,14 +353,12 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
               let fechaFinalAccionEstados = new Date(new Date(`${array[index].fecha_accion}T00:00:00`).setHours(horaFinalEstados.split(':')[0],horaFinalEstados.split(':')[1],horaFinalEstados.split(':')[2]));
 
               diferenciaFechasEstados = fechaFinalAccionEstados.getTime() - fechaInicialAccionEstados.getTime();
+              //console.log('diferenciaFechasEstados',diferenciaFechasEstados)
             
               let diferenciaFechaHorasEstados = Math.round(diferenciaFechasEstados/(1000*60*60));
 
-              //console.log('Años',Math.round(diferenciaFechasEstados/(year)))
-              //console.log('dias',Math.round(diferenciaFechasEstados/(day)))
-              //console.log('horas',Math.round(diferenciaFechasEstados/(hour)))
-              //console.log('minutos',Math.round(diferenciaFechasEstados/(minute)))
-              //console.log('segundos',Math.round(diferenciaFechasEstados/(1000)))
+              dif =  await this.functionsService.dateDifFormatTime(fechaInicialAccionEstados,fechaFinalAccionEstados);
+
 
               //tiempoEstado = `${Math.round(diferenciaFechasEstados/(hour))}:${Math.round(diferenciaFechasEstados/(minute))}:${Math.round(diferenciaFechasEstados/(1000))}`;
               
@@ -364,11 +371,27 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
             let productos:any[] = turnoLocacionEstado.detalle_solicitud_turnos_pedido.filter((item: { itemcode: string; })=>!item.itemcode.startsWith("SF"));
             let diferenciaFechasProductoEstados = diferenciaFechasEstados/productos.length;
+            console.log('diferenciaFechasProductoEstados',diferenciaFechasProductoEstados)
 
-            let tiempoEstadoProducto = Math.round(diferenciaFechasProductoEstados/(hour))!=0?`${Math.round(diferenciaFechasProductoEstados/(hour))} horas`: Math.round(diferenciaFechasProductoEstados/(minute))!=0?`${Math.round(diferenciaFechasProductoEstados/(minute))} minnutos`:`${Math.round(diferenciaFechasProductoEstados/(1000))} segundos`;
+            //let tiempoEstadoProducto = Math.round(diferenciaFechasProductoEstados/(hour))!=0?`${Math.round(diferenciaFechasProductoEstados/(hour))} horas`: Math.round(diferenciaFechasProductoEstados/(minute))!=0?`${Math.round(diferenciaFechasProductoEstados/(minute))} minutos`:`${Math.round(diferenciaFechasProductoEstados/(1000))} segundos`;
+            let acumuladoTiempoProducto =0;
+            let i =1;
+            productos.forEach(async (item)=>{
+              //horaAcumuladaProducto = horaAcumuladaProducto+(Math.round(diferenciaFechasProductoEstados/(hour))!=0?Math.round(diferenciaFechasProductoEstados/(hour)):(Math.round(diferenciaFechasProductoEstados/(minute))/60)+(Math.round(diferenciaFechasProductoEstados/(1000))/3600))
+              //acumuladoTiempoProducto+=diferenciaFechasProductoEstados;
+              acumuladoTiempoProducto=diferenciaFechasProductoEstados*i;
+              console.log('acumuladoTiempoProducto',i,acumuladoTiempoProducto)
             
-            productos.forEach((item)=>{
-              horaAcumuladaProducto = horaAcumuladaProducto+(Math.round(diferenciaFechasProductoEstados/(hour))!=0?Math.round(diferenciaFechasProductoEstados/(hour)):(Math.round(diferenciaFechasProductoEstados/(minute))/60)+(Math.round(diferenciaFechasProductoEstados/(1000))/3600))
+
+              //let tiempoAcumuladoProducto = Math.round(acumuladoTiempoProducto/(hour))!=0?`${Math.round(acumuladoTiempoProducto/(hour))} horas`: Math.round(acumuladoTiempoProducto/(minute))!=0?`${Math.round(acumuladoTiempoProducto/(minute))} minutos`:`${Math.round(acumuladoTiempoProducto/(1000))} segundos`;
+              let fechaHistorial  = new Date(`${historial.fecha_accion}T${historial.hora_accion}`);
+              let tiempoEstadoProducto = await this.functionsService.dateDifFormatTime(fechaHistorial,new Date(fechaHistorial.getTime()+diferenciaFechasProductoEstados))
+              let tiempoAcumuladoProducto = await this.functionsService.dateDifFormatTime(fechaHistorial,new Date((fechaHistorial.getTime()+acumuladoTiempoProducto)))
+
+              //horaAcumuladaProducto = horaAcumuladaProducto+(diferenciaFechasProductoEstados/(hour));
+
+              horaAcumuladaProducto = await this.functionsService.dateDifFormatTime(fechaInicioHistorialTurno,fechaHistorial);
+              
 
               detalle_historial_turnos.push({
                 locacion:locacion.label,
@@ -384,11 +407,14 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
                 cantidad:item.cantidad,
                 comentario:this.functionsService.bufferToString(historial.comentario),
                 tiempoEstado:tiempoEstadoProducto,
+                tiempoAcumuladoProducto,
                 //tiempoEstado,
                 horaAcumulada:horaAcumuladaProducto
                 //horaAcumulada,
   
               })
+
+              i++;
 
             });
 
@@ -397,17 +423,17 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
 
           })
-          //////////console.log(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado === this.estadoSeleccionado.name));
+          ////////////console.log(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado === this.estadoSeleccionado.name));
 
           //let historialEstadoTurno = await this.functionsService.groupArray(await this.functionsService.sortArrayObject(lineasHistorialEstadoTurno,'id','DESC'),'estado');
 
           //if(historialEstadoTurno.length>=2){
-            ////////console.log('historialEstadoTurno',historialEstadoTurno);
-            ////////console.log('historialEstadoTurno[1].fecha_accion',historialEstadoTurno[1].fecha_accion);
-            ////////console.log('historialEstadoTurno[1].hora_acion',historialEstadoTurno[1].hora_accion.split(':'));
-            ////////console.log(new Date(new Date(`${historialEstadoInicial[0].fecha_accion}T00:00:00`).setHours(historialEstadoInicial[0].hora_accion.split(':')[0],historialEstadoInicial[0].hora_accion.split(':')[1],historialEstadoInicial[0].hora_accion.split(':')[2])));
-            //////console.log('historialEstadoInicial[0].hora_accion',historialEstadoInicial[0].hora_accion);
-            //////console.log('historialEstadoFinal[0].hora_accion',historialEstadoFinal[0].hora_accion);
+            //////////console.log('historialEstadoTurno',historialEstadoTurno);
+            //////////console.log('historialEstadoTurno[1].fecha_accion',historialEstadoTurno[1].fecha_accion);
+            //////////console.log('historialEstadoTurno[1].hora_acion',historialEstadoTurno[1].hora_accion.split(':'));
+            //////////console.log(new Date(new Date(`${historialEstadoInicial[0].fecha_accion}T00:00:00`).setHours(historialEstadoInicial[0].hora_accion.split(':')[0],historialEstadoInicial[0].hora_accion.split(':')[1],historialEstadoInicial[0].hora_accion.split(':')[2])));
+            ////////console.log('historialEstadoInicial[0].hora_accion',historialEstadoInicial[0].hora_accion);
+            ////////console.log('historialEstadoFinal[0].hora_accion',historialEstadoFinal[0].hora_accion);
             if(historialEstadoInicial[0].hora_accion==null){
               historialEstadoInicial[0].hora_accion = "00:00:00";
             }
@@ -417,15 +443,15 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
             }
 
             let fechaInicialAccion = new Date(new Date(`${historialEstadoInicial[0].fecha_accion}T00:00:00`).setHours(historialEstadoInicial[0].hora_accion.split(':')[0],historialEstadoInicial[0].hora_accion.split(':')[1],historialEstadoInicial[0].hora_accion.split(':')[2]));
-            ////////console.log('fechaInicialAccion',fechaInicialAccion);
+            //////////console.log('fechaInicialAccion',fechaInicialAccion);
             let fechaFinalAccion = new Date(new Date(`${historialEstadoFinal[0].fecha_accion}T00:00:00`).setHours(historialEstadoFinal[0].hora_accion.split(':')[0],historialEstadoFinal[0].hora_accion.split(':')[1],historialEstadoFinal[0].hora_accion.split(':')[2]));
-            ////////console.log('fechaFinalAccion',fechaFinalAccion);
+            //////////console.log('fechaFinalAccion',fechaFinalAccion);
 
             let diferenciaFechas = fechaFinalAccion.getTime() - fechaInicialAccion.getTime();
             let diferenciaFechaHoras = Math.round(diferenciaFechas/(1000*60*60));
             horas = horas+diferenciaFechaHoras;
             turnosValidados++;
-            //////console.log('diferenciaFechaHoras',diferenciaFechaHoras);
+            ////////console.log('diferenciaFechaHoras',diferenciaFechaHoras);
           //}
           
          
@@ -442,11 +468,283 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
           turnosNoValidados++;
         }
       }
-      //////console.log('turnosNoValidados',turnosNoValidados);
+      ////////console.log('turnosNoValidados',turnosNoValidados);
       obectString+= `,"totalTurnos":"${turnosValidados}","totalHoras":"${horas}","tiempo":"${horas/turnosValidados}"}`;
       this.dataTableComprtamientoBodegas.data.push(JSON.parse(obectString));
     }
-    //console.log('detalle_historial_turnos',detalle_historial_turnos);
+    ////console.log('detalle_historial_turnos',detalle_historial_turnos);
+    this.dataTableComprtamientoBodegasDetallado.data = detalle_historial_turnos;
+    this.loading = false;
+  }
+
+  async setReporte():Promise<void>{
+
+
+    const minute = 1000 * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const year = day * 365;
+
+    let infoTurnos = await this.getInfoTurnos();
+    this.infoTurnos = infoTurnos;
+
+    //console.log('infoTurnos',infoTurnos);
+
+    let infoTurnosEstadosSeleccionados = this.infoTurnos.filter(turno=>turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado === this.estadoSeleccionadoInicial.name ).length>0
+                                                                      && turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=> historial.estado  === this.estadoSeleccionadoFinal.name).length>0                                              
+                                                              );
+    //console.log('infoTurnosEstadosSeleccionados',infoTurnosEstadosSeleccionados);
+
+    let locacionesTurnos =(await this.functionsService.groupArray( (await this.functionsService.clonObject(infoTurnosEstadosSeleccionados.map((turno)=>{
+                                                                                                  ////////////console.log(turno.locacion, turno)
+                                                                                                  return {
+                                                                                                    id: this.locaciones.filter(locacion=>locacion.code === turno.locacion).length==0?'':this.locaciones.filter(locacion=>locacion.code === turno.locacion)[0].id,
+                                                                                                    code: turno.locacion,
+                                                                                                    label: this.locaciones.filter(locacion=>locacion.code === turno.locacion).length==0?'':this.locaciones.filter(locacion=>locacion.code === turno.locacion)[0].locacion
+                                                                                                  }
+                                                                                                })
+                                                                  )),'id')).filter(locacion=>locacion.id!='');
+
+   //////////console.log('locacionesTurnos',locacionesTurnos);
+   
+    let obectString:string ="";
+    let detalle_historial_turnos:any[] = [];
+
+    for(let locacion of locacionesTurnos){
+
+      ////////console.log('locacion',locacion.label);
+      obectString = `{"locacion":"${locacion.label}"`;
+      let objectDiasLocion:any[] = [];
+      let  turnosLocacionEstado = infoTurnosEstadosSeleccionados.filter((turno: {detalle_solicitud_turnos_historial: any; locacion: any; })=>turno.locacion === locacion.code 
+                                                  && turno.detalle_solicitud_turnos_historial.filter((historial: { estado: any; fecha_accion:any })=>
+                                                                                                      historial.estado === this.estadoSeleccionadoInicial.name
+                                                                                                      || historial.estado === this.estadoSeleccionadoFinal.name
+                                                                                                      //&& new Date(historial.fecha_accion).getDay() == dia.id
+                                                                                                      //&& new Date(historial.fecha_accion).getMonth() == new Date(this.filtroRnagoFechas[0].toISOString()).getMonth()
+                                                                                                      //&& new Date(historial.fecha_accion).getFullYear() == new Date(this.filtroRnagoFechas[1].toISOString()).getFullYear()
+                                                                                                      ));
+      ////console.log('turnosLocacionEstado',turnosLocacionEstado);
+      let turnosValidados = 0; 
+      let turnosNoValidados = 0; 
+      let horas = 0 
+
+      for await(let turnoLocacionEstado of turnosLocacionEstado){
+        
+        let historialEstadoInicial = await this.functionsService.sortArrayObject(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  === this.estadoSeleccionadoInicial.name ),'id', 'ASC');
+        //////console.log('historialEstadoInicial',historialEstadoInicial);
+        let historialEstadoFinal = await this.functionsService.sortArrayObject(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  ===  this.estadoSeleccionadoFinal.name),'id', 'DESC');
+        //////console.log('historialEstadoFinal',historialEstadoFinal);
+
+        if(historialEstadoInicial.length>0 && historialEstadoFinal.length>0) {
+          let horaAcumulada = 0;
+          let horaAcumuladaProducto = 0;
+          //////console.log(`Historial locacion ${locacion.code} turno ${turnoLocacionEstado.id}:`,turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { id: any; })=>historial.id >= historialEstadoInicial[0].id && historial.id <= historialEstadoFinal[0].id ));
+          let historialEntreEstados = turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { id: any; })=>historial.id >= historialEstadoInicial[0].id && historial.id <= historialEstadoFinal[0].id );
+          //console.log('historialEntreEstados',historialEntreEstados);
+          let fechaInicioHistorialTurno = new Date(`${historialEntreEstados[0].fecha_accion}T${historialEntreEstados[0].hora_accion}`);
+          let fechInicioEstadoAnterior:Date = new Date(fechaInicioHistorialTurno);
+
+
+
+          let i = 0;
+          //Recorrer historial turno
+          for(let estadoHistorialTurno of historialEntreEstados){
+
+            //console.log(estadoHistorialTurno);
+            //Obtener la fecha de accion estado
+            let fechaInicioEstadoActual = new Date(`${estadoHistorialTurno.fecha_accion}T${estadoHistorialTurno.hora_accion}`);
+            //Definir fecha inicio estado
+             
+            //Obtener tiempo en milisegundos entre fecha fechaAccionEstadoHistoarial y fechaInicioEstado
+            let tiempoEntreEstados =   fechaInicioEstadoActual.getTime() - fechInicioEstadoAnterior.getTime();
+
+            //Obtener tiempo en milisegundos entre estados x producto
+            let productos:any[] = turnoLocacionEstado.detalle_solicitud_turnos_pedido.filter((item: { itemcode: string; })=>!item.itemcode.startsWith("SF"));
+            let tiempoEntreEstadosProductos = tiempoEntreEstados/productos.length;
+
+            console.log('Estado',estadoHistorialTurno.estado);
+            console.log('fechInicioEstadoAnterior',fechInicioEstadoAnterior.toISOString());
+            console.log('fechaInicioEstadoActual',fechaInicioEstadoActual.toISOString());
+            //console.log('tiempoEntreEstados',tiempoEntreEstados);
+            console.log('Diferencia entre estados',await this.functionsService.dateDifFormatTime(fechInicioEstadoAnterior,fechaInicioEstadoActual));
+            
+            //console.log('tiempoEntreEstadosProductos',tiempoEntreEstadosProductos);
+            console.log('Diferencia entre productos x estado',await this.functionsService.dateDifFormatTime(fechaInicioEstadoActual,new Date(fechaInicioEstadoActual.getTime()+(tiempoEntreEstadosProductos))));
+            let item = 1;
+            for(let producto of productos){
+                
+                //Calcular fecha estimada estado producto
+                let fechaEstimadaEstadoProducto = new Date(fechInicioEstadoAnterior.getTime()+(tiempoEntreEstadosProductos*item));
+                console.log('fechaEstimadaEstadoProducto',item,fechaEstimadaEstadoProducto.toISOString());
+                console.log('Diferencia entre fecha accion producto estado - fechaEstimadaEstadoProducto',await this.functionsService.dateDifFormatTime(fechaInicioEstadoActual,fechaEstimadaEstadoProducto));
+                console.log('fechaInicioHistorialTurno',item,fechaInicioHistorialTurno.toISOString());
+                console.log('fechInicioEstadoAnterior',item,fechaEstimadaEstadoProducto.toISOString());
+                console.log('Diferencia entre fecha inicio Historial - fechaEstimadaEstadoProducto',await this.functionsService.dateDifFormatTime(fechaInicioHistorialTurno,fechInicioEstadoAnterior));
+
+                detalle_historial_turnos.push({
+                  locacion:locacion.label,
+                  turno:turnoLocacionEstado.id,
+                  horacita:turnoLocacionEstado.fechacita,
+                  vehiculo:turnoLocacionEstado.vehiculo.placa,
+                  conductor:turnoLocacionEstado.conductor.nombre,
+                  condiciontpt:turnoLocacionEstado.condiciontpt,
+                  estado:estadoHistorialTurno.estado,
+                  fechaaccion:estadoHistorialTurno.fecha_accion,
+                  horaaccion:estadoHistorialTurno.hora_accion,
+                  producto:producto.itemname,
+                  cantidad:producto.cantidad,
+                  comentario:this.functionsService.bufferToString(estadoHistorialTurno.comentario),
+                  tiempoEstado:await this.functionsService.dateDifFormatTime(fechaInicioEstadoActual,new Date(fechaInicioEstadoActual.getTime()+(tiempoEntreEstadosProductos))),
+                  tiempoAcumuladoProducto:await this.functionsService.dateDifFormatTime(fechInicioEstadoAnterior,fechaEstimadaEstadoProducto),
+                  //tiempoEstado,
+                  horaAcumulada:await this.functionsService.dateDifFormatTime(fechaInicioHistorialTurno,fechaEstimadaEstadoProducto)
+                  //horaAcumulada,
+    
+                })
+
+                item++;
+            }
+
+
+
+
+
+            fechInicioEstadoAnterior = fechaInicioEstadoActual;
+
+            i++;
+          }
+        
+
+/*
+          historialEntreEstados.map(async (historial:any, index:number, array:any[])=>{
+
+            ////console.log('index',index);
+            ////console.log('array',array);
+            let tiempoEstado:string ="";
+
+            let diferenciaFechasEstados = 0
+
+            let dif ='00:00:00';
+
+            if(index !=0){
+              let horaInicialEstados:any  = array[index-1].hora_accion==null?"00:00:00":array[index-1].hora_accion;
+              let horaFinalEstados:any  = array[index].hora_accion==null?"00:00:00":array[index].hora_accion;
+
+              let fechaInicialAccionEstados = new Date(new Date(`${array[index-1].fecha_accion}T00:00:00`).setHours(horaInicialEstados.split(':')[0],horaInicialEstados.split(':')[1],horaInicialEstados.split(':')[2]));
+              let fechaFinalAccionEstados = new Date(new Date(`${array[index].fecha_accion}T00:00:00`).setHours(horaFinalEstados.split(':')[0],horaFinalEstados.split(':')[1],horaFinalEstados.split(':')[2]));
+
+              diferenciaFechasEstados = fechaFinalAccionEstados.getTime() - fechaInicialAccionEstados.getTime();
+              //console.log('diferenciaFechasEstados',diferenciaFechasEstados)
+            
+              let diferenciaFechaHorasEstados = Math.round(diferenciaFechasEstados/(1000*60*60));
+
+              dif =  await this.functionsService.dateDifFormatTime(fechaInicialAccionEstados,fechaFinalAccionEstados);
+
+
+              //tiempoEstado = `${Math.round(diferenciaFechasEstados/(hour))}:${Math.round(diferenciaFechasEstados/(minute))}:${Math.round(diferenciaFechasEstados/(1000))}`;
+              
+              tiempoEstado = Math.round(diferenciaFechasEstados/(hour))!=0?`${Math.round(diferenciaFechasEstados/(hour))} horas`: Math.round(diferenciaFechasEstados/(minute))!=0?`${Math.round(diferenciaFechasEstados/(minute))} minutos`:`${Math.round(diferenciaFechasEstados/(1000))} segundos`;
+
+              
+              //horaAcumulada = horaAcumulada+(Math.round(diferenciaFechasEstados/(hour))+(Math.round(diferenciaFechasEstados/(minute))/60)+(Math.round(diferenciaFechasEstados/(1000))/3600))
+              horaAcumulada = horaAcumulada+(Math.round(diferenciaFechasEstados/(hour))!=0?Math.round(diferenciaFechasEstados/(hour)):(Math.round(diferenciaFechasEstados/(minute))/60)+(Math.round(diferenciaFechasEstados/(1000))/3600))
+            }
+
+            let productos:any[] = turnoLocacionEstado.detalle_solicitud_turnos_pedido.filter((item: { itemcode: string; })=>!item.itemcode.startsWith("SF"));
+            let diferenciaFechasProductoEstados = diferenciaFechasEstados/productos.length;
+            console.log('diferenciaFechasProductoEstados',diferenciaFechasProductoEstados)
+
+            //let tiempoEstadoProducto = Math.round(diferenciaFechasProductoEstados/(hour))!=0?`${Math.round(diferenciaFechasProductoEstados/(hour))} horas`: Math.round(diferenciaFechasProductoEstados/(minute))!=0?`${Math.round(diferenciaFechasProductoEstados/(minute))} minutos`:`${Math.round(diferenciaFechasProductoEstados/(1000))} segundos`;
+            let acumuladoTiempoProducto =0;
+            let i =1;
+            productos.forEach(async (item)=>{
+              //horaAcumuladaProducto = horaAcumuladaProducto+(Math.round(diferenciaFechasProductoEstados/(hour))!=0?Math.round(diferenciaFechasProductoEstados/(hour)):(Math.round(diferenciaFechasProductoEstados/(minute))/60)+(Math.round(diferenciaFechasProductoEstados/(1000))/3600))
+              //acumuladoTiempoProducto+=diferenciaFechasProductoEstados;
+              acumuladoTiempoProducto=diferenciaFechasProductoEstados*i;
+              console.log('acumuladoTiempoProducto',i,acumuladoTiempoProducto)
+            
+
+              //let tiempoAcumuladoProducto = Math.round(acumuladoTiempoProducto/(hour))!=0?`${Math.round(acumuladoTiempoProducto/(hour))} horas`: Math.round(acumuladoTiempoProducto/(minute))!=0?`${Math.round(acumuladoTiempoProducto/(minute))} minutos`:`${Math.round(acumuladoTiempoProducto/(1000))} segundos`;
+              let fechaHistorial  = new Date(`${historial.fecha_accion}T${historial.hora_accion}`);
+              let tiempoEstadoProducto = await this.functionsService.dateDifFormatTime(fechaHistorial,new Date(fechaHistorial.getTime()+diferenciaFechasProductoEstados))
+              let tiempoAcumuladoProducto = await this.functionsService.dateDifFormatTime(fechaHistorial,new Date((fechaHistorial.getTime()+acumuladoTiempoProducto)))
+
+              //horaAcumuladaProducto = horaAcumuladaProducto+(diferenciaFechasProductoEstados/(hour));
+
+              horaAcumuladaProducto = await this.functionsService.dateDifFormatTime(fechaInicioHistorialTurno,fechaHistorial);
+              
+
+              detalle_historial_turnos.push({
+                locacion:locacion.label,
+                turno:turnoLocacionEstado.id,
+                horacita:turnoLocacionEstado.fechacita,
+                vehiculo:turnoLocacionEstado.vehiculo.placa,
+                conductor:turnoLocacionEstado.conductor.nombre,
+                condiciontpt:turnoLocacionEstado.condiciontpt,
+                estado:historial.estado,
+                fechaaccion:historial.fecha_accion,
+                horaaccion:historial.hora_accion,
+                producto:item.itemname,
+                cantidad:item.cantidad,
+                comentario:this.functionsService.bufferToString(historial.comentario),
+                tiempoEstado:tiempoEstadoProducto,
+                tiempoAcumuladoProducto,
+                //tiempoEstado,
+                horaAcumulada:horaAcumuladaProducto
+                //horaAcumulada,
+  
+              })
+
+              i++;
+
+            });
+
+            
+
+
+
+          })
+      */
+
+            if(historialEstadoInicial[0].hora_accion==null){
+              historialEstadoInicial[0].hora_accion = "00:00:00";
+            }
+
+            if(historialEstadoFinal[0].hora_accion==null){
+              historialEstadoFinal[0].hora_accion = "00:00:00";
+            }
+
+            let fechaInicialAccion = new Date(new Date(`${historialEstadoInicial[0].fecha_accion}T00:00:00`).setHours(historialEstadoInicial[0].hora_accion.split(':')[0],historialEstadoInicial[0].hora_accion.split(':')[1],historialEstadoInicial[0].hora_accion.split(':')[2]));
+            //////////console.log('fechaInicialAccion',fechaInicialAccion);
+            let fechaFinalAccion = new Date(new Date(`${historialEstadoFinal[0].fecha_accion}T00:00:00`).setHours(historialEstadoFinal[0].hora_accion.split(':')[0],historialEstadoFinal[0].hora_accion.split(':')[1],historialEstadoFinal[0].hora_accion.split(':')[2]));
+            //////////console.log('fechaFinalAccion',fechaFinalAccion);
+
+            let diferenciaFechas = fechaFinalAccion.getTime() - fechaInicialAccion.getTime();
+            let diferenciaFechaHoras = Math.round(diferenciaFechas/(1000*60*60));
+            horas = horas+diferenciaFechaHoras;
+            turnosValidados++;
+            ////////console.log('diferenciaFechaHoras',diferenciaFechaHoras);
+          //}
+          
+         
+          //let fechaAccion = new Date(`${historialEstadoTurno.fecha_accion}T00:00:00`);
+          //let diaAccion =fechaAccion.getDay();
+
+          /*
+          if(dia.id === diaAccion && fechaAccion >= fechaInicio && fechaAccion <= fechaFinal ){
+            turnosDia=turnosDia+1;
+          }
+          */
+
+        }else{
+          turnosNoValidados++;
+        }
+      }
+      ////////console.log('turnosNoValidados',turnosNoValidados);
+      obectString+= `,"totalTurnos":"${turnosValidados}","totalHoras":"${horas}","tiempo":"${horas/turnosValidados}"}`;
+      this.dataTableComprtamientoBodegas.data.push(JSON.parse(obectString));
+    }
+    ////console.log('detalle_historial_turnos',detalle_historial_turnos);
     this.dataTableComprtamientoBodegasDetallado.data = detalle_historial_turnos;
     this.loading = false;
   }

@@ -9,6 +9,7 @@ import * as FileSaver from 'file-saver';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as Handlebars from "handlebars";
+import * as moment from 'moment';
 
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
@@ -144,7 +145,33 @@ async dateAdd(date:Date,numberAdd:number, format:string='days'): Promise<any>{
     }
 
     
+
+   
+    
     return newDate;
+}
+
+async dateDifFormatTime(fecha1:any, fecha2:any): Promise<any>{
+
+  const newfecha1 = moment(fecha1, 'YYYY-MM-DD HH:mm:ss');
+  const newfecha2 = moment(fecha2, 'YYYY-MM-DD HH:mm:ss');
+
+  // Calculamos la diferencia en milisegundos
+  const diferenciaEnMilisegundos = newfecha2.diff(newfecha1);
+
+  // Convertimos la diferencia a horas, minutos y segundos
+  const duracion = moment.duration(diferenciaEnMilisegundos);
+  const dias = duracion.days();
+  const horas = duracion.hours();
+  const minutos = duracion.minutes();
+  const segundos = duracion.seconds();
+
+  // Formateamos la diferencia en el formato hh:mm:ss
+  const diferenciaFormateada = `${dias===1?dias+' dia':dias+' dias'} ${horas}:${minutos}:${segundos}`;
+
+  //console.log('Diferencia formateada:', diferenciaFormateada);
+
+  return diferenciaFormateada;
 }
 
 async sortArrayObject(arrayToSort:any[],field:string,order:string):Promise<any[]>{
