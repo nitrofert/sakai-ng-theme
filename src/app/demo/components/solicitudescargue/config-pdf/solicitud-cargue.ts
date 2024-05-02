@@ -1899,7 +1899,7 @@ export class PdfSolicitudCargue {
         }
         console.log('conductor',conductor);
 
-        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; })=>pedido.CardCode === datakey[datakey.length-1] && pedido.cantidad>0).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; }) => {
+        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any;itemcode:string })=>pedido.CardCode === datakey[datakey.length-1] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; }) => {
             return {
               locacion: `${locaciones.filter((locacion: { code: any; })=>locacion.code === infoTurno.locacion )[0].locacion} -- Dirección: ${locaciones.filter((locacion: { code: any; })=>locacion.code === infoTurno.locacion )[0].direccion}`,
               pedidonum: linea.pedidonum,
