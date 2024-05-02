@@ -425,7 +425,8 @@
                              [showBtnDelete]="(updatePedidosTurno && editCantidad)"
                              (onNewAccion)="adicionarLinea($event)"
                              (onDeleteAccion)="borrarLineaPedido($event)"
-                             (onChangeValue)="cambioValorCampo($event)">
+                             (onChangeValue)="cambioValorCampo($event)"
+                             (onViewUploads)="verUploads($event)">
                 </app-dynamic-table>
 
 
@@ -560,10 +561,10 @@
                         
                             <div class="field col-12 ">
                                 <label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>
-                                <p-fileUpload #uploaderFiles   name="demo[]" 
+                                <p-fileUpload #uploaderFiles   name="uploaderFiles" 
                                 chooseLabel="Seleccionar"
                                 cancelLabel="Cancelar"
-                                
+                                id="uploaderFiles"
                                 [multiple]="true" 
                                 (onSelect)="loadFiles(uploaderFiles.files)"
                                 (onRemove)="removeFile($event, uploaderFiles)"
@@ -583,8 +584,11 @@
                             </div>
 
 
-                            <div *ngIf="estado === estadosTurno.PESADO || estado === estadosTurno.CARGANDO || estado === estadosTurno.CARGADO || estado === estadosTurno.PESADOF" class="field col-12 ">
-                                <app-inspeccion-despacho [turno]="turno" (onChangeData)="setInsppeccion($event)"></app-inspeccion-despacho>
+                            <div *ngIf="estado === estadosTurno.PESADO || estado === estadosTurno.CARGANDO || estado === estadosTurno.CARGADO || estado === estadosTurno.PESADOF|| estado === estadosTurno.DESPACHADO" class="field col-12 ">
+                                <app-inspeccion-despacho [turno]="turno" 
+                                                         [estado]="estado"
+                                                        
+                                                         (onChangeData)="setInsppeccion($event)"></app-inspeccion-despacho>
                             </div>
                             
                         
@@ -943,3 +947,103 @@
 
 </p-dialog>
 <!-- Fin Dialog pedidos cliente-->
+
+
+
+<!-- Dialog historial -->
+<p-dialog [header]="'Evidencias cargue'" 
+          [(visible)]="formEvidenciasCargueTurno" 
+          [modal]="true" 
+          [style]="{width: '50vw'}" 
+          [draggable]="false" 
+          [resizable]="false"
+          [maximizable]="true">
+
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 ">
+                                <span class="p-float-label">
+                                    <input pInputText 
+                                           id="cliente" 
+                                           type="text" 
+                                           disabled 
+                                           [value]="dataFormCargueEvidencias.cliente" />
+                                    <label for="cliente"><h6>Cliente</h6></label>
+                                </span>
+                            </div>
+
+
+                            <div class="field col-12 md:col-6 ">
+                                <span class="p-float-label">
+                                    <input pInputText 
+                                           id="cliente" 
+                                           type="text" 
+                                           disabled 
+                                           [value]="dataFormCargueEvidencias.pedido" />
+                                    <label for="cliente"><h6>No. Pedido</h6></label>
+                                </span>
+                            </div>
+
+                            <div class="field col-12 md:col-6 ">
+                                <span class="p-float-label">
+                                    <input pInputText 
+                                           id="cliente" 
+                                           type="text" 
+                                           disabled 
+                                           [value]="dataFormCargueEvidencias.item" />
+                                    <label for="cliente"><h6>Item</h6></label>
+                                </span>
+                            </div>
+                            <div class=" card field col-12">
+                                <app-dynamic-table [dataTable]="dataTableEvidenciasItemTurno.data" 
+                                            [headersTable]="dataTableEvidenciasItemTurno.header"
+                                            dataKey="index" 
+                                            [rows]="10" 
+                                            [paginator]="true"
+                                            [selectionMode]="'multiple'"
+                                            [loading]="loadingPedidosTurno"
+                                            [viewCheckselectedItem] ="true"
+                                            [loading]="loadingCargue"
+                                            nameExport="evidencias_pedidos_turno"
+                                            [showBtnNew]="true"
+                                            [showBtnDelete]="true"
+                                            (onNewAccion)="uploadFiles($event)"
+                                            (onDownload)="download($event)"
+                                            (onDeleteAccion)="borrarEvidenciaPedidoTurno($event)">
+                                </app-dynamic-table>
+                            </div>
+                            
+                            <!--<div class="field col-12 ">
+                                <label for="tipoanexo"><h6>Evidencias a cargar - pedido - item</h6></label>
+                                <p-fileUpload #uploaderFilesPedidoItem  name="uploaderFilesPedidoItem[]" 
+                                chooseLabel="Seleccionar"
+                                cancelLabel="Cancelar"
+                                id="uploaderFilesPedidoItem"
+                                [multiple]="true" 
+                                (onSelect)="loadFiles(uploaderFilesPedidoItem.files)"
+                                (onRemove)="removeFile($event, uploaderFilesPedidoItem)"
+                                (onClear)="clearUploader(uploaderFilesPedidoItem)"
+                               
+                                [showUploadButton]="false"
+                                [maxFileSize]="50000000"
+                                styleClass="w-full"
+                                class="w-full">
+                                    
+                                </p-fileUpload>
+                            </div>-->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <ng-template pTemplate="footer">
+            <!--<p-button icon="pi pi-time" (click)="uploadEvidenciasPedidoItem(dataFormCargueEvidencias.id, uploaderFilesPedidoItem)" label="Cargar evidencias del cargue" styleClass="p-button-text p-button-raised"></p-button>-->
+            <p-button icon="pi pi-time" (click)="formEvidenciasCargueTurno=false" label="Cerrar" styleClass="p-button-text p-button-raised"></p-button>
+        </ng-template>
+
+
+</p-dialog>

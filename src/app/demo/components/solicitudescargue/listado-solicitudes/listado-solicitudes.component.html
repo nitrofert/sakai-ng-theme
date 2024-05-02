@@ -587,16 +587,16 @@
                         </td>
 
                         <td class="text-center">
-                            <div *ngIf="itemData.lugarentrega.length > 30" class="flex justify-content-between align-items-center">
-                                <div> {{ itemData.lugarentrega | slice:0:30 }} . . . </div>
+                            <div *ngIf="itemData.detalle_solicitudes_turnos_pedidos_lugarentrega.length > 30" class="flex justify-content-between align-items-center">
+                                <div> {{ itemData.detalle_solicitudes_turnos_pedidos_lugarentrega | slice:0:30 }} . . . </div>
                                 <div>
-                                    <p-button icon="pi pi-search" styleClass="p-button-rounded p-button-success p-button-text p-button-raised" pTooltip="Ver lugar de entrega" (click)="verLongText(itemData.lugarentrega, 'Lugar de entrega')"></p-button>
+                                    <p-button icon="pi pi-search" styleClass="p-button-rounded p-button-success p-button-text p-button-raised" pTooltip="Ver lugar de entrega" (click)="verLongText(itemData.detalle_solicitudes_turnos_pedidos_lugarentrega, 'Lugar de entrega')"></p-button>
                                 </div>
                                 
                             </div>
 
-                            <div *ngIf="itemData.lugarentrega.length <= 30">
-                                {{ itemData.lugarentrega }}
+                            <div *ngIf="itemData.detalle_solicitudes_turnos_pedidos_lugarentrega.length <= 30">
+                                {{ itemData.detalle_solicitudes_turnos_pedidos_lugarentrega }}
                             </div>
 
                             

@@ -213,7 +213,7 @@
     		</p-table>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Header III" [disabled]="(turno.estado != estadosTurno.CARGADO && turno.estado != estadosTurno.CARGANDO)?true:false" >
+            <p-tabPanel header="Header III" [disabled]="(estado != estadosTurno.PESADOF && estado != estadosTurno.DESPACHADO)?true:false" >
                 <ng-template pTemplate="header">
                     <i class="pi pi-check   mr-2"></i>
                     <span>Aceptación - firma inspección</span>
@@ -356,7 +356,8 @@
                 </div>
 
                 <div class="col-12 text-center">
-                    <canvas></canvas>
+                    <img *ngIf="filesInspeccion.length>0" [src]="filesInspeccion[0]">
+                    <p-button [label]="filesInspeccion.length==0?'Cargar firma':'Actualizar firma'" class="w-auto" icon="pi pi-pencil" iconPos="right" (click)="cargarFirma()"></p-button>
                     <div class="border-top-1 m-5"><h6>Firma y cedula conductor</h6></div>
                 </div>
 

@@ -238,7 +238,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
           let dataPieChart: any[] = [];
           let dataBarStackChart: any[any] = [];
-
+          console.log('solicitudesTurnos',solicitudesTurnos)
 
           solicitudesTurnos.raw.forEach((solicitud: {
             locacion_label: any;

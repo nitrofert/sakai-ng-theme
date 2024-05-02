@@ -1,0 +1,24 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<div class="grid">
+	<div class="col-12">
+    	
+			<div class="p-fluid p-formgrid grid">
+				
+				<div class="col-12 text-center">
+					<div class="card">
+						<p>
+							Para iniciar debe realizar click sobre la pizarra y porceder con el dibujo del trazado. Al finalizar, el trazado haga click para finalizar.
+						</p>
+						<canvas id="canvasDraw" class="border-noround border-1 shadow-4" #canvasRef></canvas>
+					</div>
+                    
+                </div>
+				<div class="col-12 flex justify-content-end">
+					<p-button icon="pi pi-save" (click)="clearZone()" label="Limpiar pizarra" styleClass="p-button-text"></p-button>
+					<p-button icon="pi pi-save" (click)="grabar()" label="Guadar imagen" styleClass="p-button-text"></p-button>
+				</div>
+			</div>
+		
+	</div>
+</div>

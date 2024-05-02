@@ -54,6 +54,9 @@ export class DynamicTableComponent implements OnInit {
   
 
   @Output() onChangeValue: EventEmitter<any> = new EventEmitter();
+  @Output() onViewUploads: EventEmitter<any> = new EventEmitter();
+  @Output() onDownload: EventEmitter<any> = new EventEmitter();
+  
 
   //loading:boolean = this.showLoading;
   selectedItem:any[] = [];
@@ -231,9 +234,15 @@ export class DynamicTableComponent implements OnInit {
     this.longText = text;
   }
 
-  verUploads(index: number){
+  verUploads(index: any){
       console.log('index linea tabla',index);
+      this.onViewUploads.emit(index);
   }
+
+  download(url: any){
+    console.log('index linea tabla',url);
+    this.onDownload.emit(url);
+}
 
  
 

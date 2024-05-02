@@ -27,6 +27,8 @@ import { DynamicChartsModule } from 'src/app/layout/shared/dynamic-charts/dynami
 import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 import { PdfSolicitudCargue } from '../solicitudescargue/config-pdf/solicitud-cargue';
 import { InspeccionDespachoComponent } from './inspeccion-despacho/inspeccion-despacho.component';
+import { DynamicDrawModule } from 'src/app/layout/shared/dynamic-draw/dynamic-draw.module';
+import { DynamicUploadModule } from 'src/app/layout/shared/dynamic-upload/dynamic-upload.module';
 
 
 
@@ -47,7 +49,9 @@ import { InspeccionDespachoComponent } from './inspeccion-despacho/inspeccion-de
     FullCalendarModule,
     ApplicationPipesModule,
     DynamicTableModule,
-    DynamicPdfModule
+    DynamicPdfModule,
+    DynamicDrawModule,
+    DynamicUploadModule
     
   ],
   providers:[AlmacenesService, 

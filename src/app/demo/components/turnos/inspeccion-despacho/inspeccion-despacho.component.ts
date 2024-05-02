@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { OrdenesCargueService } from 'src/app/demo/service/ordenes-cargue.service';
 import { PedidosService } from 'src/app/demo/service/pedidos.service';
@@ -21,6 +21,7 @@ import { NovedadesService } from 'src/app/demo/service/novedades.service';
 import { ListaHistorialTurnoComponent } from '../../solicitudescargue/lista-historial-turno/lista-historial-turno.component';
 import { CiudadesService } from 'src/app/demo/service/ciudades.service';
 import { FileUpload } from 'primeng/fileupload';
+import { DynamicDrawComponent } from 'src/app/layout/shared/dynamic-draw/dynamic-draw.component';
 
 @Component({
   selector: 'app-inspeccion-despacho',
@@ -29,9 +30,11 @@ import { FileUpload } from 'primeng/fileupload';
   styleUrls: ['./inspeccion-despacho.component.scss'],
  
 })
-export class InspeccionDespachoComponent implements  OnInit {
+export class InspeccionDespachoComponent implements  OnInit ,  OnChanges {
 
   @Input() turno!:any;
+  @Input() estado!:string;
+
   @Output() onChangeData: EventEmitter<any> = new EventEmitter();
 
   hoy:Date = new Date();
@@ -81,7 +84,11 @@ hora_inicio_cargue!:Date;
 hora_fin_cargue!:Date;
 tiempo_de_cargue:string ="";
 
-@ViewChild('uploaderFiles') uploaderFiles!:ElementRef;
+
+
+ 
+
+
 
 dataTableProductosTurno:any = {
   header:[{"cliente":{"label":"Cliente","type":"text","sizeCol":"6rem","align":"center","editable":false},
@@ -99,7 +106,7 @@ dataTableProductosTurno:any = {
   colsSum:[]
 };
 
-
+filesInspeccion:any[] = [];
 
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
@@ -124,81 +131,30 @@ dataTableProductosTurno:any = {
     //this.displayModal = true;
     //this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
-   
+   console.log('ngOnInit inspeccion');
+   console.log('turno estado inspeccion', this.estado);
     this.getPermisosModulo();
-   
-   console.log('turno inspeccion',this.turno);
-   let fecha_accion!:any;
-   let hora_accion!:any;
+    this.setFormInspeccion();
 
-   if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO).length > 0){
-      fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].fecha_accion;
-      hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].hora_accion;
-      this.hora_llegada = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
-   }
-
-   if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO).length > 0){
-    fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].fecha_accion;
-    hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].hora_accion;
-    this.hora_inicio_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
-   }
-
-
-   if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO).length > 0){
-    fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].fecha_accion;
-    hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].hora_accion;
-    this.hora_fin_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
-   }
-
-   if(this.turno.detalle_solicitud_turnos_inspeccion.length > 0){
-      let inspeccion = this.turno.detalle_solicitud_turnos_inspeccion[0];
-      this.estado_vehiculo = inspeccion.estado_vehiculo;
-      this.cantidad_unidades = inspeccion.cantidad_unidades;
-      this.conforme_cantidades = inspeccion.conforme_cantidades;
-      this.conforme_calidad = inspeccion.conforme_calidad;
-      this.observaciones = inspeccion.observaciones;
-      this.cedula_conductor = inspeccion.cedula_conductor;
-
-
-   
-
-      this.dataTableChekVehiculo[0].estado = inspeccion.olores;
-      this.dataTableChekVehiculo[0].observacion = inspeccion.obs_olores;
-      this.dataTableChekVehiculo[1].estado = inspeccion.carroceria;
-      this.dataTableChekVehiculo[1].observacion = inspeccion.obs_carroceria;
-      this.dataTableChekVehiculo[2].estado = inspeccion.carpa_filtraciones;
-      this.dataTableChekVehiculo[2].observacion = inspeccion.obs_carpa_filtraciones;
-      this.dataTableChekVehiculo[3].estado = inspeccion.plagas;
-      this.dataTableChekVehiculo[3].observacion = inspeccion.obs_plagas;
-      this.dataTableChekVehiculo[4].estado = inspeccion.humedad_grasa;
-      this.dataTableChekVehiculo[4].observacion = inspeccion.obs_humedad_grasa;
-      this.dataTableChekVehiculo[5].estado = inspeccion.estado_plancha;
-      this.dataTableChekVehiculo[5].observacion = inspeccion.obs_estado_plancha;
-      this.dataTableChekVehiculo[6].estado = inspeccion.plastico_polipropileno;
-      this.dataTableChekVehiculo[6].observacion = inspeccion.obs_plastico_polipropileno;
-
-      this.dataTableChekCarga[0].estado = inspeccion.registro_ica;
-      this.dataTableChekVehiculo[0].observacion = inspeccion.obs_registro_ica;
-      this.dataTableChekCarga[1].estado = inspeccion.lote_fabricacion;
-      this.dataTableChekVehiculo[1].observacion = inspeccion.obs_lote_fabricacion;
-      this.dataTableChekCarga[2].estado = inspeccion.peso_producto;
-      this.dataTableChekVehiculo[2].observacion = inspeccion.obs_peso_producto;
-      this.dataTableChekCarga[3].estado = inspeccion.producto_limpio;
-      this.dataTableChekVehiculo[3].observacion = inspeccion.obs_producto_limpio;
-      this.dataTableChekCarga[4].estado = inspeccion.empaques_rotura;
-      this.dataTableChekVehiculo[4].observacion = inspeccion.obs_empaques_rotura;
-      this.dataTableChekCarga[5].estado = inspeccion.producto_compactado;
-      this.dataTableChekVehiculo[5].observacion = inspeccion.obs_producto_compactado;
-
-
-   }
-
-   this.cambioValor()
-
-   this.dataTableProductosTurno.data = await this.setDataTableProductosTurno(this.turno.detalle_solicitud_turnos_pedido);
-   
   
   }
+
+  ngOnChanges(changes: SimpleChanges){
+    //////////////console.log('changes',changes['rangoFechas'].currentValue)
+
+    console.log('ngOnChanges inspeccion')
+   
+    this.estado = changes['estado'].currentValue;
+    this.turno = changes['turno'].currentValue;
+    console.log('turno estado inspeccion',this.estado);
+    console.log('turno inspeccion',this.turno);
+    this.setFormInspeccion();
+   
+    
+  }
+
+ 
+
 
 
   getPermisosModulo(){
@@ -241,7 +197,83 @@ dataTableProductosTurno:any = {
         
   }
 
+  async setFormInspeccion(){
+    
+    let fecha_accion!:any;
+    let hora_accion!:any;
+ 
+    if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO).length > 0){
+       fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].fecha_accion;
+       hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].hora_accion;
+       this.hora_llegada = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+    }
+ 
+    if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO).length > 0){
+     fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].fecha_accion;
+     hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].hora_accion;
+     this.hora_inicio_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+    }
+ 
+ 
+    if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO).length > 0){
+     fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].fecha_accion;
+     hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].hora_accion;
+     this.hora_fin_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+    }
+ 
+    if(this.turno.detalle_solicitud_turnos_inspeccion.length > 0){
+       let inspeccion = this.turno.detalle_solicitud_turnos_inspeccion[0];
+       this.estado_vehiculo = inspeccion.estado_vehiculo;
+       this.cantidad_unidades = inspeccion.cantidad_unidades;
+       this.conforme_cantidades = inspeccion.conforme_cantidades;
+       this.conforme_calidad = inspeccion.conforme_calidad;
+       this.observaciones = inspeccion.observaciones;
+       this.cedula_conductor = inspeccion.cedula_conductor;
+ 
+ 
+    
+ 
+       this.dataTableChekVehiculo[0].estado = inspeccion.olores;
+       this.dataTableChekVehiculo[0].observacion = inspeccion.obs_olores;
+       this.dataTableChekVehiculo[1].estado = inspeccion.carroceria;
+       this.dataTableChekVehiculo[1].observacion = inspeccion.obs_carroceria;
+       this.dataTableChekVehiculo[2].estado = inspeccion.carpa_filtraciones;
+       this.dataTableChekVehiculo[2].observacion = inspeccion.obs_carpa_filtraciones;
+       this.dataTableChekVehiculo[3].estado = inspeccion.plagas;
+       this.dataTableChekVehiculo[3].observacion = inspeccion.obs_plagas;
+       this.dataTableChekVehiculo[4].estado = inspeccion.humedad_grasa;
+       this.dataTableChekVehiculo[4].observacion = inspeccion.obs_humedad_grasa;
+       this.dataTableChekVehiculo[5].estado = inspeccion.estado_plancha;
+       this.dataTableChekVehiculo[5].observacion = inspeccion.obs_estado_plancha;
+       this.dataTableChekVehiculo[6].estado = inspeccion.plastico_polipropileno;
+       this.dataTableChekVehiculo[6].observacion = inspeccion.obs_plastico_polipropileno;
+ 
+       this.dataTableChekCarga[0].estado = inspeccion.registro_ica;
+       this.dataTableChekVehiculo[0].observacion = inspeccion.obs_registro_ica;
+       this.dataTableChekCarga[1].estado = inspeccion.lote_fabricacion;
+       this.dataTableChekVehiculo[1].observacion = inspeccion.obs_lote_fabricacion;
+       this.dataTableChekCarga[2].estado = inspeccion.peso_producto;
+       this.dataTableChekVehiculo[2].observacion = inspeccion.obs_peso_producto;
+       this.dataTableChekCarga[3].estado = inspeccion.producto_limpio;
+       this.dataTableChekVehiculo[3].observacion = inspeccion.obs_producto_limpio;
+       this.dataTableChekCarga[4].estado = inspeccion.empaques_rotura;
+       this.dataTableChekVehiculo[4].observacion = inspeccion.obs_empaques_rotura;
+       this.dataTableChekCarga[5].estado = inspeccion.producto_compactado;
+       this.dataTableChekVehiculo[5].observacion = inspeccion.obs_producto_compactado;
 
+       
+        await this.getFilesInspeccion();
+ 
+    }
+
+    
+   
+ 
+    this.cambioValor()
+ 
+    this.dataTableProductosTurno.data = await this.setDataTableProductosTurno(this.turno.detalle_solicitud_turnos_pedido);
+    
+  }
  
 
   async getTurno(id: number){
@@ -308,9 +340,37 @@ dataTableProductosTurno:any = {
 
   }
 
+ async getFilesInspeccion():Promise<void>{
+
+      let id_relacion = this.turno.detalle_solicitud_turnos_inspeccion[0].id;
+       let proceso = 'firma-conductor';
+       let entidad = 'inspeccion-turno';
+    
+       let filesAtach$ = this.functionsService.filesToBase64({id_relacion,proceso,entidad});
+       this.filesInspeccion = await lastValueFrom(filesAtach$);
+ }
  
 
- 
+  cargarFirma(){
+    const ref = this.dialogService.open(DynamicDrawComponent, {
+      data: {
+          id_relacion: this.turno.detalle_solicitud_turnos_inspeccion[0].id,
+          entidad: 'inspeccion-turno',
+          proceso: 'firma-conductor',
+          filename: `firma-inspeccion-turno-${this.turno.id}-conductor-${this.turno.conductor.cedula}.png`,
+          accion:this.filesInspeccion.length==0?'create':'update' ,
+      },
+      header: this.filesInspeccion.length==0?'Cargar firma':'Actualizar firma' ,
+      width: '70%',
+      height:'auto',
+      contentStyle: {"overflow": "auto"},
+      maximizable:true, 
+    });
+
+    ref.onClose.subscribe(async () => {
+      await this.getFilesInspeccion();
+    });
+  }
 
 
 }

@@ -603,6 +603,17 @@ getBase64ImageFromURL(url:any) {
   });
 }
 
+async base64ToBlob(base64:any):Promise<any> {
+  const blobBin = atob(base64.split(',')[1]);
+  let array = [];
+  for (let i = 0; i < blobBin.length; i++) {
+      array.push(blobBin.charCodeAt(i));
+  }
+  let file = new Blob([new Uint8Array(array)], { type: 'image/png' });
+
+  return file;
+}
+
 async concatenarCamposArray(data:any[],camposConcatenar:any[]):Promise<any[]> {
   let newArray:any[];
 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, DateSelectArg, EventApi, EventClickArg, EventSourceInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -26,6 +26,20 @@ import {   PdfSolicitudCargue } from '../../solicitudescargue/config-pdf/solicit
   styleUrls: ['./calendario-turnos.component.scss']
 })
 export class CalendarioTurnosComponent implements OnInit {
+
+ /* coordenadasMouseMove!:any;
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove = (e: any) => {
+    
+    if (e.target.id === 'canvasFirma') {
+      //this.write(e);
+      console.log(e);
+      this.coordenadasMouseMove = e;
+    }
+  }*/
+
+  
 
   almacenes:any[] = [];
   locaciones:any[] = [];
@@ -129,6 +143,9 @@ export class CalendarioTurnosComponent implements OnInit {
     this.hoy = await this.functionsService.formatDate(new Date(), 'DDDD, dd MMMMM YYYY');
     //this.hoy = new Date()
   }
+
+
+
 
   getPermisosModulo(){
   
