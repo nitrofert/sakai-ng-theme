@@ -27,15 +27,6 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     public anchoVentana = window.innerWidth;
     public alturaVentana = window.innerHeight;
 
-    @HostListener('dblclick', ['$event'])
-    onDoubleClick(e: any) {
-        // Tu lógica aquí
-
-        if (e.target.id === 'canvasDraw' ) {
-          console.log('Doble clic detectado', e);
-        }
-        
-    }
 
     @HostListener('touchstart', ['$event'])
     onTouchStart(e: any) { //TouchEvent on any
@@ -63,8 +54,9 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     onTouchMove(e: any) { //TouchEvent on any
         // Tu lógica aquí
        // console.log('Movimiento de toque detectado', event);
-       this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move ${e.type}`});
+       
         if (e.target.id === 'canvasDraw' && (this.isAvailabe)) {
+          this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move x:${e.clientX}, y:${e.clientY}`} );
           this.write(e);
           //console.log(e);
           //this.coordenadasMouseMove = e;
