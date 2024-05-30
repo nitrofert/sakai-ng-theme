@@ -42,6 +42,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
         // Tu lógica aquí
         if (e.target.id === 'canvasDraw' ) {
           console.log('Toque detectado', e);
+          this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `'Toque detectado ${e.type}`});
         }
     }
 
