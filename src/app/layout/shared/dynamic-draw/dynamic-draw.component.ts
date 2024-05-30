@@ -63,7 +63,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     onTouchMove(e: any) { //TouchEvent on any
         // Tu lógica aquí
        // console.log('Movimiento de toque detectado', event);
-
+       this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move ${e.type}`});
         if (e.target.id === 'canvasDraw' && (this.isAvailabe)) {
           this.write(e);
           //console.log(e);
