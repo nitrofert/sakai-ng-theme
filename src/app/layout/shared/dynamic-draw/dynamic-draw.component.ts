@@ -42,9 +42,35 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
         // Tu lógica aquí
         if (e.target.id === 'canvasDraw' ) {
           console.log('Toque detectado', e);
-          this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `'Toque detectado ${e.type}`});
+          this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Toque start ${e.type}`});
+          this.isAvailabe = true;
         }
     }
+
+    @HostListener('touchend', ['$event'])
+    onTouchEnd(e: any) { // TouchEvent on any
+        // Tu lógica aquí
+        if (e.target.id === 'canvasDraw' ) {
+          console.log('Toque levantado', e);
+          this.messageService.add({severity:'info', summary: 'Confirmación', detail:  `Toque end ${e.type}`});
+          this.isAvailabe = false;
+          this.pointsValidate = JSON.parse(JSON.stringify(this.points));
+          this.points = [];
+        }
+    }
+
+    @HostListener('touchmove', ['$event'])
+    onTouchMove(e: any) { //TouchEvent on any
+        // Tu lógica aquí
+       // console.log('Movimiento de toque detectado', event);
+
+        if (e.target.id === 'canvasDraw' && (this.isAvailabe)) {
+          this.write(e);
+          //console.log(e);
+          //this.coordenadasMouseMove = e;
+        }
+    }
+
 
     @HostListener('mousedown', ['$event'])
       onMouseDown(event: any) { //MouseEvent on any
@@ -56,6 +82,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
         
     }
 
+    
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: any) { // MouseEvent on any
       // Tu lógica aquí
