@@ -27,6 +27,45 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     public anchoVentana = window.innerWidth;
     public alturaVentana = window.innerHeight;
 
+    @HostListener('dblclick', ['$event'])
+    onDoubleClick(e: any) {
+        // Tu lógica aquí
+
+        if (e.target.id === 'canvasDraw' ) {
+          console.log('Doble clic detectado', e);
+        }
+        
+    }
+
+    @HostListener('touchstart', ['$event'])
+    onTouchStart(e: any) { //TouchEvent on any
+        // Tu lógica aquí
+        if (e.target.id === 'canvasDraw' ) {
+          console.log('Toque detectado', e);
+        }
+    }
+
+    @HostListener('mousedown', ['$event'])
+      onMouseDown(event: any) { //MouseEvent on any
+        // Tu lógica aquí
+        if (event.target.id === 'canvasDraw' ) {
+          console.log('Clic down detectado', event);
+          this.isAvailabe = true;
+        }
+        
+    }
+
+    @HostListener('mouseup', ['$event'])
+    onMouseUp(event: any) { // MouseEvent on any
+      // Tu lógica aquí
+      if (event.target.id === 'canvasDraw' ) {
+        console.log('Clic up detectado', event);
+        this.isAvailabe = false;
+        this.pointsValidate = JSON.parse(JSON.stringify(this.points));
+        this.points = [];
+      }
+  }
+
     @HostListener('document:mousemove', ['$event'])
     onMouseMove = (e: any) => {
       //console.log(e);
@@ -37,7 +76,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
       }
     }
 
-    @HostListener('click', ['$event'])
+    /*@HostListener('click', ['$event'])
     onClick = (e: any) => {
       if (e.target.id === 'canvasDraw') {
         this.isAvailabe = !this.isAvailabe;
@@ -46,7 +85,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
           this.points = [];
         }
       }
-    }
+    }*/
 
   dataCanvas!:any;
   

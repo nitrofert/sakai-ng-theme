@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ConfirmationService, FilterMetadata, MessageService } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, FilterMetadata, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { FunctionsService } from 'src/app/demo/service/functions.service';
@@ -840,6 +840,54 @@ export class ListadoSolicitudesComponent implements OnInit {
     this.titleDialigLongText = title;
     this.dialogLongText = true;
     this.longText = text;
+  }
+
+  async solicitarFlete(){
+    //console.log('orden seleccionada',this.selectedItem[0])
+
+    let fleteTurno:any[] = await this.solicitudTurnoService.fleteTurno(this.selectedItem[0].detalle_solicitudes_turnos_id);
+
+    console.log(fleteTurno);
+    if(this.selectedItem[0].detalle_solicitudes_turnos_condiciontpt!='TRANSP'){
+      this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "La modalidad de transporte asociada al turno no requiere de creación de flete." });
+    }else if(fleteTurno.length>0){
+      this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "El turno seleccionado ya cuenta con una linea de flete" });
+    }else{
+      
+      this.confirmationService.confirm({
+        message: `Desea enviar la notificación de creacion de felte para el turno ?`,
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: async () => {
+
+          this.solicitudTurnoService.sendNotificationFleteTurno(this.selectedItem[0].detalle_solicitudes_turnos_id,'solicitud')
+              .subscribe({
+                next:(result)=>{
+                  this.messageService.add({ severity: 'success', summary: 'Información', detail: "Se ha enviado correctamente la solicitud de creación del flete" });
+                },
+                error:(err)=>{
+                  this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "ocurrio un error en el envio de la solicitud de creacion de felte." });
+                }
+              })
+          
+        },
+        
+          reject: (type: any) => {
+              switch(type) {
+                  case ConfirmEventType.REJECT:
+                      //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+                  break;
+                  case ConfirmEventType.CANCEL:
+                      //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+                  break;
+              }
+          }
+      });
+    }
+
+    
+
+    
   }
 
   verHistorial(){

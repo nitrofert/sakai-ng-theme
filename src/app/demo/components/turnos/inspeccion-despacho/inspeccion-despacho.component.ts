@@ -22,6 +22,7 @@ import { ListaHistorialTurnoComponent } from '../../solicitudescargue/lista-hist
 import { CiudadesService } from 'src/app/demo/service/ciudades.service';
 import { FileUpload } from 'primeng/fileupload';
 import { DynamicDrawComponent } from 'src/app/layout/shared/dynamic-draw/dynamic-draw.component';
+import { PdfInspeccionCargue } from '../../solicitudescargue/config-pdf/inspeccion-cargue';
 
 @Component({
   selector: 'app-inspeccion-despacho',
@@ -34,6 +35,7 @@ export class InspeccionDespachoComponent implements  OnInit ,  OnChanges {
 
   @Input() turno!:any;
   @Input() estado!:string;
+  @Input() pedidos!:any;
 
   @Output() onChangeData: EventEmitter<any> = new EventEmitter();
 
@@ -96,8 +98,8 @@ dataTableProductosTurno:any = {
            "itemcode":{"label":"Código producto","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
            "itemname":{"label":"Producto","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
            "lote":{"label":"Lote","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
-           "cantidad":{"label":"Cantidad (TON)","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
-           "sacos":{"label":"Cantidad (Sacos)","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
+           "cantidad":{"label":"Cantidad (TON)","type":"number","sizeCol":"6rem","align":"center","editable":false,"sum":true}, 
+           "sacos":{"label":"Cantidad (Sacos)","type":"number","sizeCol":"6rem","align":"center","editable":false,"sum":true}, 
            "toneldasM":{"label":"Toneladas Metricas","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
            "cubicacion":{"label":"Cubicación","type":"text","sizeCol":"6rem","align":"center","editable":false},
            "remision":{"label":"No. Remisión","type":"text","sizeCol":"6rem","align":"center","editable":false}, 
@@ -124,15 +126,16 @@ filesInspeccion:any[] = [];
               private almacenesService: AlmacenesService,
               public functionsService:FunctionsService,
               private novedadesService:NovedadesService,
-              private ciudadesService:CiudadesService,) { }
+              private ciudadesService:CiudadesService,
+              private pdfInspeccionCargue:PdfInspeccionCargue) { }
 
   async ngOnInit() {
 
     //this.displayModal = true;
     //this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
-   console.log('ngOnInit inspeccion');
-   console.log('turno estado inspeccion', this.estado);
+   //console.log('ngOnInit inspeccion');
+   ////console.log('turno estado inspeccion', this.estado);
     this.getPermisosModulo();
     this.setFormInspeccion();
 
@@ -140,14 +143,16 @@ filesInspeccion:any[] = [];
   }
 
   ngOnChanges(changes: SimpleChanges){
-    //////////////console.log('changes',changes['rangoFechas'].currentValue)
+    ////////////////console.log('changes',changes['rangoFechas'].currentValue)
 
-    console.log('ngOnChanges inspeccion')
+    //console.log('ngOnChanges inspeccion')
    
-    this.estado = changes['estado'].currentValue;
-    this.turno = changes['turno'].currentValue;
-    console.log('turno estado inspeccion',this.estado);
-    console.log('turno inspeccion',this.turno);
+    //this.estado = changes['estado'].currentValue;
+    //this.turno = changes['turno'].currentValue;
+    //this.pedidos = changes['pedidos'].currentValue;
+    //console.log('turno estado inspeccion',this.estado);
+    //console.log('turno inspeccion',this.turno);
+    //console.log('turno pedidos',this.pedidos);
     this.setFormInspeccion();
    
     
@@ -160,11 +165,11 @@ filesInspeccion:any[] = [];
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    //console.log(modulo);
+    ////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////// //////console.log(permisos);
+              ////////////////////////// ////////////// ////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -174,7 +179,7 @@ filesInspeccion:any[] = [];
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////// //////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// ////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -184,7 +189,7 @@ filesInspeccion:any[] = [];
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////// //////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// ////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
              
             
 
@@ -198,6 +203,10 @@ filesInspeccion:any[] = [];
   }
 
   async setFormInspeccion(){
+
+    //console.log('Pedidos items',this.pedidos)
+
+    console.log('Turno',this.turno)
     
     let fecha_accion!:any;
     let hora_accion!:any;
@@ -223,6 +232,7 @@ filesInspeccion:any[] = [];
  
     if(this.turno.detalle_solicitud_turnos_inspeccion.length > 0){
        let inspeccion = this.turno.detalle_solicitud_turnos_inspeccion[0];
+       console.log(inspeccion);
        this.estado_vehiculo = inspeccion.estado_vehiculo;
        this.cantidad_unidades = inspeccion.cantidad_unidades;
        this.conforme_cantidades = inspeccion.conforme_cantidades;
@@ -271,8 +281,20 @@ filesInspeccion:any[] = [];
  
     this.cambioValor()
  
-    this.dataTableProductosTurno.data = await this.setDataTableProductosTurno(this.turno.detalle_solicitud_turnos_pedido);
-    
+    /*this.dataTableProductosTurno.data = await this.setDataTableProductosTurno(this.turno.detalle_solicitud_turnos_pedido);
+    let colsSum = await this.configSumTabla(this.dataTableProductosTurno.header,this.dataTableProductosTurno.data);
+    this.dataTableProductosTurno.colsSum = colsSum;
+    */
+    let dataTableProductosTurno:any = {
+      header: this.dataTableProductosTurno.header ,
+      data:  await this.setDataTableProductosTurno(this.turno.detalle_solicitud_turnos_pedido)
+    };
+
+    let colsSum = await this.configSumTabla(dataTableProductosTurno.header,dataTableProductosTurno.data);
+    this.dataTableProductosTurno = dataTableProductosTurno;
+    this.dataTableProductosTurno.colsSum = colsSum;
+
+    //console.log('this.dataTableProductosTurno',this.dataTableProductosTurno);    
   }
  
 
@@ -282,7 +304,7 @@ filesInspeccion:any[] = [];
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                 console.log('turno',turno);
+                 //console.log('turno',turno);
                   
                   
               },
@@ -298,9 +320,9 @@ filesInspeccion:any[] = [];
 
 
   cambioValor(){
-    console.log('estado_vehiculo',this.estado_vehiculo)
-    console.log('dataTableChekVehiculo',this.dataTableChekVehiculo);
-    console.log('dataTableChekCarga',this.dataTableChekCarga);
+    //console.log('estado_vehiculo',this.estado_vehiculo)
+    //console.log('dataTableChekVehiculo',this.dataTableChekVehiculo);
+    //console.log('dataTableChekCarga',this.dataTableChekCarga);
     let dataInspenccion:any = {
       fecha_inspeccion: new Date(),
       dataTableChekVehiculo:this.dataTableChekVehiculo,
@@ -370,6 +392,43 @@ filesInspeccion:any[] = [];
     ref.onClose.subscribe(async () => {
       await this.getFilesInspeccion();
     });
+  }
+
+  async imprimirInspeccion(){
+
+    this.turno.dataKey = `${this.turno.solicitud.id}-${this.turno.id}-${this.turno.vehiculo.placa}`
+    await this.pdfInspeccionCargue.generarPDF(this.turno)
+  }
+
+  async configSumTabla(headersTable:any[],dataTable:any[]):Promise<any>{
+    let colsSum:any[] = [];
+    ////////////////////////////// ////////////console.log(dataTable);
+    ////////////////////////////////// ////////////console.log(Object.keys(headersTable[0]));
+    let objString:string = "";
+    let colsSumSwitch:boolean = false;
+    for(let key of Object.keys(headersTable[0])){
+      objString+=`"${key}":`
+      if(headersTable[0][key].sum){
+        ////////////////////////////////// ////////////console.log(key);
+        colsSumSwitch = true;
+        let total = await this.functionsService.sumColArray(dataTable,JSON.parse(`[{"${key}":0}]`));
+        ////////////////////////////////// ////////////console.log(total[0][key]);
+        objString+=`${parseFloat(total[0][key])},`
+      }else{
+        objString+=`"",`
+      }
+    }
+    objString = `{${objString.substring(0,objString.length-1)}}`;
+    ////////////////////////////////// ////////////console.log(objString);
+    if(colsSumSwitch){
+      colsSum.push(JSON.parse(objString));
+    }
+    
+
+    ////////////////////////////////// ////////////console.log(colsSum);
+
+    return colsSum;
+
   }
 
 

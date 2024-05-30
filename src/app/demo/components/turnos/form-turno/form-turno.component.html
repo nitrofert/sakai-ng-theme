@@ -413,6 +413,7 @@
 
                 <app-dynamic-table [dataTable]="tablaPedidosTurno.data" 
                              [headersTable]="tablaPedidosTurno.header"
+                             
                              dataKey="index" 
                              [rows]="10" 
                              [paginator]="true"
@@ -587,6 +588,7 @@
                             <div *ngIf="estado === estadosTurno.PESADO || estado === estadosTurno.CARGANDO || estado === estadosTurno.CARGADO || estado === estadosTurno.PESADOF|| estado === estadosTurno.DESPACHADO" class="field col-12 ">
                                 <app-inspeccion-despacho [turno]="turno" 
                                                          [estado]="estado"
+                                                         [pedidos]="tablapedidosInspeccion"
                                                         
                                                          (onChangeData)="setInsppeccion($event)"></app-inspeccion-despacho>
                             </div>

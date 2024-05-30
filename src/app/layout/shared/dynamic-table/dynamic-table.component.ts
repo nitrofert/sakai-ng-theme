@@ -113,7 +113,7 @@ export class DynamicTableComponent implements OnInit {
       
     }
     if(changes['colsSum']){
-      ////////////console.log(this.colsSum);
+      console.log(changes['colsSum']);
       this.totalCols = this.colsSum;
       //////////console.log(this.totalCols);
     }

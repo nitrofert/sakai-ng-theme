@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 
 import { AlmacenesService } from 'src/app/demo/service/almacenes.service';
-import { DashboardComponentTurno } from './dashboard.component';
 import { CommonModule } from '@angular/common';
 import { BreadCrumbModule } from 'src/app/layout/shared/breadcrumb/app.breadcrumb.module';
 import { PrimengModule } from 'src/app/layout/shared/primeng/primeng.module';
@@ -21,7 +20,7 @@ import { TransportadorasService } from 'src/app/demo/service/transportadoras.ser
 import { NovedadesService } from 'src/app/demo/service/novedades.service';
 import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 import { FletesTptComponent } from '../fletes-tpt/fletes-tpt.component';
-import { ListadoFletesModule } from '../listado-fletes/listado-fletes.module';
+import { ListadoFletesComponent } from './listado-fletes.component';
 
 
 
@@ -29,8 +28,8 @@ import { ListadoFletesModule } from '../listado-fletes/listado-fletes.module';
 @NgModule({
   declarations: [
   
-    DashboardComponentTurno,
-    
+    ListadoFletesComponent,
+    FletesTptComponent
     
   ],
   imports: [
@@ -43,7 +42,7 @@ import { ListadoFletesModule } from '../listado-fletes/listado-fletes.module';
     DynamicTableModule,
     DynamicChartsModule,
     DynamicPdfModule,
-    ListadoFletesModule
+    
     
   ],
   providers:[AlmacenesService,
@@ -57,6 +56,6 @@ import { ListadoFletesModule } from '../listado-fletes/listado-fletes.module';
              ConductoresService,
              TransportadorasService,
              NovedadesService ],
-  exports:[DashboardComponentTurno]
+  exports:[ListadoFletesComponent]
 })
-export class DashboardTurnosModule { }
+export class ListadoFletesModule { }

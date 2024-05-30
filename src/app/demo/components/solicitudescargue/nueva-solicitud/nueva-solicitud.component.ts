@@ -162,6 +162,8 @@ condicionesTPT:any[] = [{code:'RETIRA',label:'Retira cliente'},{code:'TRANSP',la
 condicionSeleccionada!:any;
 condicionesFiltradas : any[] = [];
 
+verFletes:boolean = false;
+
 
 constructor(private pedidosService: PedidosService,
             private almacenesService: AlmacenesService,
@@ -268,6 +270,12 @@ getPermisosModulo(){
               this.verCondTPT = true;
             }
 
+            if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor && this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver fletes').valor){
+              this.verFletes = true;
+            }
+
+            this.verFletes = await this.setVerFletes(this.condicion_tpt,this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver fletes').valor);
+
             //console.log(this.condicion_tpt);
             /*
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver logs').valor){
@@ -358,7 +366,7 @@ async getLocaciones(){
 getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
-          next:(saldosPedidos)=>{
+          next:async (saldosPedidos)=>{
             //console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
@@ -375,6 +383,7 @@ getSaldosPedidos(){
                 }
                 
                 pedidosClientes.push({
+                  index:saldosPedidos[indexPedido].DocNum+''+saldosPedidos[indexPedido].LineNum,
                   cantidad:saldosPedidos[indexPedido].Quantity,
                   cantidad_suministrada:saldosPedidos[indexPedido].DelivrdQty,
                   //cantidad_suministrada:saldosPedidos[indexPedido].Quantity-saldosPedidos[indexPedido].SALDO,
@@ -438,7 +447,7 @@ getSaldosPedidos(){
 
            // ////////console.log(pedidosClientes.filter(pedido =>pedido.docnum ===290000003));
            // //// ////////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
-           this.pedidos = pedidosClientes;
+           this.pedidos = await this.functionsService.sortArrayObject(pedidosClientes,'index','ASC') ;
            //console.log(this.pedidos);
           },
           error:(err)=>{
@@ -549,14 +558,27 @@ filtrarCondicion(event: any) {
   }
 
 
-seleccionarCondicion(condicionSeleccionada:any){
-  
-  ////console.log(this.verCondTPT,this.condicionSeleccionada);
+async setVerFletes(condicionTPT:string,permisoVerFletes:boolean):Promise<boolean> {
+  let verFletes:boolean = false;
 
-  this.condicion_tpt = condicionSeleccionada.code;
-this.clienteSeleccionado = [];
-  this.almacenSeleccionado = [];
-  this.vehiculosEnSolicitud = [];
+  if(condicionTPT=='TRANSP' && permisoVerFletes){
+    verFletes=true;
+  }
+
+  return verFletes;
+}
+
+
+  async seleccionarCondicion(condicionSeleccionada:any){
+  
+    //console.log(this.verCondTPT,this.condicionSeleccionada,this.pedidos);
+    //console.log(`pedidos x ${ condicionSeleccionada.code}`,this.pedidos.filter(pedido=>pedido.condicion_tpt === condicionSeleccionada.code))
+
+    this.condicion_tpt = condicionSeleccionada.code;
+    this.verFletes = await this.setVerFletes(this.condicion_tpt,this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver fletes').valor);
+    this.clienteSeleccionado = [];
+    this.almacenSeleccionado = [];
+    this.vehiculosEnSolicitud = [];
 }
   
 
@@ -610,7 +632,7 @@ async getPedidosPorCliente(clientesSeleccionados:any){
  // //console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
 
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-  ////console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
+  console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
   this.getAlmacenesEnPedidos();
 }
 
@@ -1095,6 +1117,8 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
   //////////////// //// ////////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
   let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
 
+  
+
   this.pedidosAlmacenCliente = pedidosAlmacenClienteCalcudada;
 
   //////// //// ////////console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
@@ -1178,11 +1202,20 @@ configHeadersPedidos(){
       'cargada': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", editable:true, field:'cargada'},
       
     }];
+
+    if(this.verFletes){
+      headersTable[0].tarifa =  {label:'Tarifa',type:'number', sizeCol:'6rem', align:'center',currency:"$", editable:false, field:'tarifa'}
+      headersTable[0].flete =  {label:'Flete',type:'number', sizeCol:'6rem', align:'center',currency:"$", editable:true, field:'flete'}
+    }
     
     return headersTable;
 }
 
-configDataTablePedidos(arregloPedido:any){
+   configDataTablePedidos(arregloPedido:any){
+
+  console.log(arregloPedido);
+
+    
    
     let dataTable:any[] = [];
     let index:number = 0;
@@ -1206,8 +1239,15 @@ configDataTablePedidos(arregloPedido:any){
         comprometida:pedido.comprometida,
         disponible:(pedido.pendiente-pedido.comprometida),
         cargada:0,
+        //flete:0
         
       });
+
+      if(this.verFletes){
+        dataTable[dataTable.length-1].tarifa =pedido.itemcode.startsWith('SF')?pedido.precio_coniva:0;
+        dataTable[dataTable.length-1].flete =0;
+        
+      }
       index++;
     } 
     
@@ -1249,7 +1289,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
       this.showItemsSelectedPedidosAlmacenCliente=false;
   }else{
     const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-   //////// //// ////////console.log('pedidos seleccionados',pedidosSeleccionados);
+    console.log('pedidos seleccionados',pedidosSeleccionados);
   
     if(pedidosSeleccionados.length > 0){
         
@@ -1303,6 +1343,12 @@ async seleccionarPedidosAlmacenCliente(event:any){
           error = false;
   
         }
+
+        if(!error && this.verFletes && pedidosSeleccionados.filter((pedidoSeleccionado: { itemcode: string; flete:number }) =>pedidoSeleccionado.itemcode.toLowerCase().startsWith('sf') && pedidoSeleccionado.flete ===0).length > 0){
+         
+          this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `No ha ingresado el valor del flete en una linea de flete`});
+          error = false;
+        }
   
   
   
@@ -1315,7 +1361,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
             //console.log(pdidosVehiculo)
             for(let pedido of pedidosSeleccionados){
   
-             //console.log('pedido seleccionado',pedido);
+             console.log('pedido seleccionado',pedido);
   
               if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => pedidovh.pedido == pedido.docnum && 
                                                                                                                                                                     pedidovh.itemcode == pedido.itemcode && 
@@ -1346,9 +1392,12 @@ async seleccionarPedidosAlmacenCliente(event:any){
                           linenum:pedido.linenum,
                           municipioentrega:this.municipioentrega,
                           lugarentrega:this.sitioentrega,
-                          cliente:this.clienteSeleccionado2.CardName
+                          cliente:this.clienteSeleccionado2.CardName,
+                          flete:this.verFletes?pedido.flete:0
   
                     });
+
+                    
               }
               
             }
@@ -1633,8 +1682,10 @@ grabarSolicitud(){
       let pedidosVehiculo:any[] = [];
       // ////////console.log(this.pedidosCliente);
       for(let pedido of vehiculo.pedidos){
-       ////// //// ////////console.log(pedido);
+       console.log(pedido);
        ////// //// ////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
+        let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
+        /*
         let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
         let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
         let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
@@ -1642,8 +1693,16 @@ grabarSolicitud(){
         let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
 
         let tipoproducto = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].tipoprod;
+        */
 
-      
+        let email_vendedor = infoPedido[0].email_vendedor;
+        let vendedor = infoPedido[0].vendedor;
+        let dependencia = infoPedido[0].dependencia;
+        let localidad = infoPedido[0].localidad;
+        let tipoproducto = infoPedido[0].tipoprod;
+        let tarifa_tonelada = this.condicion_tpt=='TRANSP' && pedido.itemcode.startsWith('SF')?infoPedido[0].precio_coniva:0; 
+
+        let flete_tonelada = this.verFletes?pedido.flete:0;
 
 
         pedidosVehiculo.push({
@@ -1663,7 +1722,9 @@ grabarSolicitud(){
           dependencia,
           localidad,
           tipoproducto,
-          vendedor
+          vendedor,
+          tarifa_tonelada,
+          flete_tonelada
 
         });
         

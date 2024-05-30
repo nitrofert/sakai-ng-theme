@@ -29,6 +29,9 @@ import { PdfSolicitudCargue } from '../solicitudescargue/config-pdf/solicitud-ca
 import { InspeccionDespachoComponent } from './inspeccion-despacho/inspeccion-despacho.component';
 import { DynamicDrawModule } from 'src/app/layout/shared/dynamic-draw/dynamic-draw.module';
 import { DynamicUploadModule } from 'src/app/layout/shared/dynamic-upload/dynamic-upload.module';
+import { PdfInspeccionCargue } from '../solicitudescargue/config-pdf/inspeccion-cargue';
+import { FletesTptComponent } from './fletes-tpt/fletes-tpt.component';
+import { ListadoFletesComponent } from './listado-fletes/listado-fletes.component';
 
 
 
@@ -38,6 +41,8 @@ import { DynamicUploadModule } from 'src/app/layout/shared/dynamic-upload/dynami
     FormTurnoComponent,
     VistaEstadosTurnoComponent,
     InspeccionDespachoComponent,
+    
+    
   ],
   imports: [
     CommonModule,
@@ -64,6 +69,7 @@ import { DynamicUploadModule } from 'src/app/layout/shared/dynamic-upload/dynami
              ConductoresService,
              TransportadorasService,
              NovedadesService,
-             PdfSolicitudCargue]
+             PdfSolicitudCargue,
+             PdfInspeccionCargue]
 })
 export class TurnosModule { }

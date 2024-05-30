@@ -18,6 +18,8 @@ import { FunctionsService } from 'src/app/demo/service/functions.service';
 import { lastValueFrom, Observable } from 'rxjs';
 import { Table } from 'primeng/table';
 import {   PdfSolicitudCargue } from '../../solicitudescargue/config-pdf/solicitud-cargue';
+import { PdfInspeccionCargue } from '../../solicitudescargue/config-pdf/inspeccion-cargue';
+
 
 @Component({
   selector: 'app-calendario-turnos',
@@ -128,7 +130,8 @@ export class CalendarioTurnosComponent implements OnInit {
     public usuariosService:UsuarioService,
     private router:Router,
     private functionsService:FunctionsService,
-    private pdfSolicitudCargue:PdfSolicitudCargue
+    private pdfSolicitudCargue:PdfSolicitudCargue,
+    private pdfInspeccionCargue:PdfInspeccionCargue
 
     ){}
 
@@ -729,9 +732,14 @@ export class CalendarioTurnosComponent implements OnInit {
 
     console.log('orden seleccionada',this.selectedItem[0])
 
-    this.pdfSolicitudCargue.generarPDF(this.selectedItem[0]);
+   await this.pdfSolicitudCargue.generarPDF(this.selectedItem[0]);
+
+  // await this.pdfInspeccionCargue.generarPDF(this.selectedItem[0])
 
     this.selectedItem = [];
+
+
+
   }
 
   async exportExcel() {

@@ -114,7 +114,7 @@ getLocacionesMySQL(){
   this.almacenesService.getLocaciones()
   .subscribe({
       next:(locaciones)=>{
-         ////////////console.log('locacionesMySQL',locaciones);
+         console.log('locacionesMySQL',locaciones);
           this.locacionesMySQL = locaciones;
           if(this.locacionId!=0){
             this.editLocacion = true;
@@ -132,12 +132,13 @@ getLocacionesMySQL(){
   this.almacenesService.getAlmacenes()
   .subscribe({
       next:async (almacenes:any[])=>{
-       //console.log('getLocacionesSAP',almacenes);
+       console.log('getLocacionesSAP',almacenes);
         let almacenesTMP:any[] = await this.functionsService.objectToArray(almacenes);
         almacenesTMP = almacenesTMP.filter((almacen: { CorreoNoti: string | null; }) => almacen.CorreoNoti!=null && almacen.CorreoNoti!="");
         
         let locacionesSAP:any[] = [];
         for(let almacen of almacenesTMP){
+          console.log(almacen.locacion_codigo2)
           if(this.locacionesMySQL.filter(locacionMysql => locacionMysql.code == almacen.locacion_codigo2).length ==0 ){
               if(locacionesSAP.filter(locacionSAP=> locacionSAP.code == almacen.locacion_codigo2).length ==0){
                 almacen.code = almacen.locacion_codigo2;

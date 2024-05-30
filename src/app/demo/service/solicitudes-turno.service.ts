@@ -134,6 +134,12 @@ export class SolicitudTurnoService {
         return this.http.patch<any>(url,data);
     }
 
+    updateFletesTruno(id:number,data:any):Observable<any> {
+        console.log(id,data);
+        const url:string = `${this.api_url}/api/solicitud-turnos/fletes-turno/${id}`;
+        return this.http.patch<any>(url,data);
+    }
+
 
     updateEstadoTruno(id:number,data:any):Observable<any> {
         const url:string = `${this.api_url}/api/solicitud-turnos/cambiar-estado/turno/${id}`;
@@ -178,6 +184,27 @@ export class SolicitudTurnoService {
         const allInfoTurnoss$ = this.getAllInfoTurnos(params);
         const allInfoTurnoss = await lastValueFrom(allInfoTurnoss$);
         return allInfoTurnoss;
+    }
+
+
+    async fleteTurno(turnoid:any):Promise<any> {
+
+        let flete:any[] = [];
+
+        let turno:any = await this.infoTurno(turnoid);
+
+        //console.log(turno);
+
+        flete = turno.detalle_solicitud_turnos_pedido.filter((item: { itemcode: string; })=>item.itemcode.startsWith('SF'));
+
+        return flete;
+
+
+    }
+
+    sendNotificationFleteTurno(turnoid:number,tipo:string):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/envio-notificacion-flete/${turnoid}/${tipo}`;
+        return this.http.get<any>(url);
     }
 
    
