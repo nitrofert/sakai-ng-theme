@@ -27,6 +27,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     public anchoVentana = window.innerWidth;
     public alturaVentana = window.innerHeight;
 
+    /*
 
     @HostListener('touchstart', ['$event'])
     onTouchStart(e: any) { //TouchEvent on any
@@ -63,6 +64,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
         }
     }
 
+    */
 
     @HostListener('mousedown', ['$event'])
       onMouseDown(event: any) { //MouseEvent on any
