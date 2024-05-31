@@ -66,27 +66,18 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
 
     */
 
-    @HostListener('mousedown', ['$event'])
-      onMouseDown(event: any) { //MouseEvent on any
+    /*
+
+    @HostListener('document:mousedown', ['$event'])
+      onMouseDown(e: any) { //MouseEvent on any
         // Tu lógica aquí
-        if (event.target.id === 'canvasDraw' ) {
-          console.log('Clic down detectado', event);
+        if (e.target.id === 'canvasDraw' && e.target.getAttribute("draggable")) {
+          this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Toque start ${e.type}`});
+          console.log('Clic down detectado', e);
           this.isAvailabe = true;
         }
         
     }
-
-    
-    @HostListener('mouseup', ['$event'])
-    onMouseUp(event: any) { // MouseEvent on any
-      // Tu lógica aquí
-      if (event.target.id === 'canvasDraw' ) {
-        console.log('Clic up detectado', event);
-        this.isAvailabe = false;
-        this.pointsValidate = JSON.parse(JSON.stringify(this.points));
-        this.points = [];
-      }
-  }
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove = (e: any) => {
@@ -98,6 +89,21 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
       }
     }
 
+    
+    @HostListener('document:mouseup', ['$event'])
+    onMouseUp(e: any) { // MouseEvent on any
+      // Tu lógica aquí
+      if (e.target.id === 'canvasDraw' ) {
+        console.log('Clic up detectado', e);
+        this.messageService.add({severity:'info', summary: 'Confirmación', detail:  `Toque end ${e.type}`});
+        this.isAvailabe = false;
+        this.pointsValidate = JSON.parse(JSON.stringify(this.points));
+        this.points = [];
+      }
+  }*/
+
+   
+
     /*@HostListener('click', ['$event'])
     onClick = (e: any) => {
       if (e.target.id === 'canvasDraw') {
@@ -108,6 +114,27 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
         }
       }
     }*/
+
+    @HostListener("document:mousemove", ["$event"])
+    onMouseMove(event: MouseEvent) {
+      if (this.cx) {
+        const x = event.clientX - this.canvasRef.nativeElement.getBoundingClientRect().left;
+        const y = event.clientY - this.canvasRef.nativeElement.getBoundingClientRect().top;
+        this.cx.lineTo(x, y);
+        this.cx.stroke();
+      }
+    }
+  
+    @HostListener("document:mousedown", ["$event"])
+    onMouseDown(event: MouseEvent) {
+      if (this.cx) {
+        this.cx.beginPath();
+        this.cx.moveTo(
+          event.clientX - this.canvasRef.nativeElement.getBoundingClientRect().left,
+          event.clientY - this.canvasRef.nativeElement.getBoundingClientRect().top
+        );
+      }
+    }
 
   dataCanvas!:any;
   
