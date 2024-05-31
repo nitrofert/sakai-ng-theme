@@ -115,9 +115,9 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
       }
     }*/
 
-    @HostListener("document:mousemove", ["$event"])
+    /*@HostListener("document:mousemove", ["$event"])
     onMouseMove(event: MouseEvent) {
-      if (this.cx) {
+      if (this.cx && this.isAvailabe) {
         const x = event.clientX - this.canvasRef.nativeElement.getBoundingClientRect().left;
         const y = event.clientY - this.canvasRef.nativeElement.getBoundingClientRect().top;
         this.cx.lineTo(x, y);
@@ -133,8 +133,48 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
           event.clientX - this.canvasRef.nativeElement.getBoundingClientRect().left,
           event.clientY - this.canvasRef.nativeElement.getBoundingClientRect().top
         );
+        this.isAvailabe = true;
+      }
+    }*/
+
+
+    @HostListener("document:mousemove", ["$event"])
+    onMouseMove(event: MouseEvent) {
+      if (this.cx) {
+          this.findxy('move',event)
       }
     }
+  
+    @HostListener("document:mousedown", ["$event"])
+    onMouseDown(event: MouseEvent) {
+      if (this.cx) {
+        this.findxy('down',event)
+      }
+    }
+
+    @HostListener("document:mouseup", ["$event"])
+    onMouseUp(event: MouseEvent) {
+      if (this.cx) {
+        this.findxy('up',event)
+      }
+    }
+
+    
+    @HostListener("document:mouseout", ["$event"])
+    onMouseOut(event: MouseEvent) {
+      if (this.cx) {
+        this.findxy('out',event)
+      }
+    }
+
+    flag = false; 
+    prevX = 0; 
+    currX = 0; 
+    prevY = 0; 
+    currY = 0; 
+    dot_flag = false;
+    x = "black"; 
+    y = 2;
 
   dataCanvas!:any;
   
@@ -158,16 +198,63 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
  private render() {
     const canvasEl = this.canvasRef.nativeElement;
     this.cx = canvasEl.getContext('2d');
-    
     canvasEl.width = this.width;
     canvasEl.height = this.height;
-
-    
-
     this.cx.lineWidth = 3;
     this.cx.lineCap = 'round';
     this.cx.strokeStyle = '#000';
+  /*
+    canvasEl.addEventListener("mousemove",  (e:any)=> { this.findxy('move', e) }, false);
+    canvasEl.addEventListener("mousedown",  (e:any)=> { this.findxy('down', e) }, false);
+    canvasEl.addEventListener("mouseup", (e:any)=> { this.findxy('up', e) }, false);
+    canvasEl.addEventListener("mouseout", (e:any)=> { this.findxy('out', e) }, false);
+    */
   }
+
+  private  draw() {
+    this.cx.beginPath();
+    this.cx.moveTo(this.prevX, this.prevY);
+    this.cx.lineTo(this.currX, this.currY);
+    console.log(this.currX, this.currY);
+    //this.cx.strokeStyle = this.x;
+    //this.cx.lineWidth = this.y;
+    this.cx.stroke();
+    //this.cx.closePath();
+}
+
+private findxy(res:string, e:MouseEvent) {
+    const canvasEl = this.canvasRef.nativeElement;
+    const rect = canvasEl.getBoundingClientRect();
+    if (res == 'down') {
+      this.prevX = this.currX;
+      this.prevY = this.currY;
+      this.currX = e.clientX - rect.left;
+      this.currY = e.clientY - rect.top;
+      this.flag = true;
+      this.dot_flag = true;
+        if (this.dot_flag) {
+          //this.cx.beginPath();
+          //this.cx.fillStyle = this.x;
+          //this.cx.fillRect(this.currX, this.currY, 2, 2);
+          //this.cx.closePath();
+          this.dot_flag = false;
+        }
+    }
+    if (res == 'up' || res == "out") {
+      this.flag = false;
+    }
+    if (res == 'move') {
+        if (this.flag) {
+          this.prevX = this.currX;
+          this.prevY = this.currY;
+          this.currX = e.clientX - rect.left;
+          this.currY = e.clientY - rect.top;
+          
+          this.draw();
+        }
+    }
+}
+
 
   private write(res:any) {
     const canvasEl = this.canvasRef.nativeElement;
