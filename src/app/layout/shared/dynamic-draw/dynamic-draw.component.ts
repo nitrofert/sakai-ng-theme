@@ -27,6 +27,19 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     public anchoVentana = window.innerWidth;
     public alturaVentana = window.innerHeight;
 
+    flag = false; 
+    prevX = 0; 
+    currX = 0; 
+    prevY = 0; 
+    currY = 0; 
+    dot_flag = false;
+    x = "black"; 
+    y = 2;
+
+    private isDrawing = false;
+    private lastX = 0;
+    private lastY = 0;
+
     /*
 
     @HostListener('touchstart', ['$event'])
@@ -137,6 +150,8 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
       }
     }*/
 
+    /*
+
 
     @HostListener("document:mousemove", ["$event"])
     onMouseMove(event: MouseEvent) {
@@ -173,22 +188,12 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
        // console.log('Movimiento de toque detectado', event);
        //event.preventDefault();
        event.preventDefault();
-       /*if (this.cx) {
-          this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move :${JSON.stringify(event.target)}`} );
-          event.preventDefault();
-       }*/
+      
        
         
     }
-
-    flag = false; 
-    prevX = 0; 
-    currX = 0; 
-    prevY = 0; 
-    currY = 0; 
-    dot_flag = false;
-    x = "black"; 
-    y = 2;
+*/
+    
 
   dataCanvas!:any;
   
@@ -225,6 +230,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     */
   }
 
+  /*
   private  draw() {
     this.cx.beginPath();
     this.cx.moveTo(this.prevX, this.prevY);
@@ -305,6 +311,57 @@ private findxy(res:string, e:MouseEvent) {
       this.cx.stroke();
     }
   }
+
+
+  */
+
+  handleMouseDown(e: any) {
+    const canvasEl = this.canvasRef.nativeElement;
+    const rect = canvasEl.getBoundingClientRect();
+    this.isDrawing = true;
+    this.lastX = e.clientX - rect.left;
+    this.lastY = e.clientY - rect.top;
+  }
+
+  handleMouseMove(e: any) {
+    const canvasEl = this.canvasRef.nativeElement;
+    const rect = canvasEl.getBoundingClientRect();
+    if (!this.isDrawing) return;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    this.draw(x, y);
+  }
+
+  handleMouseUp(e:any) {
+    this.isDrawing = false;
+  }
+
+  handleTouchStart(e: TouchEvent) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    this.handleMouseDown(touch);
+  }
+
+  handleTouchMove(e: TouchEvent) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    this.handleMouseMove(touch);
+  }
+
+  handleTouchEnd(e:any) {
+    this.isDrawing = false;
+  }
+
+  draw(x: number, y: number) {
+    this.cx.beginPath();
+    this.cx.moveTo(this.lastX, this.lastY);
+    this.cx.lineTo(x, y);
+    this.cx.stroke();
+    this.lastX = x;
+    this.lastY = y;
+  }
+
+
 
   public clearZone = () => {
     this.isAvailabe = false;
