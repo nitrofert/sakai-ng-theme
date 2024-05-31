@@ -171,8 +171,9 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     onTouchMove(event: TouchEvent) { //TouchEvent on any
         // Tu lógica aquí
        // console.log('Movimiento de toque detectado', event);
+       //event.preventDefault();
        if (this.cx) {
-          this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move :${JSON.stringify(event)}`} );
+          this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move :${JSON.stringify(event.target)}`} );
           event.preventDefault();
        }
        
