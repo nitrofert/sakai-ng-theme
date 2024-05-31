@@ -167,6 +167,18 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
       }
     }
 
+    @HostListener('touchmove', ['$event'])
+    onTouchMove(event: TouchEvent) { //TouchEvent on any
+        // Tu lógica aquí
+       // console.log('Movimiento de toque detectado', event);
+       if (this.cx) {
+          this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move :${JSON.stringify(event)}`} );
+          event.preventDefault();
+       }
+       
+        
+    }
+
     flag = false; 
     prevX = 0; 
     currX = 0; 
@@ -215,11 +227,11 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     this.cx.beginPath();
     this.cx.moveTo(this.prevX, this.prevY);
     this.cx.lineTo(this.currX, this.currY);
-    console.log(this.currX, this.currY);
+    //console.log(this.currX, this.currY);
     //this.cx.strokeStyle = this.x;
     //this.cx.lineWidth = this.y;
     this.cx.stroke();
-    //this.cx.closePath();
+    this.cx.closePath();
 }
 
 private findxy(res:string, e:MouseEvent) {
@@ -233,10 +245,10 @@ private findxy(res:string, e:MouseEvent) {
       this.flag = true;
       this.dot_flag = true;
         if (this.dot_flag) {
-          //this.cx.beginPath();
+          this.cx.beginPath();
           //this.cx.fillStyle = this.x;
-          //this.cx.fillRect(this.currX, this.currY, 2, 2);
-          //this.cx.closePath();
+          this.cx.fillRect(this.currX, this.currY, 2, 2);
+          this.cx.closePath();
           this.dot_flag = false;
         }
     }
