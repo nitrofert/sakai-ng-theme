@@ -313,7 +313,8 @@ usuario!:any;
               private almacenesService: AlmacenesService,
               public functionsService:FunctionsService,
               private novedadesService:NovedadesService,
-              private ciudadesService:CiudadesService,) { }
+              private ciudadesService:CiudadesService,
+            ) { }
 
   ngOnInit() {
 

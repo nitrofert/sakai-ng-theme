@@ -202,8 +202,8 @@ export class SolicitudTurnoService {
 
     }
 
-    sendNotificationFleteTurno(turnoid:number,tipo:string):Observable<any> {
-        const url:string = `${this.api_url}/api/solicitud-turnos/envio-notificacion-flete/${turnoid}/${tipo}`;
+    sendNotificationFleteTurno(turnoid:number,tipo:string,email:string,responsable:string):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/envio-notificacion-flete/${turnoid}/${tipo}/${email}/${responsable}`;
         return this.http.get<any>(url);
     }
 

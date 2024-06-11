@@ -1,30 +1,57 @@
 <p-toast *ngIf="verEncabezado"></p-toast>
-<p-confirmDialog *ngIf="verEncabezado" [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<p-confirmDialog
+    *ngIf="verEncabezado"
+    [style]="{ width: '50vw' }"
+    [baseZIndex]="10000"
+    rejectButtonStyleClass="p-button-text"
+></p-confirmDialog>
 <app-breadcrumb *ngIf="verEncabezado"></app-breadcrumb>
 
 <div class="grid">
-	<div class="col-12">
-		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
+    <div class="col-12">
+        <div
+            class="card"
+            style="
+                background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png');
+                background-size: cover;
+            "
+        >
             <div class="p-fluid p-formgrid grid">
-                <div  *ngIf="verEncabezado" class="field col-12 ">
+                <div *ngIf="verEncabezado" class="field col-12">
                     <span class="p-float-label">
-                        <p-calendar id="rangoFecha" [(ngModel)]="filtroRnagoFechas" selectionMode="range" [readonlyInput]="true" [showIcon]="true" [numberOfMonths]="1"  styleClass="w-full"  (ngModelChange)="cambioFecha($event)"  ></p-calendar>
-                        <label for="rangoFecha"><h6>Seleccionar rango de fecha</h6></label>
+                        <p-calendar
+                            id="rangoFecha"
+                            [(ngModel)]="filtroRnagoFechas"
+                            selectionMode="range"
+                            [readonlyInput]="true"
+                            [showIcon]="true"
+                            [numberOfMonths]="1"
+                            styleClass="w-full"
+                            (ngModelChange)="cambioFecha($event)"
+                        ></p-calendar>
+                        <label for="rangoFecha"
+                            ><h6>Seleccionar rango de fecha</h6></label
+                        >
                     </span>
                 </div>
-    
-                <div class="field col-6 ">
+
+                <div class="field col-6">
                     <span class="p-float-label">
-                        <p-skeleton *ngIf="estadoSeleccionadoInicial.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
-                        <p-autoComplete id="estado1"
-                                    *ngIf="estados.length>0" 
-                                    [(ngModel)]="estadoSeleccionadoInicial" 
-                                    
-                                    [suggestions]="estadosFiltradasInicial" 
-                                    (completeMethod)="filtrarEstadoInicial($event)" 
-                                    field="label" 
-                                    [dropdown]="true"
-                                    (onSelect)="seleccionarEstadoInicial()">
+                        <p-skeleton
+                            *ngIf="estadoSeleccionadoInicial.length == 0"
+                            height="2rem"
+                            styleClass="mb-2"
+                        ></p-skeleton>
+                        <p-autoComplete
+                            id="estado1"
+                            *ngIf="estados.length > 0"
+                            [(ngModel)]="estadoSeleccionadoInicial"
+                            [suggestions]="estadosFiltradasInicial"
+                            (completeMethod)="filtrarEstadoInicial($event)"
+                            field="label"
+                            [dropdown]="true"
+                            (onSelect)="seleccionarEstadoInicial()"
+                        >
                         </p-autoComplete>
                         <label for="rangoFecha"><h6>Estado inicial</h6></label>
                     </span>
@@ -32,74 +59,135 @@
 
                 <div class="field col-6">
                     <span class="p-float-label">
-                        <p-skeleton *ngIf="estadoSeleccionadoFinal.length==0 " height="2rem" styleClass="mb-2"></p-skeleton>
-                        <p-autoComplete id="estado2"
-                                    *ngIf="estados.length>0" 
-                                    [(ngModel)]="estadoSeleccionadoFinal" 
-                                    
-                                    [suggestions]="estadosFiltradasFinal" 
-                                    (completeMethod)="filtrarEstadoFinal($event)" 
-                                    field="label" 
-                                    [dropdown]="true"
-                                    (onSelect)="seleccionarEstadoFinal()">
+                        <p-skeleton
+                            *ngIf="estadoSeleccionadoFinal.length == 0"
+                            height="2rem"
+                            styleClass="mb-2"
+                        ></p-skeleton>
+                        <p-autoComplete
+                            id="estado2"
+                            *ngIf="estados.length > 0"
+                            [(ngModel)]="estadoSeleccionadoFinal"
+                            [suggestions]="estadosFiltradasFinal"
+                            (completeMethod)="filtrarEstadoFinal($event)"
+                            field="label"
+                            [dropdown]="true"
+                            (onSelect)="seleccionarEstadoFinal()"
+                        >
                         </p-autoComplete>
                         <label for="rangoFecha"><h6>Estado final</h6></label>
                     </span>
                 </div>
+
+                <div class="field col-12">
+                    <span class="p-float-label">
+                        <p-skeleton
+                            *ngIf="locaciones.length == 0"
+                            height="2rem"
+                            styleClass="mb-2"
+                        ></p-skeleton>
+                        <p-multiSelect
+                            [options]="locaciones"
+                            [(ngModel)]="selectedLocaciones"
+                            defaultLabel="Seleccione una o varias locaciones"
+                            optionLabel="locacion"
+                            display="chip"
+                        ></p-multiSelect>
+                        <label for="rangoFecha"><h6>Locaciones</h6></label>
+                    </span>
+                </div>
+
+                <div class="field col-12">
+                    <p-button
+                        label="Generar reporte"
+                        icon="pi pi-list"
+                        iconPos="right"
+                        (onClick)="setReporte()"
+                    ></p-button>
+                </div>
             </div>
-            
-            
         </div>
     </div>
 </div>
 
-
-<div  class="grid">
-	<div class="col-12">
-		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-            <div  class="text-center mb-3"><h1>Tiempo promedio Locaciones entre {{estadoSeleccionadoInicial.name}}-{{estadoSeleccionadoFinal.name}}</h1></div>
-                    <div class="p-fluid p-formgrid grid">
-                        <div class="field col-12 ">
-                            <app-dynamic-table [dataTable]="dataTableComprtamientoBodegas.data" 
-                                        [headersTable]="dataTableComprtamientoBodegas.header"
-                                        
-                                        dataKey="index" 
-                                        [rows]="10" 
-                                        [rowsPerPageOptions]="[10,50,100]" 
-                                        [paginator]="false"
-                                        [selectionMode]="'multiple'"
-                                        [loading]="loading"
-                                        [showBtnExp]="true"
-                                        class="min-w-full"
-                                        nameExport="rpt_novedades">
-                            </app-dynamic-table>
-                        </div>  
-                    </div>
+<div class="grid">
+    <div class="col-12">
+        <div
+            class="card"
+            style="
+                background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png');
+                background-size: cover;
+            "
+        >
+            <div class="text-center mb-3">
+                <h1>
+                    Tiempo promedio Locaciones entre
+                    {{ estadoSeleccionadoInicial.name }}-{{
+                        estadoSeleccionadoFinal.name
+                    }}
+                </h1>
+            </div>
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12">
+                    <app-dynamic-table
+                        [dataTable]="dataTableComprtamientoBodegas.data"
+                        [headersTable]="dataTableComprtamientoBodegas.header"
+                        dataKey="index"
+                        [rows]="10"
+                        [rowsPerPageOptions]="[10, 50, 100]"
+                        [paginator]="false"
+                        [selectionMode]="'multiple'"
+                        [loading]="loading"
+                        [showBtnExp]="true"
+                        class="min-w-full"
+                        nameExport="rpt_novedades"
+                    >
+                    </app-dynamic-table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div  class="grid">
-	<div class="col-12">
-		<div class="card" style=" background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png'); background-size:cover;">
-            <div  class="text-center mb-3"><h1>Detalle Tiempo promedio Locaciones entre {{estadoSeleccionadoInicial.name}}-{{estadoSeleccionadoFinal.name}}</h1></div>
-                    <div class="p-fluid p-formgrid grid">
-                        <div class="field col-12 ">
-                            <app-dynamic-table [dataTable]="dataTableComprtamientoBodegasDetallado.data" 
-                                        [headersTable]="dataTableComprtamientoBodegasDetallado.header"
-                                        
-                                        dataKey="index" 
-                                        [rows]="10" 
-                                        [rowsPerPageOptions]="[10,50,100]" 
-                                        [paginator]="false"
-                                        [selectionMode]="'multiple'"
-                                        [loading]="loading"
-                                        [showBtnExp]="true"
-                                        class="min-w-full"
-                                        nameExport="rpt_novedades">
-                            </app-dynamic-table>
-                        </div>  
-                    </div>
+<div class="grid">
+    <div class="col-12">
+        <div
+            class="card"
+            style="
+                background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png');
+                background-size: cover;
+            "
+        >
+            <div class="text-center mb-3">
+                <h1>
+                    Detalle Tiempo promedio Locaciones entre
+                    {{ estadoSeleccionadoInicial.name }}-{{
+                        estadoSeleccionadoFinal.name
+                    }}
+                </h1>
+            </div>
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12">
+                    <app-dynamic-table
+                        [dataTable]="
+                            dataTableComprtamientoBodegasDetallado.data
+                        "
+                        [headersTable]="
+                            dataTableComprtamientoBodegasDetallado.header
+                        "
+                        dataKey="index"
+                        [rows]="10"
+                        [rowsPerPageOptions]="[10, 50, 100]"
+                        [paginator]="false"
+                        [selectionMode]="'multiple'"
+                        [loading]="loading"
+                        [showBtnExp]="true"
+                        class="min-w-full"
+                        nameExport="rpt_tiempos_"
+                    >
+                    </app-dynamic-table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

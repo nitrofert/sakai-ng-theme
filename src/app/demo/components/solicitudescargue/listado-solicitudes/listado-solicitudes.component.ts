@@ -843,15 +843,17 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   async solicitarFlete(){
-    //console.log('orden seleccionada',this.selectedItem[0])
+    console.log('orden seleccionada',this.selectedItem[0])
 
     let fleteTurno:any[] = await this.solicitudTurnoService.fleteTurno(this.selectedItem[0].detalle_solicitudes_turnos_id);
-
+    //detalle_solicitudes_turnos_pedidos_email_asistente
     console.log(fleteTurno);
     if(this.selectedItem[0].detalle_solicitudes_turnos_condiciontpt!='TRANSP'){
       this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "La modalidad de transporte asociada al turno no requiere de creación de flete." });
     }else if(fleteTurno.length>0){
       this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "El turno seleccionado ya cuenta con una linea de flete" });
+    }else if(this.selectedItem[0].detalle_solicitudes_turnos_pedidos_email_asistente==null){
+      this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "El turno seleccionado, no tiene configurado el email para el envio de la notificacion de creación de flete" });
     }else{
       
       this.confirmationService.confirm({
@@ -860,7 +862,7 @@ export class ListadoSolicitudesComponent implements OnInit {
         icon: 'pi pi-exclamation-triangle',
         accept: async () => {
 
-          this.solicitudTurnoService.sendNotificationFleteTurno(this.selectedItem[0].detalle_solicitudes_turnos_id,'solicitud')
+          this.solicitudTurnoService.sendNotificationFleteTurno(this.selectedItem[0].detalle_solicitudes_turnos_id,'solicitud',this.selectedItem[0].detalle_solicitudes_turnos_pedidos_email_asistente,this.selectedItem[0].detalle_solicitudes_turnos_pedidos_nombre_asistente)
               .subscribe({
                 next:(result)=>{
                   this.messageService.add({ severity: 'success', summary: 'Información', detail: "Se ha enviado correctamente la solicitud de creación del flete" });

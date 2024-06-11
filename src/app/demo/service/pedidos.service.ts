@@ -34,6 +34,18 @@ export class PedidosService {
         const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos?compania=${this.urlApiService.companySAP}${options}`;
         return this.http.get<any>(url);
     }
+    
+    getSaldosPedidosFletes(cliente?:string,locacion2?:string):Observable<any> {
+        let options:string = "";
+        if(cliente){
+            options+=`&cliente=${cliente}`;
+        }
+        if(locacion2){
+            options+=`&locacion2=${locacion2}`;
+        }
+        const url:string = `${this.api_url}/api/sb1xe/saldos-pedidos-fletes?compania=${this.urlApiService.companySAP}${options}`;
+        return this.http.get<any>(url);
+    }
 
     async getPedidosPorCliente(clientesSeleccionados: any, condicion_tpt:string, pedidos:any[]){
         //let pedidos = await this.getPedidos();

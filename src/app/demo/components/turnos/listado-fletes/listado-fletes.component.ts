@@ -14,6 +14,7 @@ import { Table } from 'primeng/table';
 import { FormTurnoComponent } from '../form-turno/form-turno.component';
 import * as Handlebars from 'handlebars';
 import { FletesTptComponent } from '../fletes-tpt/fletes-tpt.component';
+import { PedidosService } from 'src/app/demo/service/pedidos.service';
 
 @Component({
   selector: 'app-listado-fletes',
@@ -132,6 +133,7 @@ export class ListadoFletesComponent implements OnInit,  OnChanges {
 tablaFletesTurnos:any[] = [];
 
 turnos:any[] = [];
+turnosEntites:any[] = [];
 
 
   constructor(private almacenesService:AlmacenesService,
@@ -143,7 +145,8 @@ turnos:any[] = [];
               private router:Router,
               private localidadesService:LocalidadesService,
               private dependenciasService:DependenciasService,
-              private confirmationService: ConfirmationService,){}
+              private confirmationService: ConfirmationService,
+              private pedidosService: PedidosService,){}
 
 
   async ngOnInit() {
@@ -158,7 +161,7 @@ turnos:any[] = [];
     this.getPermisosModulo();
     
    
-   //////////////console.log(this.infousuario);
+   //////////////////console.log(this.infousuario);
     //this.configTablaProgramacionDiaria();
 
     
@@ -169,7 +172,7 @@ turnos:any[] = [];
   }
 
   ngOnChanges(changes: SimpleChanges){
-    //////console.log('changes',changes['rangoFechas'].currentValue)
+    //////////console.log('changes',changes['rangoFechas'].currentValue)
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.getPermisosModulo();
    
@@ -177,7 +180,7 @@ turnos:any[] = [];
 
   async getPermisosModulo(){
     const modulo = this.router.url;
-    ////console.log(modulo);
+    ////////console.log(modulo);
     
 
     this.showBtnNew =  await this.usuariosService.permisoModuloAccion('/portal/solicitudes-de-cargue','crear');
@@ -188,7 +191,7 @@ turnos:any[] = [];
 
 
     this.verFletes = await this.usuariosService.permisoModuloAccion('/dashboard-logistica','ver fletes');
-    //console.log(this.verFletes);
+    //////console.log(this.verFletes);
 
     this.getLocalidades();
     
@@ -248,12 +251,12 @@ turnos:any[] = [];
                 locacion.label = locacion.locacion
               })
               //this.locaciones = locaciones;
-            // //////////////////////////////////////console.log(locaciones);
+            // //////////////////////////////////////////console.log(locaciones);
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               //this.locacionSeleccionada = this.locaciones[0];
               //this.seleccionarLocacion(this.locacionSeleccionada);
-              ////console.log('aqui va');
-              ////////////////////////////////////////console.log();
+              ////////console.log('aqui va');
+              ////////////////////////////////////////////console.log();
               await this.setDashboard();
             },
             error:(err)=>{
@@ -279,14 +282,14 @@ turnos:any[] = [];
 
 
   seleccionarLocacion(locacion:any){
-    //////////////////console.log(locacion);
+    //////////////////////console.log(locacion);
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
-    //////////////////console.log(bodegas_locacion);
+    //////////////////////console.log(bodegas_locacion);
     if(bodegas_locacion.length==0){
       //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La locación ${locacion.label} no tiene bodegas asociadas`});
-      ////////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
+      ////////////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
     }else{
-      //////////////////console.log(bodegas_locacion);
+      //////////////////////console.log(bodegas_locacion);
       this.bodegas = bodegas_locacion;
       this.bodegaSeleccionada = this.bodegas[0];
       this.seleccionarBodega(this.bodegaSeleccionada);
@@ -297,7 +300,7 @@ turnos:any[] = [];
   }
 
   seleccionarBodega(bodega:any){
-    //////////////console.log(bodega);
+    //////////////////console.log(bodega);
    
   }
 
@@ -318,7 +321,7 @@ async getSolicitudesTurno(){
   this.solicitudTurnoService.getSolicitudesTurnoExtendido(params)
   .subscribe({
     next: async (solicitudesTurnos)=>{
-   
+       //////console.log(solicitudesTurnos);
        let dataPieChart:any[] = [];
        let dataBarStackChart:any[any] = [];
       
@@ -349,12 +352,12 @@ async getSolicitudesTurno(){
                                                             let hoy = new Date();
                                                             hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
                                                             solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
-                                                            ////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+                                                            ////////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
                                                             if(this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado)){
                                                               solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
                                                               solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
                                                             }else{
-                                                              //////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+                                                              //////////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
                                                               solicitud.bgColor = 'indigo-50';
                                                               solicitud.txtColor = 'primary-900';
                                                             }
@@ -397,7 +400,7 @@ async getSolicitudesTurno(){
 
                                                             solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia)?this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name:'';
                                                             solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
-                                                            ////////console.log(solicitud);
+                                                            ////////////console.log(solicitud);
                                                             
 
         //return solicitud
@@ -406,17 +409,17 @@ async getSolicitudesTurno(){
       //await this.configPieChart(dataPieChart);
       //await this.configBarSatckChart(dataBarStackChart);
 
-       ////////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+       ////////////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
 
        this.turnos = solicitudesTurnos.raw.filter((item: { detalle_solicitudes_turnos_condiciontpt: string; })=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP');
        let turnosFletes:any  = solicitudesTurnos.raw.filter((data: { detalle_solicitudes_turnos_pedidos_itemcode: string; })=>data.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF'));
-       
-       
+       this.turnosEntites = await this.setTurnosEntites(solicitudesTurnos.entities);
+       ////console.log(this.turnosEntites); 
        
       
         await this.setTableFletes(turnosFletes);
              
-       ////console.log('this.solicitudesExtendida',this.solicitudesExtendida);
+       ////////console.log('this.solicitudesExtendida',this.solicitudesExtendida);
        this.loading = false;
     },
     error:(err)=>{
@@ -430,9 +433,24 @@ async getSolicitudesTurno(){
   
 }
 
+async setTurnosEntites(solicitudes:any): Promise<any>{
+
+  let turnos:any[] = [];
+  for(let solicitud of solicitudes){
+    for(let turno of solicitud.detalle_solicitud_turnos){
+        if(turno.condiciontpt==='TRANSP'){
+          turnos.push(turno);
+        }
+    }
+  }
+
+  return turnos;
+
+}
+
 async setTableFletes(turnos:any[]):Promise<void>{
 
-  console.log(turnos);
+  //////console.log(turnos);
 
 
 
@@ -441,6 +459,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
  })
  //this.tablaFletesTurnos = tablaFletesTurnos;
  this.tablaFletesTurnos = turnos;
+ console.log('this.tablaFletesTurnos',this.tablaFletesTurnos);
  this.loading = false;
 
 
@@ -451,7 +470,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     
     
     if(event[1]){
-      //////console.log(this.filtroRnagoFechas);
+      //////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.getSolicitudesTurno();
   
@@ -475,10 +494,10 @@ async setTableFletes(turnos:any[]):Promise<void>{
    if(index>0){
     index+=1;
    }
-   ////////////////////console.log(index);
+   ////////////////////////console.log(index);
 
    filtro[index].value = value;*/
-   ////////////////////console.log(field,value, filtro,other,other2 );
+   ////////////////////////console.log(field,value, filtro,other,other2 );
    //table.filter(value,field,filtro[0].matchMode);
  
   }
@@ -505,7 +524,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   nuevaSolicitud(event: any){
-    ////////////////////////console.log(event);
+    ////////////////////////////console.log(event);
     //this.router.navigate(['/portal/solicitudes-de-cargue/nueva'],);
     
 
@@ -516,7 +535,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   gestionarSolicitud(){
-    ////console.log(this.selectedItem);
+    ////////console.log(this.selectedItem);
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar la solicitud No. ${this.selectedItem[0].solicitudes_turno_id} turno de cargue No. ${this.selectedItem[0].detalle_solicitudes_turnos_id}?`,
       header: 'Confirmación',
@@ -537,7 +556,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// ////////////console.log(("Refresh calendar");
+          //////////// ////////////////console.log(("Refresh calendar");
           this.getSolicitudesTurno();
           this.selectedItem=[];
         });
@@ -558,7 +577,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   gestionarFletes(){
-   console.log(this.selectedItemFletes);
+   ////console.log(this.selectedItemFletes);
     
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar el flete del turno No. ${this.selectedItemFletes[0].detalle_solicitudes_turnos_id}?`,
@@ -581,7 +600,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// ////////////console.log(("Refresh calendar");
+          //////////// ////////////////console.log(("Refresh calendar");
           this.getSolicitudesTurno();
           this.selectedItemFletes=[];
         });
@@ -612,7 +631,8 @@ async setTableFletes(turnos:any[]):Promise<void>{
       accept: async () => {
 
         let turnosSinFletes:any[] = await this.getTurnosSinFletes();
-        console.log('turnosSinFletes',turnosSinFletes);
+        //////console.log('turnosSinFletes',turnosSinFletes);
+        this.matchTurnosFletes(turnosSinFletes);
 
       },
       
@@ -634,8 +654,8 @@ async setTableFletes(turnos:any[]):Promise<void>{
     let turnosSinFletes:any[] = [];
 
     for(let turno of this.turnos){
-      //console.log(turno.detalle_solicitudes_turnos_id);
-      //console.log(this.turnos.filter(item=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP' && item.detalle_solicitudes_turnos_id===turno.detalle_solicitudes_turnos_id && item.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF')))
+      //////console.log(turno.detalle_solicitudes_turnos_id);
+      //////console.log(this.turnos.filter(item=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP' && item.detalle_solicitudes_turnos_id===turno.detalle_solicitudes_turnos_id && item.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF')))
       if(this.turnos.filter(item=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP' && item.detalle_solicitudes_turnos_id===turno.detalle_solicitudes_turnos_id && item.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF')).length ===0){
         if(turnosSinFletes.filter(item=>item.detalle_solicitudes_turnos_id=== turno.detalle_solicitudes_turnos_id).length ===0){
           turnosSinFletes.push(turno);
@@ -646,6 +666,120 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
 
     return turnosSinFletes;
+  }
+
+  matchTurnosFletes(turnos:any){
+      this.pedidosService.getSaldosPedidosFletes()
+          .subscribe({
+              next:async (saldos)=>{
+                  console.log(saldos);
+                  let fletes = (await this.functionsService.objectToArray(saldos)).filter((saldo: {ItemCode: any; TIPOPROD: string;Turno_Portal:any})=>saldo.TIPOPROD=='Flete' && saldo.ItemCode.startsWith('SF') && saldo.Turno_Portal!=null); 
+                  //////console.log(fletes);
+                  let flete:any = [];
+
+                  for await (let turno of turnos){
+                    //////console.log(turno.detalle_solicitudes_turnos_id);
+                    if(fletes.filter((flete: { Turno_Portal: any; })=>flete.Turno_Portal == turno.detalle_solicitudes_turnos_id).length>0){
+                        flete = fletes.find((flete: { Turno_Portal: any; })=>flete.Turno_Portal == turno.detalle_solicitudes_turnos_id);
+                        await this.asignarFleteTurno(turno.detalle_solicitudes_turnos_id,flete);
+                    }
+                  }
+
+                  this.setDashboard();
+              },
+              error:(err)=>{
+                  console.error(err);
+              }
+          })
+  }
+
+  async asignarFleteTurno(turnoid:any, flete:any):Promise<void>{
+
+    ////console.log('turno',turnoid);
+    
+    let turno:any= this.turnosEntites.find(turnoEntitie=>turnoEntitie.id === turnoid);
+    console.log('turno',turno);
+    console.log('flete',flete);
+    
+    let detalle_solicitud_turnos_pedido:any[]=turno.detalle_solicitud_turnos_pedido;
+    for await(let pedido of detalle_solicitud_turnos_pedido){
+      pedido.lineaUpdate = {update:false, create:false};
+      pedido.cantidadOld =pedido.cantidad;
+    }
+    /*let detalle_solicitud_turnos_pedido:any[] = await turno.detalle_solicitud_turnos_pedido.map((pedido: { lineaUpdate: { update: boolean; create: boolean; }; cantidadOld: any; cantidad: any; })=>{
+                                                  pedido.lineaUpdate = {update:false, create:false};
+                                                  pedido.cantidadOld =pedido.cantidad;
+                                                });*/
+    //console.log(detalle_solicitud_turnos_pedido);              
+    let lineaFlete:any = {
+      CardCode:flete.CardCode,
+      CardName:flete.CardName,
+      bodega:flete.WhsCode_Code,
+      cantidad:flete.Quantity,
+      cantidad_pedido:flete.SALDO,
+      cantidad_sacos:0,
+      dependencia:flete.DEPENDENCIA,
+      docentry:flete.DocEntry,
+      email_asistente:flete.Correo_Asistente,
+      email_vendedor:flete.Email,
+      estado:'A',
+      factura_tpt:null,
+      fecha_factura_tpt:null,
+      flete_tonelada:0,
+      hoja_entrada:null,
+      itemcode:flete.ItemCode,
+      itemname:flete.Dscription,
+      linea:flete.LineNum,
+      localidad:flete.LOCALIDAD,
+      lote_produccion:null,
+      lugarentrega:turno.lugarentrega,
+      municipioentrega:turno.municipioentrega,
+      nombre_asistente:flete.Nombre_Asistente,
+      observacion_flete:null,
+      orden_compra:null,
+      pedidonum:flete.DocNum,
+      remision:turno.remision,
+      tarifa_tonelada:flete.PRECIOU_CONIVA,
+      tipoproducto:flete.TIPOPROD,
+      toneladas_metircas:flete.Quantity,
+      vendedor:flete.SlpName,
+      lineaUpdate:{update:false, create:true},
+      cantidadOld:flete.Quantity,
+      id:0
+    }
+
+    detalle_solicitud_turnos_pedido.push(lineaFlete);
+
+    //console.log(detalle_solicitud_turnos_pedido);
+
+    let data:any = {
+      historial : {
+                    estado:turno.estado,
+                    fechaaccion:new Date(),
+                    horaaccion:new Date(),
+                    comentario:`Se genero la linea de felte para el turno bajo el pedido ${flete.DocNum}`
+                  },
+                  pedidos_detalle_solicitud:detalle_solicitud_turnos_pedido
+    };
+
+    console.log('data',data);
+    
+    this.solicitudTurnoService.updateInfoTruno(turno.id,data)
+        .subscribe({
+          next:async (turno)=>{
+            console.log('turno actualizado',turno);
+            this.messageService.add({severity:'success', summary:'!Información!', detail:`Se adiciono correctamente la linea de felete para el turno ${turno.id} asociada al pedido ${flete.DocNum}`});
+
+
+          },
+          error:(err)=>{
+            console.error(err);
+            this.messageService.add({severity:'error', summary:'Rejected', detail:err});
+          }
+    });
+    
+
+
   }
 
   async exportExcel() {

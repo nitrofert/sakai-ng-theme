@@ -367,7 +367,7 @@ getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
           next:async (saldosPedidos)=>{
-            //console.log('saldosPedidos',saldosPedidos);
+            console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
            
@@ -436,7 +436,9 @@ getSaldosPedidos(){
                   vendedor:saldosPedidos[indexPedido].SlpName,
                   dependencia:saldosPedidos[indexPedido].DEPENDENCIA,
                   localidad:saldosPedidos[indexPedido].LOCALIDAD,
-                  tipoprod:saldosPedidos[indexPedido].TIPOPROD
+                  tipoprod:saldosPedidos[indexPedido].TIPOPROD,
+                  email_asistente:saldosPedidos[indexPedido].Correo_Asistente,
+                  nombre_asistente:saldosPedidos[indexPedido].Nombre_Asistente
                   
                 })
 
@@ -1701,6 +1703,9 @@ grabarSolicitud(){
         let localidad = infoPedido[0].localidad;
         let tipoproducto = infoPedido[0].tipoprod;
         let tarifa_tonelada = this.condicion_tpt=='TRANSP' && pedido.itemcode.startsWith('SF')?infoPedido[0].precio_coniva:0; 
+        let nombre_asistente = infoPedido[0].nombre_asistente;
+        let email_asistente = infoPedido[0].email_asistente;
+
 
         let flete_tonelada = this.verFletes?pedido.flete:0;
 
@@ -1724,8 +1729,9 @@ grabarSolicitud(){
           tipoproducto,
           vendedor,
           tarifa_tonelada,
-          flete_tonelada
-
+          flete_tonelada,
+          nombre_asistente,
+          email_asistente
         });
         
         
