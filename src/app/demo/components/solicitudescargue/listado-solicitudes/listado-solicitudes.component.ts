@@ -17,6 +17,7 @@ import { DependenciasService } from 'src/app/demo/service/dependencias.service';
 import { lastValueFrom } from 'rxjs';
 import { PdfSolicitudCargue } from '../config-pdf/solicitud-cargue'
 import { ListaHistorialTurnoComponent } from '../lista-historial-turno/lista-historial-turno.component';
+import { DocumentosTurnoComponent } from '../../turnos/documentos-turno/documentos-turno.component';
 
 @Component({
   selector: 'app-listado-solicitudes',
@@ -131,6 +132,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   estadosTurno: any[] = [];
 
   solicitudesExtendida: any[] = [];
+  solicitudesEntidad: any[] = [];
 
   documentStyle = getComputedStyle(document.documentElement);
   textColor = this.documentStyle.getPropertyValue('--text-color');
@@ -326,9 +328,10 @@ export class ListadoSolicitudesComponent implements OnInit {
 
           //////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
           this.solicitudesExtendida = solicitudesTurnos.raw;
+          this.solicitudesEntidad = solicitudesTurnos.entities;
 
-
-          //console.log('this.solicitudesExtendida', this.solicitudesExtendida);
+          console.log('this.solicitudesExtendida', this.solicitudesExtendida);
+          console.log('this.solicitudesEntidad', this.solicitudesEntidad);
           this.loading = false;
         },
         error: (err) => {
@@ -725,6 +728,41 @@ export class ListadoSolicitudesComponent implements OnInit {
 
 
 
+  }
+
+  documentos(item:any){
+
+    console.log(item);
+
+ 
+
+    let solicitud:any = this.solicitudesEntidad.find(solicitudEntidad =>solicitudEntidad.id === item.solicitudes_turno_id);
+    let turno:any = solicitud.detalle_solicitud_turnos.find((turnoSolicitud: { id: any; }) => turnoSolicitud.id === item.detalle_solicitudes_turnos_id);
+    turno.dataKey = item.dataKey
+
+    console.log(turno);
+    
+        const ref = this.dialogService.open(DocumentosTurnoComponent, {
+          data: {
+              id: parseInt(turno.id),
+              info:turno
+          },
+          header: `Documentos turno: ${turno.id}` ,
+          width: '70%',
+          height:'auto',
+          contentStyle: {"overflow": "auto"},
+          maximizable:true, 
+        });
+    
+        ref.onClose.subscribe(() => {
+          //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+          //this.getCalendar();
+          //////////// //////////console.log(("Refresh calendar");
+          
+          this.selectedItem=[];
+        });
+
+     
   }
 
   async createPDF2() {

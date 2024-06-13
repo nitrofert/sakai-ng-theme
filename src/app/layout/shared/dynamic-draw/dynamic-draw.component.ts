@@ -376,51 +376,53 @@ private findxy(res:string, e:MouseEvent) {
     console.log(canvasEl.toDataURL());
     let fileCanvas = await this.functionsService.base64ToBlob(canvasEl.toDataURL());
     console.log(fileCanvas);
-    if(this.pointsValidate.length < 10  ){
+    /*if(this.pointsValidate.length < 10  ){
       this.messageService.add({severity:'error', summary:'Error', detail:'Debe dibujar una figura de mas de 10 puntos'});
     }else{
-      this.confirmationService.confirm({
-        message: `¿Esta seguro de ${this.dataCanvas.accion=='create'?'grabar':'actualizar'} el dibujo?`,
-        header: 'Confirmación',
-        icon: 'pi pi-exclamation-triangle',
-        accept: async () => {
-          if(this.dataCanvas.accion=='update'){
-             //Borrar firma del usuario
-             let deleteFile$ = this.functionsService.deleteFiles({'entidad': this.dataCanvas.entidad,'id_relacion': this.dataCanvas.id_relacion,'proceso': this.dataCanvas.proceso});
-             let deleteFile = await lastValueFrom(deleteFile$);
-          }
-          let body = new FormData();
-          body.append('file', fileCanvas, this.dataCanvas.filename);
-          body.append('entidad', this.dataCanvas.entidad);
-          body.append('id_relacion', this.dataCanvas.id_relacion);
-          body.append('proceso', this.dataCanvas.proceso);
-          body.append('nombre',this.dataCanvas.filename);
-  
-          this.functionsService.uploadFile(body)
-          .subscribe({
-            next:(result)=>{
-              ////console.log('Upload ok',result);
+      
+    }*/
+
+    this.confirmationService.confirm({
+      message: `¿Esta seguro de ${this.dataCanvas.accion=='create'?'grabar':'actualizar'} el dibujo?`,
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: async () => {
+        if(this.dataCanvas.accion=='update'){
+           //Borrar firma del usuario
+           let deleteFile$ = this.functionsService.deleteFiles({'entidad': this.dataCanvas.entidad,'id_relacion': this.dataCanvas.id_relacion,'proceso': this.dataCanvas.proceso});
+           let deleteFile = await lastValueFrom(deleteFile$);
+        }
+        let body = new FormData();
+        body.append('file', fileCanvas, this.dataCanvas.filename);
+        body.append('entidad', this.dataCanvas.entidad);
+        body.append('id_relacion', this.dataCanvas.id_relacion);
+        body.append('proceso', this.dataCanvas.proceso);
+        body.append('nombre',this.dataCanvas.filename);
+
+        this.functionsService.uploadFile(body)
+        .subscribe({
+          next:(result)=>{
+            ////console.log('Upload ok',result);
+          
+            this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${this.dataCanvas.filename}`});
             
-              this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${this.dataCanvas.filename}`});
-              
-            },
-            error:(err)=>{
-              this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
-            }
-          })
-        },
-        reject: (type: any) => {
-          switch(type) {
-              case ConfirmEventType.REJECT:
-                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
-              break;
-              case ConfirmEventType.CANCEL:
-                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
-              break;
+          },
+          error:(err)=>{
+            this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
           }
-      }
-    });
+        })
+      },
+      reject: (type: any) => {
+        switch(type) {
+            case ConfirmEventType.REJECT:
+                //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+            break;
+            case ConfirmEventType.CANCEL:
+                //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+            break;
+        }
     }
+  });
     
 
     /**/

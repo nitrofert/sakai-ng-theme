@@ -19,6 +19,7 @@ import { lastValueFrom, Observable } from 'rxjs';
 import { Table } from 'primeng/table';
 import {   PdfSolicitudCargue } from '../../solicitudescargue/config-pdf/solicitud-cargue';
 import { PdfInspeccionCargue } from '../../solicitudescargue/config-pdf/inspeccion-cargue';
+import { DocumentosTurnoComponent } from '../documentos-turno/documentos-turno.component';
 
 
 @Component({
@@ -732,14 +733,51 @@ export class CalendarioTurnosComponent implements OnInit {
 
     console.log('orden seleccionada',this.selectedItem[0])
 
-   await this.pdfSolicitudCargue.generarPDF(this.selectedItem[0]);
+    await this.pdfSolicitud(this.selectedItem[0]);
 
-  // await this.pdfInspeccionCargue.generarPDF(this.selectedItem[0])
+    await this.pdfInspeccion(this.selectedItem[0]);
+
+  
 
     this.selectedItem = [];
 
 
 
+  }
+
+  async pdfSolicitud(item:any):Promise<void> {
+    await this.pdfSolicitudCargue.generarPDF(item);
+  }
+
+  async pdfInspeccion(item:any):Promise<void> {
+    await this.pdfInspeccionCargue.generarPDF(item);
+  }
+
+  documentos(item:any){
+
+    console.log(item);
+    
+        const ref = this.dialogService.open(DocumentosTurnoComponent, {
+          data: {
+              id: parseInt(item.id),
+              info:item
+          },
+          header: `Documentos turno: ${item.id}` ,
+          width: '70%',
+          height:'auto',
+          contentStyle: {"overflow": "auto"},
+          maximizable:true, 
+        });
+    
+        ref.onClose.subscribe(() => {
+          //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+          //this.getCalendar();
+          //////////// //////////console.log(("Refresh calendar");
+          
+          this.selectedItem=[];
+        });
+
+     
   }
 
   async exportExcel() {

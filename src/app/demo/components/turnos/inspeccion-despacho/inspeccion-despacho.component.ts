@@ -56,7 +56,8 @@ export class InspeccionDespachoComponent implements  OnInit ,  OnChanges {
   permisosModulo!:any[];
 rolesUsuario:any[] = [];
 
-dataTableChekVehiculo:any[] = [{item:1,label:'SIN OLORES',estado:true,observacion:''},
+dataTableChekVehiculo:any[] = [{item:0,label:'PAGO DE CARGUE',estado:true,observacion:''},
+                               {item:1,label:'SIN OLORES',estado:true,observacion:''},
                                {item:2,label:'ESTADO CARROCERIA',estado:true,observacion:''},
                                {item:3,label:'CARPA SIN FILTRACIONES',estado:true,observacion:''},
                                {item:4,label:'AUSENCIA DE PLAGAS VIVAS O MUERTAS',estado:true,observacion:''},
@@ -242,21 +243,22 @@ filesInspeccion:any[] = [];
  
  
     
- 
-       this.dataTableChekVehiculo[0].estado = inspeccion.olores;
-       this.dataTableChekVehiculo[0].observacion = inspeccion.obs_olores;
-       this.dataTableChekVehiculo[1].estado = inspeccion.carroceria;
-       this.dataTableChekVehiculo[1].observacion = inspeccion.obs_carroceria;
-       this.dataTableChekVehiculo[2].estado = inspeccion.carpa_filtraciones;
-       this.dataTableChekVehiculo[2].observacion = inspeccion.obs_carpa_filtraciones;
-       this.dataTableChekVehiculo[3].estado = inspeccion.plagas;
-       this.dataTableChekVehiculo[3].observacion = inspeccion.obs_plagas;
-       this.dataTableChekVehiculo[4].estado = inspeccion.humedad_grasa;
-       this.dataTableChekVehiculo[4].observacion = inspeccion.obs_humedad_grasa;
-       this.dataTableChekVehiculo[5].estado = inspeccion.estado_plancha;
-       this.dataTableChekVehiculo[5].observacion = inspeccion.obs_estado_plancha;
-       this.dataTableChekVehiculo[6].estado = inspeccion.plastico_polipropileno;
-       this.dataTableChekVehiculo[6].observacion = inspeccion.obs_plastico_polipropileno;
+       this.dataTableChekVehiculo[0].estado = inspeccion.pago_cargue;
+       this.dataTableChekVehiculo[0].observacion = inspeccion.obs_pago_cargue;
+       this.dataTableChekVehiculo[1].estado = inspeccion.olores;
+       this.dataTableChekVehiculo[1].observacion = inspeccion.obs_olores;
+       this.dataTableChekVehiculo[2].estado = inspeccion.carroceria;
+       this.dataTableChekVehiculo[2].observacion = inspeccion.obs_carroceria;
+       this.dataTableChekVehiculo[3].estado = inspeccion.carpa_filtraciones;
+       this.dataTableChekVehiculo[3].observacion = inspeccion.obs_carpa_filtraciones;
+       this.dataTableChekVehiculo[4].estado = inspeccion.plagas;
+       this.dataTableChekVehiculo[4].observacion = inspeccion.obs_plagas;
+       this.dataTableChekVehiculo[5].estado = inspeccion.humedad_grasa;
+       this.dataTableChekVehiculo[5].observacion = inspeccion.obs_humedad_grasa;
+       this.dataTableChekVehiculo[6].estado = inspeccion.estado_plancha;
+       this.dataTableChekVehiculo[6].observacion = inspeccion.obs_estado_plancha;
+       this.dataTableChekVehiculo[7].estado = inspeccion.plastico_polipropileno;
+       this.dataTableChekVehiculo[7].observacion = inspeccion.obs_plastico_polipropileno;
  
        this.dataTableChekCarga[0].estado = inspeccion.registro_ica;
        this.dataTableChekVehiculo[0].observacion = inspeccion.obs_registro_ica;

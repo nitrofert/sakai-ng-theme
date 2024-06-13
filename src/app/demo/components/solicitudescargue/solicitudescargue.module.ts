@@ -25,6 +25,7 @@ import { LocalidadesService } from '../../service/localidades.service';
 import { DependenciasService } from '../../service/dependencias.service';
 import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 import { PdfSolicitudCargue } from './config-pdf/solicitud-cargue';
+import { PdfInspeccionCargue } from './config-pdf/inspeccion-cargue';
 
 
 
@@ -59,7 +60,8 @@ import { PdfSolicitudCargue } from './config-pdf/solicitud-cargue';
               CiudadesService,
               LocalidadesService,
               DependenciasService,
-              PdfSolicitudCargue
+              PdfSolicitudCargue,
+              PdfInspeccionCargue
    ]
 })
 export class SolicitudescargueModule { }
