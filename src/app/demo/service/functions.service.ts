@@ -417,7 +417,7 @@ async extraerCampos(data:any[], fields:any): Promise<any>{
     }
 
     newLine = newLine.substring(0,newLine.length-1)+"}"
-    //console.log(newLine);
+    console.log(newLine);
     ////console.log(JSON.parse(newLine));
     return JSON.parse(newLine);
 

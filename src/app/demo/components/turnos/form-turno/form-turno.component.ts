@@ -1838,7 +1838,7 @@ async validarHoraCargue():Promise<boolean>{
                   
                 }
 
-                if(turno.estado===this.estadosTurno.CARGADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
+                if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
 
                   console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
                   
