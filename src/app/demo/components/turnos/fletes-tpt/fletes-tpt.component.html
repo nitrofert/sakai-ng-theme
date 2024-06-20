@@ -249,7 +249,11 @@
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">$</span>
                         <span class="p-float-label">
-                            <p-inputNumber inputId="flete" [(ngModel)]="flete">
+                            <p-inputNumber
+                                inputId="flete"
+                                [(ngModel)]="flete"
+                                (ngModelChange)="calcularValorFlete()"
+                            >
                             </p-inputNumber>
                             <!--<input
                                 pInputText

@@ -968,8 +968,8 @@ usuario!:any;
                   this.pedidosTurno[indexPedidoSeleccionado].factura_tpt = this.prefactura;
                 }
 
-                console.log((this.fecha_prefactura && this.fleteSeleccionado[0].fecha_factura_tpt!=null) , (this.fecha_prefactura.toISOString().split('T')[0] != new Date(this.fleteSeleccionado[0].fecha_factura_tpt).toISOString().split('T')[0]));
-                console.log(this.fecha_prefactura ,this.fleteSeleccionado[0].fecha_factura_tpt , this.fecha_prefactura.toISOString().split('T')[0] , new Date(this.fleteSeleccionado[0].fecha_factura_tpt).toISOString().split('T')[0]);
+                //console.log((this.fecha_prefactura && this.fleteSeleccionado[0].fecha_factura_tpt!=null) , (this.fecha_prefactura.toISOString().split('T')[0] != new Date(this.fleteSeleccionado[0].fecha_factura_tpt).toISOString().split('T')[0]));
+                //console.log(this.fecha_prefactura ,this.fleteSeleccionado[0].fecha_factura_tpt , this.fecha_prefactura.toISOString().split('T')[0] , new Date(this.fleteSeleccionado[0].fecha_factura_tpt).toISOString().split('T')[0]);
 
 
                 if((this.fecha_prefactura) && (this.fecha_prefactura.toISOString().split('T')[0] != new Date(this.fleteSeleccionado[0].fecha_factura_tpt).toISOString().split('T')[0])){
@@ -3518,6 +3518,11 @@ async validarHoraCargue():Promise<boolean>{
   
   }
   
+
+  calcularValorFlete(){
+    this.valor_flete = this.flete* this.toneladas_flete;
+    console.log(this.flete,this.toneladas_flete,this.valor_flete);
+  }
  
 
 }
