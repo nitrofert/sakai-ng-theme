@@ -1842,8 +1842,11 @@ async validarHoraCargue():Promise<boolean>{
                 if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
 
                   console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
+
+                  let email_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.email:turno.detalle_solicitud_turnos_pedido[0].email_asistente;
+                  let nombre_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.nombrecompleto:turno.detalle_solicitud_turnos_pedido[0].nombre_asistente;
                   
-                  this.solicitudTurnoService.sendNotificationFleteTurno(turno.id,'solicitud',turno.detalle_solicitud_turnos_pedido[0].email_asistente,turno.detalle_solicitud_turnos_pedido[0].nombre_asistente)
+                  this.solicitudTurnoService.sendNotificationFleteTurno(turno.id,'solicitud',email_destino_flete,nombre_destino_flete)
                   .subscribe({
                     next:(result)=>{
                       this.messageService.add({ severity: 'success', summary: 'Información', detail: "Se ha enviado correctamente la solicitud de creación del flete" });
