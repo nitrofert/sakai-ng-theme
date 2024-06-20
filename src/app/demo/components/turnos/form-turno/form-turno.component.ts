@@ -1752,7 +1752,8 @@ async validarHoraCargue():Promise<boolean>{
                             estado:nuevoEstado,
                             fechaaccion:this.fechaaccion,
                             horaaccion:this.horaaccion,
-                            comentario:this.comentario
+                            comentario:this.comentario,
+                            estado_anterior:this.estado
                           }
             };
 
@@ -1879,7 +1880,9 @@ async validarHoraCargue():Promise<boolean>{
                                     estado:this.estadosTurno.SOLICITADO,
                                     fechaaccion:this.fechaaccion,
                                     horaaccion:this.horaaccion,
-                                    comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`
+                                    comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`,
+                                    estado_anterior:this.estado
+
                                   }
                     };
 
