@@ -108,5 +108,13 @@ export class PedidosService {
         
     }
 
+
+    getCantidadesComprometidasItemPedidoOtrasBodega(pedidonum:string,itemcode:string, bodega:string,idPedido:number):Observable<number> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas-otras-bodegas`;
+        return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido}});
+    }
+
+   
+
     
 }

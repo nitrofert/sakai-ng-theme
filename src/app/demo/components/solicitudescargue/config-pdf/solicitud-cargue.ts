@@ -1044,6 +1044,14 @@ export class PdfSolicitudCargue {
                  fillColor:"green"
              },
              col6:{
+                text:'CANTIDAD (SACOS/BULTOS)',
+                alignment:'center',
+                fontSize:8,
+                blod:true,
+                color:"antiquewhite",
+                fillColor:"green"
+            },
+             col7:{
                  text:'DESTINO DE MERCANCIA',
                  alignment:'center',
                  fontSize:8,
@@ -1064,7 +1072,7 @@ export class PdfSolicitudCargue {
              row.push( header.col4 );
              row.push( header.col5 );
              row.push( header.col6 );
-            
+             row.push( header.col7 );
              bodyTableProductos.push(row);
          }
        }
@@ -1125,6 +1133,16 @@ export class PdfSolicitudCargue {
                      blod:false,
                  }
              );
+
+            row.push(
+                 
+                {
+                    text:producto.bultos,
+                    alignment:'center',
+                    fontSize:8,
+                    blod:false,
+                }
+            );
          
              row.push(
                  
@@ -1554,7 +1572,7 @@ export class PdfSolicitudCargue {
              {
                  id:'table-info-productos',
                  table:{
-                     widths: [ '25%','10%','20%','10%','10%','25%' ],
+                     widths: [ '20%','10%','20%','10%','10%','10%','20%' ],
                      body:bodyTableProductos
                  },
                  margin:[0,5,0,5],
@@ -1845,13 +1863,14 @@ export class PdfSolicitudCargue {
         }
         console.log('conductor',conductor);
 
-        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-1] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; }) => {
+        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-1] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; cantidad_sacos:any}) => {
             return {
               locacion: `${locaciones.filter((locacion: { code: any; })=>locacion.code === infoTurno.locacion )[0].locacion} -- Dirección: ${locaciones.filter((locacion: { code: any; })=>locacion.code === infoTurno.locacion )[0].direccion}`,
               pedidonum: linea.pedidonum,
               itemname: linea.itemname,
               presentacion: '',
               cantidad: linea.cantidad,
+              bultos:linea.cantidad_sacos,
               destino: `${linea.municipioentrega} ${linea.lugarentrega}`
             }
         })

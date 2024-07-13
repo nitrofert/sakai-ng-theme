@@ -714,6 +714,7 @@ tablapedidosInspeccion!:any;
       //////////////////////////// ////////////// //////////console.log(pedido);
       let cantidadComprometida = 0;
       cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id);
+      cantidadComprometida += await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id);
       //////////////////////// ////////////// //////////console.log('cantidadComprometida',cantidadComprometida , new Date());
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
@@ -729,6 +730,16 @@ tablapedidosInspeccion!:any;
   async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:string, idPedido:number):Promise<number>{
     
     const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidasItemBodega(itemcode,bodega, idPedido);
+    const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
+  
+    return cantidadComprometida;
+  
+  
+  }
+
+  async getCantidadComprometidaItemPedidoOtrasBodegas(pedido:any, itemcode:string, bodega:string, idPedido:number):Promise<number>{
+    
+    const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidasItemPedidoOtrasBodega(pedido,itemcode,bodega, idPedido);
     const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
   
     return cantidadComprometida;

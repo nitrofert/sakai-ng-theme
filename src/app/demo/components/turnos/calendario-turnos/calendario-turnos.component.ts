@@ -598,7 +598,7 @@ export class CalendarioTurnosComponent implements OnInit {
       
     })
 
-    //turnosLocalidad = await this.functionsService.sortArrayObject(turnos,'id','DESC')
+    turnosLocalidad = await this.functionsService.sortArrayObject(turnos,'id','DESC')
 
     this.loading = false
 

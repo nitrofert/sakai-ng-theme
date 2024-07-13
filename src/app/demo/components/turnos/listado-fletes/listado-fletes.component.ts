@@ -27,6 +27,8 @@ export class ListadoFletesComponent implements OnInit,  OnChanges {
 
   @Input() rangoFechas!:any;
 
+  @Input() almacenes!:any;
+
   hoy = new Date();
   primerDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
   ultimoDiaMes:Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth() + 1, 0);
@@ -158,6 +160,8 @@ turnosEntites:any[] = [];
       this.verEncabezado = false;
     }
 
+    
+
     this.getPermisosModulo();
     
    
@@ -213,32 +217,41 @@ turnosEntites:any[] = [];
 
 
   getAlmacenes(){
-    this.almacenesService.getAlmacenes()
-        .subscribe({
-            next:(almacenes)=>{
-
-             
-              let almacenesTMP:any[] = [];
-             
-              for(let index in almacenes){
-                let linea:any = almacenes[index];
-                linea.code = linea.WhsCode_Code;
-                linea.name = linea.WhsName;
-                linea.label = `${linea.WhsCode_Code} - ${linea.WhsName} - ${linea.Name_State}`;
-                almacenesTMP.push(linea);
-             
-              }
-              
-              this.allbodegas = almacenesTMP;
-              this.getLocaciones();
-             
-             
-            },
-            error:(err)=>{
-                console.error(err);
+    if(!this.almacenes){
+      this.almacenesService.getAlmacenes()
+      .subscribe({
+          next:(almacenes)=>{
+            
+           
+            let almacenesTMP:any[] = [];
+           
+            for(let index in almacenes){
+              let linea:any = almacenes[index];
+              linea.code = linea.WhsCode_Code;
+              linea.name = linea.WhsName;
+              linea.label = `${linea.WhsCode_Code} - ${linea.WhsName} - ${linea.Name_State}`;
+              almacenesTMP.push(linea);
+           
             }
-      
-    }); 
+            
+            this.allbodegas = almacenesTMP;
+
+            console.log('almacenes calback');
+            this.getLocaciones();
+           
+           
+          },
+          error:(err)=>{
+              console.error(err);
+          }
+    
+      }); 
+    }else{
+      this.allbodegas = this.almacenes;
+      console.log('almacenes input')
+      this.getLocaciones();
+    }
+    
   }
 
   getLocaciones(){

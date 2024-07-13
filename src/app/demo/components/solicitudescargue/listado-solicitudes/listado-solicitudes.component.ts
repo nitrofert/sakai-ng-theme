@@ -559,6 +559,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       transportadoras_nombre: 'Transportadora',
       vehiculos_placa: 'Placa',
       conductores_nombre: 'Conductor',
+      conductores_cedula:'Cedula',
       conductores_numerocelular: 'Télefono Conductor',
       detalle_solicitudes_turnos_condiciontpt: 'Condición de transporte',
       lugarentrega: 'Lugar Entrega',
