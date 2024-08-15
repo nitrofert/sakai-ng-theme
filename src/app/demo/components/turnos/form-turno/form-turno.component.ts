@@ -556,6 +556,8 @@ tablapedidosInspeccion!:any;
                       return cliente;
                   });
 
+                  console.log(this.clientesTurno);
+
                   this.clienteSeleccionado = this.clientesTurno[0];
                   
                  
@@ -2551,7 +2553,8 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   filtrarCliente(event: any) {
-    this.clientesFiltrados = this.filter(event,this.clienteSeleccionado);
+    //this.clientesFiltrados = this.filter(event,this.clienteSeleccionado);
+    this.clientesFiltrados = this.filter(event,this.clientesTurno);
   }
 
   seleccionarCliente(clienteSeleccionado:any){

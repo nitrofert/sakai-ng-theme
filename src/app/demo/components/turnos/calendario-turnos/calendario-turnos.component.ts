@@ -498,6 +498,8 @@ export class CalendarioTurnosComponent implements OnInit {
 
                   this.tablaTurnosLocalidad = await this.setTablaTurnosLocalidad(await this.functionsService.clonObject(turnosLocalidad));
 
+                  //console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
+
                   //this.getCalendar();
                   this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
                   //// //////////console.log(this.boxEstados);
@@ -543,8 +545,9 @@ export class CalendarioTurnosComponent implements OnInit {
 
   async setTablaTurnosLocalidad(turnos:any): Promise<any>{
 
-    console.log('turnos',turnos);
+    //console.log('turnos',turnos);
     let turnosLocalidad:any[] = [];
+    let turnosLocalidadCliente:any[] = [];
 
     await turnos.forEach(async (turno: {
       estado: string;
@@ -586,6 +589,8 @@ export class CalendarioTurnosComponent implements OnInit {
 
       let clientesTurno = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'CardCode',[{cantidad:0}]);
 
+      
+
       for(let clienteTurno of clientesTurno){
         let lineaTurno = await this.functionsService.clonObject(turno);
         lineaTurno.label_cliente = clienteTurno.CardName;
@@ -593,16 +598,24 @@ export class CalendarioTurnosComponent implements OnInit {
         lineaTurno.cantidad = clienteTurno.cantidad;
         lineaTurno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.placa}-${clienteTurno.CardCode}`;
 
-        turnosLocalidad.push(lineaTurno);
+        turnosLocalidadCliente.push(lineaTurno);
+
+        //console.log('lineaTurno',await this.functionsService.clonObject(lineaTurno))
       }
+
+      
       
     })
 
-    turnosLocalidad = await this.functionsService.sortArrayObject(turnos,'id','DESC')
+    //console.log('turnosLocalidadCliente',await this.functionsService.clonObject(turnosLocalidadCliente))
+    console.log('turnosLocalidadCliente',(turnosLocalidadCliente))
+
+
+    turnosLocalidad = await this.functionsService.sortArrayObject(turnosLocalidadCliente,'id','DESC')
 
     this.loading = false
 
-    console.log('turnosLocalidad',turnosLocalidad)
+    //console.log('turnosLocalidad',await this.functionsService.clonObject(turnosLocalidad))
 
     return turnosLocalidad;
   }
@@ -821,7 +834,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   gestionarSolicitud(){
-    //console.log(this.selectedItem);
+    console.log(this.selectedItem);
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar el turno No. ${this.selectedItem[0].id} ?`,
       header: 'Confirmación',
