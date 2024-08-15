@@ -1131,11 +1131,11 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
 async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
   for(let pedido of pedidos){
-   //////////////////////// //// ////////console.log(pedido);
+   console.log(pedido);
     let cantidadComprometida=0; 
     cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
     cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
-    cantidadComprometida += await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
+    cantidadComprometida += await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.docnum,pedido.itemcode,pedido.codigo_almacen,pedido.linenum);
     pedido.comprometida = cantidadComprometida;
     //pedido.pendiente 
   }
@@ -1169,9 +1169,9 @@ async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, 
     return cantidadComprometida;
 }
 
-async getCantidadComprometidaItemPedidoOtrasBodegas(pedido:any, itemcode:string, bodega:string):Promise<number>{
+async getCantidadComprometidaItemPedidoOtrasBodegas(pedido:any, itemcode:string, bodega:string,linea:number):Promise<number>{
   
-  const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidasItemPedidoOtrasBodega(pedido,itemcode,bodega,0);
+  const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidasItemPedidoOtrasBodega(pedido,itemcode,bodega,0,linea);
   const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
 
   return cantidadComprometida;
