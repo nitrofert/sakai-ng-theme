@@ -26,6 +26,7 @@ import { DependenciasService } from '../../service/dependencias.service';
 import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.module';
 import { PdfSolicitudCargue } from './config-pdf/solicitud-cargue';
 import { PdfInspeccionCargue } from './config-pdf/inspeccion-cargue';
+import { PdfOrdenCargue } from './config-pdf/orden-cargue';
 
 
 
@@ -61,7 +62,8 @@ import { PdfInspeccionCargue } from './config-pdf/inspeccion-cargue';
               LocalidadesService,
               DependenciasService,
               PdfSolicitudCargue,
-              PdfInspeccionCargue
+              PdfInspeccionCargue,
+              PdfOrdenCargue
    ]
 })
 export class SolicitudescargueModule { }

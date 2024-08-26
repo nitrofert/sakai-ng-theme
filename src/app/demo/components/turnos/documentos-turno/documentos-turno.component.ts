@@ -24,6 +24,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { DynamicUploadComponent } from 'src/app/layout/shared/dynamic-upload/dynamic-upload.component';
 import { PdfSolicitudCargue } from '../../solicitudescargue/config-pdf/solicitud-cargue';
 import { PdfInspeccionCargue } from '../../solicitudescargue/config-pdf/inspeccion-cargue';
+import { PdfOrdenCargue } from '../../solicitudescargue/config-pdf/orden-cargue';
 
 @Component({
   selector: 'app-documentos-turno',
@@ -64,6 +65,8 @@ turno!:any;
 
 domain:string = window.location.hostname;
 
+//documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"Orden de cargue", tipo:"orden_cargue"},{label:"inspección de cargue", tipo:"inspeccion"}];
+
 documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"inspección de cargue", tipo:"inspeccion"}];
 
 infoTurno!:any;
@@ -83,7 +86,8 @@ infoTurno!:any;
        
               public functionsService:FunctionsService,
               private pdfSolicitudCargue:PdfSolicitudCargue,
-              private pdfInspeccionCargue:PdfInspeccionCargue
+              private pdfInspeccionCargue:PdfInspeccionCargue,
+              private pdfOrdenCargue:PdfOrdenCargue
             
               ) { }
 
@@ -183,6 +187,12 @@ infoTurno!:any;
         case 'inspeccion':
             this.pdfInspeccion();
         break;
+
+        case 'orden_cargue':
+            this.pdfOrden();
+        break;
+
+
       }
   }
  
@@ -204,5 +214,8 @@ infoTurno!:any;
     
   }
 
+ async pdfOrden():Promise<void> {
+  await this.pdfOrdenCargue.generarPDF(this.infoTurno);
+}
 
 }
