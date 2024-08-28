@@ -1649,13 +1649,13 @@ async validarHoraCargue():Promise<boolean>{
             //Validar adjuntos para el estado cargado
              
 
-            //if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0 && this.uploadActivo){
-            //  this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
-            //   this.cambioEstado = false;
+            if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0 && this.uploadActivo){
+              this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
+               this.cambioEstado = false;
               
-            //}else{
+            }else{
               this.updateTurno(data);
-            //}
+            }
             
   
         },
@@ -2338,7 +2338,7 @@ async validarHoraCargue():Promise<boolean>{
       }else if((this.tablaPedidosTurno.data[0].remision==undefined && this.estado === this.estadosTurno.PESADOF) || 
                (this.tablaPedidosTurno.data.filter((linea: { remision: null;itemcode:string })=>linea.remision == null  && !linea.itemcode.startsWith('SF')).length>0 && this.estado === this.estadosTurno.PESADOF)){
                 this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero de remisión para cada linea de producto-destino.'});
-      }else /*if((this.tablaPedidosTurno.data[0].lote_produccion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
+      }else if((this.tablaPedidosTurno.data[0].lote_produccion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
                 (this.tablaPedidosTurno.data.filter((linea: { lote_produccion: null;itemcode:string })=>linea.lote_produccion == null && !linea.itemcode.startsWith('SF')).length>0 && this.estado === this.estadosTurno.CARGANDO)){
                   this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero del lote de producccion para cada linea de producto-destino.'});
       }else if((this.tablaPedidosTurno.data[0].cantidad_sacos==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
@@ -2356,7 +2356,7 @@ async validarHoraCargue():Promise<boolean>{
                 this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar la cubicación para cada linea de producto-destino.'});
       }else if(this.estado === this.estadosTurno.CARGANDO && await this.validarEvidenciasItemPedido()=== false){
 
-      }else*/{
+      }else{
         valido = await this.validarCantidadesCarga();
       }
 

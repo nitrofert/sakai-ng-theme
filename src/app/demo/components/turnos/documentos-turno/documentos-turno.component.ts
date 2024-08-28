@@ -65,9 +65,9 @@ turno!:any;
 
 domain:string = window.location.hostname;
 
-//documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"Orden de cargue", tipo:"orden_cargue"},{label:"inspección de cargue", tipo:"inspeccion"}];
+documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"Orden de cargue", tipo:"orden_cargue"},{label:"inspección de cargue", tipo:"inspeccion"}];
 
-documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"inspección de cargue", tipo:"inspeccion"}];
+//documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"inspección de cargue", tipo:"inspeccion"}];
 
 infoTurno!:any;
 
