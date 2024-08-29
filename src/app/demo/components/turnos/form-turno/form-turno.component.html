@@ -756,7 +756,7 @@
                             </ng-template>
                         </p-fileUpload>
                     </div>
-                    <!--
+
                     <div
                         *ngIf="
                             estado === estadosTurno.PESADO ||
@@ -774,7 +774,7 @@
                             (onChangeData)="setInsppeccion($event)"
                         ></app-inspeccion-despacho>
                     </div>
-                --></div>
+                </div>
             </div>
         </div>
     </div>
@@ -850,7 +850,7 @@
     </ng-template>
 </p-dialog>
 
-<!-- Dialog pedidos cliente-->
+<!-- Dialog Pedidos cliente en locación-->
 <p-dialog
     [header]="'Pedidos cliente en locación'"
     [(visible)]="dialogPedidosCliente"
@@ -1125,7 +1125,7 @@
 </p-dialog>
 <!--Fin Dialog loading-->
 
-<!-- Dialog pedidos cliente-->
+<!-- Dialog Cambio de Locación/bodega-->
 <p-dialog
     [header]="'Cambio de Locación/bodega'"
     [(visible)]="dialogCambioBodega"
@@ -1236,7 +1236,7 @@
 </p-dialog>
 <!-- Fin Dialog pedidos cliente-->
 
-<!-- Dialog historial -->
+<!-- Dialog Evidencias cargue -->
 <p-dialog
     [header]="'Evidencias cargue'"
     [(visible)]="formEvidenciasCargueTurno"
