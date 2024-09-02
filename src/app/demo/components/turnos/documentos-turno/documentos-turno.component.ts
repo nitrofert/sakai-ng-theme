@@ -71,6 +71,8 @@ documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"Orde
 
 infoTurno!:any;
 
+evidencias_cargue:any[] = []
+
 
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
@@ -165,6 +167,8 @@ infoTurno!:any;
                   this.turno = turno;
                   this.displayModal = false;
                   this.loadingCargue = false;
+
+                  this.evidencias_cargue = await this.getEvidenciasCargue(turno);
                 
               },
               error:(err)=>{
@@ -175,6 +179,30 @@ infoTurno!:any;
         });
 
 
+  }
+
+  async getEvidenciasCargue(turno:any):Promise<any>{
+    let itemsTurno = turno.detalle_solicitud_turnos_pedido;
+    let evidenciasItemTurno:any[] = [];
+    let entidad = 'pedidos-turno';
+
+    for(let itemTurno of itemsTurno){
+      let filesAtach$ = this.functionsService.loadFiles({id_relacion:itemTurno.id,entidad});
+      let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
+
+      for(let file of filesAtachByEstadoHistorialTurno){
+        evidenciasItemTurno.push({cliente:itemTurno.CardName,producto:itemTurno.itemcode+' '+itemTurno.itemname, evidencia:file.nombre, linkS3:file.linkS3 });
+      }
+    }
+
+    console.log(evidenciasItemTurno);
+
+    return evidenciasItemTurno;
+
+  }
+
+  downloadFile(url:any){
+    window.open(url);
   }
 
   generarPDF(tipo:string){
