@@ -2354,9 +2354,9 @@ async validarHoraCargue():Promise<boolean>{
       }else if((this.tablaPedidosTurno.data[0].cubicacion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
                 (this.tablaPedidosTurno.data.filter((linea: { cubicacion: null; })=>linea.cubicacion == null).length>0 && this.estado === this.estadosTurno.CARGANDO)){
                 this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar la cubicación para cada linea de producto-destino.'});
-      }else if(this.estado === this.estadosTurno.CARGANDO && await this.validarEvidenciasItemPedido()=== false){
+      }else/* if(this.estado === this.estadosTurno.CARGANDO && await this.validarEvidenciasItemPedido()=== false){
 
-      }else{
+      }else*/{
         valido = await this.validarCantidadesCarga();
       }
 
