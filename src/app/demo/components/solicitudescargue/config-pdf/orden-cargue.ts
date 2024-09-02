@@ -786,7 +786,7 @@ export class PdfOrdenCargue {
                                 fontSize:8,
                             },
                             {
-                                text:data.cliente.nombre,
+                                text:data.trasnportadora.nombre,
                                 alignment:'center',
                                 fontSize:8,
                             },

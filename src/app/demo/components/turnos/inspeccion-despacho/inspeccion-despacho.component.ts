@@ -376,6 +376,7 @@ filesInspeccion:any[] = [];
  
 
   cargarFirma(){
+    console.log('this.turno.detalle_solicitud_turnos_inspeccion',this.turno.detalle_solicitud_turnos_inspeccion);
     const ref = this.dialogService.open(DynamicDrawComponent, {
       data: {
           id_relacion: this.turno.detalle_solicitud_turnos_inspeccion[0].id,
