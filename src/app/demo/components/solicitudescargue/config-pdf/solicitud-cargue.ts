@@ -1596,8 +1596,8 @@ export class PdfSolicitudCargue {
                 },
                 margin:[0,5,0,5],
                 layout:'noBorders'
-            },
-            {
+             },
+             {
                 id:'table-label-productos',
                 table:{
                     widths: [ '100%' ],
@@ -1616,7 +1616,7 @@ export class PdfSolicitudCargue {
                 },
                 margin:[0,5,0,5],
                 layout:'noBorders'
-            },
+             },
          ]
     }
 

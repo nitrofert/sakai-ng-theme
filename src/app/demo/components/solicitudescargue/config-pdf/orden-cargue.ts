@@ -675,9 +675,9 @@ export class PdfOrdenCargue {
                 },
                 margin:[0,5,0,5],
             },
-            //Tabla de label observaciones
+            //Tabla de label cubicacion
              {
-                id:'table-label-observaciones',
+                id:'table-label-cubicacion',
                 table:{
                     widths: [ '100%' ],
                     heights:['*',50],
@@ -707,9 +707,9 @@ export class PdfOrdenCargue {
                 margin:[0,5,0,0],
                 //layout:'noBorders'
             },
-            //Tabla de observaciones
+            //Tabla de detalle recursos
             {
-                id:'table-observaciones',
+                id:'table-detalle-recursos',
                 table:{
                     widths: [ '15%','15%','15%','15%','20%','20%' ],
                    
@@ -813,8 +813,48 @@ export class PdfOrdenCargue {
                 },
                 margin:[0,5,0,5],
                 //layout:'noBorders'
+            },
+            {
+               id:'table-label-observaciones',
+               table:{
+                   widths: [ '100%' ],
+                  
+                   body:[
+                       [
+                           {
+                               text:'Observaciones:',
+                               alignment:'left',
+                               fontSize:8,
+                               blod:true,
+                           }
+                       ],
+                      
+                   ]
+               },
+               margin:[0,5,0,5],
+               layout:'noBorders'
+            },
+            {
+               id:'table-label-observaciones',
+               table:{
+                   widths: [ '100%' ],
+                  
+                   body:[
+                       [
+                           {
+                               text:data.observacion,
+                               alignment:'left',
+                               fontSize:8,
+                               //blod:true,
+                           }
+                       ],
+                      
+                   ]
+               },
+               margin:[0,5,0,5],
+               layout:'noBorders'
             }
-
+            
             
          ]
     }
