@@ -1141,8 +1141,14 @@
                 <div class="p-fluid p-formgrid grid">
                     <div class="field col-12">
                         <span class="p-float-label">
+                            <p-skeleton
+                                *ngIf="bodegas.length == 0"
+                                height="2rem"
+                                styleClass="mb-2"
+                            ></p-skeleton>
                             <p-autoComplete
                                 id="vhiculo"
+                                *ngIf="bodegas.length > 0"
                                 [(ngModel)]="bodegaSeleccionada"
                                 [suggestions]="bodegasFiltradas"
                                 (completeMethod)="filtrarBodega($event)"

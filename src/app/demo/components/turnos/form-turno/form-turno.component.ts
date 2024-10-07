@@ -759,7 +759,7 @@ tablapedidosInspeccion!:any;
   async getInventarioItenBodega(itemcode:string, bodega:string): Promise<any>{
 
     
-    const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega(itemcode, bodega);
+    const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega2(itemcode, bodega);
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     console.log(inventariosItemBodega);
     ////////////////////////////// ////////////// //////////console.log(inventarioItemBodega);
@@ -2985,7 +2985,7 @@ async validarHoraCargue():Promise<boolean>{
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     
-     ////////////// //////////console.log(inventariosItemBodega);
+     console.log(inventariosItemBodega);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
 
     //////////console.log(arrayInventariosItemBodega);

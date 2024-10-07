@@ -1,0 +1,50 @@
+<div class="grid">
+    <div class="col-12">
+        <div
+            class="card"
+            style="
+                background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png');
+                background-size: cover;
+            "
+        >
+            <div class="text-center">
+                <h1>Acceso a la cámara en móvil</h1>
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <video
+                            class="w-full border-2 border-solid border-700"
+                            #video
+                            autoplay
+                        ></video>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <canvas
+                            class="w-full border-2 border-solid border-700 block m-2"
+                            #canvas
+                        ></canvas>
+                    </div>
+                </div>
+
+                <span class="p-buttonset">
+                    <button
+                        pButton
+                        pRipple
+                        label="Capturar foto"
+                        icon="pi pi-camera"
+                        (click)="capturarFoto()"
+                    ></button>
+                    <button
+                        pButton
+                        pRipple
+                        label="Guardar foto"
+                        icon="pi pi-save"
+                        [disabled]="!imagenDataURL"
+                        (click)="guadarFoto()"
+                    ></button>
+                </span>
+
+                <!-- <button (click)="capturarFoto()">Capturar Foto</button> -->
+            </div>
+        </div>
+    </div>
+</div>

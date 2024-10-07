@@ -97,6 +97,8 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
       body.append('proceso', this.dataUpload.proceso);
       body.append('nombre', file.name);
 
+      console.log(body)
+
       this.functionsService.uploadFile(body)
           .subscribe({
             next:(result)=>{
@@ -117,6 +119,33 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
 
  progressUpload(event :any){
   console.log('progress ',event)
+ }
+
+ guardarFoto(file:any){
+    let body = new FormData();
+    body.append('file', file, `capture_${Date.now()}.png`);
+    body.append('entidad', this.dataUpload.entidad);
+    body.append('id_relacion', this.dataUpload.id_relacion);
+    body.append('proceso', this.dataUpload.proceso);
+    body.append('nombre', `capture_${Date.now()}.png`);
+
+    console.log('guardarFoto',body)
+
+    this.functionsService.uploadFile(body)
+          .subscribe({
+            next:(result)=>{
+              console.log('Upload ok',result);
+              
+              this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo capture_${Date.now()}.png`});
+              
+            },
+            error:(err)=>{
+              this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
+            }
+      });
+
+       
+
  }
 
 }

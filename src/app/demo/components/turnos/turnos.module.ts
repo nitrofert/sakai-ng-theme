@@ -34,6 +34,7 @@ import { FletesTptComponent } from './fletes-tpt/fletes-tpt.component';
 import { ListadoFletesComponent } from './listado-fletes/listado-fletes.component';
 import { DocumentosTurnoComponent } from './documentos-turno/documentos-turno.component';
 import { PdfOrdenCargue } from '../solicitudescargue/config-pdf/orden-cargue';
+import { WebCamModule } from 'src/app/layout/shared/webcam/webcam.module';
 
 
 
@@ -59,7 +60,8 @@ import { PdfOrdenCargue } from '../solicitudescargue/config-pdf/orden-cargue';
     DynamicTableModule,
     DynamicPdfModule,
     DynamicDrawModule,
-    DynamicUploadModule
+    DynamicUploadModule,
+    
     
   ],
   providers:[AlmacenesService, 

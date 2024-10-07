@@ -96,6 +96,14 @@ export class PedidosService {
         return this.http.get<number>(url);
     }
 
+    getInventarioItenBodega2(item?:string,bodega?:string):Observable<any> {
+        let optianalParams:string ="";
+        if(item) optianalParams+=`&item=${item}`;
+        if(bodega) optianalParams+=`&bodega=${bodega}`;
+        const url:string = `${this.api_url}/api/sb1xe/inventario2?compania=${this.urlApiService.companySAP}${optianalParams}`;
+        return this.http.get<number>(url);
+    }
+
    async getVehiculosPedido() {
         //return this.http.get<any>('assets/demo/data/filesystem.json')
         return this.http.get<any>('assets/demo/data/pedidos-solicitud.json')

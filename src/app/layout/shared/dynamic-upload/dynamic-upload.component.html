@@ -1,36 +1,38 @@
 <p-toast></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<p-confirmDialog
+    [style]="{ width: '50vw' }"
+    [baseZIndex]="10000"
+    rejectButtonStyleClass="p-button-text"
+></p-confirmDialog>
 <div class="grid">
-	<div class="col-12">
-    	
-			<div class="p-fluid p-formgrid grid">
-				
-				<div class="field col-12 ">
-					<!--<label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>-->
-					<p-fileUpload #uploaderFiles   name="uploaderFiles[]" 
-					chooseLabel="Seleccionar"
-					cancelLabel="Cancelar"
-					id="uploaderFiles"
-					[multiple]="true" 
-					
-					
-					(onBeforeUpload)="UploadFiles($event, uploaderFiles)"
-					(onProgress)="progressUpload($event)"
-					
-					
-					[showUploadButton]="true"
-					[maxFileSize]="50000000"
-					styleClass="w-full"
-					class="w-full">
-						<ng-template pTemplate="content">
-							<ul *ngIf="uploadedFiles.length">
-								<li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-							</ul>
-						</ng-template>
-					</p-fileUpload>
-				</div>
-				
-			</div>
-		
-	</div>
+    <div class="col-12">
+        <div class="p-fluid p-formgrid grid">
+            <div class="field col-12">
+                <!--<label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>-->
+                <p-fileUpload
+                    #uploaderFiles
+                    name="uploaderFiles[]"
+                    chooseLabel="Seleccionar"
+                    cancelLabel="Cancelar"
+                    id="uploaderFiles"
+                    [multiple]="true"
+                    (onBeforeUpload)="UploadFiles($event, uploaderFiles)"
+                    (onProgress)="progressUpload($event)"
+                    [showUploadButton]="true"
+                    [maxFileSize]="50000000"
+                    styleClass="w-full"
+                    class="w-full"
+                >
+                    <ng-template pTemplate="content">
+                        <ul *ngIf="uploadedFiles.length">
+                            <li *ngFor="let file of uploadedFiles">
+                                {{ file.name }} - {{ file.size }} bytes
+                            </li>
+                        </ul>
+                    </ng-template>
+                </p-fileUpload>
+            </div>
+        </div>
+    </div>
 </div>
+<app-webcam (onSavePhoto)="guardarFoto($event)"></app-webcam>
