@@ -81,8 +81,12 @@ export class CalendarioTurnosComponent implements OnInit {
 
   semanaEnMilisegundos:number = 1000 * 60 * 60 * 24 * 7;  
   
-  primerDia:Date = new Date(new Date().getTime() - (this.semanaEnMilisegundos*2));
-  ultimoDia:Date = new Date(new Date().getTime() + (this.semanaEnMilisegundos*2));
+  // primerDia:Date = new Date(new Date().getTime() - (this.semanaEnMilisegundos*2));
+  // ultimoDia:Date = new Date(new Date().getTime() + (this.semanaEnMilisegundos*2));
+
+  primerDia:Date = new Date(new Date().setDate(new Date().getDate() -7));
+  ultimoDia:Date = new Date(new Date().setDate(new Date().getDate() +7));
+
   filtroRnagoFechas:Date[] = [this.primerDia,this.ultimoDia];
 
 
@@ -193,6 +197,340 @@ export class CalendarioTurnosComponent implements OnInit {
         });
         
   }
+
+  getLocaciones(){
+    this.almacenesService.getLocaciones()
+        .subscribe({
+            next:(locaciones)=>{
+               //////////console.log(locaciones);
+              this.locaciones = locaciones;
+              this.getAlmacenes();
+            },
+            error:(err)=>{
+              console.error(err);
+            }
+        })
+  }
+  getAlmacenes(){
+    //Busca los almacenes de SAP consulta XE
+    this.almacenesService.getAlmacenes()
+        .subscribe({
+            next:(almacenes)=>{
+              let almacenesTMP:any[] = [];
+             
+              for(let index in almacenes){
+                let linea:any = almacenes[index];
+                linea.code = linea.WhsCode_Code;
+                linea.name = linea.WhsName;
+                linea.label = `${linea.WhsCode_Code} - ${linea.WhsName} - ${linea.Name_State}`;
+                almacenesTMP.push(linea);
+             
+              }
+              this.almacenes = almacenesTMP;
+               //////////console.log(this.almacenes);
+              this.getLocalidades(this.almacenes);
+            },
+            error:(err)=>{
+                console.error(err);
+            }
+      
+    }); 
+  }
+
+  getLocalidades(almacenes:any){
+    
+    let localidadesAlmacenes: any[] = [];
+   
+    if(this.infousuario.locaciones.length ==0){
+      
+      for(let almacen of almacenes){
+     
+        //if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.Location).length===0){
+        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.locacion_codigo2).length===0){
+        
+          //TODO: Buscar datos del almacen en array de almacenes
+         
+          if(almacen.CorreoNoti!= null){
+            if(this.locaciones.find(locacion=>locacion.code === almacen.locacion_codigo2)){
+              let data = {
+                code:almacen.locacion_codigo2, 
+                name:almacen.locacion2,
+                label:almacen.locacion2
+              }
+              localidadesAlmacenes.push(data);
+            }
+           
+          }
+          
+        }
+      }
+     
+    }else{
+      for(let almacen of this.infousuario.locaciones){
+        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.code).length===0){
+        
+          //TODO: Buscar datos del almacen en array de almacenes
+         
+          
+            let data = {
+              code:almacen.code, 
+              name:almacen.locacion,
+              label:almacen.code+' - '+almacen.locacion
+            }
+            localidadesAlmacenes.push(data);
+          
+          
+        }
+      }
+    }
+
+    this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
+     //////////console.log(this.localidades);
+    
+
+    
+    ////// //////////console.log('localidades',this.localidades);
+  }
+
+
+  cambioFecha(event:any){
+    console.log(this.localidadSeleccionada)
+    if(event[1]){
+       if(this.localidadSeleccionada.length > 0){
+        this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+       }
+    }
+  
+  }
+
+  seleccionarLocalidad(localidad:any){
+
+    this.getTurnosPorLocalidad(localidad.code)
+    console.log(this.localidadSeleccionada);
+    
+    //this.getCalendar();
+    //this.showCalendar = true;
+  }
+
+  async getTurnosPorLocalidad(localidad:string){
+
+    this.displayModal = true;
+    this.loadingCargue = true;
+    this.completeCargue=false;
+    this.completeTimer = false;
+
+    //setTimeout(this.setTimer,2500);
+   setTimeout(()=>{this.setTimer()},2500);
+
+    
+
+    this.solicitudTurnoService.getTurnosPorLocalidad(localidad,this.filtroRnagoFechas[0],this.filtroRnagoFechas[1])
+        .subscribe({
+              next:async (turnosLocalidad)=>{
+                  
+                  if(this.completeTimer){
+                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
+                    this.displayModal = false;
+                    this.loadingCargue = false;
+                  }
+
+                  
+
+                  this.completeCargue = true;
+                  this.messageComplete = `Se completo correctamente el porceso de cargue de los turnos de la localidad.`;
+                 
+
+
+                  this.turnosLocalidad = turnosLocalidad;
+
+                  this.tablaTurnosLocalidad = await this.setTablaTurnosLocalidad(await this.functionsService.clonObject(turnosLocalidad));
+
+                  //console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
+
+                  //this.getCalendar();
+                  this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
+                  //// //////////console.log(this.boxEstados);
+              },
+              error:(err)=>{
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                console.error(err);
+                this.displayModal = false;
+                this.loadingCargue = false;
+              }
+        });
+
+        /*
+        let a:any;
+        await this.solicitudTurnoService.getListaTurnosLocacion(localidad);
+        this.turnosLocalidad$ = this.solicitudTurnoService.getTurnosLcacion$(localidad);
+       //// //////////console.log(this.turnosLocalidad$);
+        this.turnosLocalidad$.subscribe(turno=>a = turno);
+       //// //////////console.log(a);
+        this.turnosLocalidad$.subscribe({
+              next:async (turnosLocalidad)=>{
+               //// //////////console.log(turnosLocalidad);
+                if(this.completeTimer){
+                  this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
+                  this.displayModal = false;
+                  this.loadingCargue = false;
+                }
+
+                this.turnosLocalidad = turnosLocalidad;
+                this.completeCargue = true;
+                this.messageComplete = `Se completo correctamente el porceso de cargue de los turnos de la localidad.`;
+
+                this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
+              },
+              error:(err)=>{
+                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                console.error(err);
+                this.displayModal = false;
+                this.loadingCargue = false;
+              }
+        });*/
+  }
+
+
+  async setTablaTurnosLocalidad(turnos:any): Promise<any>{
+
+    //console.log('turnos',turnos);
+    let turnosLocalidad:any[] = [];
+    let turnosLocalidadCliente:any[] = [];
+
+    await turnos.forEach(async (turno: {
+      estado: string;
+      horacita: string | number | Date;
+      horacita2: string | number | Date;
+      locacion_label: any;
+      filtroLocacion: { name: any; };
+      detalle_solicitudes_turnos_fechacita: Date;
+      solicitudes_turno_created_at: Date;
+      detalle_solicitudes_turnos_horacita: Date;
+      detalle_solicitudes_turnos_horacita2: Date;
+      detalle_solicitudes_turnos_estado: string;
+      detalle_solicitud_turnos_pedido:any;
+      bgColor: string;
+      txtColor: string;
+      id: number;
+      vehiculo:any;
+      solicitud:any
+    }) => {
+
+
+
+      //turno.solicitudes_turno_created_at = new Date(turno.solicitudes_turno_created_at);
+      turno.detalle_solicitudes_turnos_fechacita = new Date(turno.horacita);
+      turno.detalle_solicitudes_turnos_horacita = new Date(turno.horacita);
+      let horacita = new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false });
+      let hoy = new Date();
+      hoy.setHours(parseInt(horacita.split(":")[0]), parseInt(horacita.split(":")[1]), parseInt(horacita.split(":")[2]));
+      turno.horacita2 = hoy;
+      //////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+      if (this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado)) {
+        turno.bgColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).backgroundColor;
+        turno.txtColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).textColor;
+      } else {
+        ////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+        turno.bgColor = 'indigo-50';
+        turno.txtColor = 'primary-900';
+      }
+
+      let clientesTurno = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'CardCode',[{cantidad:0}]);
+
+      
+
+      for(let clienteTurno of clientesTurno){
+        let lineaTurno = await this.functionsService.clonObject(turno);
+        lineaTurno.label_cliente = clienteTurno.CardName;
+        lineaTurno.CardCode = clienteTurno.CardCode;
+        lineaTurno.cantidad = clienteTurno.cantidad;
+        lineaTurno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.placa}-${clienteTurno.CardCode}`;
+
+        turnosLocalidadCliente.push(lineaTurno);
+
+        //console.log('lineaTurno',await this.functionsService.clonObject(lineaTurno))
+      }
+
+      
+      
+    })
+
+    //console.log('turnosLocalidadCliente',await this.functionsService.clonObject(turnosLocalidadCliente))
+    console.log('turnosLocalidadCliente',(turnosLocalidadCliente))
+
+
+    turnosLocalidad = await this.functionsService.sortArrayObject(turnosLocalidadCliente,'id','DESC')
+
+    this.loading = false
+
+    //console.log('turnosLocalidad',await this.functionsService.clonObject(turnosLocalidad))
+
+    return turnosLocalidad;
+  }
+
+  async setBoxEstadosDate(date:Date, estados:any, turnos:any):Promise<any>{
+    let boxEstados:any[] = [];
+
+    let dateString = date.toISOString().split('T')[0];
+
+    for(let estado of estados){
+      let boxEstado:any = {
+        estado:estado.name,
+        total: turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length
+      }
+      boxEstados.push(boxEstado);
+      estado.total = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length;
+      estado.turnos = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString)
+    }
+
+    return boxEstados;
+  }
+
+  
+  gestionarSolicitud(){
+    console.log(this.selectedItem);
+    this.confirmationService.confirm({
+      message: `Esta seguro de gestionar el turno No. ${this.selectedItem[0].id} ?`,
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+
+        const ref = this.dialogService.open(FormTurnoComponent, {
+          data: {
+              id: parseInt(this.selectedItem[0].id)
+          },
+          header: `Orden de cargue: ${this.selectedItem[0].id}` ,
+          width: '70%',
+          height:'auto',
+          contentStyle: {"overflow": "auto"},
+          maximizable:true, 
+        });
+    
+        ref.onClose.subscribe(() => {
+          //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+          //this.getCalendar();
+          //////////// //////////console.log(("Refresh calendar");
+          this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
+          this.selectedItem=[];
+        });
+
+      },
+      
+        reject: (type: any) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+                break;
+                case ConfirmEventType.CANCEL:
+                    //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+                break;
+            }
+        }
+      });
+  }
+
+
+
 
   getCalendar(){
 
@@ -353,109 +691,13 @@ export class CalendarioTurnosComponent implements OnInit {
     return this.documentStyle.getPropertyValue(`--${textColor}`);
   }
 
-  getLocaciones(){
-    this.almacenesService.getLocaciones()
-        .subscribe({
-            next:(locaciones)=>{
-               //////////console.log(locaciones);
-              this.locaciones = locaciones;
-              this.getAlmacenes();
-            },
-            error:(err)=>{
-              console.error(err);
-            }
-        })
-  }
+ 
 
 
-  getAlmacenes(){
-    this.almacenesService.getAlmacenes()
-        .subscribe({
-            next:(almacenes)=>{
-              let almacenesTMP:any[] = [];
-             
-              for(let index in almacenes){
-                let linea:any = almacenes[index];
-                linea.code = linea.WhsCode_Code;
-                linea.name = linea.WhsName;
-                linea.label = `${linea.WhsCode_Code} - ${linea.WhsName} - ${linea.Name_State}`;
-                almacenesTMP.push(linea);
-             
-              }
-              this.almacenes = almacenesTMP;
-               //////////console.log(this.almacenes);
-              this.getLocalidades(this.almacenes);
-            },
-            error:(err)=>{
-                console.error(err);
-            }
-      
-    }); 
-  }
+  
 
-  getLocalidades(almacenes:any){
-    
-    let localidadesAlmacenes: any[] = [];
-   
-    if(this.infousuario.locaciones.length ==0){
-      
-      for(let almacen of almacenes){
-     
-        //if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.Location).length===0){
-        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.locacion_codigo2).length===0){
-        
-          //TODO: Buscar datos del almacen en array de almacenes
-         
-          if(almacen.CorreoNoti!= null){
-            if(this.locaciones.find(locacion=>locacion.code === almacen.locacion_codigo2)){
-              let data = {
-                code:almacen.locacion_codigo2, 
-                name:almacen.locacion2,
-                label:almacen.locacion2
-              }
-              localidadesAlmacenes.push(data);
-            }
-           
-          }
-          
-        }
-      }
-     
-    }else{
-      for(let almacen of this.infousuario.locaciones){
-        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.code).length===0){
-        
-          //TODO: Buscar datos del almacen en array de almacenes
-         
-          
-            let data = {
-              code:almacen.code, 
-              name:almacen.locacion,
-              label:almacen.code+' - '+almacen.locacion
-            }
-            localidadesAlmacenes.push(data);
-          
-          
-        }
-      }
-    }
+ 
 
-    this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
-     //////////console.log(this.localidades);
-    
-
-    
-    ////// //////////console.log('localidades',this.localidades);
-  }
-
-  seleccionarLocalidad(localidad:any){
-
-    this.getTurnosPorLocalidad(localidad.code)
-  console.log(this.localidadSeleccionada);
-    
-    //this.getCalendar();
-    //this.showCalendar = true;
-  }
 
   setTimer(){
     if(this.completeCargue){
@@ -465,179 +707,11 @@ export class CalendarioTurnosComponent implements OnInit {
     
   }
 
-  async getTurnosPorLocalidad(localidad:string){
+ 
 
-    this.displayModal = true;
-    this.loadingCargue = true;
-    this.completeCargue=false;
-    this.completeTimer = false;
+ 
 
-    //setTimeout(this.setTimer,2500);
-   setTimeout(()=>{this.setTimer()},2500);
-
-    
-
-    this.solicitudTurnoService.getTurnosPorLocalidad(localidad,this.filtroRnagoFechas[0],this.filtroRnagoFechas[1])
-        .subscribe({
-              next:async (turnosLocalidad)=>{
-                  
-                  if(this.completeTimer){
-                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
-                    this.displayModal = false;
-                    this.loadingCargue = false;
-                  }
-
-                  
-
-                  this.completeCargue = true;
-                  this.messageComplete = `Se completo correctamente el porceso de cargue de los turnos de la localidad.`;
-                 
-
-
-                  this.turnosLocalidad = turnosLocalidad;
-
-                  this.tablaTurnosLocalidad = await this.setTablaTurnosLocalidad(await this.functionsService.clonObject(turnosLocalidad));
-
-                  //console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
-
-                  //this.getCalendar();
-                  this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
-                  //// //////////console.log(this.boxEstados);
-              },
-              error:(err)=>{
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                console.error(err);
-                this.displayModal = false;
-                this.loadingCargue = false;
-              }
-        });
-
-        /*
-        let a:any;
-        await this.solicitudTurnoService.getListaTurnosLocacion(localidad);
-        this.turnosLocalidad$ = this.solicitudTurnoService.getTurnosLcacion$(localidad);
-       //// //////////console.log(this.turnosLocalidad$);
-        this.turnosLocalidad$.subscribe(turno=>a = turno);
-       //// //////////console.log(a);
-        this.turnosLocalidad$.subscribe({
-              next:async (turnosLocalidad)=>{
-               //// //////////console.log(turnosLocalidad);
-                if(this.completeTimer){
-                  this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
-                  this.displayModal = false;
-                  this.loadingCargue = false;
-                }
-
-                this.turnosLocalidad = turnosLocalidad;
-                this.completeCargue = true;
-                this.messageComplete = `Se completo correctamente el porceso de cargue de los turnos de la localidad.`;
-
-                this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
-              },
-              error:(err)=>{
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-                console.error(err);
-                this.displayModal = false;
-                this.loadingCargue = false;
-              }
-        });*/
-  }
-
-  async setTablaTurnosLocalidad(turnos:any): Promise<any>{
-
-    //console.log('turnos',turnos);
-    let turnosLocalidad:any[] = [];
-    let turnosLocalidadCliente:any[] = [];
-
-    await turnos.forEach(async (turno: {
-      estado: string;
-      horacita: string | number | Date;
-      horacita2: string | number | Date;
-      locacion_label: any;
-      filtroLocacion: { name: any; };
-      detalle_solicitudes_turnos_fechacita: Date;
-      solicitudes_turno_created_at: Date;
-      detalle_solicitudes_turnos_horacita: Date;
-      detalle_solicitudes_turnos_horacita2: Date;
-      detalle_solicitudes_turnos_estado: string;
-      detalle_solicitud_turnos_pedido:any;
-      bgColor: string;
-      txtColor: string;
-      id: number;
-      vehiculo:any;
-      solicitud:any
-    }) => {
-
-
-
-      //turno.solicitudes_turno_created_at = new Date(turno.solicitudes_turno_created_at);
-      turno.detalle_solicitudes_turnos_fechacita = new Date(turno.horacita);
-      turno.detalle_solicitudes_turnos_horacita = new Date(turno.horacita);
-      let horacita = new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false });
-      let hoy = new Date();
-      hoy.setHours(parseInt(horacita.split(":")[0]), parseInt(horacita.split(":")[1]), parseInt(horacita.split(":")[2]));
-      turno.horacita2 = hoy;
-      //////////console.log(solicitud.detalle_solicitudes_turnos_estado);
-      if (this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado)) {
-        turno.bgColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).backgroundColor;
-        turno.txtColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).textColor;
-      } else {
-        ////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
-        turno.bgColor = 'indigo-50';
-        turno.txtColor = 'primary-900';
-      }
-
-      let clientesTurno = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'CardCode',[{cantidad:0}]);
-
-      
-
-      for(let clienteTurno of clientesTurno){
-        let lineaTurno = await this.functionsService.clonObject(turno);
-        lineaTurno.label_cliente = clienteTurno.CardName;
-        lineaTurno.CardCode = clienteTurno.CardCode;
-        lineaTurno.cantidad = clienteTurno.cantidad;
-        lineaTurno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.placa}-${clienteTurno.CardCode}`;
-
-        turnosLocalidadCliente.push(lineaTurno);
-
-        //console.log('lineaTurno',await this.functionsService.clonObject(lineaTurno))
-      }
-
-      
-      
-    })
-
-    //console.log('turnosLocalidadCliente',await this.functionsService.clonObject(turnosLocalidadCliente))
-    console.log('turnosLocalidadCliente',(turnosLocalidadCliente))
-
-
-    turnosLocalidad = await this.functionsService.sortArrayObject(turnosLocalidadCliente,'id','DESC')
-
-    this.loading = false
-
-    //console.log('turnosLocalidad',await this.functionsService.clonObject(turnosLocalidad))
-
-    return turnosLocalidad;
-  }
-
-  async setBoxEstadosDate(date:Date, estados:any, turnos:any):Promise<any>{
-    let boxEstados:any[] = [];
-
-    let dateString = date.toISOString().split('T')[0];
-
-    for(let estado of estados){
-      let boxEstado:any = {
-        estado:estado.name,
-        total: turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length
-      }
-      boxEstados.push(boxEstado);
-      estado.total = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length;
-      estado.turnos = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString)
-    }
-
-    return boxEstados;
-  }
-
+  
   async filtrarLocalidad(event:any){
     this.localidadesFiltradas = await this.functionsService.filter(event,this.localidades);
   }
@@ -722,11 +796,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
 
-  cambioFecha(event:any){
-    
-    
-  
-  }
+ 
 
   
 
@@ -833,47 +903,6 @@ export class CalendarioTurnosComponent implements OnInit {
     });*/
   }
 
-  gestionarSolicitud(){
-    console.log(this.selectedItem);
-    this.confirmationService.confirm({
-      message: `Esta seguro de gestionar el turno No. ${this.selectedItem[0].id} ?`,
-      header: 'Confirmación',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-
-        const ref = this.dialogService.open(FormTurnoComponent, {
-          data: {
-              id: parseInt(this.selectedItem[0].id)
-          },
-          header: `Orden de cargue: ${this.selectedItem[0].id}` ,
-          width: '70%',
-          height:'auto',
-          contentStyle: {"overflow": "auto"},
-          maximizable:true, 
-        });
-    
-        ref.onClose.subscribe(() => {
-          //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
-          //this.getCalendar();
-          //////////// //////////console.log(("Refresh calendar");
-          this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
-          this.selectedItem=[];
-        });
-
-      },
-      
-        reject: (type: any) => {
-            switch(type) {
-                case ConfirmEventType.REJECT:
-                    //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
-                break;
-                case ConfirmEventType.CANCEL:
-                    //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
-                break;
-            }
-        }
-      });
-  }
 
     
 }

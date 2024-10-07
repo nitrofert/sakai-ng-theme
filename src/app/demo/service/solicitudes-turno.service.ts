@@ -31,7 +31,7 @@ export class SolicitudTurnoService {
     {name:EstadosDealleSolicitud.PESADOF, value:EstadosDealleSolicitud.PESADOF, backgroundColor:'green-100', textColor:'gray-900',icon:'pi pi-compass',order:11},
     {name:EstadosDealleSolicitud.DESPACHADO, value:EstadosDealleSolicitud.DESPACHADO, backgroundColor:'green-600', textColor:'surface-50',icon:'pi pi-truck',order:12},
     {name:EstadosDealleSolicitud.CANCELADO, value:EstadosDealleSolicitud.CANCELADO, backgroundColor:'bluegray-600', textColor:'surface-50',icon:'pi pi-times-circle',order:13},
-  ];
+    ];
 
 
     constructor(private http: HttpClient,

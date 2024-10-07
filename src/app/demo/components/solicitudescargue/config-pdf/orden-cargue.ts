@@ -366,7 +366,7 @@ export class PdfOrdenCargue {
      
        }
       
-     
+       console.log('headerTableProductos',headerTableProductos);
      
        
      
@@ -604,15 +604,7 @@ export class PdfOrdenCargue {
             
             
            
-             //Tabla de información productos 2
-             {
-                 id:'table-info-productos',
-                 table:{
-                     widths: [ '20%','10%','10%','20%','10%','10%','10%','10%' ],
-                     body:bodyTableProductos
-                 },
-                 margin:[0,5,0,5],
-             },
+            
              //Tabla de información tiempos logisticos
              {
                 id:'table-info-tiempos',
@@ -853,7 +845,16 @@ export class PdfOrdenCargue {
                },
                margin:[0,5,0,5],
                layout:'noBorders'
-            }
+            },
+             //Tabla de información productos 2
+             {
+                id:'table-info-productos',
+                table:{
+                    widths: [ '20%','10%','10%','20%','10%','10%','10%','10%' ],
+                    body:bodyTableProductos
+                },
+                margin:[0,5,0,5],
+            },
             
             
          ]

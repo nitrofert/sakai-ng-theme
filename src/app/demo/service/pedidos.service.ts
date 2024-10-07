@@ -88,8 +88,11 @@ export class PedidosService {
         return this.http.get<number>(url,{params:{itemcode,bodega}});
     }
 
-    getInventarioItenBodega():Observable<any> {
-        const url:string = `${this.api_url}/api/sb1xe/inventario?compania=${this.urlApiService.companySAP}`;
+    getInventarioItenBodega(item?:string,bodega?:string):Observable<any> {
+        let optianalParams:string ="";
+        if(item) optianalParams+=`&item=${item}`;
+        if(bodega) optianalParams+=`&bodega=${bodega}`;
+        const url:string = `${this.api_url}/api/sb1xe/inventario?compania=${this.urlApiService.companySAP}${optianalParams}`;
         return this.http.get<number>(url);
     }
 

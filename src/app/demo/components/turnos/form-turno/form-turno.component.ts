@@ -301,6 +301,7 @@ tablapedidosInspeccion!:any;
     this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
+    console.log(new Date().toTimeString());
     this.getPermisosModulo();
     this.getCiudades();
 
@@ -346,9 +347,13 @@ tablapedidosInspeccion!:any;
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
               ////////////////// ////////////// //////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+
               await this.getVehiculos();
+              console.log('cargue vehiculos',new Date().toTimeString());
               await this.getConductores();
+              console.log('cargue conductores',new Date().toTimeString());
               await this.getTransportadoras();
+              console.log('cargue tranportadoras',new Date().toTimeString());
               
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
              //////////// //////////console.log(this.updateModulo);
@@ -519,7 +524,7 @@ tablapedidosInspeccion!:any;
         .subscribe({
               next:async (turno)=>{
                  ////console.log('turno',turno);
-                  
+                 console.log('Cargue informacion del turno',new Date().toTimeString());
                   this.turno = turno;
                   
                   
@@ -631,6 +636,8 @@ tablapedidosInspeccion!:any;
                       }
                   }
                   
+
+                  console.log('Display informacion del turno',new Date().toTimeString());
                 
 
                   ////////////////// ////////////// //////////console.log(this.estado);
@@ -750,9 +757,11 @@ tablapedidosInspeccion!:any;
   }
 
   async getInventarioItenBodega(itemcode:string, bodega:string): Promise<any>{
-    const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
-    const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
+
     
+    const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega(itemcode, bodega);
+    const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
+    console.log(inventariosItemBodega);
     ////////////////////////////// ////////////// //////////console.log(inventarioItemBodega);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
     
