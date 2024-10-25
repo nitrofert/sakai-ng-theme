@@ -35,4 +35,7 @@
         </div>
     </div>
 </div>
-<app-webcam (onSavePhoto)="guardarFoto($event)"></app-webcam>
+<app-webcam
+    (onSavePhoto)="guardarFoto($event)"
+    [loading]="loading"
+></app-webcam>

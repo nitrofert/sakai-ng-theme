@@ -25,6 +25,13 @@
                     </div>
                 </div>
 
+                <p-progressBar
+                    *ngIf="loading"
+                    mode="indeterminate"
+                    [style]="{ height: '6px' }"
+                    class="m-2"
+                ></p-progressBar>
+
                 <span class="p-buttonset">
                     <button
                         pButton
@@ -38,7 +45,7 @@
                         pRipple
                         label="Guardar foto"
                         icon="pi pi-save"
-                        [disabled]="!imagenDataURL"
+                        [disabled]="!imagenDataURL || loading"
                         (click)="guadarFoto()"
                     ></button>
                 </span>

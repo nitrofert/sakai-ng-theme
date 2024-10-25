@@ -438,7 +438,9 @@ getSaldosPedidos(){
                   localidad:saldosPedidos[indexPedido].LOCALIDAD,
                   tipoprod:saldosPedidos[indexPedido].TIPOPROD,
                   email_asistente:saldosPedidos[indexPedido].Correo_Asistente,
-                  nombre_asistente:saldosPedidos[indexPedido].Nombre_Asistente
+                  nombre_asistente:saldosPedidos[indexPedido].Nombre_Asistente,
+                  Maneja_Lote:saldosPedidos[indexPedido].Maneja_Lote,
+
                   
                 })
 
@@ -1293,7 +1295,7 @@ confirmarSeleccionPedidosAlmacenCliente(){
 
 async seleccionarPedidosAlmacenCliente(event:any){
  
-  //////////////////////// //// ////////console.log(this.clienteSeleccionado2);
+  console.log(event);
   this.envioLineaCarguePedido =true;
 
 
@@ -1406,7 +1408,8 @@ async seleccionarPedidosAlmacenCliente(event:any){
                           municipioentrega:this.municipioentrega,
                           lugarentrega:this.sitioentrega,
                           cliente:this.clienteSeleccionado2.CardName,
-                          flete:this.verFletes?pedido.flete:0
+                          flete:this.verFletes?pedido.flete:0,
+                          Maneja_lote:pedido.Maneja_Lote
   
                     });
 
@@ -1698,6 +1701,7 @@ grabarSolicitud(){
        console.log(pedido);
        ////// //// ////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
         let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
+        console.log('infoPedido',infoPedido);
         /*
         let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
         let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
@@ -1716,6 +1720,7 @@ grabarSolicitud(){
         let tarifa_tonelada = this.condicion_tpt=='TRANSP' && pedido.itemcode.startsWith('SF')?infoPedido[0].precio_coniva:0; 
         let nombre_asistente = infoPedido[0].nombre_asistente;
         let email_asistente = infoPedido[0].email_asistente;
+        let Maneja_lote = infoPedido[0].Maneja_Lote;
 
 
         let flete_tonelada = this.verFletes?pedido.flete:0;
@@ -1742,7 +1747,8 @@ grabarSolicitud(){
           tarifa_tonelada,
           flete_tonelada,
           nombre_asistente,
-          email_asistente
+          email_asistente,
+          Maneja_lote
         });
         
         
@@ -1775,7 +1781,8 @@ grabarSolicitud(){
         clientes: clientesSolicitud,
         detalle_solicitud
       }
-     //////console.log('newSolicitud',newSolicitud);
+     
+      console.log('newSolicitud',newSolicitud);
       
       
      this.solicitudTurnoService.create(newSolicitud)

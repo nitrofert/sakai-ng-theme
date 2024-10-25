@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   templateUrl: './webcam.component.html',
   //styleUrls: ['./breadcrumb.component.scss']
 })
-export class WebCamComponent implements OnInit {
+export class WebCamComponent implements OnInit, OnChanges {
 
   @ViewChild('video', { static: true }) videoElement!: ElementRef;
   @ViewChild('canvas', { static: true }) canvasElement!: ElementRef;
@@ -15,12 +15,19 @@ export class WebCamComponent implements OnInit {
 
   imagenDataURL:any;
 
+  
+
+  @Input() loading!:boolean;
   @Output() onSavePhoto: EventEmitter<any> = new EventEmitter();
 
   constructor(private router:Router,) { }
 
   ngOnInit(): void {
     this.iniciarCamara();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('cambios webcam',changes);
   }
 
   iniciarCamara() {
@@ -57,7 +64,7 @@ export class WebCamComponent implements OnInit {
   guadarFoto(){
 
     const canvas = this.canvasElement.nativeElement;
-
+    this.loading = true;
     canvas.toBlob((blob: any) => {
       this.onSavePhoto.emit(blob);
     });

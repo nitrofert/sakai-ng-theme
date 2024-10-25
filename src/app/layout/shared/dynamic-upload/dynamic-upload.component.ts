@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUpload } from 'primeng/fileupload';
 import { lastValueFrom } from 'rxjs';
 import { FunctionsService } from 'src/app/demo/service/functions.service';
@@ -21,12 +21,15 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
   uploadedFiles:any[] = [];
 
   dataUpload!:any;
+
+  loading:boolean = false;
  
   
   constructor(public functionsService: FunctionsService,
               public config: DynamicDialogConfig,
               private messageService: MessageService,
               private confirmationService: ConfirmationService,
+              //public ref: DynamicDialogRef,
               ){}
 
   ngOnInit(): void {
@@ -112,7 +115,7 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
             }
       });
 
-       uploaderFiles.clear();
+       uploaderFiles.clear(); 
 
  }
  }
@@ -122,6 +125,7 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
  }
 
  guardarFoto(file:any){
+    
     let body = new FormData();
     body.append('file', file, `capture_${Date.now()}.png`);
     body.append('entidad', this.dataUpload.entidad);
@@ -131,16 +135,19 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
 
     console.log('guardarFoto',body)
 
+    
+
     this.functionsService.uploadFile(body)
           .subscribe({
             next:(result)=>{
               console.log('Upload ok',result);
               
               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo capture_${Date.now()}.png`});
-              
+              this.loading = false;
             },
             error:(err)=>{
               this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
+              this.loading = false;
             }
       });
 

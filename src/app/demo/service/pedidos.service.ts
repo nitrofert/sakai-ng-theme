@@ -125,6 +125,14 @@ export class PedidosService {
         return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido,linea}});
     }
 
+    getInventarioLotesItemBodega(item?:string,bodega?:string):Observable<any> {
+        let optianalParams:string ="";
+        if(item) optianalParams+=`&item=${item}`;
+        if(bodega) optianalParams+=`&bodega=${bodega}`;
+        const url:string = `${this.api_url}/api/sb1xe/inventario-lotes?compania=${this.urlApiService.companySAP}${optianalParams}`;
+        return this.http.get<number>(url);
+    }
+
    
 
     
