@@ -162,7 +162,7 @@ evidencias_cargue:any[] = []
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                 console.log('turno docs',turno);
+                //console.log('turno docs',turno);
                   
                   this.turno = turno;
                   this.displayModal = false;
@@ -195,7 +195,7 @@ evidencias_cargue:any[] = []
       }
     }
 
-    console.log(evidenciasItemTurno);
+   //console.log(evidenciasItemTurno);
 
     return evidenciasItemTurno;
 

@@ -24,6 +24,8 @@ import { FileUpload } from 'primeng/fileupload';
 import { DynamicUploadComponent } from 'src/app/layout/shared/dynamic-upload/dynamic-upload.component';
 import { Table } from 'primeng/table';
 
+// import { usb, getDeviceList } from 'usb';
+
 @Component({
   selector: 'app-form-turno',
   providers:[ConfirmationService,MessageService], 
@@ -77,6 +79,10 @@ export class FormTurnoComponent implements  OnInit {
   btnUpdateInfo: MenuItem =   {label: 'Actualizar informaciíon', icon: 'pi pi-pencil', command: () => { this.updateInfoTurno();}};
 
   btnCambioBodega: MenuItem =   {label: 'Cambio Locacion/bodega', icon: 'pi pi-sync', command: () => { this.cambioBodega();}};
+
+  btnDescargue: MenuItem =   {label: 'Descargar', icon: 'pi pi-download', command: () => { this.inicioDescargueTurno();}};
+  btnFinDescargue: MenuItem =   {label: 'Fin Descargue', icon: 'pi pi-box', command: () => { this.finalizarDescargueTurno();}};
+  btnEntregar: MenuItem =   {label: 'Remisionar', icon: 'pi pi-sign-out', command: () => { this.entregaTurno();}};
 
   observacionesCargue:any[] = [];
   observaciones:string = "";
@@ -287,11 +293,16 @@ formLotesItemBodega:boolean = false;
 loadingTableLotesItemBodega:boolean = true;
 lotesItemBodegaSelected:any[] = [];
 
+getRemisiones:boolean = false;
+remisionesPorCliente:any[] = [];
+
 @ViewChild('filterTable') filterTable!: ElementRef;
 
 @ViewChild('totalSolicitado') totalSolicitado!: ElementRef;
 @ViewChild('totalTonItem') totalTonItem!: ElementRef;
 @ViewChild('totalSacosItem') totalSacosItem!: ElementRef;
+
+tipoTurno:string = 'RETIRO';
 
 
 
@@ -314,6 +325,12 @@ lotesItemBodegaSelected:any[] = [];
               private ciudadesService:CiudadesService,) { }
 
   ngOnInit() {
+
+    // const devices = getDeviceList();
+
+    // for (const device of devices) {
+    //    //console.log(device); // Legacy device
+    // }
 
     this.displayModal = true;
     this.loadingCargue = true;
@@ -541,10 +558,11 @@ lotesItemBodegaSelected:any[] = [];
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                 //console.log('turno',JSON.parse(JSON.stringify(turno)));
+                //console.log('turno',JSON.parse(JSON.stringify(turno)));
                  
                  //console.log('Cargue informacion del turno',new Date().toTimeString());
                   this.turno = turno;
+                  this.tipoTurno = this.turno.tipo;
                   
                   
                   this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
@@ -608,7 +626,7 @@ lotesItemBodegaSelected:any[] = [];
                     }
                   });
 
-                  console.log('pedidosTurno',this.pedidosTurno);
+                 //console.log('pedidosTurno',this.pedidosTurno);
                   this.telefono = turno.conductor.numerotelefono;
                   this.celular = turno.conductor.numerocelular;
                   this.email = turno.conductor.email;
@@ -849,13 +867,14 @@ lotesItemBodegaSelected:any[] = [];
     let headersTable:any=  this.configHeadersPedidos();
     let dataTable:any =  this.configDataTablePedidos(this.pedidosTurno);
     
+    
     this.tablaPedidosTurno = {
       header: headersTable,
       data: dataTable,
       //colsSum: await this.configSumTabla(headersTable,dataTable)
     }
 
-    //console.log('tablaPedidosTurno',this.tablaPedidosTurno.data)
+    console.log('tablaPedidosTurno',this.tablaPedidosTurno.data)
 
     this.loadingPedidosTurno = false;
   }
@@ -879,10 +898,10 @@ lotesItemBodegaSelected:any[] = [];
         'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'itemname'},
         'almacen': {label:'Almacen.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:'almacen'},
         'cantidad_pedido': {label:'Cantidad pedido',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,field:'cantidad_pedido'},
-        'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:this.editCantidad,field:'cantidad',"sum":true},
+        'cantidad': {label:this.tipoTurno==='RETIRO'?'Cantidad a cargar':'Cantidad a descargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:this.editCantidad,field:'cantidad',"sum":true},
         'comprometida': {label:'Cantidad comprometida',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,field:'comprometida'},
         'cantidadbodega': {label:'Cantidad en bodega',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false,field:'cantidadbodega'},
-        'disponible': {label:'Disponible para cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false,field:'disponible'},
+        'disponible': {label:this.tipoTurno==='RETIRO'?'Disponible para cargar':'Disponible para descargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON", side:"rigth", editable:false,field:'disponible'},
         'lugarentrega':{label:'Lugar entrega',type:'text', sizeCol:'8rem', align:'left', editable:false,field:'lugarentrega',longText:30},
         
 
@@ -891,10 +910,21 @@ lotesItemBodegaSelected:any[] = [];
         
       }];
 
+
+       if(this.tipoTurno==='ENTREGA'){
+          headersTable[0].lote_produccion = {label:'Lote',type:'button-line', sizeCol:'8rem', align:'left', editable:false,field:'lote_produccion', icon:'pi pi-qrcode', tooltip:'Gestionar lote'};
+          headersTable[0].cantidad_sacos = {label:'Cantidad (Sacos)',type:'number', sizeCol:'8rem', align:'left', editable:false,field:'cantidad_sacos',"sum":true};
+          headersTable[0].toneladas_metircas = {label:'Toneladas Metricas',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'toneladas_metircas',"sum":true};    
+
+          if(this.estado === this.estadosTurno.ENTREGADO || this.estado === this.estadosTurno.DESPACHADO){
+            headersTable[0].remision = {label:'# Remision',type:'text', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.PESADOF?true:false),field:'remision'}
+          }
+       }
+
       
 
 
-      if(this.estado === this.estadosTurno.CARGANDO || this.estado === this.estadosTurno.CARGADO || this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO ){
+      if((this.estado === this.estadosTurno.CARGANDO || this.estado === this.estadosTurno.CARGADO || this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO ) && this.tipoTurno==='RETIRO' ){
         
         // headersTable[0].lote_produccion = {label:'Lote',type:'text', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'lote_produccion'};
         // headersTable[0].cantidad_sacos = {label:'Cantidad (Sacos)',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'cantidad_sacos',"sum":true};
@@ -904,8 +934,8 @@ lotesItemBodegaSelected:any[] = [];
 
         headersTable[0].toneladas_metircas = {label:'Toneladas Metricas',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'toneladas_metircas',"sum":true};
         headersTable[0].cubicacion = {label:'Cubicación',type:'text', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'cubicacion'}
-        if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
-            headersTable[0].remision = {label:'# Remision',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.PESADOF?true:false),field:'remision'}
+        if(/*this.estado === this.estadosTurno.PESADOF || */this.estado === this.estadosTurno.DESPACHADO){
+            headersTable[0].remision = {label:'# Remision',type:'text', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.PESADOF?true:false),field:'remision'}
         }
         headersTable[0].evidencias = {label:'Evidencias',type:'uploads', sizeCol:'8rem', align:'left',editable:false,}
 
@@ -946,14 +976,29 @@ lotesItemBodegaSelected:any[] = [];
             disponible:pedido.disponible,
             lugarentrega:`${pedido.municipioentrega} - ${pedido.lugarentrega}`,
           }
+
+
+          if(this.tipoTurno==='ENTREGA'){
+            lineaPedido.comprometida=0;
+            lineaPedido.cantidadbodega=pedido.cantidadbodega;
+            lineaPedido.disponible=pedido.disponible;
+            lineaPedido.lugarentrega=`${pedido.municipioentrega} - ${pedido.lugarentrega}`;
+            lineaPedido.lote_produccion =  pedido.lote_produccion;
+            lineaPedido.cantidad_sacos =  pedido.cantidad_sacos;
+            lineaPedido.toneladas_metircas =  pedido.toneladas_metircas;
+            if(this.estado === this.estadosTurno.ENTREGADO || this.estado === this.estadosTurno.DESPACHADO){
+              lineaPedido.remision =  pedido.remision;
+            }
+          
+          }
   
          
-          if(this.estado === this.estadosTurno.CARGANDO || this.estado === this.estadosTurno.CARGADO || this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO ){
+          if((this.estado === this.estadosTurno.CARGANDO || this.estado === this.estadosTurno.CARGADO || this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO ) && this.tipoTurno==='RETIRO' ){
             lineaPedido.lote_produccion =  pedido.lote_produccion;
             lineaPedido.cantidad_sacos =  pedido.cantidad_sacos;
             lineaPedido.toneladas_metircas =  pedido.toneladas_metircas;
             lineaPedido.cubicacion =  pedido.cubicacion;
-            if(this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO){
+            if(/*this.estado === this.estadosTurno.PESADOF || */this.estado === this.estadosTurno.DESPACHADO){
               lineaPedido.remision =  pedido.remision;
             }
             lineaPedido.evidencias =  '';
@@ -1100,7 +1145,12 @@ lotesItemBodegaSelected:any[] = [];
 
       case this.estadosTurno.PESADO:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Inicio cargue').valor){
-          this.arrayBtnTurnos.push(this.btnCargue);
+          if(this.tipoTurno==='RETIRO'){
+            this.arrayBtnTurnos.push(this.btnCargue);
+          }else{
+            this.arrayBtnTurnos.push(this.btnDescargue);
+          }
+          
         }
 
         if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
@@ -1111,6 +1161,16 @@ lotesItemBodegaSelected:any[] = [];
       case this.estadosTurno.CARGANDO:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Fin cargue').valor){
           this.arrayBtnTurnos.push(this.btnFinCargue);
+        }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
+        }
+      break;
+
+      case this.estadosTurno.DESCARGANDO:
+        if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Fin cargue').valor){
+          this.arrayBtnTurnos.push(this.btnFinDescargue);
         }
 
         if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
@@ -1128,9 +1188,24 @@ lotesItemBodegaSelected:any[] = [];
         }
       break;
 
+      case this.estadosTurno.DESCARGADO:
+        if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Pesaje final').valor){
+            this.arrayBtnTurnos.push(this.btnPesoFinal);
+        }
+
+        if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
+          this.arrayBtnTurnos.push(this.btnUpdateInfo);
+        }
+      break;
+
       case this.estadosTurno.PESADOF:
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Despachar').valor){
+          if(this.tipoTurno==='RETIRO'){
             this.arrayBtnTurnos.push(this.btnDespachar);
+          }else{
+            this.arrayBtnTurnos.push(this.btnEntregar);
+          }  
+          
         }
 
         if(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.PLANIFICADOR) && this.updateModulo){
@@ -1508,10 +1583,6 @@ async validarHoraCargue():Promise<boolean>{
   cerrar(){
     this.ref.close();
   }
-
-
- 
-  
   
   historialTurno(idTutno?:any){
     //this.formHistorialTurno= true;
@@ -1594,6 +1665,17 @@ async validarHoraCargue():Promise<boolean>{
       this.clonarTablaPedidos();
     }
   }
+
+  async inicioDescargueTurno(){
+    if(await this.validarFormulario()){
+      this.accion = 'descargar'
+      this.formEstadoTurno = true;
+      this.tituloEstado = "Descargar turno "+this.turnoId;
+      this.novedad = false;
+      this.clonarTablaPedidos();
+    }
+  }
+
   async finalizarCargueTurno(){
     if(await this.validarFormulario()){
       this.accion = 'finalizar cargue de'
@@ -1603,6 +1685,17 @@ async validarHoraCargue():Promise<boolean>{
       this.clonarTablaPedidos();
     }
   }
+
+  async finalizarDescargueTurno(){
+    if(await this.validarFormulario()){
+      this.accion = 'finalizar descargue de'
+      this.formEstadoTurno = true;
+      this.tituloEstado = "Finalizar descargue turno "+this.turnoId;
+      this.novedad = false;
+      this.clonarTablaPedidos();
+    }
+  }
+
   async pesarTurno2(){
     if(await this.validarFormulario()){
       this.accion = 'realizar pesaje final a'
@@ -1618,6 +1711,16 @@ async validarHoraCargue():Promise<boolean>{
       this.accion = 'despachar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Despachar turno "+this.turnoId;
+      this.novedad = false;
+      this.clonarTablaPedidos();
+    }
+  }
+
+  async entregaTurno(){
+    if(await this.validarFormulario()){
+      this.accion = 'entregar'
+      this.formEstadoTurno = true;
+      this.tituloEstado = "Entrega de material  turno "+this.turnoId;
       this.novedad = false;
       this.clonarTablaPedidos();
     }
@@ -1668,6 +1771,10 @@ async validarHoraCargue():Promise<boolean>{
 
   cambiarEstadoTurno(){
 
+    //console.log(this.remisionesPorCliente);
+
+    //console.log(this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length);
+
     this.cambioEstado = true;
 
     if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
@@ -1676,8 +1783,10 @@ async validarHoraCargue():Promise<boolean>{
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe seleccionar el tipo de solicitud.` });
     }else if((this.accion == 'validar revision inventario' ) && ( !this.comentario)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe ingesar un comentario.` });
-    }else if((this.estado === this.estadosTurno.PESADOF || this.estado === this.estadosTurno.DESPACHADO) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
+    }else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.CARGADO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad de unidades a recibir en la inspección debe ser mayor a cero.` });
+    } else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.PESADOF /*|| this.estado === this.estadosTurno.DESPACHADO*/) && (this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length)){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail: `Debe ingresar el número del mafiesto de carga para cada remisión.` });
     }else{
       this.confirmationService.confirm({
         message: 'Esta seguro de '+this.accion+' la orden de cargue No. '+this.turnoId+'?',
@@ -1695,7 +1804,9 @@ async validarHoraCargue():Promise<boolean>{
             //   this.cambioEstado = false;
               
             //}else{
+              
               this.updateTurno(data);
+            
             //}
             
   
@@ -1718,6 +1829,7 @@ async validarHoraCargue():Promise<boolean>{
 
   async configDataTurno():Promise<any> {
     
+    console.log('turno para validar estado',this.turno.condiciontpt);
 
     let nuevoEstado = "";
             let mensaje ="";
@@ -1755,17 +1867,27 @@ async validarHoraCargue():Promise<boolean>{
   
                   case 'pesar':
                     nuevoEstado = this.estadosTurno.PESADO;
-                    mensaje = `ha sido pesado. El peso vacio del  vehiculo ${this.vehiculoSeleccionado.placa} fue de  ${this.peso_bruto} TON`;
+                    mensaje = `ha sido pesado. ${this.tipoTurno==='RETIRO'?'El peso vacio':'El peso neto'} del  vehiculo ${this.vehiculoSeleccionado.placa} fue de  ${this.tipoTurno==='RETIRO'?this.peso_bruto:this.peso_neto} TON`;
                   break;
   
                   case 'cargar':
                     nuevoEstado = this.estadosTurno.CARGANDO;
                     mensaje = `ha iniciado el cargue`;
                   break;
+
+                  case 'descargar':
+                    nuevoEstado = this.estadosTurno.DESCARGANDO;
+                    mensaje = `ha iniciado el descargue`;
+                  break;
   
                   case 'finalizar cargue de':
                     nuevoEstado = this.estadosTurno.CARGADO;
                     mensaje = `ha sido cargado`;
+                  break;
+
+                  case 'finalizar descargue de':
+                    nuevoEstado = this.estadosTurno.DESCARGADO;
+                    mensaje = `ha sido descargado`;
                   break;
 
                   case 'realizar pesaje final a':
@@ -1776,6 +1898,11 @@ async validarHoraCargue():Promise<boolean>{
                   case 'despachar':
                     nuevoEstado = this.estadosTurno.DESPACHADO;
                     mensaje = `ha sido despachado`;
+                  break;
+
+                  case 'entregar':
+                    nuevoEstado = this.estadosTurno.ENTREGADO;
+                    mensaje = `ha sido entregado`;
                   break;
   
                   case 'cancelar':
@@ -1800,6 +1927,7 @@ async validarHoraCargue():Promise<boolean>{
   
             this.displayModal = true;
             this.loadingCargue = true;
+            //this.getRemisiones = true;
 
             let data:any = {
               historial : {
@@ -1866,144 +1994,179 @@ async validarHoraCargue():Promise<boolean>{
               
             }
 
+            if(this.remisionesPorCliente.length>0){
+              
+              data.remisionesPorCliente = this.remisionesPorCliente;
+            }
+
             if(this.inspeccionTurno){
               data.inspeccion = this.inspeccionTurno;
             }
             
-           //console.log('Data update turno',data);
+          console.log('Data update turno',data);
 
     return data;
   }
 
   updateTurno(data:any){
 
-    // this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
-    //   .subscribe({
-    //         next:async (turno)=>{
-    //             //console.log("turno actualizado",turno);
+    this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
+      .subscribe({
+            next:async (turno)=>{
+                console.log("turno actualizado",turno);
                 
-    //             if(this.filesToUpload.length > 0 && this.uploadActivo){
-    //               for(let anexo of this.filesToUpload){
-    //                 let body = new FormData();
-    //                 body.append('file', anexo.file, anexo.file.name);
-    //                 body.append('entidad', 'turnos');
-    //                 body.append('id_relacion', turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].id);
-    //                 body.append('proceso', turno.estado);
-    //                 body.append('nombre', anexo.file.name);
+                if(this.filesToUpload.length > 0 && this.uploadActivo){
+                  for(let anexo of this.filesToUpload){
+                    let body = new FormData();
+                    body.append('file', anexo.file, anexo.file.name);
+                    body.append('entidad', 'turnos');
+                    body.append('id_relacion', turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].id);
+                    body.append('proceso', turno.estado);
+                    body.append('nombre', anexo.file.name);
 
-    //                 this.functionsService.uploadFile(body)
-    //                     .subscribe({
-    //                       next:(result)=>{
-    //                         //////console.log('Upload ok',result);
-    //                         this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
-    //                       },
-    //                       error:(err)=>{
-    //                         this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
-    //                       }
-    //                     })
-    //               }
+                    this.functionsService.uploadFile(body)
+                        .subscribe({
+                          next:(result)=>{
+                            //////console.log('Upload ok',result);
+                            this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
+                          },
+                          error:(err)=>{
+                            this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
+                          }
+                        })
+                  }
                   
-    //             }
+                }
 
-    //             if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
+                if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
 
-    //               //console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
+                  //console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
 
-    //               let email_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.email:turno.detalle_solicitud_turnos_pedido[0].email_asistente;
-    //               let nombre_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.nombrecompleto:turno.detalle_solicitud_turnos_pedido[0].nombre_asistente;
+                  let email_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.email:turno.detalle_solicitud_turnos_pedido[0].email_asistente;
+                  let nombre_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.nombrecompleto:turno.detalle_solicitud_turnos_pedido[0].nombre_asistente;
                   
-    //               this.solicitudTurnoService.sendNotificationFleteTurno(turno.id,'solicitud',email_destino_flete,nombre_destino_flete)
-    //               .subscribe({
-    //                 next:(result)=>{
-    //                   this.messageService.add({ severity: 'success', summary: 'Información', detail: "Se ha enviado correctamente la solicitud de creación del flete" });
-    //                 },
-    //                 error:(err)=>{
-    //                   this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "ocurrio un error en el envio de la solicitud de creacion de felte." });
-    //                 }
-    //               })
+                  this.solicitudTurnoService.sendNotificationFleteTurno(turno.id,'solicitud',email_destino_flete,nombre_destino_flete)
+                  .subscribe({
+                    next:(result)=>{
+                      this.messageService.add({ severity: 'success', summary: 'Información', detail: "Se ha enviado correctamente la solicitud de creación del flete" });
+                    },
+                    error:(err)=>{
+                      this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "ocurrio un error en el envio de la solicitud de creacion de felte." });
+                    }
+                  })
                     
-    //             }
+                }
 
-    //             this.pedidosTurno.map((pedido)=>{
-    //               pedido.lineaUpdate = {update:false, create:false};
-                  
-    //             });
+                this.pedidosTurno.map((pedido)=>{
+                  pedido.lineaUpdate = {update:false, create:false};
+                  if(turno.estado===this.estadosTurno.DESPACHADO){
+                    console.log('pedido',pedido);
+                    
+                    pedido.remision = turno.detalle_solicitud_turnos_pedido.filter((lineaPedido: { itemcode: any; id: any; })=>lineaPedido.itemcode === pedido.itemcode && lineaPedido.id === pedido.id)[0].remision;
+                  }
+                });
 
-    //             this.novedadesSeleccionadas = [];
+                this.novedadesSeleccionadas = [];
 
-    //             if(this.updateModulo){
-    //               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
-    //             }
+                if(this.updateModulo){
+                  this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha actualizado correctamente los cambios efectuados a la orden de cargue ${turno.id}.`});
+                }
 
-    //             this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
-    //             this.displayModal = false;
-    //             this.loadingCargue = false;
-    //             this.formEstadoTurno = false;
-    //             this.estado = turno.estado
+                this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cambio del estado.`});
+                this.displayModal = false;
+                this.loadingCargue = false;
+                this.formEstadoTurno = false;
+                this.estado = turno.estado
 
-    //             if(turno.estado===this.estadosTurno.VALINVENTARIO){
+                if(turno.estado===this.estadosTurno.VALINVENTARIO){
                     
 
-    //                 let newEstado:any = {
-    //                   historial : {
-    //                                 estado:this.estadosTurno.SOLICITADO,
-    //                                 fechaaccion:this.fechaaccion,
-    //                                 horaaccion:this.horaaccion,
-    //                                 comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`,
-    //                                 estado_anterior:this.estado
+                    let newEstado:any = {
+                      historial : {
+                                    estado:this.estadosTurno.SOLICITADO,
+                                    fechaaccion:this.fechaaccion,
+                                    horaaccion:this.horaaccion,
+                                    comentario:`Se realizo validación del inventario de los items del turno, dispnibilidad:${data.historial.disponibilidad.toLowerCase()}, Fecha:${data.historial.fechadisponibilidad.toLocaleDateString()}`,
+                                    estado_anterior:this.estado
 
-    //                               }
-    //                 };
+                                  }
+                    };
 
-    //                 this.solicitudTurnoService.updateInfoTruno(this.turnoId,newEstado)
-    //                 .subscribe({
-    //                       next:async (turno)=>{
-    //                         this.estado = turno.estado
+                    this.solicitudTurnoService.updateInfoTruno(this.turnoId,newEstado)
+                    .subscribe({
+                          next:async (turno)=>{
+                            this.estado = turno.estado
                             
-    //                       },  
-    //                       error:(err)=> {
-    //                         this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-    //                           console.error(err);
-    //                           this.displayModal = false;
-    //                           this.loadingCargue = false;
+                          },  
+                          error:(err)=> {
+                            this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
+                              console.error(err);
+                              this.displayModal = false;
+                              this.loadingCargue = false;
                               
-    //                       }
-    //                 });
-    //             }
+                          }
+                    });
+                }
+                // Si el estado del turno es remisionado y la condicion de trasnporte es TRASP y existe al menos un item de traslado, buscar los turnos creados en base al turno actual
+                if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==='TRASLADO').length > 0){
+                  //buscar los turnos asociados al turno actual
+                  this.solicitudTurnoService.getTurnosByTurnoBase(turno.id)
+                    .subscribe({
+                        next:(result)=>{
+                          if(result.length>0){
+                            let turnos:string='';
+                            for(let turno of result){
+                              turnos+=turno.id+','
+                            }
+                            this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `Se ha${result.length>1?'n':''} creado ${result.length>1?'los':'el'} siguiente${result.length>1?'s':''} turno${result.length>1?'s':''} de entrega: ${turnos.substring(0,turnos.length-1)} basado el turno:${turno.id}.`});
+                          }
+                        },
+                        error:(err)=>{
+                          console.error(err);
+                          this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                        }
 
-    //             this.configTablePedidosAlmacenCliente();
+                    });  
+                }
 
-    //             this.configSplitButton(this.estado,this.permisosModulo);
+                this.configTablePedidosAlmacenCliente();
+
+                this.configSplitButton(this.estado,this.permisosModulo);
 
 
-    //             this.solicitudTurnoService.sendNotification(turno.id)
-    //                 .subscribe({
-    //                     next:(result)=>{
-    //                       if(result){
-    //                         this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${turno.id}.`});
-    //                       }
-    //                     },
-    //                     error:(err)=>{
-    //                       console.error(err);
-    //                       this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-    //                     }
+                this.solicitudTurnoService.sendNotification(turno.id)
+                    .subscribe({
+                        next:(result)=>{
+                          if(result){
+                            this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se han enviado las notificaciones correspondientes para el turno ${turno.id}.`});
+                          }
+                        },
+                        error:(err)=>{
+                          console.error(err);
+                          this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                        }
 
-    //                 });
+                    });
               
 
-    //         },
-    //         error:(err)=> {
-    //           this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-    //             console.error(err);
-    //             this.displayModal = false;
-    //             this.loadingCargue = false;
+            },
+            error:(err)=> {
+              console.error(err);
+              this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                console.error(err);
+                this.displayModal = false;
+                this.loadingCargue = false;
                 
-    //         }
-    //   });
+            }
+      });
       
               
   }
 
+  setRemisiones(remisiones:any){
+    console.log('remisiones',remisiones);
+    this.remisionesPorCliente = remisiones;
+  }
 
 
   async emailsClientes(turno:any,mensaje:string):Promise<void> {
@@ -2375,10 +2538,10 @@ async validarHoraCargue():Promise<boolean>{
   async validarFormulario():Promise<boolean> {
       let valido:boolean = false;
 
-      ////////console.log(this.tablaPedidosTurno.data);
-      if(this.tablaPedidosTurno.data[0].remision==undefined){
-        ////////console.log('remisión no definida');
-      }
+      console.log(this.tablaPedidosTurno.data);
+      // if(this.tablaPedidosTurno.data[0].remision==undefined){
+      //   ////////console.log('remisión no definida');
+      // }
     
       ////////console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length);
 
@@ -2388,10 +2551,12 @@ async validarHoraCargue():Promise<boolean>{
          this.vehiculoSeleccionado.id==0 || 
          this.conductorSeleccionado.id==0 ){
         this.messageService.add({severity:'error', summary: '!Error¡', detail:  "Debe deiligenciar los campos resaltados en rojo"});
-      }else if((this.tablaPedidosTurno.data[0].remision==undefined && this.estado === this.estadosTurno.PESADOF) || 
-               (this.tablaPedidosTurno.data.filter((linea: { remision: null;itemcode:string })=>linea.remision == null  && !linea.itemcode.startsWith('SF')).length>0 && this.estado === this.estadosTurno.PESADOF)){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero de remisión para cada linea de producto-destino.'});
-      }else if((this.tablaPedidosTurno.data[0].lote_produccion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
+      }else 
+      // if((this.tablaPedidosTurno.data[0].remision==undefined && this.estado === this.estadosTurno.PESADOF) || 
+      //          (this.tablaPedidosTurno.data.filter((linea: { remision: null;itemcode:string })=>linea.remision == null  && !linea.itemcode.startsWith('SF')).length>0 && this.estado === this.estadosTurno.PESADOF)){
+      //           this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero de remisión para cada linea de producto-destino.'});
+      // }else 
+      if((this.tablaPedidosTurno.data[0].lote_produccion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
                 (this.tablaPedidosTurno.data.filter((linea: { lote_produccion: null;itemcode:string })=>linea.lote_produccion == null && !linea.itemcode.startsWith('SF')).length>0 && this.estado === this.estadosTurno.CARGANDO)){
                   this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar el numero del lote de producccion para cada linea de producto-destino.'});
       }else if((this.tablaPedidosTurno.data[0].cantidad_sacos==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
@@ -2405,7 +2570,7 @@ async validarHoraCargue():Promise<boolean>{
       }else if((this.tablaPedidosTurno.data.filter((linea: { toneladas_metircas: any; itemcode:string })=>linea.toneladas_metircas === 0 && !linea.itemcode.startsWith('SF')).length>0 && this.estado === this.estadosTurno.CARGANDO)){
                 this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La canitidad de toneladas metricas para cada linea de producto-destino debe ser mayor a cero.'});
       }else if((this.tablaPedidosTurno.data[0].cubicacion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
-                (this.tablaPedidosTurno.data.filter((linea: { cubicacion: null; })=>linea.cubicacion == null).length>0 && this.estado === this.estadosTurno.CARGANDO)){
+                (this.tablaPedidosTurno.data.filter((linea: { cubicacion: null;  itemcode:string })=>linea.cubicacion == null && !linea.itemcode.startsWith('SF')).length>0  && this.estado === this.estadosTurno.CARGANDO)){
                 this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar la cubicación para cada linea de producto-destino.'});
       }else/* if(this.estado === this.estadosTurno.CARGANDO && await this.validarEvidenciasItemPedido()=== false){
 
@@ -2953,16 +3118,17 @@ async validarHoraCargue():Promise<boolean>{
                             pedidonum:pedido.docnum,
                             docentry:this.pedidosCliente.find(pedidoCliente=>pedidoCliente.docnum==pedido.docnum ).docentry,
                             itemcode:pedido.itemcode,
-                            linea:pedido.linenum,
                             itemname:pedido.itemname,
-                            cantidad_pedido:parseFloat(pedido.pendiente),
-                            cantidad:parseFloat(pedido.cargada),
+                            linea:pedido.linenum,
                             bodega:pedido.almacen,
                             CardCode:this.clienteSeleccionado.CardCode,
                             CardName:this.clienteSeleccionado.CardName,
-                            lugarentrega:this.sitioentrega,
-                            municipioentrega:this.municipioentrega,
                             email_vendedor:email_vendedor,
+                            vendedor,
+                            cantidad:parseFloat(pedido.cargada),
+                            cantidad_pedido:parseFloat(pedido.pendiente),
+                            municipioentrega:this.municipioentrega,
+                            lugarentrega:this.sitioentrega,
                             remision:null,
                             estado:"A",
                             createdAt:'',
@@ -2975,7 +3141,7 @@ async validarHoraCargue():Promise<boolean>{
                             dependencia,
                             localidad,
                             tipoproducto,
-                            vendedor
+                            
                             //cliente:this.clienteSeleccionado.CardName,
                       });
                       
@@ -3756,7 +3922,7 @@ async validarHoraCargue():Promise<boolean>{
               let lotesItemBodega:any[] = [];
               //Cargar array de lotes item bodega ws sap
               for(let item in result){
-                lotesItemBodega.push({lote:result[item].Lote, fecha_vencimiento:result[item].Fechavencimiento, cantidad_bodega_lote:result[item].Stock})
+                lotesItemBodega.push({lote:result[item].Lote, fecha_vencimiento:result[item].Fechavencimiento, cantidad_bodega_lote:result[item].Stock,estado:'A'})
               }
               //console.log('lotesItemBodega',lotesItemBodega);
               this.lotesItemBodega = await this.filtrarLotesSAP(this.lotesItemLine,lotesItemBodega)
@@ -3793,7 +3959,13 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   seleccionarLotesItemBodega(){
-    //console.log(this.lotesItemBodegaSelected);
+    //console.log('lotesItemBodegaSelected',this.lotesItemBodegaSelected);
+    // if(this.lotesItemBodegaSelected.filter(lote=>lote.cantidad_bodega_lote>)){
+
+    // }else{
+
+    // }
+
     for(let loteItemBodega of this.lotesItemBodegaSelected){
       this.lotesItemLine.push({
         id:this.itemLineSelected[0].id,
@@ -3802,7 +3974,7 @@ async validarHoraCargue():Promise<boolean>{
         cantidad_bodega_lote:loteItemBodega.cantidad_bodega_lote,
         cantidad_cargue_lote:0,
         cantidad_sacos_lote:0,
-        lineaUpdate:{create:true,update:false}
+        //lineaUpdate:{create:true,update:false}
       })
     }
 
@@ -3819,19 +3991,21 @@ async validarHoraCargue():Promise<boolean>{
       // //console.log('idLinea',idLinea);
 
       let index = this.lotesItemLine.findIndex(item=>item.id === idLinea);
-      this.lotesItemLine[index].lineaUpdate.update = true;
+      //this.lotesItemLine[index].lineaUpdate.update = true;
       if(valorCampo===""){
         valorCampo =0;
         this.lotesItemLine[index][campo]=0;
       }
 
       if(campo==='cantidad_cargue_lote'){
-        if(valorCampo> parseInt(arrayLinea[campo])){
+        console.log('valorCampo',valorCampo);
+        console.log('parseFloat(arrayLinea[campo])',parseFloat(arrayLinea['cantidad_bodega_lote']));
+        if(valorCampo> parseFloat(arrayLinea['cantidad_bodega_lote'])){
           this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad a cagar del lote supera la cantidad existente en la bodega'});
           valorCampo =0;
           this.lotesItemLine[index][campo]=0;
   
-        }else if(valorCampo> parseInt(this.totalSolicitado.nativeElement.value)){
+        }else if(valorCampo> parseFloat(this.totalSolicitado.nativeElement.value)){
           this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad a cagar del lote supera la cantidad solictada del item en el turno'});
           valorCampo =0;
           this.lotesItemLine[index][campo]=0;
@@ -3853,7 +4027,7 @@ async validarHoraCargue():Promise<boolean>{
       // //console.log('campo',campo);
 
       let index = this.lotesItemLine.findIndex(item=>item.id === idLinea);
-      this.lotesItemLine[index].lineaUpdate.update = true;
+      //this.lotesItemLine[index].lineaUpdate.update = true;
 
       if (event.key === "Enter") {
       
@@ -3866,12 +4040,12 @@ async validarHoraCargue():Promise<boolean>{
           this.lotesItemLine[index][campo]=0;
         }
         if(campo==='cantidad_cargue_lote'){
-          if(valorCampo> parseInt(arrayLinea[campo])){
+          if(valorCampo> parseFloat(arrayLinea['cantidad_bodega_lote'])){
             this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad a cagar del lote supera la cantidad existente en la bodega'});
             valorCampo =0;
             this.lotesItemLine[index][campo]=0;
     
-          }else if(valorCampo> parseInt(this.totalSolicitado.nativeElement.value)){
+          }else if(valorCampo> parseFloat(this.totalSolicitado.nativeElement.value)){
             this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad a cagar del lote supera la cantidad solictada del item en el turno'});
             valorCampo =0;
             this.lotesItemLine[index][campo]=0;
@@ -3888,8 +4062,8 @@ async validarHoraCargue():Promise<boolean>{
     let totalSacos = 0;
 
     for(let loteItemLine of this.lotesItemLine){
-      totalTon+=parseInt(loteItemLine.cantidad_cargue_lote);
-      totalSacos+=parseInt(loteItemLine.cantidad_sacos_lote);
+      totalTon+=parseFloat(loteItemLine.cantidad_cargue_lote);
+      totalSacos+=parseFloat(loteItemLine.cantidad_sacos_lote);
     }
 
     //console.log('totalTon',totalTon);
@@ -3900,22 +4074,32 @@ async validarHoraCargue():Promise<boolean>{
   
   
   borrarLote(){
-
+    
+    let index = this.lotesItemLine.findIndex(item=>item.lote === this.lotesItemLineSelected[0].lote);
+    this.lotesItemLine.splice(index,1)
+    this.calcularTotalesItemLotes();
+    this.lotesItemLineSelected = [];
   }
 
   asignarLotesItem(){
+
+    console.log('lotesItemLine',JSON.stringify(this.lotesItemLine))
+
     let cantidad_solicitada = this.totalSolicitado.nativeElement.value;
     let totalTon = this.totalTonItem.nativeElement.value;
     let totalSacos = this.totalSacosItem.nativeElement.value;
     let idLinea = this.itemLineSelected[0].id;
+    
 
-    if(parseInt(totalTon) ===0 || parseInt(totalSacos)===0 ){
+    if(parseFloat(totalTon) ===0 || parseFloat(totalSacos)===0 ){
       this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad total a cagar y la cantidad total de sacos debe ser mayor a cero'});
-    }else if(parseInt(totalTon) > parseInt(cantidad_solicitada)){
+    }else if(parseFloat(totalTon) > parseFloat(cantidad_solicitada)){
       this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad total a cagar supera la cantidad solictada del item en el turno'});
+    }else if(this.lotesItemLine.filter(item=>item.cantidad_cargue_lote ===0 || item.cantidad_sacos_lote===0).length >0 ){
+      this.messageService.add({severity:'Error', summary:'Error', detail:'Dentro de los lotes seleccionados hay uno a mas lotes con cantidad y/o sacos en cero (0)'});
+    }else if(parseFloat(totalTon) < parseFloat(cantidad_solicitada) ){
+      this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad total de los lotes no es igual a la cantidad a cagar del item seleccionado'});
     }else{
-
-      
 
       // if(this.lotesItems.filter(item=>item.id === this.lotesItemLine[0].id).length===0){
       //   for(let loteItem of this.lotesItemLine){
@@ -3929,6 +4113,9 @@ async validarHoraCargue():Promise<boolean>{
       //   }
 
       // }
+      // if(parseFloat(totalTon) < parseFloat(cantidad_solicitada) ){
+      //   this.messageService.add({severity:'warn', summary:'Advertencia', detail:'La cantidad total de los lotes no es igual a la cantidad a cagar del item seleccionado'});
+      // }
 
       let indexTablaItemTurno = this.tablaPedidosTurno.data.findIndex((item: { index: any; })=>item.index === idLinea);
       let indexItemTurno = this.pedidosTurno.findIndex((item: { id: any; })=>item.id === idLinea);
@@ -3940,8 +4127,8 @@ async validarHoraCargue():Promise<boolean>{
       this.pedidosTurno[indexItemTurno].cantidad_sacos = totalSacos;
       this.pedidosTurno[indexItemTurno].lote_produccion = lotes;
       this.pedidosTurno[indexItemTurno].lineaUpdate.update = true;
-
       this.formGestionLotesItem = false;
+
     }
     
     

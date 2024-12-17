@@ -499,7 +499,7 @@ async getSolicitudesTurno(){
 
 async setTableFletes(turnos:any[]):Promise<void>{
 
-  console.log(turnos);
+ //console.log(turnos);
 
  let tablaFletesTurnos = turnos.filter(turno=>turno.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF') )
  this.tablaFletesTurnos = tablaFletesTurnos;
@@ -620,7 +620,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   gestionarFletes(){
-   console.log(this.selectedItemFletes);
+  //console.log(this.selectedItemFletes);
     
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar el flete del turno No. ${this.selectedItemFletes[0].detalle_solicitudes_turnos_id}?`,

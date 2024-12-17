@@ -13,6 +13,12 @@ export enum EstadosDealleSolicitud {
     PESADOF="Pesado final",
     DESPACHADO="Remisionado",
     CANCELADO="Cancelado",
-    ACTIVADO="Activado"
+    ACTIVADO="Activado",
+   
+    RUTA="En ruta",
+    DESCARGANDO="Descargando",
+    DESCARGADO="Descargado",
+    ENTREGADO="Entregado",
+    RECIBIDO="Rcibido",
     
 }

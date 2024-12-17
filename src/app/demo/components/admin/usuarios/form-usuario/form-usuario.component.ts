@@ -258,7 +258,7 @@ export class FormUsuarioComponent implements  OnInit {
 
 
   seleccionaRrol(roles:any){
-    console.log(roles)
+   //console.log(roles)
 
     if(roles.filter((opcion: { nombre: string; }) =>opcion.nombre === 'CLIENTE LOGISTICA').length >0){
         this.validarCamposClienteLogistica = true;
@@ -349,7 +349,7 @@ export class FormUsuarioComponent implements  OnInit {
                       this.functionsService.uploadFile(body)
                           .subscribe({
                             next:(result)=>{
-                              console.log('Upload ok',result);
+                             //console.log('Upload ok',result);
                               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
                             },
                             error:(err)=>{
@@ -411,7 +411,7 @@ export class FormUsuarioComponent implements  OnInit {
                     let deleteFile$ = this.functionsService.deleteFiles({entidad:'usuario',id_relacion:usuario.id,proceso:'firma'});
                     let deleteFile = await lastValueFrom(deleteFile$);
 
-                    console.log(deleteFile);
+                   //console.log(deleteFile);
 
                     //registrar nueva firma
                     for(let anexo of this.filesToUpload){
@@ -425,7 +425,7 @@ export class FormUsuarioComponent implements  OnInit {
                       this.functionsService.uploadFile(body)
                           .subscribe({
                             next:(result)=>{
-                              console.log('Upload ok',result);
+                             //console.log('Upload ok',result);
                               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
                             },
                             error:(err)=>{

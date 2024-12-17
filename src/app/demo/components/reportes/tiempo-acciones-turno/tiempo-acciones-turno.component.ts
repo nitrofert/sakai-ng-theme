@@ -178,7 +178,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
         .subscribe({
             next:async (locaciones)=>{
 
-              console.log(locaciones);
+             //console.log(locaciones);
               await locaciones.map((locacion:any)=>{
                 locacion.label = locacion.locacion
               })
@@ -319,7 +319,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
         
 
         let lineasHistorialEstadoTurno = turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  === this.estadoSeleccionadoInicial.name || historial.estado === this.estadoSeleccionadoFinal.name);
-        console.log('turnoLocacionEstado',turnoLocacionEstado.id);
+       //console.log('turnoLocacionEstado',turnoLocacionEstado.id);
         //////////console.log('lineasHistorialEstadoTurno',lineasHistorialEstadoTurno);
 
         let historialEstadoInicial = await this.functionsService.sortArrayObject(turnoLocacionEstado.detalle_solicitud_turnos_historial.filter((historial: { estado: any; })=>historial.estado  === this.estadoSeleccionadoInicial.name ),'id', 'ASC');
@@ -372,7 +372,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
             let productos:any[] = turnoLocacionEstado.detalle_solicitud_turnos_pedido.filter((item: { itemcode: string; })=>!item.itemcode.startsWith("SF"));
             let diferenciaFechasProductoEstados = diferenciaFechasEstados/productos.length;
-            console.log('diferenciaFechasProductoEstados',diferenciaFechasProductoEstados)
+           //console.log('diferenciaFechasProductoEstados',diferenciaFechasProductoEstados)
 
             //let tiempoEstadoProducto = Math.round(diferenciaFechasProductoEstados/(hour))!=0?`${Math.round(diferenciaFechasProductoEstados/(hour))} horas`: Math.round(diferenciaFechasProductoEstados/(minute))!=0?`${Math.round(diferenciaFechasProductoEstados/(minute))} minutos`:`${Math.round(diferenciaFechasProductoEstados/(1000))} segundos`;
             let acumuladoTiempoProducto =0;
@@ -381,7 +381,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
               //horaAcumuladaProducto = horaAcumuladaProducto+(Math.round(diferenciaFechasProductoEstados/(hour))!=0?Math.round(diferenciaFechasProductoEstados/(hour)):(Math.round(diferenciaFechasProductoEstados/(minute))/60)+(Math.round(diferenciaFechasProductoEstados/(1000))/3600))
               //acumuladoTiempoProducto+=diferenciaFechasProductoEstados;
               acumuladoTiempoProducto=diferenciaFechasProductoEstados*i;
-              console.log('acumuladoTiempoProducto',i,acumuladoTiempoProducto)
+             //console.log('acumuladoTiempoProducto',i,acumuladoTiempoProducto)
             
 
               //let tiempoAcumuladoProducto = Math.round(acumuladoTiempoProducto/(hour))!=0?`${Math.round(acumuladoTiempoProducto/(hour))} horas`: Math.round(acumuladoTiempoProducto/(minute))!=0?`${Math.round(acumuladoTiempoProducto/(minute))} minutos`:`${Math.round(acumuladoTiempoProducto/(1000))} segundos`;
@@ -480,7 +480,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
   async setReporte():Promise<void>{
 
-    console.log(this.selectedLocaciones);
+   //console.log(this.selectedLocaciones);
 
     if(this.selectedLocaciones.length === 0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe seleccionar al menos una locación para generar el reporte.'});
@@ -525,7 +525,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
     for(let locacion of locacionesTurnos){
 
-      console.log('Validando locacion',locacion.label);
+     //console.log('Validando locacion',locacion.label);
       obectString = `{"locacion":"${locacion.label}"`;
       let objectDiasLocion:any[] = [];
       let  turnosLocacionEstado = infoTurnosEstadosSeleccionados.filter((turno: {detalle_solicitud_turnos_historial: any; locacion: any; })=>turno.locacion === locacion.code 
@@ -562,7 +562,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
           let i = 0;
           //Recorrer historial turno
-          console.log('Validando turno',turnoLocacionEstado.id);
+         //console.log('Validando turno',turnoLocacionEstado.id);
           for(let estadoHistorialTurno of historialEntreEstados){
 
             //console.log(estadoHistorialTurno);
@@ -586,19 +586,19 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
             //console.log('tiempoEntreEstadosProductos',tiempoEntreEstadosProductos);
             //console.log('Diferencia entre productos x estado',await this.functionsService.dateDifFormatTime(fechaInicioEstadoActual,new Date(fechaInicioEstadoActual.getTime()+(tiempoEntreEstadosProductos))));
             let item = 1;
-            console.log('Validando estado turno',estadoHistorialTurno.estado);
+           //console.log('Validando estado turno',estadoHistorialTurno.estado);
             for(let producto of productos){
                 
                 //Calcular fecha estimada estado producto
-                console.log('Calcular tiempo estimada  producto',producto.itemname);
+               //console.log('Calcular tiempo estimada  producto',producto.itemname);
                 let fechaEstimadaEstadoProducto = new Date(fechInicioEstadoAnterior.getTime()+(tiempoEntreEstadosProductos*item));
 
-                console.log('Tiempo',fechaEstimadaEstadoProducto);
+               //console.log('Tiempo',fechaEstimadaEstadoProducto);
                 //console.log('fechaEstimadaEstadoProducto',item,fechaEstimadaEstadoProducto.toISOString());
                 //console.log('Diferencia entre fecha accion producto estado - fechaEstimadaEstadoProducto',await this.functionsService.dateDifFormatTime(fechaInicioEstadoActual,fechaEstimadaEstadoProducto));
                 //console.log('fechaInicioHistorialTurno',item,fechaInicioHistorialTurno.toISOString());
-               // console.log('fechInicioEstadoAnterior',item,fechaEstimadaEstadoProducto.toISOString());
-               // console.log('Diferencia entre fecha inicio Historial - fechaEstimadaEstadoProducto',await this.functionsService.dateDifFormatTime(fechaInicioHistorialTurno,fechInicioEstadoAnterior));
+               ////console.log('fechInicioEstadoAnterior',item,fechaEstimadaEstadoProducto.toISOString());
+               ////console.log('Diferencia entre fecha inicio Historial - fechaEstimadaEstadoProducto',await this.functionsService.dateDifFormatTime(fechaInicioHistorialTurno,fechInicioEstadoAnterior));
 
                 detalle_historial_turnos.push({
                   locacion:locacion.label,
@@ -671,7 +671,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
 
             let productos:any[] = turnoLocacionEstado.detalle_solicitud_turnos_pedido.filter((item: { itemcode: string; })=>!item.itemcode.startsWith("SF"));
             let diferenciaFechasProductoEstados = diferenciaFechasEstados/productos.length;
-            console.log('diferenciaFechasProductoEstados',diferenciaFechasProductoEstados)
+           //console.log('diferenciaFechasProductoEstados',diferenciaFechasProductoEstados)
 
             //let tiempoEstadoProducto = Math.round(diferenciaFechasProductoEstados/(hour))!=0?`${Math.round(diferenciaFechasProductoEstados/(hour))} horas`: Math.round(diferenciaFechasProductoEstados/(minute))!=0?`${Math.round(diferenciaFechasProductoEstados/(minute))} minutos`:`${Math.round(diferenciaFechasProductoEstados/(1000))} segundos`;
             let acumuladoTiempoProducto =0;
@@ -680,7 +680,7 @@ export class TiempoAccionesTurnoComponent implements  OnInit, OnChanges {
               //horaAcumuladaProducto = horaAcumuladaProducto+(Math.round(diferenciaFechasProductoEstados/(hour))!=0?Math.round(diferenciaFechasProductoEstados/(hour)):(Math.round(diferenciaFechasProductoEstados/(minute))/60)+(Math.round(diferenciaFechasProductoEstados/(1000))/3600))
               //acumuladoTiempoProducto+=diferenciaFechasProductoEstados;
               acumuladoTiempoProducto=diferenciaFechasProductoEstados*i;
-              console.log('acumuladoTiempoProducto',i,acumuladoTiempoProducto)
+             //console.log('acumuladoTiempoProducto',i,acumuladoTiempoProducto)
             
 
               //let tiempoAcumuladoProducto = Math.round(acumuladoTiempoProducto/(hour))!=0?`${Math.round(acumuladoTiempoProducto/(hour))} horas`: Math.round(acumuladoTiempoProducto/(minute))!=0?`${Math.round(acumuladoTiempoProducto/(minute))} minutos`:`${Math.round(acumuladoTiempoProducto/(1000))} segundos`;

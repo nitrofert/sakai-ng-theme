@@ -368,7 +368,7 @@ usuario!:any;
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.usuario = infoUsuario;
-              console.log('infoUsuario',infoUsuario);
+             //console.log('infoUsuario',infoUsuario);
               this.rolesUsuario = infoUsuario.roles;
               ////////////////// ////////////// //////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
               await this.getVehiculos();
@@ -543,9 +543,9 @@ usuario!:any;
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                 console.log('turno',this.dataKey);
+                //console.log('turno',this.dataKey);
                  let keys:any = this.dataKey.split('-');
-                 console.log('keys',keys);
+                //console.log('keys',keys);
                   
                   this.turno = turno;
                   
@@ -577,7 +577,7 @@ usuario!:any;
 
                   this.observaciones = turno.observacion;
                   //this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
-                  console.log('this.observacionesCargue',this.observacionesCargue);
+                 //console.log('this.observacionesCargue',this.observacionesCargue);
                   this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
                       cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
                       return cliente;
@@ -622,22 +622,22 @@ usuario!:any;
 
                   this.hoja_de_entrada = this.fleteSeleccionado[0].hoja_entrada;
                   
-                  console.log('this.fleteSeleccionado[0].observacion_flete',this.fleteSeleccionado[0].observacion_flete);
+                 //console.log('this.fleteSeleccionado[0].observacion_flete',this.fleteSeleccionado[0].observacion_flete);
 
                   if(this.fleteSeleccionado[0].observacion_flete!=null){
                     this.observaciones_flete = JSON.parse(this.fleteSeleccionado[0].observacion_flete);
                   }
 
-                  console.log('this.observaciones_flete',this.observaciones_flete);
+                 //console.log('this.observaciones_flete',this.observaciones_flete);
                   
                   this.pedidosTurno.map((pedido)=>{
                     pedido.lineaUpdate = {update:false, create:false};
                     pedido.cantidadOld =pedido.cantidad;
                   });
 
-                  console.log('pedidosTurno',this.pedidosTurno);
-                  console.log('fleteSeleccionado',this.fleteSeleccionado);
-                  console.log('productosFleteSeleccionado',this.productosFleteSeleccionado);
+                 //console.log('pedidosTurno',this.pedidosTurno);
+                 //console.log('fleteSeleccionado',this.fleteSeleccionado);
+                 //console.log('productosFleteSeleccionado',this.productosFleteSeleccionado);
 
                   this.telefono = turno.conductor.numerotelefono;
                   this.celular = turno.conductor.numerocelular;
@@ -929,14 +929,14 @@ usuario!:any;
         accept: async () => {
 
           
-          console.log(this.flete === this.fleteSeleccionado[0].flete_tonelada,
-                      this.prefactura === this.fleteSeleccionado[0].factura_tpt,
-                      this.fleteSeleccionado[0].fecha_factura_tpt == null && this.fecha_prefactura  ===  this.fleteSeleccionado[0].fecha_factura_tpt,
-                      this.orden_de_compra === this.fleteSeleccionado[0].orden_compra,
-                      this.hoja_de_entrada === this.fleteSeleccionado[0].hoja_entrada
-                    );
+        //  console.log(this.flete === this.fleteSeleccionado[0].flete_tonelada,
+        //               this.prefactura === this.fleteSeleccionado[0].factura_tpt,
+        //               this.fleteSeleccionado[0].fecha_factura_tpt == null && this.fecha_prefactura  ===  this.fleteSeleccionado[0].fecha_factura_tpt,
+        //               this.orden_de_compra === this.fleteSeleccionado[0].orden_compra,
+        //               this.hoja_de_entrada === this.fleteSeleccionado[0].hoja_entrada
+        //             );
 
-          console.log(this.fleteSeleccionado[0].fecha_factura_tpt , this.fecha_prefactura )
+        //  console.log(this.fleteSeleccionado[0].fecha_factura_tpt , this.fecha_prefactura )
 
 
           if(this.flete === this.fleteSeleccionado[0].flete_tonelada && 
@@ -953,7 +953,7 @@ usuario!:any;
                 
 
                 let indexPedidoSeleccionado = this.pedidosTurno.findIndex(pedido=>pedido.id === this.fleteSeleccionado[0].id);
-                console.log(indexPedidoSeleccionado);
+               //console.log(indexPedidoSeleccionado);
 
                 
                 let descripcion:string ="";
@@ -996,7 +996,7 @@ usuario!:any;
 
                 this.observaciones_flete.push(linea_obsevacion);
                 
-                console.log(JSON.stringify(this.observaciones_flete));
+               //console.log(JSON.stringify(this.observaciones_flete));
 
                 this.pedidosTurno[indexPedidoSeleccionado].observacion_flete = JSON.stringify(this.observaciones_flete);
 
@@ -1450,7 +1450,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   
-  async objectToArray(object:any): Promise<any>{
+  async objectToArray(object:any):Promise<any>{
       let array:any[] = [];
 
       //Object.keys(object).map((key) => { //////////////////////////// ////////////// //////////console.log(object[key])});
@@ -1721,7 +1721,7 @@ async validarHoraCargue():Promise<boolean>{
   clonarTablaPedidos(){
     let tablaPedidos:any  = JSON.parse(JSON.stringify(this.tablaPedidosTurno))
     this.tablapedidosInspeccion = tablaPedidos;
-    console.log('this.tablapedidosInspeccion',this.tablapedidosInspeccion)
+   //console.log('this.tablapedidosInspeccion',this.tablapedidosInspeccion)
   }
 
   
@@ -2330,7 +2330,7 @@ async validarHoraCargue():Promise<boolean>{
 
   cambioValorCampo(arregloCambioCampo:any){
    
-  console.log(arregloCambioCampo);
+ //console.log(arregloCambioCampo);
 
    
    let indexLineaPedido = this.pedidosTurno.findIndex(item=>item.id === arregloCambioCampo.index 
@@ -3370,7 +3370,7 @@ async validarHoraCargue():Promise<boolean>{
 
   async verUploads($event:any){
 
-    console.log('$event',$event);
+   //console.log('$event',$event);
     this.uploadedFiles = [];
     let lineaPedido = this.tablaPedidosTurno.data.filter((linea: { index: any; })=>linea.index === $event);
     
@@ -3382,7 +3382,7 @@ async validarHoraCargue():Promise<boolean>{
     let filesAtach$ = this.functionsService.loadFiles({id_relacion,proceso,entidad});
     let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
 
-    console.log(filesAtachByEstadoHistorialTurno);
+   //console.log(filesAtachByEstadoHistorialTurno);
 
     this.dataTableEvidenciasItemTurno.data =  await filesAtachByEstadoHistorialTurno.map((file)=>{
       return {
@@ -3496,7 +3496,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   uploadFiles($event:any){
-    console.log($event);
+   //console.log($event);
     if($event){
       const ref = this.dialogService.open(DynamicUploadComponent, {
         data: {
@@ -3521,7 +3521,7 @@ async validarHoraCargue():Promise<boolean>{
 
   calcularValorFlete(){
     this.valor_flete = this.flete* this.toneladas_flete;
-    console.log(this.flete,this.toneladas_flete,this.valor_flete);
+   //console.log(this.flete,this.toneladas_flete,this.valor_flete);
   }
  
 

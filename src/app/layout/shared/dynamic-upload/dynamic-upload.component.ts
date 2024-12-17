@@ -33,7 +33,7 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
               ){}
 
   ngOnInit(): void {
-   // console.log(this.anchoVentana,this.alturaVentana);
+   ////console.log(this.anchoVentana,this.alturaVentana);
    this.dataUpload = this.config.data;
   }
 
@@ -89,9 +89,9 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
 
  UploadFiles(event:any,uploaderFiles: FileUpload){
   
-  console.log(event)
+ //console.log(event)
   for(let file of uploaderFiles.files){
-      console.log(file);
+     //console.log(file);
 
       let body = new FormData();
       body.append('file', file, file.name);
@@ -100,7 +100,7 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
       body.append('proceso', this.dataUpload.proceso);
       body.append('nombre', file.name);
 
-      console.log(body)
+     //console.log(body)
 
       this.functionsService.uploadFile(body)
           .subscribe({
@@ -121,7 +121,7 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
  }
 
  progressUpload(event :any){
-  console.log('progress ',event)
+ //console.log('progress ',event)
  }
 
  guardarFoto(file:any){
@@ -133,14 +133,14 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
     body.append('proceso', this.dataUpload.proceso);
     body.append('nombre', `capture_${Date.now()}.png`);
 
-    console.log('guardarFoto',body)
+   //console.log('guardarFoto',body)
 
     
 
     this.functionsService.uploadFile(body)
           .subscribe({
             next:(result)=>{
-              console.log('Upload ok',result);
+             //console.log('Upload ok',result);
               
               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo capture_${Date.now()}.png`});
               this.loading = false;

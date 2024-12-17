@@ -236,7 +236,7 @@ turnosEntites:any[] = [];
             
             this.allbodegas = almacenesTMP;
 
-            console.log('almacenes calback');
+           //console.log('almacenes calback');
             this.getLocaciones();
            
            
@@ -248,7 +248,7 @@ turnosEntites:any[] = [];
       }); 
     }else{
       this.allbodegas = this.almacenes;
-      console.log('almacenes input')
+     //console.log('almacenes input')
       this.getLocaciones();
     }
     
@@ -319,7 +319,7 @@ turnosEntites:any[] = [];
 
   async setDashboard():Promise<void>{
     
-    console.log('Set Dashboard');
+   //console.log('Set Dashboard');
     this.getSolicitudesTurno();
     
 }
@@ -473,7 +473,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
  })
  //this.tablaFletesTurnos = tablaFletesTurnos;
  this.tablaFletesTurnos = turnos;
- console.log('this.tablaFletesTurnos',this.tablaFletesTurnos);
+//console.log('this.tablaFletesTurnos',this.tablaFletesTurnos);
  this.loading = false;
 
 
@@ -645,7 +645,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
       accept: async () => {
 
         let turnosSinFletes:any[] = await this.getTurnosSinFletes();
-        console.log('turnosSinFletes',turnosSinFletes);
+       //console.log('turnosSinFletes',turnosSinFletes);
         this.getSaldosPedidosFletes(turnosSinFletes);
 
       },
@@ -767,7 +767,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
       id:0
     }
 
-    console.log('lineaFlete new',lineaFlete);
+   //console.log('lineaFlete new',lineaFlete);
 
     detalle_solicitud_turnos_pedido.push(lineaFlete);
 
@@ -783,26 +783,26 @@ async setTableFletes(turnos:any[]):Promise<void>{
                   pedidos_detalle_solicitud:detalle_solicitud_turnos_pedido
     };
 
-    console.log('data',data);
+   //console.log('data',data);
     
     this.solicitudTurnoService.updateInfoTruno(turno.id,data)
         .subscribe({
           next:async (turno)=>{
-            console.log('turno actualizado',turno);
+           //console.log('turno actualizado',turno);
             this.messageService.add({severity:'success', summary:'!Información!', detail:`Se adiciono correctamente la linea de felete para el turno ${turno.id} asociada al pedido ${flete.DocNum}`});
 
            let turnosSinFlete = await this.getTurnosSinFletes();
 
-            console.log('turnoSinFlete',turnosSinFlete);
+           //console.log('turnoSinFlete',turnosSinFlete);
 
             let turnoSinFlete:any = turnosSinFlete.find(linea => linea.detalle_solicitudes_turnos_id === turno.id);
 
-            console.log('turnoSinFlete',turnoSinFlete);
-            console.log('turno.detalle_solicitud_turnos_pedido',turno.detalle_solicitud_turnos_pedido,lineaFlete.docentry,lineaFlete.pedidonum);
+           //console.log('turnoSinFlete',turnoSinFlete);
+           //console.log('turno.detalle_solicitud_turnos_pedido',turno.detalle_solicitud_turnos_pedido,lineaFlete.docentry,lineaFlete.pedidonum);
 
             let lineaFletePedido =await turno.detalle_solicitud_turnos_pedido.find((pedido: { docentry: any; pedidonum: any; })=>pedido.docentry== lineaFlete.docentry && pedido.pedidonum==lineaFlete.pedidonum)
 
-            console.log('lineaFletePedido',lineaFletePedido);
+           //console.log('lineaFletePedido',lineaFletePedido);
             
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_id = lineaFletePedido.id;
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_pedidonum = lineaFletePedido.pedidonum;
@@ -842,7 +842,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_updated_at= lineaFletePedido.updaeteAt;
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_detalleSolicitudId= turno.id;
 
-            console.log('turnoSinFlete',turnoSinFlete);
+           //console.log('turnoSinFlete',turnoSinFlete);
 
             this.tablaFletesTurnos.push(turnoSinFlete);
 

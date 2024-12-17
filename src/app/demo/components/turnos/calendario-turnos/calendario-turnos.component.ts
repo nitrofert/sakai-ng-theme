@@ -37,7 +37,7 @@ export class CalendarioTurnosComponent implements OnInit {
     
     if (e.target.id === 'canvasFirma') {
       //this.write(e);
-      console.log(e);
+     //console.log(e);
       this.coordenadasMouseMove = e;
     }
   }*/
@@ -90,7 +90,7 @@ export class CalendarioTurnosComponent implements OnInit {
   filtroRnagoFechas:Date[] = [this.primerDia,this.ultimoDia];
 
 
-  columnsTable: number = 11;
+  columnsTable: number = 14;
   dataKey: string = "dataKey";
   loading: boolean = true;
 
@@ -111,7 +111,8 @@ export class CalendarioTurnosComponent implements OnInit {
     'detalle_solicitudes_turnos_pedidos_cantidad',
     'detalle_solicitudes_turnos_pedidos_bodega',
     'remision',
-    'lugarentrega'
+    'lugarentrega',
+    'detalle_solicitudes_turnos_tipo'
   ];
   selectionMode: string = "multiple";
   selectedItem: any[] = [];
@@ -122,7 +123,7 @@ export class CalendarioTurnosComponent implements OnInit {
   @ViewChild('filter') filter!: ElementRef;
 
   filtroLocaciones: any[] = [];
- 
+  tiposTurno:any[]  = [{name:'RETIRO', value:'RETIRO'},{name:'ENTREGA', value:'ENTREGA'}]
   
 
   constructor(
@@ -294,7 +295,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
 
   cambioFecha(event:any){
-    console.log(this.localidadSeleccionada)
+   //console.log(this.localidadSeleccionada)
     if(event[1]){
        if(this.localidadSeleccionada.length > 0){
         this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
@@ -306,7 +307,7 @@ export class CalendarioTurnosComponent implements OnInit {
   seleccionarLocalidad(localidad:any){
 
     this.getTurnosPorLocalidad(localidad.code)
-    console.log(this.localidadSeleccionada);
+   //console.log(this.localidadSeleccionada);
     
     //this.getCalendar();
     //this.showCalendar = true;
@@ -327,6 +328,8 @@ export class CalendarioTurnosComponent implements OnInit {
     this.solicitudTurnoService.getTurnosPorLocalidad(localidad,this.filtroRnagoFechas[0],this.filtroRnagoFechas[1])
         .subscribe({
               next:async (turnosLocalidad)=>{
+
+                console.log('turnosLocalidad',turnosLocalidad);
                   
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
@@ -456,7 +459,7 @@ export class CalendarioTurnosComponent implements OnInit {
     })
 
     //console.log('turnosLocalidadCliente',await this.functionsService.clonObject(turnosLocalidadCliente))
-    console.log('turnosLocalidadCliente',(turnosLocalidadCliente))
+   //console.log('turnosLocalidadCliente',(turnosLocalidadCliente))
 
 
     turnosLocalidad = await this.functionsService.sortArrayObject(turnosLocalidadCliente,'id','DESC')
@@ -488,18 +491,20 @@ export class CalendarioTurnosComponent implements OnInit {
 
   
   gestionarSolicitud(){
-    console.log(this.selectedItem);
+   console.log('turno seleccionado',this.selectedItem);
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar el turno No. ${this.selectedItem[0].id} ?`,
       header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
+
+
         const ref = this.dialogService.open(FormTurnoComponent, {
           data: {
               id: parseInt(this.selectedItem[0].id)
           },
-          header: `Orden de cargue: ${this.selectedItem[0].id}` ,
+          header: `${this.selectedItem[0].tipo==='RETIRO'?'Turno de cargue':'Turno de descargue'}: ${this.selectedItem[0].id}` ,
           width: '70%',
           height:'auto',
           contentStyle: {"overflow": "auto"},
@@ -814,7 +819,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
     let lineasSolicitud = this.selectedItem[0].detalle_solicitud_turnos_pedido;
 
-    console.log('orden seleccionada',this.selectedItem[0])
+   //console.log('orden seleccionada',this.selectedItem[0])
 
     await this.pdfSolicitud(this.selectedItem[0]);
 
@@ -838,7 +843,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   documentos(item:any){
 
-    console.log(item);
+   //console.log(item);
     
         const ref = this.dialogService.open(DocumentosTurnoComponent, {
           data: {

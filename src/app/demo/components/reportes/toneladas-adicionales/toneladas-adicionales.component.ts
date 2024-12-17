@@ -227,7 +227,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
     let infoTurnos = (await this.solicitudTurnoService.turnosExtendido(params)).raw;
     
-   console.log('infoTurnos',infoTurnos);
+  //console.log('infoTurnos',infoTurnos);
 
     //return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
     return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; pedidos_turno_itemcode:any })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO && !turno.pedidos_turno_itemcode.startsWith('SF') )
@@ -240,7 +240,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
   async setReporte():Promise<void>{
 
     let infoTurnos = await this.getInfoTurnos();
-    console.log('infoTurnos filtrado',infoTurnos);
+   //console.log('infoTurnos filtrado',infoTurnos);
     ////console.log(await this.functionsService.concatenarCamposArray( await this.functionsService.clonObject(infoTurnos), ['pedidos_turno_dependencia','locacion_id']));
     this.infoTurnos = infoTurnos;
 

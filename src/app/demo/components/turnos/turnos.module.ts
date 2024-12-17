@@ -35,6 +35,8 @@ import { ListadoFletesComponent } from './listado-fletes/listado-fletes.componen
 import { DocumentosTurnoComponent } from './documentos-turno/documentos-turno.component';
 import { PdfOrdenCargue } from '../solicitudescargue/config-pdf/orden-cargue';
 import { WebCamModule } from 'src/app/layout/shared/webcam/webcam.module';
+import { RemisionesComponent } from './remisiones/remisiones.component';
+import { UsbPortModule } from 'src/app/layout/shared/usb-port/usb-port.module';
 
 
 
@@ -44,7 +46,8 @@ import { WebCamModule } from 'src/app/layout/shared/webcam/webcam.module';
     FormTurnoComponent,
     VistaEstadosTurnoComponent,
     InspeccionDespachoComponent,
-    DocumentosTurnoComponent
+    DocumentosTurnoComponent,
+    RemisionesComponent
     
     
   ],
@@ -61,7 +64,7 @@ import { WebCamModule } from 'src/app/layout/shared/webcam/webcam.module';
     DynamicPdfModule,
     DynamicDrawModule,
     DynamicUploadModule,
-    
+    UsbPortModule
     
   ],
   providers:[AlmacenesService, 

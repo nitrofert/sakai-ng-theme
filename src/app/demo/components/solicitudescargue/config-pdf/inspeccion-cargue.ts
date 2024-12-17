@@ -1647,7 +1647,7 @@ export class PdfInspeccionCargue {
     }
 
     footer:any =(firmas:any)=> {
-        console.log('footer', firmas);
+       //console.log('footer', firmas);
         return {
             
         margin: 8,
@@ -1818,7 +1818,7 @@ export class PdfInspeccionCargue {
     
     async generarPDF(data:any):Promise<void>{
         
-        console.log('datakey',data.dataKey);
+       //console.log('datakey',data.dataKey);
         let datakey = data.dataKey.split('-');
         let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
         let infoTurno = await lastValueFrom(infoTurno$);
@@ -1861,7 +1861,7 @@ export class PdfInspeccionCargue {
 
         let filesAtachByInspeccion = await lastValueFrom(fileInspeccion$);
 
-       // console.log('filesAtachByInspeccion',filesAtachByInspeccion)
+       ////console.log('filesAtachByInspeccion',filesAtachByInspeccion)
 
         if(filesAtachByInspeccion.length === 0){
             filesAtachByInspeccion.push(`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQcAAABYCAIAAAB3ZqVmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAADfSURBVHhe7dMxAQAwEAOh+jedzn8awANvwGUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVsC1fUBYOJv6tIhuAAAAAElFTkSuQmCC`)
@@ -1884,7 +1884,7 @@ export class PdfInspeccionCargue {
             inspector:filesAtachByInspector[0]
         }
 
-        console.log(firmas);
+       //console.log(firmas);
 
 
 

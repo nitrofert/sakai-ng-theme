@@ -135,7 +135,7 @@ export class SolicitudTurnoService {
     }
 
     updateFletesTruno(id:number,data:any):Observable<any> {
-        console.log(id,data);
+       //console.log(id,data);
         const url:string = `${this.api_url}/api/solicitud-turnos/fletes-turno/${id}`;
         return this.http.patch<any>(url,data);
     }
@@ -207,6 +207,11 @@ export class SolicitudTurnoService {
         return this.http.get<any>(url);
     }
 
+
+    getTurnosByTurnoBase(turnoid:number):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/turnos-por-turno-base/${turnoid}`;
+        return this.http.get<any>(url);
+    }
    
 
     

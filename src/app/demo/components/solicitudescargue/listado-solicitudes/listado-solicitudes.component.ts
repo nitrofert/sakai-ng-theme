@@ -107,7 +107,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   permisosUsuarioPagina: any[] = [{ read_accion: true, create_accion: true, update_accion: false, delete_accion: false }];
 
-  columnsTable: number = 19;
+  columnsTable: number = 21;
   dataKey: string = "dataKey";
   loading: boolean = true;
   globalFilterFields: any[] = ['solicitudes_turno_id',
@@ -125,11 +125,15 @@ export class ListadoSolicitudesComponent implements OnInit {
     'detalle_solicitudes_turnos_pedidos_cantidad',
     'detalle_solicitudes_turnos_pedidos_bodega',
     'remision',
-    'lugarentrega'
+    'lugarentrega',
+    'detalle_solicitudes_turnos_tipo',
+    'detalle_solicitudes_turnos_pedidos_tipo_operacion'
   ];
   selectionMode: string = "multiple";
   selectedItem: any[] = [];
   estadosTurno: any[] = [];
+  tiposTurno:any[]  = [{name:'RETIRO', value:'RETIRO'},{name:'ENTREGA', value:'ENTREGA'}]
+  tiposOperacion:any[]  = [{name:'VENTAS', value:'VENTAS'},{name:'TRASLADO', value:'TRASLADO'},{name:'COMPRAS', value:'COMPRAS'}]
 
   solicitudesExtendida: any[] = [];
   solicitudesEntidad: any[] = [];
@@ -240,7 +244,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
           let dataPieChart: any[] = [];
           let dataBarStackChart: any[any] = [];
-          console.log('solicitudesTurnos',solicitudesTurnos)
+         console.log('solicitudesTurnos',solicitudesTurnos)
 
           solicitudesTurnos.raw.forEach((solicitud: {
             locacion_label: any;
@@ -330,8 +334,8 @@ export class ListadoSolicitudesComponent implements OnInit {
           this.solicitudesExtendida = solicitudesTurnos.raw;
           this.solicitudesEntidad = solicitudesTurnos.entities;
 
-          console.log('this.solicitudesExtendida', this.solicitudesExtendida);
-          console.log('this.solicitudesEntidad', this.solicitudesEntidad);
+         //console.log('this.solicitudesExtendida', this.solicitudesExtendida);
+         //console.log('this.solicitudesEntidad', this.solicitudesEntidad);
           this.loading = false;
         },
         error: (err) => {
@@ -733,7 +737,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   documentos(item:any){
 
-    console.log(item);
+   //console.log(item);
 
  
 
@@ -741,7 +745,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     let turno:any = solicitud.detalle_solicitud_turnos.find((turnoSolicitud: { id: any; }) => turnoSolicitud.id === item.detalle_solicitudes_turnos_id);
     turno.dataKey = item.dataKey
 
-    console.log(turno);
+   //console.log(turno);
     
         const ref = this.dialogService.open(DocumentosTurnoComponent, {
           data: {
@@ -769,7 +773,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   async createPDF2() {
 
 
-    console.log('orden seleccionada',this.selectedItem[0])
+   //console.log('orden seleccionada',this.selectedItem[0])
 
     this.pdfSolicitudCargue.generarPDF(this.selectedItem[0]);
     /*
@@ -788,7 +792,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
       let infoTurno$ = this.solicitudTurnoService.getTurnosByID(this.selectedItem[0].detalle_solicitudes_turnos_id);
       let infoTurno = await lastValueFrom(infoTurno$);
-      console.log('infoTurno',infoTurno);
+     //console.log('infoTurno',infoTurno);
       let historialTurno:any[] = infoTurno.detalle_solicitud_turnos_historial;
   
       if(historialTurno.length > 0 && historialTurno.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 ) {
@@ -882,11 +886,11 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   async solicitarFlete(){
-    console.log('orden seleccionada',this.selectedItem[0])
+   //console.log('orden seleccionada',this.selectedItem[0])
 
     let fleteTurno:any[] = await this.solicitudTurnoService.fleteTurno(this.selectedItem[0].detalle_solicitudes_turnos_id);
     //detalle_solicitudes_turnos_pedidos_email_asistente
-    console.log(fleteTurno);
+   //console.log(fleteTurno);
     if(this.selectedItem[0].detalle_solicitudes_turnos_condiciontpt!='TRANSP'){
       this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "La modalidad de transporte asociada al turno no requiere de creación de flete." });
     }else if(fleteTurno.length>0){
@@ -932,7 +936,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   verHistorial(){
-    console.log('orden seleccionada',this.selectedItem[0])
+   //console.log('orden seleccionada',this.selectedItem[0])
 
     let idTurno = this.selectedItem[0].dataKey.split('-')[1];
     

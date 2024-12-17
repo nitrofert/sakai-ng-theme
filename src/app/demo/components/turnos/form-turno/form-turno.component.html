@@ -247,7 +247,7 @@
                 <p-divider align="left" class="field col-12">
                     <div class="inline-flex align-items-center">
                         <i class="pi pi-info-circle mr-2"></i>
-                        <b>Información cargue</b>
+                        <b>{{tipoTurno==='RETIRO'?'Información cargue':'Información descargue'}}</b>
                     </div>
                 </p-divider>
 
@@ -338,7 +338,7 @@
                                     !(
                                         updateModulo &&
                                         updatePesoBruto &&
-                                        estado == estadosTurno.ARRIBO
+                                        ((estado == estadosTurno.ARRIBO && this.tipoTurno==='RETIRO')|| (estado == estadosTurno.DESCARGADO && this.tipoTurno==='ENTREGA'))
                                     )
                                         ? true
                                         : false
@@ -392,7 +392,8 @@
                                     !(
                                         updateModulo &&
                                         updatePesoBruto &&
-                                        estado == estadosTurno.CARGADO
+                                       
+                                        ((estado == estadosTurno.CARGADO && this.tipoTurno==='RETIRO')|| (estado == estadosTurno.ARRIBO && this.tipoTurno==='ENTREGA'))
                                     )
                                         ? true
                                         : false
@@ -483,7 +484,7 @@
 
                 <div class="field col-12">
                     <label for="observaciones"
-                        ><h6>Observaciones de cargue</h6></label
+                        ><h6>Observaciones de {{tipoTurno==='RETIRO'?'cargue':'descargue'}}</h6></label
                     >
                     <div
                         id="observaciones"
@@ -530,8 +531,8 @@
                 [viewCheckselectedItem]="true"
                 [loading]="loadingCargue"
                 nameExport="pedidos_turno"
-                [showBtnNew]="updatePedidosTurno && editCantidad"
-                [showBtnDelete]="updatePedidosTurno && editCantidad"
+                [showBtnNew]="updatePedidosTurno && editCantidad && tipoTurno==='RETIRO'"
+                [showBtnDelete]="updatePedidosTurno && editCantidad && tipoTurno==='RETIRO'"
                 (onNewAccion)="adicionarLinea($event)"
                 (onDeleteAccion)="borrarLineaPedido($event)"
                 (onChangeValue)="cambioValorCampo($event)"
@@ -758,22 +759,18 @@
                         </p-fileUpload>
                     </div>
 
-                    <div
-                        *ngIf="
-                            estado === estadosTurno.PESADO ||
-                            estado === estadosTurno.CARGANDO ||
-                            estado === estadosTurno.CARGADO ||
-                            estado === estadosTurno.PESADOF ||
-                            estado === estadosTurno.DESPACHADO
-                        "
-                        class="field col-12"
-                    >
+                    <div *ngIf="(estado === estadosTurno.PESADO ||estado === estadosTurno.CARGANDO ||estado === estadosTurno.CARGADO) && tipoTurno==='RETIRO' " class="field col-12">
                         <app-inspeccion-despacho
                             [turno]="turno"
                             [estado]="estado"
                             [pedidos]="tablapedidosInspeccion"
                             (onChangeData)="setInsppeccion($event)"
                         ></app-inspeccion-despacho>
+                    </div>
+
+
+                    <div *ngIf="estado === estadosTurno.PESADOF || estado === estadosTurno.DESPACHADO" class="field col-12">
+                        <app-remisiones [turno]="turno" [getRemisionesPorCliente]="getRemisiones" (onGetRemisiones)="setRemisiones($event)"></app-remisiones>
                     </div>
                 </div>
             </div>
@@ -1414,6 +1411,7 @@
                                 id="item"
                                 type="text"
                                 #totalTonItem
+                                readonly
                                 [disabled]="itemLineSelected.length===0 || (itemLineSelected[0].maneja_lote==='Y')"
                                 [value]="itemLineSelected.length> 0 && (itemLineSelected[0].maneja_lote==='N')?itemLineSelected[0].cantidad:0 "
                             />
@@ -1427,6 +1425,7 @@
                                 pInputText
                                 id="item"
                                 type="text"
+                                readonly
                                 #totalSacosItem
                                 [disabled]="itemLineSelected.length===0 || (itemLineSelected[0].maneja_lote==='Y')"
                                 [value]="itemLineSelected.length> 0 && (itemLineSelected[0].maneja_lote==='N')?itemLineSelected[0].cantidad_sacos:0 "
@@ -1456,6 +1455,7 @@
                                 <div class="flex justify-content-between flex-column sm:flex-row">
                                     <div>
                                         <button
+                                            *ngIf="tipoTurno==='RETIRO'"
                                             pButton
                                             pTooltip="Limpiar"
                                             tooltipPosition="bottom"
@@ -1468,7 +1468,7 @@
 
                                         <button
                                             pButton
-                                            
+                                            *ngIf="tipoTurno==='RETIRO'"
                                             [pTooltip]="'Adicionar lote'"
                                             tooltipPosition="bottom"
                                             placeholder="Bottom"
@@ -1479,7 +1479,7 @@
                                         ></button>
                                         <button
                                             pButton
-                                            
+                                            *ngIf="tipoTurno==='RETIRO'"
                                             [pTooltip]="'Eliminar lote'"
                                             tooltipPosition="bottom"
                                             placeholder="Bottom"
@@ -1585,7 +1585,7 @@
                                                     [type]="'number'"
                                                     [(ngModel)]="lote.cantidad_cargue_lote"
                                                     class="w-full"
-                                                    
+                                                    [disabled]="tipoTurno==='ENTREGA'"
                                                     (change)="
                                                         cambioValorCampoTablaLotesItem(
                                                             $event,
@@ -1621,7 +1621,7 @@
                                                     [type]="'number'"
                                                     [(ngModel)]="lote.cantidad_sacos_lote"
                                                     class="w-full"
-                                                    
+                                                    [disabled]="tipoTurno==='ENTREGA'"
                                                     (change)="
                                                         cambioValorCampoTablaLotesItem(
                                                             $event,
@@ -1683,7 +1683,7 @@
         <p-button
             icon="pi pi-time"
             (click)="asignarLotesItem()"
-            label="Cerrar"
+            label="Asignar lotes"
             styleClass="p-button-text p-button-raised"
         ></p-button>
     </ng-template>
@@ -1839,3 +1839,5 @@
         ></p-button>
     </ng-template>
 </p-dialog>
+
+

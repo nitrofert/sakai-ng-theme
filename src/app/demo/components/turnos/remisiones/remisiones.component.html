@@ -1,0 +1,689 @@
+<p-toast></p-toast>
+<p-confirmDialog
+    [style]="{ width: '50vw' }"
+    [baseZIndex]="10000"
+    rejectButtonStyleClass="p-button-text"
+></p-confirmDialog>
+<div class="grid">
+    <div class="col-12">
+        <p-card header="Detalle remisiones">
+            <div *ngFor="let cliente of clientes;index as i;" class="p-fluid p-formgrid grid">
+                <p-divider align="left" class="field col-12" style="margin-bottom: -15px;">
+                    <div class="inline-flex align-items-center">
+                        <!-- <i class="pi pi-building mr-2"></i> -->
+                        <b>{{cliente.CardCode}} - {{cliente.CardName}}</b>
+                    </div>
+                </p-divider>
+                <p-card *ngFor="let remision of cliente.remisiones;index as y;"  [subheader]="'Remision # '+(y+1)" class="field col-12">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cliente"
+                                    type="text"
+                                    readonly
+                                    [value]="remision.base_objectType=='17'?'FPD':remision.base_objectType=='1250000001'?remision.tipo_operacion==='TRASLADO'?'TRASLADO':'CONSIGNA':remision.base_objectType=='13'?'FPP':'' "
+                                    class="p-inputtext-sm" placeholder="Small"
+                                />
+                                <label for="cliente"><h6>Tipo documento</h6></label>
+                            </span>
+                        </div>
+    
+                        <div class="field col-12 md:col-6">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cliente"
+                                    type="text"
+                                    readonly
+                                    [value]="remision.base_docnum"
+                                    class="p-inputtext-sm" placeholder="Small"
+                                />
+                                <label for="cliente"><h6>Código documento</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-6">
+                            <span class="p-float-label">
+                                <!-- <input
+                                    pInputText
+                                    id="cliente"
+                                    type="text"
+                                    ()
+                                    [value]="remision.manifiesto"
+                                    class="p-inputtext-sm" placeholder="Small"
+                                /> -->
+                                <p-inputNumber 
+                                                [(ngModel)]="remision.manifiesto" 
+                                                mode="decimal" 
+                                                inputId="manifiesto" 
+                                                [useGrouping]="false"
+                                                (ngModelChange)="cambioValorManifiesto()">
+                                </p-inputNumber>
+                                <label for="cliente"><h6># Manifiesto de carga</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-6">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cliente"
+                                    type="text"
+                                    readonly
+                                    [value]="remision.municipioentrega"
+                                    class="p-inputtext-sm" placeholder="Small"
+                                />
+                                <label for="cliente"><h6>Municipio entrega</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-12">
+                            <span class="p-float-label">
+                                <textarea
+                                    rows="5"
+                                    class="w-full"
+                                    pInputTextarea
+                                    inputId="comentario"
+                                    [(ngModel)]="remision.lugarentrega"
+                                    class="p-inputtext-sm" placeholder="Small"
+                                    readonly
+                                >
+                                </textarea>
+                                <label for="cliente"><h6>Lugar entrega</h6></label>
+                            </span>
+                        </div>
+
+                        <!-- <p-table
+                            #dt1
+                            [value]="remision.detalle_remision"
+                            [dataKey]="'id'"
+                            [rows]="10"
+                            [rowsPerPageOptions]="[10, 50, 100]"
+                            [loading]="loading"
+                            [rowHover]="true"
+                            [styleClass]="'p-datatable-gridlines p-datatable-sm border-1 '"
+                            [paginator]="true"
+                            [globalFilterFields]="['id','itemcode','itemname','bodega']"
+                            [selectionMode]="'single'"
+                            class="field col-12"
+                            responsiveLayout="scroll"
+                        >
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                                <div>
+                                    <button
+                                        pButton
+                                        pTooltip="Limpiar"
+                                        tooltipPosition="bottom"
+                                        placeholder="Bottom"
+                                        class="p-button-outlined mb-2 mr-2 p-button-sm"
+                                        icon="pi pi-filter-slash"
+                                        (click)="clear(dt1)"
+                                    ></button>
+                                </div>
+                                <div>
+                                    <span class="p-input-icon-left mb-2">
+                                        <i class="pi pi-search"></i>
+                                        <input
+                                            pInputText
+                                            type="text"
+                                            #filter
+                                            (input)="onGlobalFilter(dt1, $event)"
+                                            placeholder="Buscar por palabra clave"
+                                            class="w-min p-inputtext-sm"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    
+                                </th>
+                                <th
+                                    pSortableColumn="linea"
+                                    style="min-width: 8rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Linea</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="linea"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="numeric"
+                                                field="linea"
+                                                display="menu"
+                                                placeholder="Buscar por linea"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="itemcode"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Código item</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="itemcode"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="itemcode"
+                                                display="menu"
+                                                placeholder="Buscar por código item"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="itemname"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Descripción item</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="itemname"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="itemname"
+                                                display="menu"
+                                                placeholder="Buscar por descripción item"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="bodega"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Bodega</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="bodega"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="bodega"
+                                                display="menu"
+                                                placeholder="Buscar por bodega"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="cantidad"
+                                    style="min-width: 8rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Cantidad</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="cantidad"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="numeric"
+                                                field="cantidad"
+                                                display="menu"
+                                                placeholder="Buscar por cantidad"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                pSortableColumn="cantidad_sacos"
+                                style="min-width: 8rem"
+                            >
+                                <div
+                                    class="flex justify-content-between align-items-center"
+                                >
+                                    <div class="text-center">Cantidad sacos</div>
+                                    <div>
+                                        <p-sortIcon
+                                            field="cantidad_sacos"
+                                        ></p-sortIcon>
+                                        <p-columnFilter
+                                            type="numeric"
+                                            field="cantidad_sacos"
+                                            display="menu"
+                                            placeholder="Buscar por cantidad sacos"
+                                        ></p-columnFilter>
+                                    </div>
+                                </div>
+                            </th>
+
+                                
+                                <th>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-linea>
+                            <tr [pSelectableRow]="linea">
+                                <td>
+                                    <p-tableCheckbox
+                                        [value]="linea"
+                                        [id]="'selectRow' + linea['id']"
+                                    ></p-tableCheckbox>
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.linea }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.itemcode }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.itemname }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.bodega }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.cantidad }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.cantidad_sacos }}
+                                </td>
+                                <td></td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td [colSpan]="8" class="text-center">
+                                    No se econtraron registros.
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="loadingbody">
+                            <tr>
+                                <td [colSpan]="8" class="text-center">
+                                    Cargando registros. Por favor espere
+                                </td>
+                            </tr>
+                        </ng-template>
+                        </p-table> -->
+
+                        <p-treeTable [value]="remision.lotes" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Linea</th>
+                                    <th>Código item / Lote</th>
+                                    <th>Descrioción</th>
+                                    
+                                    <th>Bodega</th>
+                                    <th>Cantidad (TON)</th>
+                                    <th>Cantidad Sacos</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                                <tr [ttRow]="rowNode">
+                                    <td>
+                                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                                        {{ rowData.linea }}
+                                    </td>
+                                    <td>{{ rowData.itemcode_lote }}</td>
+                                    <td>{{ rowData.itemname }}</td>
+                                    <td>{{ rowData.bodega }}</td>
+                                    <td>{{ rowData.cantidad }}</td>
+                                    <td>{{ rowData.cantidad_sacos }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-treeTable>
+                      
+                        
+                        
+
+                    </div>
+                </p-card>
+            </div>
+            
+                 
+            <!-- <div *ngFor="let cliente of clientes;index as i;">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="cliente"
+                                type="text"
+                                disabled
+                                [value]="cliente.CardCode"
+                            />
+                            <label for="cliente"><h6>Codigo Cliente</h6></label>
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="cliente"
+                                type="text"
+                                disabled
+                                [value]="cliente.CardName"
+                            />
+                            <label for="cliente"><h6>Nombre Cliente</h6></label>
+                        </span>
+                    </div>
+
+                    <div *ngFor="let remision of cliente.remisiones;index as i;" >
+
+                        <div class="field col-12 md:col-6">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cliente"
+                                    type="text"
+                                    disabled
+                                    [value]="remision.tipo_documento"
+                                />
+                                <label for="cliente"><h6>Tipo documento</h6></label>
+                            </span>
+                        </div>
+    
+                        <div class="field col-12 md:col-6">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cliente"
+                                    type="text"
+                                    disabled
+                                    [value]="remision.base_docnum"
+                                />
+                                <label for="cliente"><h6>Código documento</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-12">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cliente"
+                                    type="text"
+                                    disabled
+                                    [value]="remision.municipioentrega"
+                                />
+                                <label for="cliente"><h6>Municipio entrega</h6></label>
+                            </span>
+                        </div>
+
+                        <div class="field col-12">
+                            <span class="p-float-label">
+                                <textarea
+                                    rows="5"
+                                    class="w-full"
+                                    pInputTextarea
+                                    inputId="comentario"
+                                    [(ngModel)]="remision.lugarentrega"
+                                >
+                                </textarea>
+                                <label for="cliente"><h6>Lugar entrega</h6></label>
+                            </span>
+                        </div>
+
+                        <p-table
+                            #dt1
+                            [value]="remision.detalle_remision"
+                            [dataKey]="'id'"
+                            [rows]="10"
+                            [rowsPerPageOptions]="[10, 50, 100]"
+                            [loading]="loading"
+                            [rowHover]="true"
+                            [styleClass]="'p-datatable-gridlines p-datatable-sm border-1 '"
+                            [paginator]="true"
+                            [globalFilterFields]="['id','itemcode','itemname','bodega']"
+                            [selectionMode]="'single'"
+                            
+                            responsiveLayout="scroll"
+                        >
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                                <div>
+                                    <button
+                                        pButton
+                                        pTooltip="Limpiar"
+                                        tooltipPosition="bottom"
+                                        placeholder="Bottom"
+                                        class="p-button-outlined mb-2 mr-2 p-button-sm"
+                                        icon="pi pi-filter-slash"
+                                        (click)="clear(dt1)"
+                                    ></button>
+                                </div>
+                                <div>
+                                    <span class="p-input-icon-left mb-2">
+                                        <i class="pi pi-search"></i>
+                                        <input
+                                            pInputText
+                                            type="text"
+                                            #filter
+                                            (input)="onGlobalFilter(dt1, $event)"
+                                            placeholder="Buscar por palabra clave"
+                                            class="w-min p-inputtext-sm"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    
+                                </th>
+                                <th
+                                    pSortableColumn="linea"
+                                    style="min-width: 8rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Linea</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="linea"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="numeric"
+                                                field="linea"
+                                                display="menu"
+                                                placeholder="Buscar por linea"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="itemcode"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Código item</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="itemcode"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="itemcode"
+                                                display="menu"
+                                                placeholder="Buscar por código item"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="itemname"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Descripción item</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="itemname"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="itemname"
+                                                display="menu"
+                                                placeholder="Buscar por descripción item"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="bodega"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Bodega</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="bodega"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="bodega"
+                                                display="menu"
+                                                placeholder="Buscar por bodega"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th
+                                    pSortableColumn="cantidad"
+                                    style="min-width: 8rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Cantidad</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="cantidad"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="numeric"
+                                                field="cantidad"
+                                                display="menu"
+                                                placeholder="Buscar por cantidad"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                
+                                <th>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-linea>
+                            <tr [pSelectableRow]="linea">
+                                <td>
+                                    <p-tableCheckbox
+                                        [value]="linea"
+                                        [id]="'selectRow' + linea['id']"
+                                    ></p-tableCheckbox>
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.linea }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.itemcode }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.itemname }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.bodega }}
+                                </td>
+                                <td class="text-center">
+                                    {{ linea.cantidad }}
+                                </td>
+                                <td></td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td [colSpan]="7" class="text-center">
+                                    No se econtraron registros.
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="loadingbody">
+                            <tr>
+                                <td [colSpan]="7" class="text-center">
+                                    Cargando registros. Por favor espere
+                                </td>
+                            </tr>
+                        </ng-template>
+                        </p-table>
+
+
+                    </div>
+
+          
+                </div>
+            </div>             -->
+
+        </p-card>
+       
+       
+
+       
+    </div>
+</div>
+
+<!-- Dialog loading -->
+<p-dialog
+    header="Cargando"
+    [(visible)]="displayModal"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <p class="m-0"></p>
+
+    <div
+        *ngIf="loadingCargue"
+        class="field col flex justify-content-center align-items-center"
+    >
+        <!--<p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>-->
+        <!--<p-progressSpinner></p-progressSpinner>-->
+        <img src="assets/layout/images/Rhombus.gif" alt="" />
+    </div>
+    <div
+        *ngIf="completeCargue"
+        class="field col flex justify-content-center align-items-center animation-duration-1000 animation-ease-out"
+    >
+        <div class="text-center">
+            <span>{{ messageComplete }}</span>
+            <span
+                >Esta ventana se cerrara automaticamente en unos segundos, si
+                esto no ocurre puede cerrarla manualmente.</span
+            >
+        </div>
+    </div>
+</p-dialog>
+<!--Fin Dialog loading-->

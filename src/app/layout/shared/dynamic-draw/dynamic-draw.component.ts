@@ -46,7 +46,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     onTouchStart(e: any) { //TouchEvent on any
         // Tu lógica aquí
         if (e.target.id === 'canvasDraw' ) {
-          console.log('Toque detectado', e);
+         //console.log('Toque detectado', e);
           this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Toque start ${e.type}`});
           this.isAvailabe = true;
         }
@@ -56,7 +56,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     onTouchEnd(e: any) { // TouchEvent on any
         // Tu lógica aquí
         if (e.target.id === 'canvasDraw' ) {
-          console.log('Toque levantado', e);
+         //console.log('Toque levantado', e);
           this.messageService.add({severity:'info', summary: 'Confirmación', detail:  `Toque end ${e.type}`});
           this.isAvailabe = false;
           this.pointsValidate = JSON.parse(JSON.stringify(this.points));
@@ -67,7 +67,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     @HostListener('touchmove', ['$event'])
     onTouchMove(e: any) { //TouchEvent on any
         // Tu lógica aquí
-       // console.log('Movimiento de toque detectado', event);
+       ////console.log('Movimiento de toque detectado', event);
        
         if (e.target.id === 'canvasDraw' && (this.isAvailabe)) {
           this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `move :${JSON.stringify(e)}`} );
@@ -86,7 +86,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
         // Tu lógica aquí
         if (e.target.id === 'canvasDraw' && e.target.getAttribute("draggable")) {
           this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Toque start ${e.type}`});
-          console.log('Clic down detectado', e);
+         //console.log('Clic down detectado', e);
           this.isAvailabe = true;
         }
         
@@ -107,7 +107,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     onMouseUp(e: any) { // MouseEvent on any
       // Tu lógica aquí
       if (e.target.id === 'canvasDraw' ) {
-        console.log('Clic up detectado', e);
+       //console.log('Clic up detectado', e);
         this.messageService.add({severity:'info', summary: 'Confirmación', detail:  `Toque end ${e.type}`});
         this.isAvailabe = false;
         this.pointsValidate = JSON.parse(JSON.stringify(this.points));
@@ -185,7 +185,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
     @HostListener('touchmove', ['$event'])
     onTouchMove(event: TouchEvent) { //TouchEvent on any
         // Tu lógica aquí
-       // console.log('Movimiento de toque detectado', event);
+       ////console.log('Movimiento de toque detectado', event);
        //event.preventDefault();
        event.preventDefault();
       
@@ -204,7 +204,7 @@ export class DynamicDrawComponent implements OnInit, AfterViewInit {
               ){}
 
   ngOnInit(): void {
-   // console.log(this.anchoVentana,this.alturaVentana);
+   ////console.log(this.anchoVentana,this.alturaVentana);
    this.dataCanvas = this.config.data;
   }
 
@@ -373,9 +373,9 @@ private findxy(res:string, e:MouseEvent) {
 
   async grabar(){
     const canvasEl = this.canvasRef.nativeElement;
-    console.log(canvasEl.toDataURL());
+   //console.log(canvasEl.toDataURL());
     let fileCanvas = await this.functionsService.base64ToBlob(canvasEl.toDataURL());
-    console.log(fileCanvas);
+   //console.log(fileCanvas);
     /*if(this.pointsValidate.length < 10  ){
       this.messageService.add({severity:'error', summary:'Error', detail:'Debe dibujar una figura de mas de 10 puntos'});
     }else{

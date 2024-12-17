@@ -210,7 +210,7 @@ async setEventsTimeLine(data:any):Promise<void>{
   let events:any[] =[];
   let index:number = 0;
   for(let event of data){
-   console.log(event);
+  //console.log(event);
    let id_relacion = eval(event.index);
    let proceso = event.estado;
    let entidad = 'turnos';
@@ -241,7 +241,7 @@ async setEventsTimeLine(data:any):Promise<void>{
      }
    });
 
-   console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno);
+  //console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno);
 
    
    
@@ -279,7 +279,7 @@ async setEventsTimeLine(data:any):Promise<void>{
 }
 
 download(link:string){
-  console.log(link);
+ //console.log(link);
   window.open(link);
 }
 

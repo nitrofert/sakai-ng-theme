@@ -323,6 +323,172 @@
                         </th>
 
                         <th
+                            pSortableColumn="detalle_solicitudes_turnos_tipo"
+                            style="min-width: 11rem"
+                        >
+                            <div
+                                class="flex justify-content-between align-items-center"
+                            >
+                                <div class="text-center">Tipo turno</div>
+                                <div>
+                                    <!--<p-columnFilter field="detalle_solicitudes_turnos_estado" 
+                                                matchMode="in" 
+                                                display="menu" 
+                                                [showMatchModes]="false" 
+                                                [showOperator]="false" 
+                                                [showAddButton]="false">
+
+                                    <ng-template pTemplate="header">
+                                        <div class="px-3 pt-3 pb-0">
+                                            <span class="font-bold">Seleccionar estado</span>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-multiSelect [ngModel]="value" [options]="estadosTurno" placeholder="Cualquiera" (onChange)="filter($event.value)" >
+                                            
+                                            <ng-template let-option pTemplate="item">
+                                                <div class="inline-block vertical-align-middle">
+                                                    
+                                                    <span class="ml-1 mt-1">{{ option.name }}</span>
+                                                </div>
+                                            </ng-template>
+                                        </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>-->
+                                    <p-sortIcon
+                                        field="detalle_solicitudes_turnos_tipo"
+                                    ></p-sortIcon>
+                                    <p-columnFilter
+                                        field="detalle_solicitudes_turnos_tipo"
+                                        matchMode="equals"
+                                        display="menu"
+                                        placeholder="Buscar por tipo turno"
+                                        [showMatchModes]="false"
+                                        [showOperator]="false"
+                                        [showAddButton]="false"
+                                        [showApplyButton]="false"
+                                    >
+                                        <ng-template
+                                            pTemplate="filter"
+                                            let-value
+                                            let-filter="filterCallback"
+                                        >
+                                            <p-dropdown
+                                                [ngModel]="value"
+                                                [options]="tiposTurno"
+                                                (onChange)="
+                                                    filter($event.value)
+                                                "
+                                                placeholder="Cualquiera"
+                                            >
+                                                <ng-template
+                                                    pTemplate="selectedItem"
+                                                >
+                                                    <div>{{ value }}</div>
+                                                </ng-template>
+                                                <ng-template
+                                                    let-option
+                                                    pTemplate="item"
+                                                >
+                                                    <span
+                                                        [class]="
+                                                            'customer-badge status-' +
+                                                            option.name
+                                                        "
+                                                        >{{ option.name }}</span
+                                                    >
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </ng-template>
+                                    </p-columnFilter>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th
+                            pSortableColumn="detalle_solicitudes_turnos_pedidos_tipo_operacion"
+                            style="min-width: 11rem"
+                        >
+                            <div
+                                class="flex justify-content-between align-items-center"
+                            >
+                                <div class="text-center">Tipo operación</div>
+                                <div>
+                                    <!--<p-columnFilter field="detalle_solicitudes_turnos_estado" 
+                                                matchMode="in" 
+                                                display="menu" 
+                                                [showMatchModes]="false" 
+                                                [showOperator]="false" 
+                                                [showAddButton]="false">
+
+                                    <ng-template pTemplate="header">
+                                        <div class="px-3 pt-3 pb-0">
+                                            <span class="font-bold">Seleccionar estado</span>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-multiSelect [ngModel]="value" [options]="estadosTurno" placeholder="Cualquiera" (onChange)="filter($event.value)" >
+                                            
+                                            <ng-template let-option pTemplate="item">
+                                                <div class="inline-block vertical-align-middle">
+                                                    
+                                                    <span class="ml-1 mt-1">{{ option.name }}</span>
+                                                </div>
+                                            </ng-template>
+                                        </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>-->
+                                    <p-sortIcon
+                                        field="detalle_solicitudes_turnos_pedidos_tipo_operacion"
+                                    ></p-sortIcon>
+                                    <p-columnFilter
+                                        field="detalle_solicitudes_turnos_pedidos_tipo_operacion"
+                                        matchMode="equals"
+                                        display="menu"
+                                        placeholder="Buscar por tipo operación"
+                                        [showMatchModes]="false"
+                                        [showOperator]="false"
+                                        [showAddButton]="false"
+                                        [showApplyButton]="false"
+                                    >
+                                        <ng-template
+                                            pTemplate="filter"
+                                            let-value
+                                            let-filter="filterCallback"
+                                        >
+                                            <p-dropdown
+                                                [ngModel]="value"
+                                                [options]="tiposOperacion"
+                                                (onChange)="
+                                                    filter($event.value)
+                                                "
+                                                placeholder="Cualquiera"
+                                            >
+                                                <ng-template
+                                                    pTemplate="selectedItem"
+                                                >
+                                                    <div>{{ value }}</div>
+                                                </ng-template>
+                                                <ng-template
+                                                    let-option
+                                                    pTemplate="item"
+                                                >
+                                                    <span
+                                                        [class]="
+                                                            'customer-badge status-' +
+                                                            option.name
+                                                        "
+                                                        >{{ option.name }}</span
+                                                    >
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </ng-template>
+                                    </p-columnFilter>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th
                             pSortableColumn="locacion_label"
                             style="min-width: 15rem"
                         >
@@ -879,6 +1045,28 @@
                             "
                         >
                             {{ itemData.detalle_solicitudes_turnos_estado }}
+                        </td>
+
+                        <td
+                            [class]="
+                                'text-center bg-' +
+                                itemData.bgColor +
+                                ' text-' +
+                                itemData.txtColor
+                            "
+                        >
+                            {{ itemData.detalle_solicitudes_turnos_tipo }}
+                        </td>
+
+                        <td
+                            [class]="
+                                'text-center bg-' +
+                                itemData.bgColor +
+                                ' text-' +
+                                itemData.txtColor
+                            "
+                        >
+                            {{ itemData.detalle_solicitudes_turnos_pedidos_tipo_operacion }}
                         </td>
 
                         <td class="text-center">

@@ -159,6 +159,9 @@ mostrarLogs:boolean = false;
 verCondTPT:boolean = false;
 
 condicionesTPT:any[] = [{code:'RETIRA',label:'Retira cliente'},{code:'TRANSP',label:'Transporta sociedades'}];
+
+tipoOperaciones:any[] = [{code:'VENTAS',label:'Ventas'},{code:'TRASLADO',label:'Traslado'}];
+
 condicionSeleccionada!:any;
 condicionesFiltradas : any[] = [];
 
@@ -321,7 +324,7 @@ this.usuariosService.getInfoUsuario()
           }
           this.clientes = clientesUsuario;
 
-          //////////////////// //// ////////console.log(this.clientes);
+          console.log(this.clientes);
           this.getSaldosPedidos();
           
           
@@ -367,20 +370,20 @@ getSaldosPedidos(){
   this.pedidosService.getSaldosPedidos()
       .subscribe({
           next:async (saldosPedidos)=>{
-            console.log('saldosPedidos',saldosPedidos);
+           console.log('saldosPedidos',saldosPedidos);
            let pedidosClientes:any[] = [];
            for(let indexPedido in saldosPedidos){
            
 
-              if(saldosPedidos[indexPedido].DocNum == '121011980'){
-                ////console.log('pedido 121011980',saldosPedidos[indexPedido]);
-              }
+              // if(saldosPedidos[indexPedido].DocNum == '121011980'){
+              //   ////console.log('pedido 121011980',saldosPedidos[indexPedido]);
+              // }
             
               if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
 
-                if(saldosPedidos[indexPedido].locacion_codigo2=='LADORADA'){
-                  ////console.log(saldosPedidos[indexPedido])
-                }
+                // if(saldosPedidos[indexPedido].locacion_codigo2=='LADORADA'){
+                //   ////console.log(saldosPedidos[indexPedido])
+                // }
                 
                 pedidosClientes.push({
                   index:saldosPedidos[indexPedido].DocNum+''+saldosPedidos[indexPedido].LineNum,
@@ -431,7 +434,6 @@ getSaldosPedidos(){
                   total_documento:saldosPedidos[indexPedido].LineTotal,
                   total_impuesto:0,
                   total_linea_siniva:0,
-                  vicepresidencia:'',
                   email_vendedor:saldosPedidos[indexPedido].Email,
                   vendedor:saldosPedidos[indexPedido].SlpName,
                   dependencia:saldosPedidos[indexPedido].DEPENDENCIA,
@@ -440,6 +442,21 @@ getSaldosPedidos(){
                   email_asistente:saldosPedidos[indexPedido].Correo_Asistente,
                   nombre_asistente:saldosPedidos[indexPedido].Nombre_Asistente,
                   Maneja_Lote:saldosPedidos[indexPedido].Maneja_Lote,
+                  ObjType:saldosPedidos[indexPedido].ObjType,
+                  vicepresidencia:saldosPedidos[indexPedido].VICEPRESIDENCIA,
+                  ivacode:saldosPedidos[indexPedido].IvaCode,
+                  precio_lista:saldosPedidos[indexPedido].ListaPrecio,
+                  precio_vendedor:saldosPedidos[indexPedido].PrecioVendedor,
+                  precio_gerente:saldosPedidos[indexPedido].PrecioGerente,
+                  categoria_item:saldosPedidos[indexPedido].Categoria_Item,
+                  subcategoria_item:saldosPedidos[indexPedido].Subcategoria_Item,
+                  almacen_fpp:saldosPedidos[indexPedido].AlmacenFPP,
+                  bodega_destino:saldosPedidos[indexPedido].Bodega_Destino,
+                  ubicacion:saldosPedidos[indexPedido].Bodega_Destino==='CONSIGNA'?`CONSIGNA-${saldosPedidos[indexPedido].CardCode}`:'',
+                  codigo_vendedor:saldosPedidos[indexPedido].Codigo_Vendedor,
+                  precio_unitario:saldosPedidos[indexPedido].Precio_Unitario,
+                  tipo_operacion:saldosPedidos[indexPedido].Tipo_Movimiento,
+                  bodega_final:saldosPedidos[indexPedido].Bodega_Fin,
 
                   
                 })
@@ -452,7 +469,7 @@ getSaldosPedidos(){
            // ////////console.log(pedidosClientes.filter(pedido =>pedido.docnum ===290000003));
            // //// ////////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
            this.pedidos = await this.functionsService.sortArrayObject(pedidosClientes,'index','ASC') ;
-           //console.log(this.pedidos);
+           console.log(this.pedidos);
           },
           error:(err)=>{
             console.error(err);
@@ -576,7 +593,7 @@ async setVerFletes(condicionTPT:string,permisoVerFletes:boolean):Promise<boolean
   async seleccionarCondicion(condicionSeleccionada:any){
   
     //console.log(this.verCondTPT,this.condicionSeleccionada,this.pedidos);
-    //console.log(`pedidos x ${ condicionSeleccionada.code}`,this.pedidos.filter(pedido=>pedido.condicion_tpt === condicionSeleccionada.code))
+    console.log(`pedidos x ${ condicionSeleccionada.code}`,this.pedidos.filter(pedido=>pedido.condicion_tpt === condicionSeleccionada.code))
 
     this.condicion_tpt = condicionSeleccionada.code;
     this.verFletes = await this.setVerFletes(this.condicion_tpt,this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver fletes').valor);
@@ -636,7 +653,7 @@ async getPedidosPorCliente(clientesSeleccionados:any){
  // //console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
 
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-  console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
+ //console.log('pedidosCliente',this.pedidosCliente,this.almacenes);
   this.getAlmacenesEnPedidos();
 }
 
@@ -1133,7 +1150,7 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
 async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
   for(let pedido of pedidos){
-   console.log(pedido);
+  //console.log(pedido);
     let cantidadComprometida=0; 
     cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
     cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
@@ -1228,7 +1245,7 @@ configHeadersPedidos(){
 
    configDataTablePedidos(arregloPedido:any){
 
-  console.log(arregloPedido);
+ //console.log(arregloPedido);
 
     
    
@@ -1295,7 +1312,7 @@ confirmarSeleccionPedidosAlmacenCliente(){
 
 async seleccionarPedidosAlmacenCliente(event:any){
  
-  console.log(event);
+ //console.log(event);
   this.envioLineaCarguePedido =true;
 
 
@@ -1304,7 +1321,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
       this.showItemsSelectedPedidosAlmacenCliente=false;
   }else{
     const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-    console.log('pedidos seleccionados',pedidosSeleccionados);
+   //console.log('pedidos seleccionados',pedidosSeleccionados);
   
     if(pedidosSeleccionados.length > 0){
         
@@ -1376,7 +1393,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
             //console.log(pdidosVehiculo)
             for(let pedido of pedidosSeleccionados){
   
-             console.log('pedido seleccionado',pedido);
+            //console.log('pedido seleccionado',pedido);
   
               if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => pedidovh.pedido == pedido.docnum && 
                                                                                                                                                                     pedidovh.itemcode == pedido.itemcode && 
@@ -1698,10 +1715,10 @@ grabarSolicitud(){
       let pedidosVehiculo:any[] = [];
       // ////////console.log(this.pedidosCliente);
       for(let pedido of vehiculo.pedidos){
-       console.log(pedido);
+        //console.log('this.pedidosCliente',this.pedidosCliente);
        ////// //// ////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
         let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
-        console.log('infoPedido',infoPedido);
+       console.log('infoPedido',infoPedido);
         /*
         let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
         let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
@@ -1721,6 +1738,24 @@ grabarSolicitud(){
         let nombre_asistente = infoPedido[0].nombre_asistente;
         let email_asistente = infoPedido[0].email_asistente;
         let Maneja_lote = infoPedido[0].Maneja_Lote;
+        let tipo_documento = infoPedido[0].tipo_pedido;
+        let objectType = infoPedido[0].ObjType;
+        let vicepresidencia = infoPedido[0].vicepresidencia;
+        let ivacode = infoPedido[0].ivacode;
+        let precio_lista = infoPedido[0].precio_lista;
+        let precio_vendedor = infoPedido[0].precio_vendedor;
+        let precio_gerente = infoPedido[0].precio_gerente;
+        let categoria_item = infoPedido[0].categoria_item;
+        let subcategoria_item = infoPedido[0].subcategoria_item;
+        let almacen_fpp = infoPedido[0].almacen_fpp;
+        let bodega_destino = infoPedido[0].bodega_destino;
+        let bodega_final = infoPedido[0].bodega_final;
+        let ubicacion = infoPedido[0].ubicacion;
+        let codigo_vendedor = infoPedido[0].codigo_vendedor;
+        let precio_unitario = infoPedido[0].precio_unitario;
+        let tipo_operacion = infoPedido[0].tipo_operacion;
+        
+        
 
 
         let flete_tonelada = this.verFletes?pedido.flete:0;
@@ -1748,7 +1783,24 @@ grabarSolicitud(){
           flete_tonelada,
           nombre_asistente,
           email_asistente,
-          Maneja_lote
+          Maneja_lote,
+          tipo_documento,
+          objectType,
+          vicepresidencia,
+          ivacode,
+          precio_lista,
+          precio_vendedor,
+          precio_gerente,
+          categoria_item,
+          subcategoria_item,
+          almacen_fpp,
+          bodega_destino,
+          ubicacion,
+          codigo_vendedor,
+          precio_unitario,
+          tipo_operacion,
+          bodega_final
+
         });
         
         
@@ -1782,7 +1834,7 @@ grabarSolicitud(){
         detalle_solicitud
       }
      
-      console.log('newSolicitud',newSolicitud);
+     console.log('newSolicitud',newSolicitud);
       
       
      this.solicitudTurnoService.create(newSolicitud)

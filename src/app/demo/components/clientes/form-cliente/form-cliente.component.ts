@@ -115,7 +115,7 @@ export class FormClienteComponent  implements  OnInit {
   async getInfoCliente(CardCode:any){
     let infoClientes = await this.clientesService.infoClientes();
     let infoCliente = infoClientes.find((cliente: { CardCode: any; })=>cliente.CardCode === CardCode);
-    console.log(infoCliente);
+   //console.log(infoCliente);
     this.idCliente = infoCliente.id;
     this.CardName = infoCliente.CardName;
     this.EmailAddress = infoCliente.EmailAddress;

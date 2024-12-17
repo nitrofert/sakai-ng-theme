@@ -93,7 +93,7 @@ getPermisosModulo(){
 
 async getInfoUsuario():Promise<void> {
   this.infoUsuario = await this.usuariosService.infoUsuario();
- console.log(this.infoUsuario);
+//console.log(this.infoUsuario);
 
  this.id_usuario = this.infoUsuario.id;
 
@@ -158,7 +158,7 @@ editar(){
                   let deleteFile$ = this.functionsService.deleteFiles({entidad:'usuario',id_relacion:usuario.id,proceso:'firma'});
                   let deleteFile = await lastValueFrom(deleteFile$);
 
-                  console.log(deleteFile);
+                 //console.log(deleteFile);
 
                   //registrar nueva firma
                   for(let anexo of this.filesToUpload){
@@ -172,7 +172,7 @@ editar(){
                     this.functionsService.uploadFile(body)
                         .subscribe({
                           next:(result)=>{
-                            console.log('Upload ok',result);
+                           //console.log('Upload ok',result);
                             this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
                           },
                           error:(err)=>{
