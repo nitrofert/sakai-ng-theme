@@ -1,4 +1,10 @@
 <p-toast></p-toast>
+<p-confirmDialog
+    [style]="{ width: '50vw' }"
+    [baseZIndex]="10000"
+    rejectButtonStyleClass="p-button-text"
+></p-confirmDialog>
+
 <div class="grid">
 	<div class="col-12">
 		<div class="card">
@@ -66,6 +72,72 @@
                     </span>
                 </div>
 
+                <p-divider *ngIf="config.data.id!=0" align="left" class="field col-12">
+                    <div class="inline-flex align-items-center">
+                        
+                        <b>Vigencia ARL</b>
+                    </div>
+                </p-divider>
+
+
+                <div *ngIf="config.data.id!=0" class="field col-12  ">
+                    <div class="p-inputgroup">
+                        <span class="p-float-label">
+                            <input pInputText 
+                                   id="links3" 
+                                   type="text" 
+                                    
+                                   [(ngModel)]="links3"/>
+                            <label for="links3"><h6>ARL activa</h6></label>
+                        </span>
+                        <span
+                            class="p-inputgroup-addon"
+                            pTooltip="Ver historial ARL"
+                        >
+                            <a
+                                style="cursor: pointer"
+                                (click)="verARL(links3)"
+                                ><i class="pi pi-eye"></i
+                            ></a>
+                        </span>
+                    </div>
+                    
+                </div>
+
+                
+                <div *ngIf="config.data.id!=0" class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-calendar
+                            inputId="fechainicio"
+                            [showIcon]="true"
+                            [(ngModel)]="fechainicio"
+                            [minDate]="hoy"
+                            
+                            
+                        >
+                        </p-calendar>
+                        <label for="fechainicio"><h6>Inicio vigencia</h6></label>
+                    </span>
+                </div>
+
+                <div *ngIf="config.data.id!=0" class="field col-12 md:col-6 ">
+                    <span class="p-float-label">
+                        <p-calendar
+                            inputId="fechafin"
+                            [showIcon]="true"
+                            [(ngModel)]="fechafin"
+                            [minDate]="hoy"
+                            
+                            
+                        >
+                        </p-calendar>
+                        <label for="fechafin"><h6>Fin vigencia</h6></label>
+                    </span>
+                </div>
+
+                
+
+
                 
             </div>
         </div>
@@ -79,3 +151,315 @@
         </div>
     </div>
 </div>
+
+
+<!-- Dialog historial ARL -->
+<p-dialog
+    header="Historial ARL"
+    [(visible)]="displayModalHistorialARL"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <div class="p-fluid p-formgrid grid">
+
+                    <div class="field col-12">
+                        <p-table
+                            #dtHistorialARL
+                            [value]="historialARL"
+                            dataKey="id"
+                            [rows]="10"
+                            
+                            [loading]="loadingTableHistorialARL"
+                            [rowHover]="true"
+                            [styleClass]="'p-datatable-gridlines p-datatable-sm  shadow-4 '"
+                            tableStyleClass="w-full"
+                            [paginator]="true"
+                            [globalFilterFields]="['fechainicio','fechafin','estado']"
+                            selectionMode="single"
+                            [(selection)]="historialARLLineSelected"
+                            responsiveLayout="scroll"
+                        >
+                            <ng-template pTemplate="caption">
+                                <div class="flex justify-content-between flex-column sm:flex-row">
+                                    <div>
+                                        <button
+                                            
+                                            pButton
+                                            pTooltip="Limpiar"
+                                            tooltipPosition="bottom"
+                                            placeholder="Bottom"
+                                            
+                                            class="p-button-outlined mb-2 mr-2 p-button-sm"
+                                            icon="pi pi-filter-slash"
+                                            (click)="clear(dtHistorialARL)"
+                                        ></button>
+
+                                        <button
+                                            pButton
+                                            
+                                            [pTooltip]="'Adicionar lote'"
+                                            tooltipPosition="bottom"
+                                            placeholder="Bottom"
+                                            
+                                            class="p-button-outlined mb-2 mr-2 p-button-success p-button-sm"
+                                            icon="pi pi-plus"
+                                            (click)="adicionarARL()"
+                                        ></button>
+                                        <button
+                                            pButton
+                                            
+                                            [pTooltip]="'Eliminar ARL'"
+                                            tooltipPosition="bottom"
+                                            placeholder="Bottom"
+                                            class="p-button-outlined mb-2 mr-2 p-button-danger p-button-sm"
+                                            icon="pi pi-trash"
+                                            [disabled]="historialARLLineSelected.length == 0"
+                                            (click)="borrarARL()"
+                                        ></button>
+
+                                    </div>
+                                    <div>
+                                        <span class="p-input-icon-left mb-2">
+                                            <i class="pi pi-search"></i>
+                                            <input
+                                                pInputText
+                                                type="text"
+                                                #filterTable
+                                                (input)="onGlobalFilter(dtHistorialARL, $event)"
+                                                placeholder="Buscar por palabra clave"
+                                                class="w-min p-inputtext-sm"
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 3rem"></th>
+                                    
+                                    <th>
+                                        <div
+                                            class="flex justify-content-between align-items-center"
+                                        >
+                                            Fecha inicio vigencia
+                                            <p-columnFilter
+                                                type="date"
+                                                field="created_at"
+                                                display="menu"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </th>
+
+                                    <th>
+                                        <div
+                                            class="flex justify-content-between align-items-center"
+                                        >
+                                            Fecha fin vigencia
+                                            <p-columnFilter
+                                                type="date"
+                                                field="created_at"
+                                                display="menu"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div
+                                            class="flex justify-content-between align-items-center"
+                                        >
+                                            Estado
+                                            <p-columnFilter
+                                                type="text"
+                                                field="created_at"
+                                                display="menu"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </th>
+                                    
+                                   
+                                    <th></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-arl>
+                                <tr>
+                                    <td>
+                                        <p-tableCheckbox
+                                            [value]="arl"
+                                        ></p-tableCheckbox>
+                                    </td>
+                                    
+                                    
+                                    <td style="min-width: 12rem">
+                                        {{ arl.fechainicio | date }}
+                                    </td>
+
+                                    <td style="min-width: 12rem">
+                                        {{ arl.fechafin | date }}
+                                    </td>
+
+                                    <td style="min-width: 12rem">
+                                        {{ arl.estado }}
+                                    </td>
+
+                                   
+
+
+
+                                    <td>
+                                        <div class="text-center">
+                                            <button
+                                                pButton
+                                                pTooltip="Descargar"
+                                                tooltipPosition="bottom"
+                                                placeholder="Bottom"
+                                                class="p-button-outlined mb-2 mr-2 p-button-info p-button-sm"
+                                                icon="pi pi-download"
+                                                (click)="downloadARL(arl)"
+                                            ></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        No se econtraron ARL asosciadas al conductor.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="loadingbody">
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        Cargandob historial ARL. Por favor espere
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <ng-template pTemplate="footer">
+        <p-button
+            icon="pi pi-check"
+            (click)="displayModalHistorialARL=false"
+            label="Cerrar historial ARL"
+            styleClass="p-button-text"
+        ></p-button>
+    </ng-template>
+    
+</p-dialog>
+<!--Fin Dialog historial ARL-->
+
+<!-- Dialog cargue  ARL -->
+<p-dialog
+    header="Registro de ARL"
+    [(visible)]="displayModalRegistroARL"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+>
+
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <div class="p-fluid p-formgrid grid">
+                    
+                    <div class="field col-12 md:col-6 ">
+                        <span class="p-float-label">
+                            <p-calendar
+                                inputId="fechainicio"
+                                [showIcon]="true"
+                                [(ngModel)]="nueva_fechainicio_arl"
+                                [minDate]="hoy"
+                                
+                                
+                            >
+                            </p-calendar>
+                            <label for="fechainicio"><h6>Inicio vigencia</h6></label>
+                        </span>
+                    </div>
+
+                    <div  class="field col-12 md:col-6 ">
+                        <span class="p-float-label">
+                            <p-calendar
+                                inputId="fechafin"
+                                [showIcon]="true"
+                                [(ngModel)]="nueva_fechafin_arl"
+                                [minDate]="hoy"
+                                
+                                
+                            >
+                            </p-calendar>
+                            <label for="fechafin"><h6>Fin vigencia</h6></label>
+                        </span>
+                    </div>
+
+                    <div  class="field col-12">
+                        <!--<label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>-->
+                        <span class="p-float-label">
+                            <label for="fechafin"><h6>Subir ARL</h6></label>
+                        </span>
+                        <p-fileUpload
+                            #uploaderFiles
+                            name="uploaderFiles[]"
+                            chooseLabel="Seleccionar"
+                            cancelLabel="Cancelar"
+                            id="uploaderFiles"
+                            [multiple]="false"
+                            (onBeforeUpload)="UploadFiles($event, uploaderFiles)"
+                            (onProgress)="progressUpload($event)"
+                            [showUploadButton]="true"
+                            [maxFileSize]="50000000"
+                            styleClass="w-full"
+                            class="w-full"
+                        >
+                            <ng-template pTemplate="content">
+                                <ul *ngIf="uploadedFiles.length">
+                                    <li *ngFor="let file of uploadedFiles">
+                                        {{ file.name }} - {{ file.size }} bytes
+                                    </li>
+                                </ul>
+                            </ng-template>
+                        </p-fileUpload>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    
+</p-dialog>
+<!--Fin Dialog historial ARL-->
+
+<!-- Dialog loading -->
+<p-dialog
+    header="Cargando"
+    [(visible)]="displayModal"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <p class="m-0"></p>
+
+    <div
+        
+        class="field col flex justify-content-center align-items-center"
+    >
+        <!--<p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>-->
+        <!--<p-progressSpinner></p-progressSpinner>-->
+        <img src="assets/layout/images/Rhombus.gif" alt="" />
+    </div>
+    
+</p-dialog>
+<!--Fin Dialog loading-->

@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { FileUpload } from 'primeng/fileupload';
+import { Table } from 'primeng/table';
 import { ConductoresService } from 'src/app/demo/service/conductores.service';
+import { FunctionsService } from 'src/app/demo/service/functions.service';
 
 @Component({
   selector: 'app-form-conductor',
@@ -19,15 +23,42 @@ export class FormConductorComponent  implements  OnInit {
   fechacargue:Date = new Date();
   hoy:Date = new Date();
 
+  fechainicio:Date = new Date();
+  fechafin:Date = new Date();
+
+  nueva_fechainicio_arl:Date = new Date();
+  nueva_fechafin_arl:Date = new Date();
+
+
   envioLineaConductor:boolean = false;
   updateMode:boolean = false;
 
+  @ViewChild('uploaderFiles',{ static:false}) uploaderFiles!:ElementRef;
+  uploadedFiles:any[] = [];
+  dataUpload!:any;
+  links3:string = "";
+
+  infoConductor:any;
+
+  displayModalHistorialARL:boolean = false;
+  displayModal:boolean = false;
+  displayModalRegistroARL:boolean = false;
+
+  historialARL:any[] = [];
+  loadingTableHistorialARL:boolean = false;
+
+  historialARLLineSelected:any[] = [];
+
+  @ViewChild('filterTable') filterTable!: ElementRef;
+
+  
 
   constructor(
     public ref: DynamicDialogRef, public config: DynamicDialogConfig,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private conductoresService: ConductoresService
+    private conductoresService: ConductoresService,
+    public functionsService: FunctionsService,
     ){}
 
     ngOnInit() {
@@ -42,12 +73,25 @@ export class FormConductorComponent  implements  OnInit {
       this.conductoresService.getConductorById(id)
           .subscribe({
               next:(infoConductor)=>{
-                 //////////console.log(infoConductor);
+                  console.log('infoConductor',infoConductor);
+                  this.infoConductor = infoConductor;
                   this.nombre= infoConductor.nombre;
                   this.cedula=  infoConductor.cedula;
                   this.email= infoConductor.email;
                   this.numerotelefonico= infoConductor.numerotelefono;
                   this.numerocelular = infoConductor.numerocelular;
+
+                  this.historialARL = infoConductor.historial_arl;
+
+                  if(this.historialARL.length > 0){
+                    let arl_activa = this.historialARL.filter(arl=>arl.estado === 'ACTIVO');
+
+                    if(arl_activa.length > 0){
+                      this.fechainicio = new Date(arl_activa[0].fechainicio+'T05:00:00.000Z');
+                      this.fechafin = new Date(arl_activa[0].fechafin+'T05:00:00.000Z');
+                      this.links3 = arl_activa[0].path_s3; 
+                    }
+                  } 
                  
               },
               error:(err)=>{
@@ -73,6 +117,7 @@ export class FormConductorComponent  implements  OnInit {
 
           if(this.updateMode){
             //Actualizar info conductor
+            
             this.conductoresService.update(nuevoConductor,this.config.data.id)
               .subscribe({
                   next: (conductor)=>{
@@ -134,4 +179,161 @@ export class FormConductorComponent  implements  OnInit {
           event.preventDefault();
         }
     }
+
+    adicionarARL(){
+      this.displayModalRegistroARL=true;
+    }
+
+
+    borrarARL(){
+
+
+      this.confirmationService.confirm({
+        message: `Esta seguro de borrar las ARL seleccionadas?`,
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+  
+          for(let arl of this.historialARLLineSelected ){
+
+          }
+  
+  
+        },
+        
+          reject: (type: any) => {
+              switch(type) {
+                  case ConfirmEventType.REJECT:
+                      //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+                  break;
+                  case ConfirmEventType.CANCEL:
+                      //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+                  break;
+              }
+          }
+        });
+      
+
+      
+    }
+
+    downloadARL(arl:any){
+      console.log(arl);
+
+      let query:any = {
+        id:arl.fileid
+      }
+
+      this.functionsService.loadFiles(query)
+                 .subscribe({
+                   next:(result)=>{
+                     console.log('loadFiles ok',result);
+                     window.open(result[0].linkS3);
+                     
+                   },
+                   error:(err)=>{
+                     this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
+                   }
+             });
+      
+    }
+
+
+    UploadFiles(event:any,uploaderFiles: FileUpload){
+
+
+      if(this.nueva_fechafin_arl< this.nueva_fechainicio_arl){
+        this.messageService.add({severity:'error', summary:'Error', detail:'La fecha de fin no puede ser menor a la fecha de inicio vigencia '});
+      }else{
+
+        this.dataUpload =  {
+          id_relacion: this.infoConductor.id,
+          entidad: 'conductor',
+          proceso: 'arl',
+        }
+    
+        //console.log(event)
+        for(let file of uploaderFiles.files){
+            //console.log(file);
+       
+             let body = new FormData();
+             body.append('file', file, file.name);
+             body.append('entidad', this.dataUpload.entidad);
+             body.append('id_relacion', this.dataUpload.id_relacion);
+             body.append('proceso', this.dataUpload.proceso);
+             body.append('nombre', file.name);
+       
+            //console.log(body)
+       
+             this.functionsService.uploadFile(body)
+                 .subscribe({
+                   next:(result)=>{
+                     console.log('Upload ok',result);
+                     
+                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${file.name}`});
+
+                     let updateArlConductor ={
+
+                        cedula:this.cedula,
+                        arl:{
+                          fechainicio: this.nueva_fechainicio_arl,
+                          fechafin: this.nueva_fechafin_arl,
+                          path_s3: result.nombre,
+                          links3: result.linkS3,
+                          fileid: result.id
+                        }                      
+                    }
+
+                    this.conductoresService.updateARl(updateArlConductor,this.config.data.id)
+                      .subscribe({
+                          next: (historialARL)=>{
+                            console.log(historialARL);
+                            //this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue actualizado correctamente`});
+                            this.historialARL = historialARL;
+                            this.displayModalRegistroARL=false;
+                          },
+                          error:(err)=> {
+                              console.error(err);
+
+                              this.messageService.add({severity:'error', summary:'Error:'+err.error.statusCode, detail:err.error.message});
+                          },
+                    });
+
+
+          
+                     
+                   },
+                   error:(err)=>{
+                     this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
+                   }
+             });
+       
+              uploaderFiles.clear(); 
+       
+        }
+      }
+      
+    }
+     
+      progressUpload(event :any){
+      //console.log('progress ',event)
+      }
+
+
+      verARL(url:string){
+          this.displayModalHistorialARL = true;
+      }
+
+      formatCurrency(value: number) {
+        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      }
+    
+      onGlobalFilter(table: Table, event: Event) {
+          table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+      }
+    
+      clear(table: Table) {
+        table.clear();
+        this.filterTable.nativeElement.value = '';
+      }
 }

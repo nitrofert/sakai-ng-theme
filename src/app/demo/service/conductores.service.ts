@@ -51,6 +51,21 @@ export class ConductoresService {
 
     }
 
+    updateARl(nuevoConductor:any,id:any):Observable<any>{
+      
+        const url:string = `${this.api_url}/api/conductores/arl/${id}`;
+        return this.http.patch<any>(url, nuevoConductor);
+
+    }
+
+    borrarArl(arl:any):Observable<any>{
+        const url:string = `${this.api_url}/api/conductores/borrar-arl`;
+        return this.http.post<any>(url, arl);
+    }
+
+
+    
+
     
     inactivar(infoConductores:any[]):Observable<any>{
       

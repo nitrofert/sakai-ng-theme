@@ -232,6 +232,27 @@
                                 </th>
 
                                 <th
+                                pSortableColumn="tipo_operacion"
+                                style="min-width: 15rem"
+                            >
+                                <div
+                                    class="flex justify-content-between align-items-center"
+                                >
+                                    <div class="text-center">Tipo operación</div>
+                                    <div>
+                                        <p-sortIcon
+                                            field="tipo_operacion"
+                                        ></p-sortIcon>
+                                        <p-columnFilter
+                                            type="text"
+                                            field="tipo_operacion"
+                                            display="menu"
+                                            placeholder="Buscar por tipo operación"
+                                        ></p-columnFilter>
+                                    </div>
+                                </div>
+                            </th>
+                                <th
                                     pSortableColumn="detalle_solicitudes_turnos_estado"
                                     style="min-width: 11rem"
                                 >
@@ -586,6 +607,12 @@
                                 <td class="text-center">
                                     {{
                                         itemData.tipo
+                                    }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{
+                                        itemData.tipo_operacion
                                     }}
                                 </td>
 

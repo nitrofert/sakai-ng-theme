@@ -348,7 +348,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
                   this.tablaTurnosLocalidad = await this.setTablaTurnosLocalidad(await this.functionsService.clonObject(turnosLocalidad));
 
-                  //console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
+                  console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
 
                   //this.getCalendar();
                   this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
@@ -396,7 +396,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   async setTablaTurnosLocalidad(turnos:any): Promise<any>{
 
-    //console.log('turnos',turnos);
+    console.log('turnos',turnos);
     let turnosLocalidad:any[] = [];
     let turnosLocalidadCliente:any[] = [];
 
@@ -439,16 +439,16 @@ export class CalendarioTurnosComponent implements OnInit {
       }
 
       let clientesTurno = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'CardCode',[{cantidad:0}]);
-
-      
-
+      let tipo_operaciones_turno:any[] = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'tipo_operacion',[{cantidad:0}]);
+      console.log('tipo_operaciones_turno',(tipo_operaciones_turno.map((operacion)=>{return operacion.tipo_operacion}).join(",")));
+      let tipo_operacion = (tipo_operaciones_turno.map((operacion)=>{return operacion.tipo_operacion}).join(","));
       for(let clienteTurno of clientesTurno){
         let lineaTurno = await this.functionsService.clonObject(turno);
         lineaTurno.label_cliente = clienteTurno.CardName;
         lineaTurno.CardCode = clienteTurno.CardCode;
         lineaTurno.cantidad = clienteTurno.cantidad;
         lineaTurno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.placa}-${clienteTurno.CardCode}`;
-
+        lineaTurno.tipo_operacion = tipo_operacion;
         turnosLocalidadCliente.push(lineaTurno);
 
         //console.log('lineaTurno',await this.functionsService.clonObject(lineaTurno))
