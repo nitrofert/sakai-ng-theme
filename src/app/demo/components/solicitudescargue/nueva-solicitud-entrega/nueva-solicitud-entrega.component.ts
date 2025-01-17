@@ -1176,8 +1176,11 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 for(let vehiculo of vehiculos){
                     let lineaVehiculo = this.vehiculos.find(vh => vh.code === vehiculo.placa);
                     lineaVehiculo.cantidad = vehiculo.cantidad;
+                    lineaVehiculo.id_despacho = vehiculo.id_despacho;
                     this.vehiculosSeleccionadoPedidos.push(lineaVehiculo);
                 }
+
+                console.log(this.vehiculosSeleccionadoPedidos);
 
                 //this.vehiculosSeleccionadoPedidos = vehiculos;
                 
@@ -1666,7 +1669,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                     //Recorrer array de placas seleccinadas
                     for(let vehiculo of this.vehiculosSeleccionadoPedidos){
                       //Buscar placa de vehiculo seleccionado en array de vehiculos en solicitud
-                      let index = this.vehiculosSolicitud.findIndex(vehiculoSolicitud=>vehiculoSolicitud.placa === vehiculo.placa);
+                      let index = this.vehiculosSolicitud.findIndex(vehiculoSolicitud=>vehiculoSolicitud.placa === vehiculo.placa && vehiculoSolicitud.id_despacho === vehiculo.id_despacho) ;
                       
 
                       this.vehiculosSolicitud[index].itemName = event[0].itemname;
