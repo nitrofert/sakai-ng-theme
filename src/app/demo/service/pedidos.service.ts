@@ -73,9 +73,9 @@ export class PedidosService {
         return pedidosClientes;
     }
 
-    getCantidadesComprometidas(pedidonum:string,itemcode:string, bodega:string,idPedido:number):Observable<number> {
+    getCantidadesComprometidas(pedidonum:string,itemcode:string, bodega:string,idPedido:number, tipoTurno:string ='RETIRO'):Observable<number> {
         const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas`;
-        return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido}});
+        return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido,tipoTurno}});
     }
 
     getCantidadesComprometidasItemBodega(itemcode:string, bodega:string,idPedido:number):Observable<number> {
@@ -131,6 +131,19 @@ export class PedidosService {
         if(bodega) optianalParams+=`&bodega=${bodega}`;
         const url:string = `${this.api_url}/api/sb1xe/inventario-lotes?compania=${this.urlApiService.companySAP}${optianalParams}`;
         return this.http.get<number>(url);
+    }
+
+
+    getSaldosOrdenesCompra(cliente?:string,locacion2?:string):Observable<any> {
+        let options:string = "";
+        if(cliente){
+            options+=`&cliente=${cliente}`;
+        }
+        if(locacion2){
+            options+=`&locacion2=${locacion2}`;
+        }
+        const url:string = `${this.api_url}/api/sb1xe/saldos-ordenes?compania=${this.urlApiService.companySAP}${options}`;
+        return this.http.get<any>(url);
     }
 
    

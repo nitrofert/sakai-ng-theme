@@ -19,6 +19,7 @@ export class FormTransportadoraComponent implements  OnInit {
   nombre_contacto:string = '';
   telefono_contacto:string = '';
   email_contacto:string = '';
+  nombre_puerto:string = "";
  
   envioLineaTransportadora:boolean = false;
   updateMode:boolean = false;
@@ -83,6 +84,7 @@ export class FormTransportadoraComponent implements  OnInit {
                     this.telefono_contacto = infoTransportadora.telefono_contacto;
                     this.email_contacto = infoTransportadora.email_contacto;
                     this.notificaciones = infoTransportadora.notificaciones;
+                    this.nombre_puerto = infoTransportadora.nombre_puerto;
                 },
                 error:(err)=>{
                   console.error(err);
@@ -104,7 +106,8 @@ export class FormTransportadoraComponent implements  OnInit {
             nombre_contacto:this.nombre_contacto,
             telefono_contacto:this.telefono_contacto,
             email_contacto:this.email_contacto,
-            notificaciones:this.notificaciones
+            notificaciones:this.notificaciones,
+            nombre_puerto:this.nombre_puerto
             
           }
 

@@ -20,11 +20,23 @@ import { lastValueFrom } from 'rxjs';
 
     getClientes():Observable<any>{
         const url:string = `${this.api_url}/api/clientes`;
-        return this.http.get<any>(url);
+        return this.http.get<any>(url,{params:{tipoSN:'C'}});
     }
 
     async infoClientes():Promise<any>{
         const infoClientes$ = this.getClientes();
+        const infoClientes = await lastValueFrom(infoClientes$);
+        ////////////console.log(infoClientes)
+        return infoClientes;
+    }
+
+    getProveedores():Observable<any>{
+        const url:string = `${this.api_url}/api/clientes`;
+        return this.http.get<any>(url,{params:{tipoSN:'S'}});
+    }
+
+    async infoProveedores():Promise<any>{
+        const infoClientes$ = this.getProveedores();
         const infoClientes = await lastValueFrom(infoClientes$);
         ////////////console.log(infoClientes)
         return infoClientes;

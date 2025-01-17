@@ -27,6 +27,7 @@ import { DynamicPdfModule } from 'src/app/layout/shared/dynamic-pdf/dynamic-pdf.
 import { PdfSolicitudCargue } from './config-pdf/solicitud-cargue';
 import { PdfInspeccionCargue } from './config-pdf/inspeccion-cargue';
 import { PdfOrdenCargue } from './config-pdf/orden-cargue';
+import { NuevaSolicitudEntregaComponent } from './nueva-solicitud-entrega/nueva-solicitud-entrega.component';
 
 
 
@@ -34,6 +35,7 @@ import { PdfOrdenCargue } from './config-pdf/orden-cargue';
   declarations: [
     ListadoSolicitudesComponent,
     NuevaSolicitudComponent,
+    NuevaSolicitudEntregaComponent,
     ListaHistorialTurnoComponent
   ],
   imports: [

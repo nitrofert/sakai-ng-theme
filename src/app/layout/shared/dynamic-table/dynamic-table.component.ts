@@ -18,6 +18,8 @@ export class DynamicTableComponent implements OnInit {
   @Input() dataKey!:string;
   @Input() rows!:number;
   @Input() rowsPerPageOptions!:number[];
+  @Input() selectTable:boolean = true;
+
   //@Input() 
   @Input() paginator!:boolean;
   @Input() selectionMode!:string;
@@ -103,9 +105,21 @@ export class DynamicTableComponent implements OnInit {
 
     if(changes['showSelectedItems']!=undefined){
       if(changes['showSelectedItems'].currentValue ==true){
-        //////////////////////console.log('emit items selected or table', this.dataTable);
+        console.log('emit items selected or table', changes['showSelectedItems'].currentValue,changes['showSelectedItems'],this.selectedItem);
+
+        // if(this.selectedItem.length===0){
+
+        // }else{
+        //     this.onSelectedItems.emit(this.selectedItem);
+        // }
+
+        if(this.selectTable){
+          this.onSelectedItems.emit(this.dataTable);
+        }else{
+          this.onSelectedItems.emit(this.selectedItem);  
+        }
         //this.onSelectedItems.emit(this.selectedItem);
-        this.onSelectedItems.emit(this.dataTable);
+        //this.onSelectedItems.emit(this.dataTable);
       }else{
         this.selectedItem = [];
       }

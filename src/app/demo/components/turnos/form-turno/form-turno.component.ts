@@ -765,12 +765,13 @@ tipoTurno:string = 'RETIRO';
       //////////////////////////// ////////////// ////////////console.log(pedido);
       let cantidadComprometida = 0;
       cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id);
-      cantidadComprometida += await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id,pedido.linenum);
+      cantidadComprometida += this.tipoTurno==='RETIRO'?await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id,pedido.linenum):0;
       //////////////////////// ////////////// ////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
       //////////////////////// ////////////// ////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
-      pedido.disponible = (pedido.cantidadbodega-cantidadComprometida)<0?0:(pedido.cantidadbodega-cantidadComprometida);
+      console.log('this.tipoTurno',this.tipoTurno);
+      pedido.disponible = this.tipoTurno==='RETIRO'?((pedido.cantidadbodega-cantidadComprometida)<0?0:(pedido.cantidadbodega-cantidadComprometida)):((pedido.cantidad_pedido-cantidadComprometida)<0?0:pedido.cantidad_pedido-cantidadComprometida);
       
       
     }
@@ -874,14 +875,15 @@ tipoTurno:string = 'RETIRO';
       //colsSum: await this.configSumTabla(headersTable,dataTable)
     }
 
-    console.log('tablaPedidosTurno',this.tablaPedidosTurno.data)
+    //console.log('tablaPedidosTurno',this.tablaPedidosTurno.data)
 
     this.loadingPedidosTurno = false;
   }
 
 
 
-    configHeadersPedidos(){
+  configHeadersPedidos(){
+    console.log('config header pedidos turno', this.pedidosTurno)
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
@@ -912,7 +914,10 @@ tipoTurno:string = 'RETIRO';
 
 
        if(this.tipoTurno==='ENTREGA'){
-          headersTable[0].lote_produccion = {label:'Lote',type:'button-line', sizeCol:'8rem', align:'left', editable:false,field:'lote_produccion', icon:'pi pi-qrcode', tooltip:'Gestionar lote'};
+          if(this.pedidosTurno.filter(pedido=>pedido.tipo_operacion!="ENTREGA")){
+            headersTable[0].lote_produccion = {label:'Lote',type:'button-line', sizeCol:'8rem', align:'left', editable:false,field:'lote_produccion', icon:'pi pi-qrcode', tooltip:'Gestionar lote'};  
+          }
+          
           headersTable[0].cantidad_sacos = {label:'Cantidad (Sacos)',type:'number', sizeCol:'8rem', align:'left', editable:false,field:'cantidad_sacos',"sum":true};
           headersTable[0].toneladas_metircas = {label:'Toneladas Metricas',type:'number', sizeCol:'8rem', align:'left', editable:(this.estado === this.estadosTurno.CARGANDO?true:false),field:'toneladas_metircas',"sum":true};    
 
@@ -983,7 +988,10 @@ tipoTurno:string = 'RETIRO';
             lineaPedido.cantidadbodega=pedido.cantidadbodega;
             lineaPedido.disponible=pedido.disponible;
             lineaPedido.lugarentrega=`${pedido.municipioentrega} - ${pedido.lugarentrega}`;
-            lineaPedido.lote_produccion =  pedido.lote_produccion;
+            if(pedido.tipo_operacion!="ENTREGA"){
+              lineaPedido.lote_produccion =  pedido.lote_produccion;
+            }
+            
             lineaPedido.cantidad_sacos =  pedido.cantidad_sacos;
             lineaPedido.toneladas_metircas =  pedido.toneladas_metircas;
             if(this.estado === this.estadosTurno.ENTREGADO || this.estado === this.estadosTurno.DESPACHADO){
@@ -2933,6 +2941,8 @@ async validarHoraCargue():Promise<boolean>{
   }
   
   configHeadersNewPedidos(){
+
+    console.log('config Header pedidos cleinte', this.pedidosCliente);
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
@@ -3003,7 +3013,7 @@ async validarHoraCargue():Promise<boolean>{
         this.showItemsSelectedPedidosAlmacenCliente=false;
     }else{
       const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-      //// ////////////// ////////////console.log('pedidos seleccionados',pedidosSeleccionados);
+      console.log('pedidos seleccionados',pedidosSeleccionados);
     
       if(pedidosSeleccionados.length > 0){
           

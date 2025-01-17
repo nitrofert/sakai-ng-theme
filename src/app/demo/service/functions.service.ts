@@ -687,6 +687,23 @@ async setTImeToDate(date:Date, time:any ):Promise<any> {
 
   return newDateTime;
 }
+
+async reemplazarCaracteresEspeciales(texto:string):Promise<string>{
+  return texto.replace('\r','').replace('\t','');
+  //return texto.normalize('NFD').replace(/[\u0300-\u036f]/g,"");
+
+}
+
+async reemplazarCarateres(cadena:string, arrayCaracteres:any[], caracterReemplazo:string=""):Promise<string>{
+  
+
+  for(let caracter of arrayCaracteres ){
+    let patron =  `/${caracter}/gi`;
+    cadena.replace(patron,caracterReemplazo);
+  }
+
+  return cadena;
+}
   
 
 }

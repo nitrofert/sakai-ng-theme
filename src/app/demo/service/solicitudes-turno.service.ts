@@ -212,6 +212,22 @@ export class SolicitudTurnoService {
         const url:string = `${this.api_url}/api/solicitud-turnos/turnos-por-turno-base/${turnoid}`;
         return this.http.get<any>(url);
     }
+
+    getTurnoQuery(params:any):Observable<any> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/solicitud-turnos/turno-query`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url,{params:params});
+    }
+
+    
+    async getTurnoByQuery(params?:any):Promise<any> {
+        const infoTurno$ = this.getTurnoQuery(params);
+        const infoTurno = await lastValueFrom(infoTurno$);
+        return infoTurno;
+    }
    
 
     
