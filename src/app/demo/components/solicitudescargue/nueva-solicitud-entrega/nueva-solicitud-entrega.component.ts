@@ -166,6 +166,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
         tipoVehiculos:any[] = [];
 
+        loadingCargueCSV:boolean = false;
+
         constructor(private pedidosService: PedidosService,
             private almacenesService: AlmacenesService,
             private messageService: MessageService,
@@ -225,11 +227,11 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
   
             const modulo = this.router.url;
             
-            //console.log('modulo',modulo);
+            ////console.log('modulo',modulo);
             this.usuariosService.getPermisosModulo(modulo)
                 .subscribe({
                     next: async (permisos)=>{
-                      //////////////// //// //////////console.log(permisos);
+                      //////////////// //// ////////////console.log(permisos);
                       if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                         this.router.navigate(['/auth/access']);
                       }
@@ -239,7 +241,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                       }
                       this.permisosModulo = permisos;
                       this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-                      //////////////////////////// //// //////////console.log(this.multiplesClientes);
+                      //////////////////////////// //// ////////////console.log(this.multiplesClientes);
           
                      
                       /*
@@ -249,7 +251,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                       this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
                       */
           
-                      //////console.log(this.permisosModulo);
+                      ////////console.log(this.permisosModulo);
                       if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='RETIRA').valor){
                         this.condicion_tpt="RETIRA";
                       }
@@ -270,7 +272,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                       //this.verFletes = await this.setVerFletes(this.condicion_tpt,this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='ver fletes').valor);
           
                      
-                      //////////////// //// //////////console.log(this.condicion_tpt);
+                      //////////////// //// ////////////console.log(this.condicion_tpt);
                       
           
                     },
@@ -285,7 +287,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.ciudadesService.getCiudades()
                 .subscribe({
                     next:(ciudades)=>{
-                     //////// //// //////////console.log(ciudades);
+                     //////// //// ////////////console.log(ciudades);
                       ciudades.map((ciudad:any)=>{
                         ciudad.label = `${ciudad.code} - ${ciudad.nombre}`;
                       });
@@ -304,7 +306,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.usuariosService.getInfoUsuario()
                 .subscribe({
                     next: async (infoUsuario)=>{
-                      ////////////////////// //// //////////console.log(infoUsuario);
+                      ////////////////////// //// ////////////console.log(infoUsuario);
                       let clientesUsuario!:any;
             
                       if(await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.TRANSPORTASOCIEDAD) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.ADMIN)){
@@ -314,10 +316,10 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                       }else{
                         //Mostrar clientes asociados al usuario
                         clientesUsuario = infoUsuario.clientes;
-                        ////////////////// //// //////////console.log(clientesUsuario[0].CardCode,await this.usuariosService.infoUsuarioByCardCode(clientesUsuario[0].CardCode));
+                        ////////////////// //// ////////////console.log(clientesUsuario[0].CardCode,await this.usuariosService.infoUsuarioByCardCode(clientesUsuario[0].CardCode));
                       }
             
-                      ////////////////// //// //////////console.log('clientesUsuario',clientesUsuario);
+                      ////////////////// //// ////////////console.log('clientesUsuario',clientesUsuario);
             
                       for(let clienteUsuario of clientesUsuario){
                         clienteUsuario.code = clienteUsuario.CardCode;
@@ -326,7 +328,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                       }
                       this.clientes = clientesUsuario;
             
-                      //console.log(this.clientes);
+                      ////console.log(this.clientes);
                       
                       
                       this.getSaldosPedidos();
@@ -356,7 +358,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                     
                     }
                     this.almacenes = almacenesTMP.filter(almacen=>almacen.CorreoNoti !=null && almacen.CorreoNoti!='');
-                    //////console.log('this.almacenes',this.almacenes);
+                    ////////console.log('this.almacenes',this.almacenes);
                     
                     },
                     error:(err)=>{
@@ -370,7 +372,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.almacenesService.getLocaciones()
                 .subscribe({
                     next:(locaciones)=>{
-                        //////// //// //////////console.log('locaciones',locaciones);
+                        //////// //// ////////////console.log('locaciones',locaciones);
                         this.locaciones = locaciones;
                     },
                     error:(err)=>{
@@ -392,7 +394,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                     }
                    
                     this.tipoVehiculos = tipoVehiculos;
-                    console.log(tipoVehiculos);
+                    //console.log(tipoVehiculos);
                     
                   },
                   error: (err)=>{
@@ -405,16 +407,16 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.vehiculosService.getVehiculos()
                 .subscribe({
                   next: (vehiculos)=>{
-                      ////console.log(vehiculos);
+                      //////console.log(vehiculos);
                       for(let vehiculo of vehiculos){
                         vehiculo.code = vehiculo.placa;
                         vehiculo.name = vehiculo.placa;
                         vehiculo.label = vehiculo.placa+' ('+vehiculo.tipo_vehiculo.capacidad+' TON)';
                         vehiculo.clase = vehiculo.tipo_vehiculo;
                       }
-                      //////////////////////////// //// //////////console.log(conductores);
+                      //////////////////////////// //// ////////////console.log(conductores);
                       this.vehiculos = vehiculos;
-                      console.log('vehiculos',vehiculos);
+                      //console.log('vehiculos',vehiculos);
                   },
                   error: (err)=>{
                      console.error(err);
@@ -433,10 +435,10 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                           conductor.name = conductor.nombre;
                           conductor.label = conductor.cedula+' - '+conductor.nombre;
                         }
-                        //////////////////////////// //// //////////console.log(conductores);
+                        //////////////////////////// //// ////////////console.log(conductores);
                         this.conductores = conductores;
 
-                        console.log('this.conductores',this.conductores);
+                        //console.log('this.conductores',this.conductores);
                     },
                     error: (err)=>{
                       console.error(err);
@@ -454,9 +456,9 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                       transportadora.name = transportadora.nombre;
                       transportadora.label = transportadora.nit+' - '+transportadora.nombre;
                     }
-                    //////////////////////////// //// //////////console.log(conductores);
+                    //////////////////////////// //// ////////////console.log(conductores);
                     this.transportadoras = transportadoras;
-                    //console.log('this.transportadoras',this.transportadoras);
+                    ////console.log('this.transportadoras',this.transportadoras);
                 },
                 error: (err)=>{
                   console.error(err);
@@ -468,19 +470,19 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.pedidosService.getSaldosOrdenesCompra()
                 .subscribe({
                     next:async (saldosPedidos)=>{
-                        console.log('saldosPedidos',saldosPedidos);
+                        //console.log('saldosPedidos',saldosPedidos);
                         let pedidosClientes:any[] = [];
                         for(let indexPedido in saldosPedidos){
                         
             
                             // if(saldosPedidos[indexPedido].DocNum == '121011980'){
-                            //   //////console.log('pedido 121011980',saldosPedidos[indexPedido]);
+                            //   ////////console.log('pedido 121011980',saldosPedidos[indexPedido]);
                             // }
                         
                             if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
             
                             // if(saldosPedidos[indexPedido].locacion_codigo2=='LADORADA'){
-                            //   //////console.log(saldosPedidos[indexPedido])
+                            //   ////////console.log(saldosPedidos[indexPedido])
                             // }
                             
                             pedidosClientes.push({
@@ -564,12 +566,12 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             
                         }
             
-                        // //////////console.log(pedidosClientes.filter(pedido =>pedido.docnum ===290000003));
-                        // //// //////////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
+                        // ////////////console.log(pedidosClientes.filter(pedido =>pedido.docnum ===290000003));
+                        // //// ////////////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
 
 
                         this.pedidos = await this.functionsService.sortArrayObject(pedidosClientes,'index','ASC') ;
-                        //console.log(this.pedidos);
+                        ////console.log(this.pedidos);
                     },
                     error:(err)=>{
                       console.error(err);
@@ -583,9 +585,9 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
 
         async seleccionarCliente(clienteSeleccionado:any){
-            //////////////////////// //// //////////console.log(clienteSeleccionado);
+            //////////////////////// //// ////////////console.log(clienteSeleccionado);
             
-            //console.log(clienteSeleccionado);
+            ////console.log(clienteSeleccionado);
           
             // if(this.verCondTPT && this.condicionSeleccionada.length == 0){
             //   this.messageService.add({severity:'error', summary:'Error', detail:'Debe seleccionar primero una condición de transporte'});
@@ -615,7 +617,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
         async seleccionarTipoCompra(tipoCompraSeleccionada:any){
   
-            ////console.log(this.verCondTPT,this.condicionSeleccionada,this.pedidos);
+            //////console.log(this.verCondTPT,this.condicionSeleccionada,this.pedidos);
             
         
             
@@ -628,10 +630,10 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         generarTreeTable(){
 
             let vehiculos :any[] = [];
-           //////// //// //////////console.log(this.condicion_tpt);
+           //////// //// ////////////console.log(this.condicion_tpt);
           
             for(let solicitud of this.vehiculosEnSolicitud){
-              //////////////////////////// //// //////////console.log(solicitud);
+              //////////////////////////// //// ////////////console.log(solicitud);
               let fechacargue = new Date(solicitud.fechacargue);
               let horacargue = new Date(solicitud.horacargue);
               let data = {
@@ -669,7 +671,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             }
             
             this.vehiculosPedidos = datatabletree2.data as TreeNode[];
-            //console.log('this.vehiculosPedidos',this.vehiculosPedidos);
+            ////console.log('this.vehiculosPedidos',this.vehiculosPedidos);
             
         }
 
@@ -680,17 +682,17 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
           
 
         async getPedidosPorCliente(clientesSeleccionados:any){
-            //////console.log(this.condicion_tpt);
-           // ////console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
+            ////////console.log(this.condicion_tpt);
+           // //////console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
           
             this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-            //console.log('pedidosCliente',this.pedidosCliente);
+            ////console.log('pedidosCliente',this.pedidosCliente);
             this.getAlmacenesEnPedidos();
         }
 
         getAlmacenesEnPedidos(){
             let almacenesPedidosCliente: any[] = [];
-            //////console.log('almacenesPedidosCliente',this.almacenes,this.pedidosCliente);
+            ////////console.log('almacenesPedidosCliente',this.almacenes,this.pedidosCliente);
             for(let pedido of this.pedidosCliente){
               
               if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode).length===0){
@@ -700,7 +702,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 if(this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode).length>0){
                   //let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.Location == pedido.locacion)[0];
                   let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode)[0];
-                  ////////////////////////// //// //////////console.log(informacionAlmacen);
+                  ////////////////////////// //// ////////////console.log(informacionAlmacen);
                   //informacionAlmacen.label = informacionAlmacen.Location+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
                   informacionAlmacen.label = informacionAlmacen.locacion2+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
                   //almacenesPedidosCliente.push(informacionAlmacen);
@@ -714,7 +716,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
               }
             }
             this.almacenesPedidosCliente = almacenesPedidosCliente;
-            //////// //// //////////console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
+            //////// //// ////////////console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
           
         }
 
@@ -723,16 +725,16 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
 
         async seleccionarAlmacen(almacenSeleccionado:any){
-            //////console.log(almacenSeleccionado);
+            ////////console.log(almacenSeleccionado);
             //this.getPedidosClientePorAlmacen(almacenSeleccionado.code);
            
             if(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code).length>0){
-              ////////////////// //// //////////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
-              ////////////////// //// //////////console.log(this.horainicio, this.horafin);
+              ////////////////// //// ////////////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
+              ////////////////// //// ////////////console.log(this.horainicio, this.horafin);
               this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
               this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion;
           
-              //////////////// //// //////////console.log('horariosLocacion',this.horariosLocacion);
+              //////////////// //// ////////////console.log('horariosLocacion',this.horariosLocacion);
               await this.seleccionarFechaCita();
             }else{
               //Establecer horarios locacion
@@ -749,20 +751,20 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
               for(let horario of horarios){
                 let diasNot:any[] = [];
                 let diasAtencionLocacion:any[] = horario.dias_atencion.split(',');
-                ////////////////// //// //////////console.log(diasAtencionLocacion);
+                ////////////////// //// ////////////console.log(diasAtencionLocacion);
                 for(let dia of diasNoAtencion){
-                  ////////////////// //// //////////console.log(diasAtencionLocacion.includes(dia.fullname));
+                  ////////////////// //// ////////////console.log(diasAtencionLocacion.includes(dia.fullname));
           
                   if(!diasAtencionLocacion.includes(dia.fullname)){
                       diasNot.push(dia);
                   }
-                  ////////////////// //// //////////console.log(dia.fullname,JSON.stringify(diasNot));
+                  ////////////////// //// ////////////console.log(dia.fullname,JSON.stringify(diasNot));
                 }
                 
                 diasNoAtencion = diasNot;
               }
           
-             // //////////////// //// //////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
+             // //////////////// //// ////////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
           
             return diasNoAtencion.map((dia)=>{ return dia.id});
         }
@@ -778,35 +780,35 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.horariosSeleccionados = horariosSeleccionados;
           
             /*for(let horario of this.horariosLocacion){
-              //////////////// //// //////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+              //////////////// //// ////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
             }*/
-            //////////////// //// //////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+            //////////////// //// ////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
             await this.cambioHoraCita();
         }
           
         async cambioHoraCita():Promise<void>{
-            //////////////// //// //////////console.log(this.horacargue.toLocaleTimeString());
+            //////////////// //// ////////////console.log(this.horacargue.toLocaleTimeString());
             /*for(let horario of this.horariosSeleccionados){
-              //////////////// //// //////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-              //////////////// //// //////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
-              //////////////// //// //////////console.log(new Date(this.horacargue));
+              //////////////// //// ////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+              //////////////// //// ////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+              //////////////// //// ////////////console.log(new Date(this.horacargue));
           
               let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
               let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
               let horacargue = new Date(this.horacargue);
           
               if(horainicio<= horacargue && horafin >= horacargue){
-                //////////////// //// //////////console.log('hora valida en horario id '+horario.id);
+                //////////////// //// ////////////console.log('hora valida en horario id '+horario.id);
               }else{
-                //////////////// //// //////////console.log('hora invalida en horario id '+horario.id);
+                //////////////// //// ////////////console.log('hora invalida en horario id '+horario.id);
               }
             }*/
-            ////////////////// //// //////////console.log(this.horariosSeleccionados.filter(horario=>new Date(horario.horainicio)< new Date(this.horacargue) && new Date(horario.horafin)> new Date(this.horacargue)));
+            ////////////////// //// ////////////console.log(this.horariosSeleccionados.filter(horario=>new Date(horario.horainicio)< new Date(this.horacargue) && new Date(horario.horafin)> new Date(this.horacargue)));
           
             if(await this.validarHoraCargue()){
-              //////////////// //// //////////console.log('hora valida en horario ');
+              //////////////// //// ////////////console.log('hora valida en horario ');
             }else{
-              //////////////// //// //////////console.log('hora invalida en horario');
+              //////////////// //// ////////////console.log('hora invalida en horario');
             }
         }
 
@@ -814,18 +816,18 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             let horarioValido:boolean = true;
           
             for(let horario of this.horariosSeleccionados){
-              //////////////// //// //////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-              //////////////// //// //////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
-              //////////////// //// //////////console.log(new Date(this.horacargue));
+              //////////////// //// ////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+              //////////////// //// ////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+              //////////////// //// ////////////console.log(new Date(this.horacargue));
           
               let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
               let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
               let horacargue = new Date(this.horacargue);
           
               if(horainicio<= horacargue && horafin >= horacargue){
-                //////////////// //// //////////console.log('hora valida en horario id '+horario.id);
+                //////////////// //// ////////////console.log('hora valida en horario id '+horario.id);
               }else{
-                //////////////// //// //////////console.log('hora invalida en horario id '+horario.id);
+                //////////////// //// ////////////console.log('hora invalida en horario id '+horario.id);
                 horarioValido = false;
               }
             }
@@ -876,7 +878,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.vehiculosFiltrados.unshift({
               id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
             });
-            //////////////////////////// //// //////////console.log(this.vehiculosFiltrados);
+            //////////////////////////// //// ////////////console.log(this.vehiculosFiltrados);
         }
           
         async filtrarConductor(event:any){
@@ -904,7 +906,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
 
         seleccionarTransportadora(transportadoraSeleccionada:any){
-            //////////////////// //// //////////console.log(transportadoraSeleccionada)
+            //////////////////// //// ////////////console.log(transportadoraSeleccionada)
             if(transportadoraSeleccionada.id == 0){
               //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
               this.nuevaTransportadora();
@@ -913,19 +915,19 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
           
         async seleccionarVehiculo(vehiculoSeleccionado:any){
-            //////////// //// //////////console.log(vehiculoSeleccionado)
+            //////////// //// ////////////console.log(vehiculoSeleccionado)
             if(vehiculoSeleccionado.id == 0){
                 //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
                 this.nuevoVehiculo();
             }else{
-                ////////////////////////// //// //////////console.log(vehiculoSeleccionado)
+                ////////////////////////// //// ////////////console.log(vehiculoSeleccionado)
                 this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
                 //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
                 let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
           
                 this.pesobruto = vehiculoSeleccionado.pesovacio;
                 this.pesoneto = vehiculoSeleccionado.pesomax;
-                //////////////////////////// //// //////////console.log(this.capacidadVehiculo,capacidaVh);
+                //////////////////////////// //// ////////////console.log(this.capacidadVehiculo,capacidaVh);
                 this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
                 
           
@@ -951,7 +953,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
           
             ref.onClose.subscribe((infoTransportadora) => {
               this.getTransportadoras();
-              //////////////////// //// //////////console.log(infoTransportadora)
+              //////////////////// //// ////////////console.log(infoTransportadora)
               
               if(infoTransportadora.update){
                 this.transportadoraSeleccionada.code = infoTransportadora.nit;
@@ -960,9 +962,9 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 this.transportadoraSeleccionada.name = infoTransportadora.nombre;
                 this.transportadoraSeleccionada.label  = infoTransportadora.nit+' - '+infoTransportadora.nombre;
           
-                //////////////////// //// //////////console.log(this.transportadoraSeleccionada)
+                //////////////////// //// ////////////console.log(this.transportadoraSeleccionada)
               }
-              //////////////////////////// //// //////////console.log("Refresh calendar");
+              //////////////////////////// //// ////////////console.log("Refresh calendar");
             });
         }
           
@@ -980,7 +982,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
           
             ref.onClose.subscribe(async (infoVehiculo) => {
               this.getVehiculos();
-              //////////////////// //// //////////console.log(infoVehiculo)
+              //////////////////// //// ////////////console.log(infoVehiculo)
               if(infoVehiculo.update){
                 this.capacidadVehiculo = infoVehiculo.capacidad;
                 let capacidaVh = await this.cacluarCapacidadDisponibleVH(infoVehiculo.placa); 
@@ -990,7 +992,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 this.vehiculoSeleccionado.capacidad = infoVehiculo.capacidad;
                 this.vehiculoSeleccionado.label = infoVehiculo.placa;
               }
-              //////////////////////////// //// //////////console.log("Refresh calendar");
+              //////////////////////////// //// ////////////console.log("Refresh calendar");
             });
         }
           
@@ -1008,7 +1010,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
           
             ref.onClose.subscribe((infoConductor) => {
               this.getConductores();
-              //////////////////// //// //////////console.log(infoConductor)
+              //////////////////// //// ////////////console.log(infoConductor)
               if(infoConductor.update){
                 this.conductorSeleccionado.code = infoConductor.cedula;
                 this.conductorSeleccionado.cedula = infoConductor.cedula;
@@ -1023,7 +1025,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
           
         seleccionarConductor(conductorSeleccionado:any){
-            //////////////////// //// //////////console.log(conductorSeleccionado)
+            //////////////////// //// ////////////console.log(conductorSeleccionado)
             if(conductorSeleccionado.id == 0){
               //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
               this.nuevoConductor();
@@ -1035,7 +1037,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.envioAdicionVehiculo = true;
 
             if(!this.fileTmp){
-               ////////////////////////// //// //////////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
+               ////////////////////////// //// ////////////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
                 if(Object.keys(this.vehiculoSeleccionado).length ==0 || 
                 Object.keys(this.conductorSeleccionado).length ==0 ||
                 Object.keys(this.transportadoraSeleccionada).length ==0 //||
@@ -1053,11 +1055,11 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                     icon: 'pi pi-exclamation-triangle',
                     accept: () => {
               
-                        //////console.log(this.fechacargue.toISOString());
+                        ////////console.log(this.fechacargue.toISOString());
                     
-                        //////console.log(this.horacargue.toISOString());
+                        ////////console.log(this.horacargue.toISOString());
                         let horacargue = `${this.fechacargue.toISOString().split("T")[0]}T${this.horacargue.toISOString().split("T")[1]}`;
-                        //////console.log(new Date(horacargue));
+                        ////////console.log(new Date(horacargue));
               
               
                         
@@ -1077,6 +1079,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                             sitioentrega:this.sitioentrega,
                             municipioentrega:this.municipioentrega,
                             observacion:this.observacion,
+                            
                             pedidos:[]
                         });
 
@@ -1099,12 +1102,13 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                             sitioentrega:this.sitioentrega,
                             municipioentrega:this.municipioentrega,
                             observacion:this.observacion,
+                            key:`${this.vehiculoSeleccionado.code}`,
                             pedidos:[]
 
 
                         })
               
-                        //////console.log( this.vehiculosEnSolicitud);
+                        ////////console.log( this.vehiculosEnSolicitud);
                         //this.envioLineaCarguePedido =false;
                         
                         this.envioAdicionVehiculo = false;
@@ -1153,7 +1157,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
             let capacidadDisponibleVH = 0;
             let vehiculo:any = this.vehiculosEnSolicitud.filter(pedido =>pedido.placa == placa);
-            //////////////////////////// //// //////////console.log(vehiculo.length);
+            //////////////////////////// //// ////////////console.log(vehiculo.length);
             if(vehiculo.length >0){
               capacidadDisponibleVH =vehiculo[0].cantidad
             }
@@ -1161,28 +1165,30 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             /*for(let pedido of pedidosVehiculo){
               capacidadDisponibleVH+=pedido.cantidad;
             }*/
-            //////////////////////////// //// //////////console.log(capacidadDisponibleVH);
+            //////////////////////////// //// ////////////console.log(capacidadDisponibleVH);
             return capacidadDisponibleVH;
         }
 
         async adicionarItemsPedidoVehiculo(vehiculos:any[]){  
-            //console.log('vehiculos seleccionados para adicion de items',vehiculos);  
+            console.log('vehiculos seleccionados para adicion de items',vehiculos);  
             if(vehiculos.length === 0){
                 this.messageService.add({severity:'error', summary:'!Error', detail:'Debe seleccionar al menos un vehiculo para adicionar items'});
             }else{
 
                 
                 this.vehiculosSeleccionadoPedidos = [];
-                for(let vehiculo of vehiculos){
-                    let lineaVehiculo = this.vehiculos.find(vh => vh.code === vehiculo.placa);
-                    lineaVehiculo.cantidad = vehiculo.cantidad;
-                    lineaVehiculo.id_despacho = vehiculo.id_despacho;
-                    this.vehiculosSeleccionadoPedidos.push(lineaVehiculo);
-                }
+                // for(let vehiculo of vehiculos){
+                //     //console.log('vehiculo seleccionado',vehiculo);
+                //     let lineaVehiculo = this.vehiculos.find(vh => vh.code === vehiculo.placa);
+                //     lineaVehiculo.cantidad = vehiculo.cantidad;
+                //     lineaVehiculo.id_despacho = vehiculo.id_despacho;
+                //     lineaVehiculo.key = vehiculo.key;
+                //     this.vehiculosSeleccionadoPedidos.push(lineaVehiculo);
+                // }
 
-                console.log(this.vehiculosSeleccionadoPedidos);
+                //console.log(this.vehiculosSeleccionadoPedidos);
 
-                //this.vehiculosSeleccionadoPedidos = vehiculos;
+                this.vehiculosSeleccionadoPedidos = vehiculos;
                 
 
                 let clienteSeleccionado:any;
@@ -1206,6 +1212,15 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             if(vehiculos.length === 0){
                 this.messageService.add({severity:'error', summary:'!Error', detail:'Debe seleccionar al menos un vehiculo para desvincular de la solicitud'});
             }else{
+                console.log('vehiculos seleccionados',vehiculos);
+                
+                for(let vehiculo of vehiculos){
+                  let index = this.vehiculosSolicitud.findIndex(vh=>vh.index === vehiculo.index);
+                  this.vehiculosSolicitud.splice(index,1);
+                }
+
+                this.messageService.add({severity:'success', summary:'OK', detail:'Las placas seleccionadas fueron removidaas correctamente.'});
+
 
             }
 
@@ -1214,7 +1229,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         async adicionarItemPedido(placa:string){
 
             
-            ////////////////////////////// //// //////////console.log(placa);
+            ////////////////////////////// //// ////////////console.log(placa);
             let vehiculo = await this.vehiculos.find(vehiculo =>vehiculo.code === placa);
             this.vehiculoSeleccionado = vehiculo;
             let clienteSeleccionado:any;
@@ -1223,7 +1238,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             }else{
               clienteSeleccionado = this.clienteSeleccionado;
             }
-            ////////////////////////// //// //////////console.log(this.clienteSeleccionado[0])
+            ////////////////////////// //// ////////////console.log(this.clienteSeleccionado[0])
             this.clienteSeleccionado2 = await clienteSeleccionado;
           
             await this.seleccionarVehiculo(this.vehiculoSeleccionado);
@@ -1236,12 +1251,12 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code,clienteSeleccionado.code);
           
             /*let pedidosVehiculo = await this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa).pedidos;
-            //////////////////////////// //// //////////console.log(pedidosVehiculo);
+            //////////////////////////// //// ////////////console.log(pedidosVehiculo);
             //Modificar pedidos del cliente x almacen adicionando las cantidades cargadas de los pedidos asociadas al vehiculo 
           
             for(let pedidoVehiculo of pedidosVehiculo){
               let index = this.tablaPedidosAlmacenCliente.data.findIndex((pedido: {itemcode: any; docnum: any; }) => pedido.docnum == pedidoVehiculo.pedido && pedido.itemcode == pedidoVehiculo.itemcode);
-              //////////////////////////// //// //////////console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
+              //////////////////////////// //// ////////////console.log(this.tablaPedidosAlmacenCliente.data[index].cargada,pedidoVehiculo.cantidad);
               this.tablaPedidosAlmacenCliente.data[index].cargada = pedidoVehiculo.cantidad;
             }*/
             
@@ -1249,7 +1264,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
 
         quitarVehiculo(placa:string){
-            ////console.log(placa);
+            //////console.log(placa);
             this.confirmRemoveVehiculo(placa);
         }
           
@@ -1258,7 +1273,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             let placaNode = other.parent.data.vehiculo;
             let pedidoNode = other.node.data.conductor.split('-')[0].trim()
             let itemNode = other.node.data.fechacargue.split('-')[0].trim();
-            ////console.log(other,placaNode,pedidoNode,itemNode);
+            //////console.log(other,placaNode,pedidoNode,itemNode);
             this.confirmRemovePedidoItem(placaNode,pedidoNode,itemNode);
         }
           
@@ -1271,9 +1286,9 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                   let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
                   this.vehiculosEnSolicitud.splice(index,1);
                   this.messageService.add({severity:'info', summary:'Confirmado', detail:'El vhículo '+placa+' fue eliminado de la lista'});
-                  //////////////////////////// //// //////////console.log(this.vehiculosEnSolicitud);
+                  //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
                   this.generarTreeTable();
-                  //////////////////////////// //// //////////console.log(this.tablaPedidosAlmacenCliente);
+                  //////////////////////////// //// ////////////console.log(this.tablaPedidosAlmacenCliente);
           
               },
               reject: (type: any) => {
@@ -1296,29 +1311,29 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 icon: 'pi pi-exclamation-triangle',
                 accept: () => {
           
-                    //this.mostrarLogs?////console.log('Accion para remover linea de pedido asociado a un vehiculo'):null;
-                    //this.mostrarLogs?////console.log('Vehiculos en solicitud',this.vehiculosEnSolicitud):null;
+                    //this.mostrarLogs?//////console.log('Accion para remover linea de pedido asociado a un vehiculo'):null;
+                    //this.mostrarLogs?//////console.log('Vehiculos en solicitud',this.vehiculosEnSolicitud):null;
                     
                     let index = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == placa);
           
-                    //this.mostrarLogs?////console.log(`Index array vehiculos de la placa ${placa}`,index):null;
+                    //this.mostrarLogs?//////console.log(`Index array vehiculos de la placa ${placa}`,index):null;
                     
                     let pedidos = this.vehiculosEnSolicitud[index].pedidos;
           
-                    //this.mostrarLogs?////console.log(`pedidos asociados al vehiculos de placa ${placa}`,pedidos):null;
+                    //this.mostrarLogs?//////console.log(`pedidos asociados al vehiculos de placa ${placa}`,pedidos):null;
                     
                     //let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode+' - '+pedidovh.itemname == item);
                     let indexPedido = pedidos.findIndex((pedidovh: { pedido: string; itemcode: string; itemname: string; }) => pedidovh.pedido==pedido && pedidovh.itemcode == item);
           
-                    //this.mostrarLogs?////console.log(`Index array pedidos del pedido ${pedido} item ${item}`,indexPedido):null;
+                    //this.mostrarLogs?//////console.log(`Index array pedidos del pedido ${pedido} item ${item}`,indexPedido):null;
           
-                    ////////////////////////// //// //////////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
+                    ////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud[index].pedidos,indexPedido);
                     this.vehiculosEnSolicitud[index].cantidad =this.vehiculosEnSolicitud[index].cantidad-eval(this.vehiculosEnSolicitud[index].pedidos[indexPedido].cantidad);
                     this.vehiculosEnSolicitud[index].pedidos.splice(indexPedido,1);
                     this.messageService.add({severity:'info', summary:'Confirmado', detail:'El item '+item+' fue eliminado de la lista'});
-                    //////////////////////////// //// //////////console.log(this.vehiculosEnSolicitud);
+                    //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
                     this.generarTreeTable();
-                    //////////////////////////// //// //////////console.log(this.tablaPedidosAlmacenCliente);
+                    //////////////////////////// //// ////////////console.log(this.tablaPedidosAlmacenCliente);
           
                 },
                 reject: (type: any) => {
@@ -1338,14 +1353,14 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             //this.pedidosAlmacenCliente = await this.pedidosService.getPedidosClientePorAlmacen(this.clienteSeleccionado, almacen);
             //let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
             let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacioncode === almacen && pedido.cardcode === cliente)
-            //////////////// //// //////////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
+            //////////////// //// ////////////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
             let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
           
             
           
             this.pedidosAlmacenCliente = pedidosAlmacenClienteCalcudada;
           
-            //////// //// //////////console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
+            //////// //// ////////////console.log('pedidosAlmacenCliente',this.pedidosAlmacenCliente);
             
             this.configTablePedidosAlmacenCliente();
         }
@@ -1353,7 +1368,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
             for(let pedido of pedidos){
-            ////console.log(pedido);
+            //////console.log(pedido);
               let cantidadComprometida=0; 
               cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
               cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
@@ -1376,11 +1391,11 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
 
         async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
-            //////////////////////// //// //////////console.log(pedido, itemcode, bodega);
+            //////////////////////// //// ////////////console.log(pedido, itemcode, bodega);
               let cantidadComprometida =0;
               for(let vehiculo of this.vehiculosEnSolicitud){
                   for(let lineaPedido of vehiculo.pedidos){
-                   ////////////////////////// //// //////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
+                   ////////////////////////// //// ////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
                       if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
                         
                         cantidadComprometida+=lineaPedido.cantidad;
@@ -1392,7 +1407,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
 
         configTablePedidosAlmacenCliente(){
-            //console.log('this.pedidosAlmacenCliente',this.pedidosAlmacenCliente);
+            ////console.log('this.pedidosAlmacenCliente',this.pedidosAlmacenCliente);
             let headersTable:any= this.configHeadersPedidos();
             let dataTable:any = this.configDataTablePedidos(this.pedidosAlmacenCliente);
              
@@ -1439,7 +1454,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
           
         configDataTablePedidos(arregloPedido:any){
           
-           ////console.log(arregloPedido);
+           //////console.log(arregloPedido);
           
               
              
@@ -1487,7 +1502,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
           
         seleccionarCliente2(clienteSeleccionado2:any){
-               //////// //// //////////console.log(clienteSeleccionado2, this.almacenSeleccionado)
+               //////// //// ////////////console.log(clienteSeleccionado2, this.almacenSeleccionado)
                 this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code, clienteSeleccionado2.code);
         }   
           
@@ -1496,34 +1511,31 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         }
           
         seleccionarMunicipio(){
-           //////// //// //////////console.log(this.municipioSeleccionado);
+           //////// //// ////////////console.log(this.municipioSeleccionado);
             this.municipioentrega = this.municipioSeleccionado.label;
         }
 
         async seleccionarPedidosAlmacenCliente(event:any){
  
-             //console.log('pedidos seleccionados',event);
+             ////console.log('pedidos seleccionados',event);
              this.envioLineaCarguePedido =true;
 
              let toneladasVehiculos = 0;
 
              for(let vehiculo of this.vehiculosSeleccionadoPedidos){
-                //console.log('vehiculo seleccionado',vehiculo);
+                ////console.log('vehiculo seleccionado',vehiculo);
                 toneladasVehiculos+=vehiculo.cantidad;     
              }
-
-             //console.log('toneladasVehiculos', toneladasVehiculos);
-
+             ////console.log('toneladasVehiculos', toneladasVehiculos);
              //await this.vehiculosSeleccionadoPedidos.forEach((vehiculo=>{ toneladasVehiculos+=vehiculo.tipo_vehiculo.capacidad}));
-           
-           
+
              if(this.sitioentrega=="" || this.municipioentrega==""){
                  this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
                  this.showItemsSelectedPedidosAlmacenCliente=false;
              }else{
 
                 // const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-                ////console.log('pedidos seleccionados',pedidosSeleccionados);
+                //////console.log('pedidos seleccionados',pedidosSeleccionados);
                 //  if(pedidosSeleccionados.length > 0){
                     
                 //      let totalCarga = 0;
@@ -1535,10 +1547,10 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 //        if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                 //            totalCarga+=parseFloat(pedido.cargada);
               
-                //            //this.mostrarLogs?////console.log('Linea pedido',pedido):null;
+                //            //this.mostrarLogs?//////console.log('Linea pedido',pedido):null;
             
-                //            //////console.log('pedido.cargada',parseFloat(pedido.cargada).toFixed(2))
-                //            //////console.log('pedido.disponible',parseFloat(pedido.disponible.toFixed(2)))            
+                //            ////////console.log('pedido.cargada',parseFloat(pedido.cargada).toFixed(2))
+                //            ////////console.log('pedido.disponible',parseFloat(pedido.disponible.toFixed(2)))            
                   
                 //            if(parseFloat(parseFloat(pedido.cargada).toFixed(2))> parseFloat(parseFloat(pedido.disponible).toFixed(2)) ){
                             
@@ -1591,10 +1603,10 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 //          let indexVehiculo = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa == this.vehiculoSeleccionado.code);
                 //          //Obtener pedidos asociados al vehiculo en la solicitud
                 //          let pdidosVehiculo:any[] = this.vehiculosEnSolicitud[indexVehiculo].pedidos;
-                //          ////console.log(pdidosVehiculo)
+                //          //////console.log(pdidosVehiculo)
                 //          for(let pedido of pedidosSeleccionados){
               
-                //          ////console.log('pedido seleccionado',pedido);
+                //          //////console.log('pedido seleccionado',pedido);
               
                 //            if(pdidosVehiculo.length >0 && pdidosVehiculo.find((pedidovh: { pedido: any, itemcode:any, municipioentrega:any, lugarentrega:any, linenum:any }) => pedidovh.pedido == pedido.docnum && 
                 //                                                                                                                                                                  pedidovh.itemcode == pedido.itemcode && 
@@ -1637,14 +1649,14 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                           
                 //          }
             
-                //          ////console.log(pdidosVehiculo,this.pedidosCliente);
+                //          //////console.log(pdidosVehiculo,this.pedidosCliente);
               
                 //          this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
                 //          this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
                 //          this.envioLineaCarguePedido =false;
                 //          this.dialogPedidosCliente = false;
                 //          this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-                //          ////////////// //// //////////console.log(this.vehiculosEnSolicitud);
+                //          ////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
                 //          this.configTablePedidosAlmacenCliente();
                 //          this.generarTreeTable();
                 //      }
@@ -1664,13 +1676,17 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 }else if( event[0].disponible < toneladasVehiculos){
                   this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad a cargar de las placas seleccionadas (${toneladasVehiculos} TON) es mayor a la cantidad disponible del pedido/item seleccionado (${event[0].disponible} TON)`});
                 }else{
-                    ////console.log(event)
+                    //console.log('linea item seleccionado',event)
 
                     //Recorrer array de placas seleccinadas
                     for(let vehiculo of this.vehiculosSeleccionadoPedidos){
                       //Buscar placa de vehiculo seleccionado en array de vehiculos en solicitud
-                      let index = this.vehiculosSolicitud.findIndex(vehiculoSolicitud=>vehiculoSolicitud.placa === vehiculo.placa && vehiculoSolicitud.id_despacho === vehiculo.id_despacho) ;
                       
+                      
+                      let index = this.vehiculosSolicitud.findIndex(vehiculoSolicitud=>vehiculoSolicitud.key === vehiculo.key) ;
+                      // //console.log('index',index);
+                      // //console.log('this.vehiculosSolicitud[index]',this.vehiculosSolicitud[index])
+
 
                       this.vehiculosSolicitud[index].itemName = event[0].itemname;
                       this.vehiculosSolicitud[index].pedido = event[0].docnum;
@@ -1723,7 +1739,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                     //                     }]
                     // }
 
-                    //console.log('this.vehiculosSolicitud',this.vehiculosSolicitud)
+                    ////console.log('this.vehiculosSolicitud',this.vehiculosSolicitud)
 
                     this.envioLineaCarguePedido =false;
                     this.dialogPedidosCliente = false;
@@ -1739,7 +1755,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             let cantidadCargada =0;
             let vehiculo = this.vehiculosEnSolicitud.find(vehiculo =>vehiculo.placa == placa);
             for(let pedidoVehiculo of vehiculo.pedidos){
-              ////////////////// //// //////////console.log(pedidoVehiculo)
+              ////////////////// //// ////////////console.log(pedidoVehiculo)
               if(!pedidoVehiculo.itemcode.toLowerCase().startsWith("sf")){
                 cantidadCargada+=eval(pedidoVehiculo.cantidad);
               }
@@ -1763,7 +1779,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
         grabarSolicitud2(){
 
-            //////////////////////////// //// //////////console.log(this.vehiculosEnSolicitud);
+            //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
             this.displayModal = true;
             this.loadingCargue = true;
             this.completeCargue=false;
@@ -1810,12 +1826,12 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 this.displayModal = false;
               }else*/{
                 let pedidosVehiculo:any[] = [];
-                // //////////console.log(this.pedidosCliente);
+                // ////////////console.log(this.pedidosCliente);
                 for(let pedido of vehiculo.pedidos){
-                  ////console.log('this.pedidosCliente',this.pedidosCliente);
-                 ////// //// //////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
+                  //////console.log('this.pedidosCliente',this.pedidosCliente);
+                 ////// //// ////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
                   let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
-                 //console.log('infoPedido',infoPedido);
+                 ////console.log('infoPedido',infoPedido);
                   /*
                   let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
                   let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
@@ -1933,7 +1949,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                   detalle_solicitud
                 }
                
-               //console.log('newSolicitud',newSolicitud);
+               ////console.log('newSolicitud',newSolicitud);
                 
                 
                this.solicitudTurnoService.create(newSolicitud)
@@ -1979,7 +1995,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
         grabarSolicitud(){
 
-          //////////////////////////// //// //////////console.log(this.vehiculosEnSolicitud);
+          //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
           this.displayModal = true;
           this.loadingCargue = true;
           this.completeCargue=false;
@@ -2026,12 +2042,12 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
               this.displayModal = false;
             }else*/{
               let pedidosVehiculo:any[] = [];
-              // //////////console.log(this.pedidosCliente);
+              // ////////////console.log(this.pedidosCliente);
               for(let pedido of vehiculo.pedidos){
-                ////console.log('this.pedidosCliente',this.pedidosCliente);
-               ////// //// //////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
+                //////console.log('this.pedidosCliente',this.pedidosCliente);
+               ////// //// ////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
                 let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
-               //console.log('infoPedido',infoPedido);
+               ////console.log('infoPedido',infoPedido);
                 /*
                 let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
                 let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
@@ -2158,7 +2174,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 detalle_solicitud
               }
              
-             //console.log('newSolicitud',newSolicitud);
+             ////console.log('newSolicitud',newSolicitud);
               
               
              this.solicitudTurnoService.create(newSolicitud)
@@ -2204,8 +2220,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
         async configEmails(dataSolicitud:any): Promise<void>{
     
-            ////////////// //// //////////console.log(JSON.stringify(dataSolicitud));
-            //////// //// //////////console.log(dataSolicitud);
+            ////////////// //// ////////////console.log(JSON.stringify(dataSolicitud));
+            //////// //// ////////////console.log(dataSolicitud);
         
             await this.emailsClientes(dataSolicitud);
             await this.emailsVendedores(dataSolicitud);
@@ -2223,7 +2239,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             //let emailBodega:string = this.almacenSeleccionado.email;
             let objectMail:any;
             let usuarioCreador:any = await this.usuariosService.infoUsuario();
-            ////////////////// //// //////////console.log(usuarioCreador);
+            ////////////////// //// ////////////console.log(usuarioCreador);
             let totalvehiculos:number =0;
             let totaltoneladas:number = 0;
         
@@ -2275,10 +2291,10 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 if(cliente.EmailAddress==null || cliente.EmailAddress==undefined){
                   //Obtenert email del cliente del usuario segun el cardcode 
                   let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(cliente.CardCode);
-                  ////////////////// //// //////////console.log('usuarioCliente',usuarioCliente);
+                  ////////////////// //// ////////////console.log('usuarioCliente',usuarioCliente);
                   if(usuarioCliente!=false){
                     cliente.EmailAddress = usuarioCliente.email;
-                    //////////////// //// //////////console.log('usuarioCliente.email',usuarioCliente.email);
+                    //////////////// //// ////////////console.log('usuarioCliente.email',usuarioCliente.email);
                   }
                   
                 }
@@ -2302,8 +2318,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                                   cliente
                       }         
                     };
-                    //////////////// //// //////////console.log('objectMail Cliente',objectMail);
-                    //////////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+                    //////////////// //// ////////////console.log('objectMail Cliente',objectMail);
+                    //////////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
                 }
         
                 // Configuracion de email para jefe de zona o vendedor
@@ -2344,8 +2360,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                             
                 }         
               };
-              //////////////// //// //////////console.log('objectMail Bodega',objectMail);
-              //////////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+              //////////////// //// ////////////console.log('objectMail Bodega',objectMail);
+              //////////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
             }
             */
         
@@ -2364,7 +2380,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             transportadora: any; detalle_solicitud_turnos_pedido: any[]; id: number; estado: any; fechacita: any; horacita: any; locacion: any; lugarentrega: any; municipioentrega: any; observacion: any; })=>{
             
             turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-                //////////////// //// //////////console.log(turno.id, pedido.CardCode);
+                //////////////// //// ////////////console.log(turno.id, pedido.CardCode);
                 let email_cliente = solicitud.clientes.find((cliente: { CardCode: any; })=>cliente.CardCode === pedido.CardCode).EmailAddress;
                 if(turnosCliente.filter(cliente=>cliente.codigo===pedido.CardCode).length === 0){
         
@@ -2397,7 +2413,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 }else{
                     
                     let indexCliente = turnosCliente.findIndex(cliente=>cliente.codigo === pedido.CardCode);
-                    //////////////// //// //////////console.log(turnosCliente[indexCliente]);
+                    //////////////// //// ////////////console.log(turnosCliente[indexCliente]);
         
                     if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
                         let turnoCliente:any;
@@ -2420,7 +2436,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                         turnosCliente[indexCliente].turnos.push(turnoCliente);
                     }else{
                         let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
-                        //////////////// //// //////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                        //////////////// //// ////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                         turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                         if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                         turnosCliente[indexCliente].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -2435,14 +2451,14 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         
         
         
-            //////// //// //////////console.log(turnosCliente);
+            //////// //// ////////////console.log(turnosCliente);
         
             turnosCliente.forEach(async (cliente)=>{
-            //////// //// //////////console.log('cliente', cliente);
+            //////// //// ////////////console.log('cliente', cliente);
             // if(cliente.email!='' && cliente.email!=null){
         
                 let clienteTurno:any = solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === cliente.codigo);
-                //////// //// //////////console.log('solicitud.clientes',clienteTurno);
+                //////// //// ////////////console.log('solicitud.clientes',clienteTurno);
         
                 //clienteTurno.turnos = cliente.turnos;
                 let objectMail = {
@@ -2473,8 +2489,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                             origen:'mail_cliente'
                 }         
                 };
-                //////// //// //////////console.log('objectMail Cliente',objectMail);
-                ////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+                //////// //// ////////////console.log('objectMail Cliente',objectMail);
+                ////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
                 await this.functionsService.sendMail(objectMail)
             //  }
             });
@@ -2490,7 +2506,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         })=>{
             
             turno.detalle_solicitud_turnos_pedido.forEach((pedido)=>{
-                //////////////// //// //////////console.log(turno.id, pedido.CardCode);
+                //////////////// //// ////////////console.log(turno.id, pedido.CardCode);
                 if(turnosVendedor.filter(vendedor=>vendedor.codigo===pedido.email_vendedor).length === 0){
         
                     let turnoVendedor:any;
@@ -2522,7 +2538,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 }else{
                     
                     let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.codigo === pedido.email_vendedor);
-                    //////////////// //// //////////console.log(turnosCliente[indexCliente]);
+                    //////////////// //// ////////////console.log(turnosCliente[indexCliente]);
         
                     if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
                         let turnoVendedor:any;
@@ -2545,7 +2561,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                         turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
                     }else{
                         let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
-                        //////////////// //// //////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                        //////////////// //// ////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                         turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                         if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                         turnosVendedor[indexVendedor].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -2557,7 +2573,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             
             });
         
-            ////////////// //// //////////console.log(turnosVendedor);
+            ////////////// //// ////////////console.log(turnosVendedor);
         
             turnosVendedor.forEach(async (vendedor)=>{
             if(vendedor.email!='' && vendedor.email!=null){
@@ -2579,8 +2595,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                             //cliente:solicitud.clientes.find((clienteSolicitud: { CardCode: any; }) => clienteSolicitud.CardCode === vendedor.code)
                 }         
                 };
-                //////// //// //////////console.log('objectMail vendedor',objectMail);
-                ////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+                //////// //// ////////////console.log('objectMail vendedor',objectMail);
+                ////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
                 await this.functionsService.sendMail(objectMail)
             }
             });
@@ -2637,8 +2653,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                                 origen:this.domain=='localhost'?'mail_estado_locacion':''
                     }         
                 };
-                //////// //// //////////console.log('objectMail Bodega',objectMail);
-                ////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+                //////// //// ////////////console.log('objectMail Bodega',objectMail);
+                ////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
                 await this.functionsService.sendMail(objectMail)
         
         
@@ -2647,7 +2663,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             });
                 
         
-            //////////// //// //////////console.log('emailsTurno',emailsTurno.join());
+            //////////// //// ////////////console.log('emailsTurno',emailsTurno.join());
             /*
             if(emailsTurno.join()!=''){
             emailBodega = emailsTurno.join();
@@ -2687,8 +2703,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                             
                 }         
             };
-            //////// //// //////////console.log('objectMail Bodega',objectMail);
-            ////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+            //////// //// ////////////console.log('objectMail Bodega',objectMail);
+            ////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
             await this.functionsService.sendMail(objectMail)
         
             }
@@ -2731,8 +2747,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                         
             }         
             };
-            //////// //// //////////console.log('objectMail trasporta sociedad',objectMail);
-            ////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+            //////// //// ////////////console.log('objectMail trasporta sociedad',objectMail);
+            ////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
             await this.functionsService.sendMail(objectMail)
         }
   
@@ -2775,15 +2791,15 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                         
             }         
             };
-            //////// //// //////////console.log('objectMail usuario creador',objectMail);
-            ////////// //// //////////console.log(await this.functionsService.sendMail(objectMail));
+            //////// //// ////////////console.log('objectMail usuario creador',objectMail);
+            ////////// //// ////////////console.log(await this.functionsService.sendMail(objectMail));
             await this.functionsService.sendMail(objectMail)
         
         }
 
         filter(event: any, arrayFiltrar:any[]) {
 
-            ////////////////////////////// //// //////////console.log(arrayFiltrar);
+            ////////////////////////////// //// ////////////console.log(arrayFiltrar);
             const filtered: any[] = [];
             const query = event.query;
             for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -2805,7 +2821,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 data: dataTable
             }
             
-              //////////////////////////// //// //////////console.log(this.tablaPedidosEnSolicitud);
+              //////////////////////////// //// ////////////console.log(this.tablaPedidosEnSolicitud);
             
           }
 
@@ -2829,14 +2845,14 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         onLoad($event:any){
 
 
-          //this.loadingCargueCSV = true;
+          this.loadingCargueCSV = true;
           const [ file ] = $event.currentFiles;
           this.fileTmp = {
             fileRaw:file,
             fileName:file.name
           }
       
-          //console.log('this.fileTmp2',file);
+          ////console.log('this.fileTmp2',file);
           this.readDocument(file);
         
         }
@@ -2848,7 +2864,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
               let text:any =fileReader.result ;
               var lines = text.split('\n') ;
               for(let line of lines){
-                ////console.log(await this.functionsService.reemplazarCaracteresEspeciales(line));
+                //////console.log(await this.functionsService.reemplazarCaracteresEspeciales(line));
                 arrayTexto.push(await this.functionsService.reemplazarCaracteresEspeciales(line));
               }
 
@@ -2872,13 +2888,15 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
           
           if(this.validarENcabezadoArchivo(encabezados,lineasArchivo[0].split(";"))){
               this.validarDatosArchivo(lineasArchivo,encabezados);
+          }else{
+            this.loadingCargueCSV = false;
           }
           
         }
 
         validarENcabezadoArchivo(encabezados:any[],encabezadosArchivo:any[]){
 
-          //console.log(encabezados, encabezadosArchivo);
+          ////console.log(encabezados, encabezadosArchivo);
           this.erroresImportacionVehiculos = [];
           let valido = false;
           if(encabezadosArchivo.length===0){
@@ -2910,7 +2928,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
         async validarDatosArchivo(lineasArchivo:any[],encabezados:any[]){
 
-          //console.log('lineasDatos',lineasArchivo);
+          ////console.log('lineasDatos',lineasArchivo);
 
           let valido = false;
           let lineasDatos = await this.functionsService.clonObject(lineasArchivo);
@@ -2924,7 +2942,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.importeVehiculosSolicitud = [];
             for(let linea of lineasDatos){
               let arrayLinea:any[] = linea.split(";");
-              //console.log('arrayLinea',index,arrayLinea.join("").length);
+              ////console.log('arrayLinea',index,arrayLinea.join("").length);
               if(arrayLinea.join("").length>0){
                 if(arrayLinea.length===0){
                   this.messageService.add({severity:'error', summary:'!Error', detail: `la línea ${index} del archivo cargado, debe estar separado por el simbolo de punto y coma (;)`});
@@ -2954,7 +2972,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
                             let turno = await this.solicitudTurnoService.getTurnoByQuery({id_despacho_puerto:id_despacho});
 
-                            //console.log('turno por id despacho',turno);
+                            ////console.log('turno por id despacho',turno);
 
                             if(!turno){
                               this.importeVehiculosSolicitud.push({ 
@@ -2979,6 +2997,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                                 sitioentrega:'',
                                 municipioentrega:'',
                                 observacion:'',
+                                key:`${placa}${id_despacho}`,
                                 pedidos:[]
     
     
@@ -3003,6 +3022,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
               this.messageService.add({severity:'success', summary:'OK', detail:'El archivo cargado fue validado correctamente, puede proceder a cargar los vehiculos.'});
               this.erroresImportacionVehiculos.push({icon:'pi pi-check', classColor:'p-button-rounded p-button-success p-button-text',severity:'success', summary:'OK', detail:`El archivo cargado fue validado correctamente, puede proceder a cargar los vehiculos.`});
             }
+
+            this.loadingCargueCSV = false;
           }
         }
 
@@ -3019,21 +3040,21 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
             let valido = true;
 
-            console.log('cantidad_carga',cantidad_carga);
+            //console.log('cantidad_carga',cantidad_carga);
             if(cantidad_carga === '' || isNaN(cantidad_carga || cantidad_carga<=0)){
               this.messageService.add({severity:'error', summary:'!Error', detail: `El campo cantidad carga debe ser un valor numerico o mayor a cero`});
               this.erroresImportacionVehiculos.push({icon:'pi pi-times', classColor:'p-button-rounded p-button-danger p-button-text', severity:'error', summary:'!Error',detail:`El campo cantidad carga debe ser un valor numerico o mayor a cero`});
               valido = false;
             }
-            ////console.log(this.vehiculos.filter(vehiculo=>vehiculo.code === placa));
+            //////console.log(this.vehiculos.filter(vehiculo=>vehiculo.code === placa));
             if(this.vehiculos.filter(vehiculo=>vehiculo.code === placa).length===0 && placa!=''){
               this.messageService.add({severity:'warn', summary:'!Error', detail: `La placa ${placa} de la línea ${index} del archivo cargado, no existe en el maestro de vehiculos del portal`});
               this.erroresImportacionVehiculos.push({icon:'pi pi-exclamation-circle', classColor:'p-button-rounded p-button-warning p-button-text', severity:'warn', summary:'!Error',detail:`La placa ${placa} de la línea ${index} del archivo cargado, no existe en el maestro de vehiculos del portal`});
               //valido = false;
-              //console.log('cedula',placa);
+              ////console.log('cedula',placa);
 
               let tipoVehiculo = (await this.functionsService.sortArrayObject(this.tipoVehiculos.filter(tipoVehiculo=>tipoVehiculo.pesomax > (cantidad_carga/1000)),'pesomax','ASC'))[0];
-              console.log('tipoVehiculo',tipoVehiculo);
+              //console.log('tipoVehiculo',tipoVehiculo);
 
               //registrar vehiculo 
 
@@ -3050,7 +3071,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
               this.vehiculosService.create(nuevoVehiculo)
               .subscribe({
                   next: (vehiculo)=>{
-                    console.log(vehiculo);
+                    //console.log(vehiculo);
                     this.messageService.add({severity:'success', summary:'información', detail:`El vehículo ${placa} fue registrado correctamente`});
                     this.erroresImportacionVehiculos.push({icon:'pi pi-check', classColor:'p-button-rounded p-button-success p-button-text', severity:'success', summary:'!Ok',detail:`El vehículo ${placa} fue registrado correctamente`});
                     vehiculo.code = vehiculo.placa;
@@ -3070,12 +3091,12 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             }
 
 
-            // //console.log(this.conductores.filter(async conductor=>(await this.functionsService.reemplazarCarateres(conductor.code,['.',','],""))  === (await this.functionsService.reemplazarCarateres(cedula,['.',','],""))))
+            // ////console.log(this.conductores.filter(async conductor=>(await this.functionsService.reemplazarCarateres(conductor.code,['.',','],""))  === (await this.functionsService.reemplazarCarateres(cedula,['.',','],""))))
             if(this.conductores.filter(conductor=>conductor.code  === cedula).length===0 && cedula!=''){
               this.messageService.add({severity:'warn', summary:'!Error', detail: `El conductor ${conductor} de la línea ${index} del archivo cargado, no existe en el maestro de conductores del portal`});
               this.erroresImportacionVehiculos.push({icon:'pi pi-exclamation-circle', classColor:'p-button-rounded p-button-warning p-button-text', severity:'warn', summary:'!Advertencia',detail:`El conductor ${conductor} de la línea ${index} del archivo cargado, no existe en el maestro de conductores del portal`});
               //valido = false;
-              //console.log('cedula',cedula);
+              ////console.log('cedula',cedula);
 
               let nuevoConductor ={
                 nombre:conductor,
@@ -3090,7 +3111,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.conductoresService.create(nuevoConductor)
             .subscribe({
                 next: (conductor)=>{
-                 //////////console.log(conductor);
+                 ////////////console.log(conductor);
                   this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue registrado correctamente`});
                   this.erroresImportacionVehiculos.push({icon:'pi pi-check', classColor:'p-button-rounded p-button-success p-button-text', severity:'success', summary:'!Ok',detail:`El conductor ${conductor.nombre} fue registrado correctamente`});
 
@@ -3117,11 +3138,11 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
               this.messageService.add({severity:'error', summary:'!Error', detail: `La transportadora ${transportadora} de la línea ${index} del archivo cargado, no existe en el maestro de transportadoras del portal`});
               this.erroresImportacionVehiculos.push({icon:'pi pi-times', classColor:'p-button-rounded p-button-danger p-button-text', severity:'error', summary:'!Error',detail:`La transportadora ${transportadora} de la línea ${index} del archivo cargado, no existe en el maestro de transportadoras del portal`});
               valido = false;
-              //console.log('transportadora',transportadora);
+              ////console.log('transportadora',transportadora);
             }
 
             let turno = await this.solicitudTurnoService.getTurnoByQuery({id_despacho_puerto:id_despacho});
-            //console.log('turno por id despacho',turno);
+            ////console.log('turno por id despacho',turno);
 
             if(turno){
               this.messageService.add({severity:'warn', summary:'!Advertencia', detail: `El vehiculo ${placa} con el id despacho ${id_despacho} de la línea ${index} ya se le asigno el turno ${turno.id} del archivo cargado, no existe en el maestro de transportadoras del portal`});
