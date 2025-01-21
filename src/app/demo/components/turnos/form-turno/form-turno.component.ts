@@ -304,6 +304,8 @@ remisionesPorCliente:any[] = [];
 
 tipoTurno:string = 'RETIRO';
 
+tipoOperacion:string ='';
+
 
 
   constructor( private messageService: MessageService,
@@ -558,7 +560,7 @@ tipoTurno:string = 'RETIRO';
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                //console.log('turno',JSON.parse(JSON.stringify(turno)));
+               console.log('turno',(turno));
                  
                  //console.log('Cargue informacion del turno',new Date().toTimeString());
                   this.turno = turno;
@@ -726,6 +728,10 @@ tipoTurno:string = 'RETIRO';
                   
                   this.configTablePedidosAlmacenCliente();
                   this.configSplitButton(this.estado,this.permisosModulo);
+                  if(this.turno.tipo==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==="ENTREGA").length>0){
+                    this.tipoOperacion='ENTREGA';
+                  }
+                   
               },
               error:(err)=>{
                 console.error(err);
@@ -770,7 +776,7 @@ tipoTurno:string = 'RETIRO';
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
       //////////////////////// ////////////// ////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
-      console.log('this.tipoTurno',this.tipoTurno);
+     //console.log('this.tipoTurno',this.tipoTurno);
       pedido.disponible = this.tipoTurno==='RETIRO'?((pedido.cantidadbodega-cantidadComprometida)<0?0:(pedido.cantidadbodega-cantidadComprometida)):((pedido.cantidad_pedido-cantidadComprometida)<0?0:pedido.cantidad_pedido-cantidadComprometida);
       
       
@@ -883,7 +889,7 @@ tipoTurno:string = 'RETIRO';
 
 
   configHeadersPedidos(){
-    console.log('config header pedidos turno', this.pedidosTurno)
+   //console.log('config header pedidos turno', this.pedidosTurno)
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
@@ -1777,7 +1783,7 @@ async validarHoraCargue():Promise<boolean>{
     // ////////////// ////////////console.log(this.solictudProduccionSeleccionada)
   }
 
-  cambiarEstadoTurno(){
+ async cambiarEstadoTurno(){
 
     //console.log(this.remisionesPorCliente);
 
@@ -1795,6 +1801,8 @@ async validarHoraCargue():Promise<boolean>{
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad de unidades a recibir en la inspección debe ser mayor a cero.` });
     } else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.PESADOF /*|| this.estado === this.estadosTurno.DESPACHADO*/) && (this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Debe ingresar el número del mafiesto de carga para cada remisión.` });
+    }else if(await this.validarFechaEstado()){
+
     }else{
       this.confirmationService.confirm({
         message: 'Esta seguro de '+this.accion+' la orden de cargue No. '+this.turnoId+'?',
@@ -1835,9 +1843,52 @@ async validarHoraCargue():Promise<boolean>{
     
   }
 
+  async validarFechaEstado():Promise<boolean>{
+
+    //console.log('estados turno',this.estadosTurno,);
+
+    let error = false;
+    let turno_actual = this.turno.estado;
+    let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.turno.detalle_solicitud_turnos_historial)),'id','ASC')
+
+    //console.log('historial_turno',historial_turno);
+
+    if(historial_turno.length > 0){
+      let ultimoEstado = historial_turno[historial_turno.length-1];
+      console.log('ultimoEstado',ultimoEstado);
+      let fecha_accion_ultimo_estado = new Date(`${ultimoEstado.fecha_accion} ${ultimoEstado.hora_accion}`);
+      
+
+      //fecha_accion_ultimo_estado.setHours(0,0,0);
+
+      //fecha_accion_ultimo_estado.setHours(ultimoEstado.hora_accion.split(':')[0],ultimoEstado.hora_accion.split(':')[1],ultimoEstado.hora_accion.split(':')[2]);
+
+      //console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
+
+      let fechaaccion = new Date(this.fechaaccion);
+
+      fechaaccion.setHours(0,0,0)
+
+      let horaaccion = new Date(this.horaaccion);//.toISOString().split('T')[1];
+
+      fechaaccion.setHours(horaaccion.getHours(),horaaccion.getMinutes(),horaaccion.getSeconds());
+
+      //console.log('fechaaccion',fechaaccion);
+
+      if(fechaaccion < fecha_accion_ultimo_estado){
+        this.messageService.add({severity:'error', summary: '!Error¡', detail: `La fecha del nuevo estado ${fechaaccion.toISOString().split('T')[0]} ${fechaaccion.toTimeString().split(' ')[0]} no puede ser menor a fecha de accion del ultimo estado "${ultimoEstado.estado}" ${fecha_accion_ultimo_estado.toISOString().split('T')[0]} ${fecha_accion_ultimo_estado.toTimeString().split(' ')[0]}.` });
+        error = true;
+      }
+      
+ 
+    }
+
+    return error;
+  }
+
   async configDataTurno():Promise<any> {
     
-    console.log('turno para validar estado',this.turno.condiciontpt);
+   //console.log('turno para validar estado',this.turno.condiciontpt);
 
     let nuevoEstado = "";
             let mensaje ="";
@@ -2011,7 +2062,7 @@ async validarHoraCargue():Promise<boolean>{
               data.inspeccion = this.inspeccionTurno;
             }
             
-          console.log('Data update turno',data);
+         //console.log('Data update turno',data);
 
     return data;
   }
@@ -2021,7 +2072,7 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
       .subscribe({
             next:async (turno)=>{
-                console.log("turno actualizado",turno);
+               //console.log("turno actualizado",turno);
                 
                 if(this.filesToUpload.length > 0 && this.uploadActivo){
                   for(let anexo of this.filesToUpload){
@@ -2067,8 +2118,8 @@ async validarHoraCargue():Promise<boolean>{
 
                 this.pedidosTurno.map((pedido)=>{
                   pedido.lineaUpdate = {update:false, create:false};
-                  if(turno.estado===this.estadosTurno.DESPACHADO){
-                    console.log('pedido',pedido);
+                  if(turno.estado===this.estadosTurno.DESPACHADO || turno.estado===this.estadosTurno.ENTREGADO){
+                   //console.log('pedido',pedido);
                     
                     pedido.remision = turno.detalle_solicitud_turnos_pedido.filter((lineaPedido: { itemcode: any; id: any; })=>lineaPedido.itemcode === pedido.itemcode && lineaPedido.id === pedido.id)[0].remision;
                   }
@@ -2172,7 +2223,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   setRemisiones(remisiones:any){
-    console.log('remisiones',remisiones);
+   //console.log('remisiones',remisiones);
     this.remisionesPorCliente = remisiones;
   }
 
@@ -2546,7 +2597,7 @@ async validarHoraCargue():Promise<boolean>{
   async validarFormulario():Promise<boolean> {
       let valido:boolean = false;
 
-      console.log(this.tablaPedidosTurno.data);
+     //console.log(this.tablaPedidosTurno.data);
       // if(this.tablaPedidosTurno.data[0].remision==undefined){
       //   ////////console.log('remisión no definida');
       // }
@@ -2942,7 +2993,7 @@ async validarHoraCargue():Promise<boolean>{
   
   configHeadersNewPedidos(){
 
-    console.log('config Header pedidos cleinte', this.pedidosCliente);
+   //console.log('config Header pedidos cleinte', this.pedidosCliente);
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
@@ -3013,7 +3064,7 @@ async validarHoraCargue():Promise<boolean>{
         this.showItemsSelectedPedidosAlmacenCliente=false;
     }else{
       const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-      console.log('pedidos seleccionados',pedidosSeleccionados);
+     //console.log('pedidos seleccionados',pedidosSeleccionados);
     
       if(pedidosSeleccionados.length > 0){
           
@@ -4008,8 +4059,8 @@ async validarHoraCargue():Promise<boolean>{
       }
 
       if(campo==='cantidad_cargue_lote'){
-        console.log('valorCampo',valorCampo);
-        console.log('parseFloat(arrayLinea[campo])',parseFloat(arrayLinea['cantidad_bodega_lote']));
+       //console.log('valorCampo',valorCampo);
+       //console.log('parseFloat(arrayLinea[campo])',parseFloat(arrayLinea['cantidad_bodega_lote']));
         if(valorCampo> parseFloat(arrayLinea['cantidad_bodega_lote'])){
           this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad a cagar del lote supera la cantidad existente en la bodega'});
           valorCampo =0;
@@ -4093,7 +4144,7 @@ async validarHoraCargue():Promise<boolean>{
 
   asignarLotesItem(){
 
-    console.log('lotesItemLine',JSON.stringify(this.lotesItemLine))
+   //console.log('lotesItemLine',JSON.stringify(this.lotesItemLine))
 
     let cantidad_solicitada = this.totalSolicitado.nativeElement.value;
     let totalTon = this.totalTonItem.nativeElement.value;

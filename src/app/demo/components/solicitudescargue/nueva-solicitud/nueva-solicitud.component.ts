@@ -328,7 +328,7 @@ this.usuariosService.getInfoUsuario()
           }
           this.clientes = clientesUsuario;
 
-          ////console.log(this.clientes);
+          console.log(this.clientes);
           this.getSaldosPedidos();
           
           
@@ -657,7 +657,7 @@ async getPedidosPorCliente(clientesSeleccionados:any){
  // //////console.log(this.pedidos.filter(pedido=>pedido.condicion_tpt===this.condicion_tpt));
 
   this.pedidosCliente = await this.pedidosService.getPedidosPorCliente(clientesSeleccionados, this.condicion_tpt, this.pedidos);
-  ////console.log('pedidosCliente',this.pedidosCliente);
+  console.log('pedidosCliente',this.pedidosCliente);
   this.getAlmacenesEnPedidos();
 }
 

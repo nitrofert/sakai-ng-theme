@@ -73,6 +73,8 @@ infoTurno!:any;
 
 evidencias_cargue:any[] = []
 
+tipoTurno:string="";
+
 
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
@@ -162,14 +164,14 @@ evidencias_cargue:any[] = []
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                //console.log('turno docs',turno);
+                console.log('turno docs',turno);
                   
                   this.turno = turno;
                   this.displayModal = false;
                   this.loadingCargue = false;
 
                   this.evidencias_cargue = await this.getEvidenciasCargue(turno);
-                
+                  this.tipoTurno = this.turno.tipo;
               },
               error:(err)=>{
                 console.error(err);
