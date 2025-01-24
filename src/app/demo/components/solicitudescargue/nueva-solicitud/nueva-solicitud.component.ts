@@ -167,6 +167,8 @@ condicionesFiltradas : any[] = [];
 
 verFletes:boolean = false;
 
+loadingTablePedidos:boolean = true;
+
 
 constructor(private pedidosService: PedidosService,
             private almacenesService: AlmacenesService,
@@ -1286,6 +1288,8 @@ configDataTablePedidos(arregloPedido:any){
       }
       index++;
     } 
+
+    this.loadingTablePedidos = false;
     
     return dataTable;
 }
@@ -1296,6 +1300,7 @@ filtrarCliente2(event: any) {
 
 seleccionarCliente2(clienteSeleccionado2:any){
      //////// //// ////////////console.log(clienteSeleccionado2, this.almacenSeleccionado)
+     this.loadingTablePedidos = true;
       this.getPedidosClientePorAlmacen(this.almacenSeleccionado.code, clienteSeleccionado2.code);
 }   
 

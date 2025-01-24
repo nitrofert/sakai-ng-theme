@@ -37,6 +37,7 @@ import { PdfOrdenCargue } from '../solicitudescargue/config-pdf/orden-cargue';
 import { WebCamModule } from 'src/app/layout/shared/webcam/webcam.module';
 import { RemisionesComponent } from './remisiones/remisiones.component';
 import { UsbPortModule } from 'src/app/layout/shared/usb-port/usb-port.module';
+import { PdfRemision } from '../solicitudescargue/config-pdf/remision';
 
 
 
@@ -79,7 +80,8 @@ import { UsbPortModule } from 'src/app/layout/shared/usb-port/usb-port.module';
              NovedadesService,
              PdfSolicitudCargue,
              PdfInspeccionCargue,
-             PdfOrdenCargue],
+             PdfOrdenCargue,
+             PdfRemision],
   
 })
 export class TurnosModule { }

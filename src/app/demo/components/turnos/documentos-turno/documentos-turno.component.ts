@@ -25,6 +25,7 @@ import { DynamicUploadComponent } from 'src/app/layout/shared/dynamic-upload/dyn
 import { PdfSolicitudCargue } from '../../solicitudescargue/config-pdf/solicitud-cargue';
 import { PdfInspeccionCargue } from '../../solicitudescargue/config-pdf/inspeccion-cargue';
 import { PdfOrdenCargue } from '../../solicitudescargue/config-pdf/orden-cargue';
+import { PdfRemision } from '../../solicitudescargue/config-pdf/remision';
 
 @Component({
   selector: 'app-documentos-turno',
@@ -65,7 +66,9 @@ turno!:any;
 
 domain:string = window.location.hostname;
 
-documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"Orden de cargue", tipo:"orden_cargue"},{label:"inspección de cargue", tipo:"inspeccion"}];
+//documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"Orden de cargue", tipo:"orden_cargue"},{label:"inspección de cargue", tipo:"inspeccion"}];
+
+documentos:any[] = [];
 
 //documentos:any[] = [{label:"Solicitud de cargue", tipo:"solicitud"},{label:"inspección de cargue", tipo:"inspeccion"}];
 
@@ -91,7 +94,8 @@ tipoTurno:string="";
               public functionsService:FunctionsService,
               private pdfSolicitudCargue:PdfSolicitudCargue,
               private pdfInspeccionCargue:PdfInspeccionCargue,
-              private pdfOrdenCargue:PdfOrdenCargue
+              private pdfOrdenCargue:PdfOrdenCargue,
+              private pdfRemision:PdfRemision
             
               ) { }
 
@@ -102,6 +106,7 @@ tipoTurno:string="";
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
     this.infoTurno = this.config.data.info;
+    ////console.log('this.infoTurno',this.infoTurno);
     this.getPermisosModulo();
    
 
@@ -114,11 +119,11 @@ tipoTurno:string="";
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    //////console.log(modulo);
+    ////////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////// //////////console.log(permisos);
+              ////////////////////////// ////////////// ////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -128,7 +133,7 @@ tipoTurno:string="";
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////// //////////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// ////////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -138,7 +143,7 @@ tipoTurno:string="";
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////// //////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// ////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
            
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
         
@@ -164,7 +169,7 @@ tipoTurno:string="";
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                console.log('turno docs',turno);
+                //console.log('turno docs',turno);
                   
                   this.turno = turno;
                   this.displayModal = false;
@@ -172,6 +177,79 @@ tipoTurno:string="";
 
                   this.evidencias_cargue = await this.getEvidenciasCargue(turno);
                   this.tipoTurno = this.turno.tipo;
+
+                  if(this.tipoTurno==='RETIRO'){
+                    this.documentos = [{label:"Solicitud de cargue", tipo:"solicitud",value:''},{label:"Orden de cargue", tipo:"orden_cargue",value:''},{label:"inspección de cargue", tipo:"inspeccion",value:''}];
+                  }
+
+                  let remisiones_turno:any[] = [];
+
+                  for(let remision of turno.detalle_solicitud_turnos_remisiones){
+                    this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
+
+                    // let linea_remision:any = {
+                    //   numero:remision.docnum,
+                    //   pedido:remision.base_docnum,
+                    //   cliente: turno.solicitud.clientes.filter((socio_negocio: { CardCode: any; })=>socio_negocio.CardCode === remision.CardCode)[0],
+                    //   destino: `${remision.municipioentrega} - ${remision.lugarentrega}`,
+                    //   vehiculo:turno.vehiculo,
+                    //   transportadora:turno.transportadora,
+                    //   conductor:turno.conductor,
+                    //   tara:turno.peso_vacio,
+                    //   peso_carga:turno.peso_neto - turno.peso_vacio,
+                    //   neto:turno.peso_neto,
+                    // }
+
+                    // let detalle_remision:any[] = [];
+                    // //Buscar en detalle_pedidos_turno los items coincidentes con la remision.docnum
+
+                    // let detalle_pedidos_turno = turno.detalle_solicitud_turnos_pedido.filter((pedido:{remision:any})=>pedido.remision === remision.docnum);
+
+                    // for(let pedido of detalle_pedidos_turno){
+                    //   let linea_detalle_remision = {
+                    //     pedidonum:pedido.pedidonum,
+                    //     linea:pedido.linea,
+                    //     bodega:pedido.bodega,
+                    //     itemcode:pedido.itemcode,
+                    //     itemname:pedido.itemname,
+                    //     cantidad:pedido.cantidad,
+                    //     cantidad_sacos:pedido.cantidad_sacos,
+                    //     lote:'',
+                    //     unidad:'TONELADA'
+                    //   }
+                    //   //Si la linea del pedido no tiene lotes asignar linea_detalle_remision
+                    //   if(pedido.detalle_lotes_item_turno!=undefined && pedido.detalle_lotes_item_turno.length ===0){
+                    //     detalle_remision.push(linea_detalle_remision);
+                    //   }else{
+                    //     for(let lote of pedido.detalle_lotes_item_turno){
+                    //       linea_detalle_remision.cantidad = lote.cantidad_cargue_lote;
+                    //       linea_detalle_remision.cantidad_sacos = lote.cantidad_sacos_lote;
+                    //       linea_detalle_remision.lote = lote.lote;
+
+                    //       detalle_remision.push(linea_detalle_remision);
+
+                    //     }
+                    //   }
+                    // }
+
+                    // linea_remision.detalle_remision = detalle_remision;
+                    // remisiones_turno.push(linea_remision);
+
+                     
+
+                  }
+
+                   
+
+                    //console.log('remisiones_turno',remisiones_turno)
+
+                    
+
+                    
+
+
+                    
+                  
               },
               error:(err)=>{
                 console.error(err);
@@ -197,7 +275,7 @@ tipoTurno:string="";
       }
     }
 
-   //console.log(evidenciasItemTurno);
+   ////console.log(evidenciasItemTurno);
 
     return evidenciasItemTurno;
 
@@ -207,7 +285,7 @@ tipoTurno:string="";
     window.open(url);
   }
 
-  generarPDF(tipo:string){
+  generarPDF(tipo:string,valor?:any){
 
       switch(tipo){
         case 'solicitud':
@@ -220,6 +298,10 @@ tipoTurno:string="";
 
         case 'orden_cargue':
             this.pdfOrden();
+        break;
+
+        case 'remision':
+          this.pdfRemisionTurno(valor);
         break;
 
 
@@ -246,6 +328,13 @@ tipoTurno:string="";
 
  async pdfOrden():Promise<void> {
   await this.pdfOrdenCargue.generarPDF(this.infoTurno);
-}
+ }
+
+ async pdfRemisionTurno(remision:any):Promise<void>{
+
+  await this.pdfRemision.generarPDF(this.turno.id,remision);
+ }
+
+
 
 }
