@@ -1830,7 +1830,7 @@ async validarHoraCargue():Promise<boolean>{
               
             //}else{
               
-              //this.updateTurno(data);
+              this.updateTurno(data);
             
             //}
             
@@ -1901,17 +1901,25 @@ async validarHoraCargue():Promise<boolean>{
     //console.log('estados turno',this.estadosTurno,);
 
     let error = false;
-    let turno_actual = this.turno.estado;
+    let estado_turno_actual = this.turno.estado;
     let hoy:Date = new Date((new Date() ).setHours(0,0,0));
     let fecha_vigencia_arl_activa:Date = this.turno.conductor.historial_arl.length===0?new Date((new Date() ).setHours(0,0,0)):new Date(`${this.turno.conductor.historial_arl.find((arl: { estado: string; })=>arl.estado==='ACTIVO').fechafin}T00:00:00`);
 
     console.log('hoy',hoy)
     console.log('fecha_vigencia_arl_activa',fecha_vigencia_arl_activa)
     
-    if(this.turno.conductor.historial_arl.length===0){
+    if(estado_turno_actual === this.estadosTurno.SOLICITADO && this.turno.conductor.historial_arl.length===0 ){
+      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: `El conductor ${this.turno.conductor.nombre} no tiene asociado una ARL` });
+      //error = true;
+    }else if(estado_turno_actual === this.estadosTurno.SOLICITADO && this.hoy > fecha_vigencia_arl_activa){
+      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: `La fecha de vigencia de la ARL del conductor ${fecha_vigencia_arl_activa.toISOString().split('T')[0]} es menor a la fecha actual  ${hoy.toISOString().split('T')[0]} ` });
+      //error = true;
+    }
+
+    if(estado_turno_actual != this.estadosTurno.SOLICITADO && this.turno.conductor.historial_arl.length===0 ){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `El conductor ${this.turno.conductor.nombre} no tiene asociado una ARL` });
       error = true;
-    }else if(this.hoy > fecha_vigencia_arl_activa){
+    }else if(estado_turno_actual != this.estadosTurno.SOLICITADO && this.hoy > fecha_vigencia_arl_activa){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La fecha de vigencia de la ARL del conductor ${fecha_vigencia_arl_activa.toISOString().split('T')[0]} es menor a la fecha actual  ${hoy.toISOString().split('T')[0]} ` });
       error = true;
     }
