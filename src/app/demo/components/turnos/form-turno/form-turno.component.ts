@@ -39,6 +39,9 @@ export class FormTurnoComponent implements  OnInit {
   turnoId!:number;
   ordenCargue: any;
   hoy:Date = new Date();
+  ayer:Date = new Date((new Date()).setDate(this.hoy.getDate()-1));
+
+  
 
   cliente:string = '';
   localidad:string = '';
@@ -333,6 +336,10 @@ tipoOperacion:string ='';
     // for (const device of devices) {
     //    //console.log(device); // Legacy device
     // }
+
+    console.log('ayer',this.ayer);
+    console.log('hoy',this.hoy);
+
 
     this.displayModal = true;
     this.loadingCargue = true;
@@ -1803,6 +1810,8 @@ async validarHoraCargue():Promise<boolean>{
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Debe ingresar el número del mafiesto de carga para cada remisión.` });
     }else if(await this.validarFechaEstado()){
 
+    }else if(await this.validarARL()){
+
     }else{
       this.confirmationService.confirm({
         message: 'Esta seguro de '+this.accion+' la orden de cargue No. '+this.turnoId+'?',
@@ -1821,7 +1830,7 @@ async validarHoraCargue():Promise<boolean>{
               
             //}else{
               
-              this.updateTurno(data);
+              //this.updateTurno(data);
             
             //}
             
@@ -1851,7 +1860,7 @@ async validarHoraCargue():Promise<boolean>{
     let turno_actual = this.turno.estado;
     let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.turno.detalle_solicitud_turnos_historial)),'id','ASC')
 
-    //console.log('historial_turno',historial_turno);
+    console.log('historial_turno',historial_turno);
 
     if(historial_turno.length > 0){
       let ultimoEstado = historial_turno[historial_turno.length-1];
@@ -1873,7 +1882,8 @@ async validarHoraCargue():Promise<boolean>{
 
       fechaaccion.setHours(horaaccion.getHours(),horaaccion.getMinutes(),horaaccion.getSeconds());
 
-      //console.log('fechaaccion',fechaaccion);
+      console.log('fechaaccion',fechaaccion);
+      console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
 
       if(fechaaccion < fecha_accion_ultimo_estado){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: `La fecha del nuevo estado ${fechaaccion.toISOString().split('T')[0]} ${fechaaccion.toTimeString().split(' ')[0]} no puede ser menor a fecha de accion del ultimo estado "${ultimoEstado.estado}" ${fecha_accion_ultimo_estado.toISOString().split('T')[0]} ${fecha_accion_ultimo_estado.toTimeString().split(' ')[0]}.` });
@@ -1885,6 +1895,31 @@ async validarHoraCargue():Promise<boolean>{
 
     return error;
   }
+
+  async validarARL():Promise<boolean>{
+
+    //console.log('estados turno',this.estadosTurno,);
+
+    let error = false;
+    let turno_actual = this.turno.estado;
+    let hoy:Date = new Date((new Date() ).setHours(0,0,0));
+    let fecha_vigencia_arl_activa:Date = this.turno.conductor.historial_arl.length===0?new Date((new Date() ).setHours(0,0,0)):new Date(`${this.turno.conductor.historial_arl.find((arl: { estado: string; })=>arl.estado==='ACTIVO').fechafin}T00:00:00`);
+
+    console.log('hoy',hoy)
+    console.log('fecha_vigencia_arl_activa',fecha_vigencia_arl_activa)
+    
+    if(this.turno.conductor.historial_arl.length===0){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail: `El conductor ${this.turno.conductor.nombre} no tiene asociado una ARL` });
+      error = true;
+    }else if(this.hoy > fecha_vigencia_arl_activa){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail: `La fecha de vigencia de la ARL del conductor ${fecha_vigencia_arl_activa.toISOString().split('T')[0]} es menor a la fecha actual  ${hoy.toISOString().split('T')[0]} ` });
+      error = true;
+    }
+
+    return error;
+  }
+
+  
 
   async configDataTurno():Promise<any> {
     
@@ -2062,7 +2097,7 @@ async validarHoraCargue():Promise<boolean>{
               data.inspeccion = this.inspeccionTurno;
             }
             
-         //console.log('Data update turno',data);
+         console.log('Data update turno',data);
 
     return data;
   }
@@ -2072,7 +2107,11 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
       .subscribe({
             next:async (turno)=>{
-               //console.log("turno actualizado",turno);
+               console.log("turno actualizado",turno);
+
+               this.turno.detalle_solicitud_turnos_historial = turno.detalle_solicitud_turnos_historial;
+
+
                 
                 if(this.filesToUpload.length > 0 && this.uploadActivo){
                   for(let anexo of this.filesToUpload){

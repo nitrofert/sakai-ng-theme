@@ -344,7 +344,10 @@ export class ListadoSolicitudesComponent implements OnInit {
           await this.configBarSatckChart(dataBarStackChart);
 
           ////////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
-          this.solicitudesExtendida = solicitudesTurnos.raw;
+          //this.solicitudesExtendida = solicitudesTurnos.raw;
+          this.solicitudesExtendida = await this.functionsService.groupArray(JSON.parse(JSON.stringify(solicitudesTurnos.raw)),'dataKey') ;
+          console.log(this.solicitudesExtendida);
+
           this.solicitudesEntidad = solicitudesTurnos.entities;
 
          ////console.log('this.solicitudesExtendida', this.solicitudesExtendida);

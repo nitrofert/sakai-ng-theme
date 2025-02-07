@@ -122,7 +122,7 @@ export class FormConductorComponent  implements  OnInit {
               .subscribe({
                   next: (conductor)=>{
                    //////////console.log(conductor);
-                    this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue actualizado correctamente`});
+                    this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${this.nombre} fue actualizado correctamente`});
                   },
                   error:(err)=> {
                       console.error(err);
@@ -291,6 +291,12 @@ export class FormConductorComponent  implements  OnInit {
                             //this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue actualizado correctamente`});
                             this.historialARL = historialARL;
                             this.displayModalRegistroARL=false;
+
+                            let arlActiva:any = historialARL.find((arl: { estado: string; })=>arl.estado==='ACTIVO');
+                            this.links3 = arlActiva.path_s3;
+                            this.fechainicio = new Date(`${arlActiva.fechainicio}T00:00:00`);
+                            this.fechafin = new Date(`${arlActiva.fechafin}T00:00:00`);
+
                           },
                           error:(err)=> {
                               console.error(err);

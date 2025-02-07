@@ -177,6 +177,8 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
   async setDataRemisiones(infoTurno:any):Promise<any[]>{
 
     let remisiones:any[] = [];
+
+    let treTableLotes:any[] = [];
     
     //Armar array de remisiones
     for(let linea_detalle of infoTurno.detalle_solicitud_turnos_pedido){
@@ -256,6 +258,8 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
                 ]
               
             })
+
+            
           }else{
             let index = remisiones.findIndex(remision=>remision.base_docnum === linea_detalle.pedidonum && remision.lugarentrega == linea_detalle.lugarentrega && remision.municipioentrega == linea_detalle.municipioentrega);
             remisiones[index].detalle_remision.push(
@@ -316,7 +320,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
         
     }
 
-   //console.log('remisiones ---', remisiones);
+    console.log('remisiones ---', remisiones);
     return remisiones;
 }
 
@@ -329,6 +333,23 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
             CardCode:linea_detalle.CardCode,
             CardName:linea_detalle.CardName,
             remisiones: this.remisiones.filter(remision=>remision.CardCode===linea_detalle.CardCode)
+            // remisiones: await (this.remisiones.filter(remision=>remision.CardCode===linea_detalle.CardCode)).map((remision)=>{
+            //   return {
+            //     fecha:remision.fecha,
+            //     turnoid:remision.turnoid,
+            //     base_docnum:remision.base_docnum,
+            //     base_docentry:remision.base_docentry,
+            //     base_objectType:remision.base_objectType,
+            //     municipioentrega:remision.municipioentrega,
+            //     lugarentrega:remision.lugarentrega,
+            //     CardCode:remision.CardCode,
+            //     CardName:remision.CardName,
+            //     codigo_vendedor:remision.codigo_vendedor,
+            //     manifiesto:remision.manifiesto,
+            //     tipo_operacion:remision.tipo_operacion,
+            //     detalle_remision:remision.detalle_remision
+            //   }
+            // })
             
           })
         }
@@ -352,7 +373,35 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
   }
 
   async emitirRemisionesPorCliente():Promise<void>{
-    this.onGetRemisiones.emit(this.clientes)
+    
+    let clientes:any[] =[];
+    for(let cliente of this.clientes){
+      clientes.push({
+          CardCode:cliente.CardCode,
+          CardName:cliente.CardName,
+          remisiones: await cliente.remisiones.map((remision: { fecha: any; turnoid: any; base_docnum: any; base_docentry: any; base_objectType: any; municipioentrega: any; lugarentrega: any; CardCode: any; CardName: any; codigo_vendedor: any; manifiesto: any; tipo_operacion: any; detalle_remision: any; })=>{
+            return {
+              fecha:remision.fecha,
+                turnoid:remision.turnoid,
+                base_docnum:remision.base_docnum,
+                base_docentry:remision.base_docentry,
+                base_objectType:remision.base_objectType,
+                municipioentrega:remision.municipioentrega,
+                lugarentrega:remision.lugarentrega,
+                CardCode:remision.CardCode,
+                CardName:remision.CardName,
+                codigo_vendedor:remision.codigo_vendedor,
+                manifiesto:remision.manifiesto,
+                tipo_operacion:remision.tipo_operacion,
+                detalle_remision:remision.detalle_remision
+            }
+          })
+      })
+    }
+
+    console.log('clientes remisiones',clientes);
+    this.onGetRemisiones.emit(clientes)
+    //this.onGetRemisiones.emit(this.clientes)
   }
 
   async cambioValorManifiesto(){

@@ -161,6 +161,7 @@
     [style]="{ width: '50vw' }"
     [draggable]="false"
     [resizable]="false"
+    [maximizable]="true"
 >
     <div class="grid">
         <div class="col-12">
@@ -365,6 +366,7 @@
     [style]="{ width: '50vw' }"
     [draggable]="false"
     [resizable]="false"
+    [maximizable]="true"
 >
 
     <div class="grid">
@@ -378,7 +380,7 @@
                                 inputId="fechainicio"
                                 [showIcon]="true"
                                 [(ngModel)]="nueva_fechainicio_arl"
-                                [minDate]="hoy"
+                                
                                 
                                 
                             >
@@ -393,7 +395,7 @@
                                 inputId="fechafin"
                                 [showIcon]="true"
                                 [(ngModel)]="nueva_fechafin_arl"
-                                [minDate]="hoy"
+                                
                                 
                                 
                             >
@@ -402,7 +404,7 @@
                         </span>
                     </div>
 
-                    <div  class="field col-12">
+                    <div  class="field col-12 mt-5">
                         <!--<label for="tipoanexo"><h6>Anexos - Estado - Turno</h6></label>-->
                         <span class="p-float-label">
                             <label for="fechafin"><h6>Subir ARL</h6></label>

@@ -312,6 +312,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                       if(await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.TRANSPORTASOCIEDAD) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.ADMIN)){
                         //Listar todos los clientes
                         clientesUsuario = await this.clientesService.infoProveedores();
+
             
                       }else{
                         //Mostrar clientes asociados al usuario
@@ -325,10 +326,14 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                         clienteUsuario.code = clienteUsuario.CardCode;
                         clienteUsuario.name =  clienteUsuario.CardName;
                         clienteUsuario.label = clienteUsuario.CardCode+' - '+clienteUsuario.CardName;
+
+                        if(clienteUsuario.CardCode==='PN901174177'){
+                          console.log('NItrofert')
+                        }
                       }
                       this.clientes = clientesUsuario;
             
-                      ////console.log(this.clientes);
+                      console.log('this.clientes',this.clientes);
                       
                       
                       this.getSaldosPedidos();
@@ -470,7 +475,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.pedidosService.getSaldosOrdenesCompra()
                 .subscribe({
                     next:async (saldosPedidos)=>{
-                        //console.log('saldosPedidos',saldosPedidos);
+                        console.log('saldosPedidos',saldosPedidos);
                         let pedidosClientes:any[] = [];
                         for(let indexPedido in saldosPedidos){
                         
@@ -478,6 +483,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                             // if(saldosPedidos[indexPedido].DocNum == '121011980'){
                             //   ////////console.log('pedido 121011980',saldosPedidos[indexPedido]);
                             // }
+
+                            console.log( saldosPedidos[indexPedido].CardCode);
                         
                             if(this.clientes.find(cliente =>cliente.CardCode == saldosPedidos[indexPedido].CardCode)){
             
@@ -569,9 +576,9 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                         // ////////////console.log(pedidosClientes.filter(pedido =>pedido.docnum ===290000003));
                         // //// ////////////console.log(pedidosClientes.filter(pedido=>pedido.condicion_tpt==='TRANSP' && !pedido.itemcode.startsWith('SF')));
 
-
+                        console.log('pedidosClientes',pedidosClientes);
                         this.pedidos = await this.functionsService.sortArrayObject(pedidosClientes,'index','ASC') ;
-                        ////console.log(this.pedidos);
+                        console.log('this.pedidos',this.pedidos);
                     },
                     error:(err)=>{
                       console.error(err);
@@ -1176,7 +1183,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             }else{
 
                 
-                this.vehiculosSeleccionadoPedidos = [];
+                //this.vehiculosSeleccionadoPedidos = [];
                 // for(let vehiculo of vehiculos){
                 //     //console.log('vehiculo seleccionado',vehiculo);
                 //     let lineaVehiculo = this.vehiculos.find(vh => vh.code === vehiculo.placa);
@@ -1993,7 +2000,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             }
         }
 
-        grabarSolicitud(){
+        async grabarSolicitud(){
 
           //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
           this.displayModal = true;
@@ -2085,8 +2092,19 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 let tipo_operacion = infoPedido[0].tipo_operacion;
                 let motonave = infoPedido[0].motonave;
                 
-                
-        
+                //Si el tipo de operacion es igual a traslado, buscar webservice de lotes segun item , linea y numero documento de traslado sap
+                let lotesItemDoc:any[] = [];
+                if(tipo_operacion==='TRASLADO'){
+                  let lotesItem = await this.pedidosService.lotesItemDocnum(pedido.itemcode,pedido.linenum,pedido.pedido)
+                  for(let index in lotesItem)  {
+                    lotesItemDoc.push({
+                      cantidad_bodega_lote:lotesItem[index].Cantidad,
+                      cantidad_cargue_lote:pedido.cantidad ,
+                      cantidad_sacos_lote:0,
+                      lote:lotesItem[index].Lote,
+                    })
+                  }
+                }
         
                // let flete_tonelada = this.verFletes?pedido.flete:0;
                let flete_tonelada = 0;
@@ -2131,7 +2149,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                   precio_unitario,
                   tipo_operacion,
                   bodega_final,
-                  motonave
+                  motonave,
+                  detalle_lotes_item_turno:lotesItemDoc
         
                 });
                 
@@ -2174,7 +2193,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 detalle_solicitud
               }
              
-             ////console.log('newSolicitud',newSolicitud);
+             console.log('newSolicitud',newSolicitud);
               
               
              this.solicitudTurnoService.create(newSolicitud)

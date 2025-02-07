@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { TreeNode } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { UrlApiService } from './url-api.service';
 
 @Injectable()
@@ -144,6 +144,22 @@ export class PedidosService {
         }
         const url:string = `${this.api_url}/api/sb1xe/saldos-ordenes?compania=${this.urlApiService.companySAP}${options}`;
         return this.http.get<any>(url);
+    }
+
+
+
+    getLotesItemDocnum(itemcode:string,linenum:string,docnum:any):Observable<any> {
+        
+        //const url:string = `${this.api_url}/api/sb1xe/lotes-item-doc?compania=${this.urlApiService.companySAP}&item=${itemcode}&linea=${linenum}&documento=${docnum}`;
+        const url:string = `${this.api_url}/api/sb1xe/lotes-item-doc?compania=${this.urlApiService.companySAP}&item=${itemcode}&documento=${docnum}`;
+        return this.http.get<any>(url);
+    }
+
+    async lotesItemDocnum(itemcode:string,linenum:string,docnum:any):Promise<any>{
+        let lotesItemDoc$ = await this.getLotesItemDocnum(itemcode,linenum,docnum);
+        let lotesItemDoc = lastValueFrom(lotesItemDoc$);
+
+        return lotesItemDoc;
     }
 
    

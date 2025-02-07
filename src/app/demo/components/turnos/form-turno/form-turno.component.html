@@ -600,11 +600,17 @@
                 <div class="p-fluid p-formgrid grid">
                     <div class="field col-12 md:col-6 mt-3">
                         <span class="p-float-label">
-                            <p-calendar
+                            <!-- <p-calendar
                                 inputId="fechaaccion"
                                 [showIcon]="true"
                                 [(ngModel)]="fechaaccion"
                                 [minDate]="hoy"
+                            ></p-calendar> -->
+                            <p-calendar
+                                inputId="fechaaccion"
+                                [showIcon]="true"
+                                [(ngModel)]="fechaaccion"
+                                [minDate]="ayer"
                             ></p-calendar>
                             <label for="fechaaccion"
                                 ><h6>Fecha acción</h6></label

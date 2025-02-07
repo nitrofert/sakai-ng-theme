@@ -451,8 +451,26 @@
                                             {{ vehiculo.itemName }}
                                         </td>
                 
-                                        <td>
-                                            {{ vehiculo.cantidad }}
+                                        <td pEditableColumn>
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input
+                                                        
+                                                        pInputText
+                                                        type="number"
+                                                        [(ngModel)]="
+                                                            vehiculo.cantidad
+                                                        "
+                                                    />
+                                                  
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{
+                                                        vehiculo.cantidad 
+                                                    }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                            
                                         </td>
                                     </tr>
                                 </ng-template>
