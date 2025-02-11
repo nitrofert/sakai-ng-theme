@@ -640,11 +640,16 @@ tipoOperacion:string ='';
                   this.celular = turno.conductor.numerocelular;
                   this.email = turno.conductor.email;
                   
-                  let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);
-                  this.cantidad = totalesTabla[0].cantidad;
+                  let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  console.log(this.peso_neto-this.peso_bruto);
+                  //console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
+                  this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
+
+                  console.log('cantidad',this.cantidad);
+                  console.log('turno.peso_neto',turno.peso_neto);
+                 
                   this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
                   //this.peso_neto = this.peso_bruto+this.cantidad;
-                  this.peso_neto = turno.peso_neto==0?this.peso_bruto+this.cantidad:turno.peso_neto;
+                  this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
                   this.totalCarga = totalesTabla[0].cantidad;
                   this.displayModal = false;
                   this.loadingCargue = false;
@@ -1034,7 +1039,7 @@ tipoOperacion:string ='';
           if(!pedido.itemcode.toLowerCase().startsWith("sf")){
             totalCarga+=parseFloat(pedido.cantidad); 
           }
-          this.cantidad = totalCarga;
+          //this.cantidad = totalCarga;
           //
           //this.totalCarga = totalCarga;
           //this.cantidad =totalCarga;
@@ -2601,7 +2606,8 @@ async validarHoraCargue():Promise<boolean>{
       event.target.value =0;
     }
     ////////////////// ////////////// ////////////console.log(peso, this.peso_bruto);
-    this.peso_neto = this.cantidad+parseFloat(event.target.value)
+    this.peso_neto = this.turno.tipo==='RETIRO'?this.cantidad+parseFloat(event.target.value):this.turno.peso_neto;
+    this.cantidad =  Number((this.peso_neto-parseFloat(event.target.value)).toFixed(2));
     if(this.pesomax < (this.peso_neto)){
       //error cantidad a cargar mayor a la capacidad del vehiculo
       this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});
@@ -2622,7 +2628,8 @@ async validarHoraCargue():Promise<boolean>{
       event.target.value =0;
     }
     ////////////// ////////////// ////////////console.log(peso, this.peso_bruto, parseFloat(event.target.value));
-    this.cantidad = parseFloat(event.target.value)-this.peso_bruto;
+    //this.cantidad = parseFloat(event.target.value)-this.peso_bruto;
+    this.cantidad =  Number((parseFloat(event.target.value)-this.peso_bruto).toFixed(2));
     if(this.pesomax < (parseFloat(event.target.value))){
       //error cantidad a cargar mayor a la capacidad del vehiculo
       this.messageService.add({severity:'warn', summary: '!Error¡', detail:`El peso neto a cargar es mayor al peso neto permitido`});

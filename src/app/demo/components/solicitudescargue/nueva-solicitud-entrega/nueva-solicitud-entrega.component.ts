@@ -2170,7 +2170,9 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 conductor:this.conductores.find(conductor=>conductor.code === vehiculo.cedula).id,
                 locacion:this.almacenSeleccionado.code,
                 pedidos_detalle_solicitud:pedidosVehiculo,
-                tipo:'ENTREGA'
+                tipo:'ENTREGA',
+                estado: EstadosDealleSolicitud.AUTORIZADO
+
               }
 
               if(vehiculo.id_despacho){
