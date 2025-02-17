@@ -1921,10 +1921,10 @@ async validarHoraCargue():Promise<boolean>{
       //error = true;
     }
 
-    if(estado_turno_actual != this.estadosTurno.SOLICITADO && this.turno.conductor.historial_arl.length===0 ){
+    if(estado_turno_actual != this.estadosTurno.SOLICITADO && this.turno.conductor.historial_arl.length===0 && (this.turno.tipo ==='RETIRO' || (this.turno.tipo ==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==='ENTREGA').length >0 ))){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `El conductor ${this.turno.conductor.nombre} no tiene asociado una ARL` });
       error = true;
-    }else if(estado_turno_actual != this.estadosTurno.SOLICITADO && this.hoy > fecha_vigencia_arl_activa){
+    }else if(estado_turno_actual != this.estadosTurno.SOLICITADO && this.hoy > fecha_vigencia_arl_activa && (this.turno.tipo ==='RETIRO' || (this.turno.tipo ==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==='ENTREGA').length >0 ))){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La fecha de vigencia de la ARL del conductor ${fecha_vigencia_arl_activa.toISOString().split('T')[0]} es menor a la fecha actual  ${hoy.toISOString().split('T')[0]} ` });
       error = true;
     }
