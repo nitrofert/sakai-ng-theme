@@ -227,7 +227,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
   
             const modulo = this.router.url;
             
-            ////console.log('modulo',modulo);
+            console.log('modulo',modulo);
             this.usuariosService.getPermisosModulo(modulo)
                 .subscribe({
                     next: async (permisos)=>{
@@ -1784,225 +1784,225 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             
         }
 
-        grabarSolicitud2(){
+        // grabarSolicitud2(){
 
-            //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
-            this.displayModal = true;
-            this.loadingCargue = true;
-            this.completeCargue=false;
-            this.completeTimer = false;
+        //     //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
+        //     this.displayModal = true;
+        //     this.loadingCargue = true;
+        //     this.completeCargue=false;
+        //     this.completeTimer = false;
           
-            //setTimeout(this.setTimer,2500);
-            setTimeout(()=>{this.setTimer()},2500);
+        //     //setTimeout(this.setTimer,2500);
+        //     setTimeout(()=>{this.setTimer()},2500);
            
-            //Validar existencia de pedidos en vehiculos
-            let error = false;
-            let detalle_solicitud:any[] = [];
+        //     //Validar existencia de pedidos en vehiculos
+        //     let error = false;
+        //     let detalle_solicitud:any[] = [];
           
             
             
-            for(let vehiculo of this.vehiculosEnSolicitud){
+        //     for(let vehiculo of this.vehiculosEnSolicitud){
           
-              if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
-                this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
-                //error = false;
-                //this.displayModal = false;
-              }
+        //       if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
+        //         this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
+        //         //error = false;
+        //         //this.displayModal = false;
+        //       }
           
-              if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
-                //error = false;
-                //this.displayModal = false;
-              }
+        //       if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
+        //         this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
+        //         //error = false;
+        //         //this.displayModal = false;
+        //       }
           
-              if(vehiculo.pedidos.length == 0){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado pedidos`});
-                error = true;
-                this.displayModal = false;
-              }else/* if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
-                this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
-                error = false;
-                this.displayModal = false;
-              }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length >1 && this.condicion_tpt=='TRANSP'){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} solo se le puede asignar un solo item de flete`});
-                error = true;
-                this.displayModal = false;
-              }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
-                error = false;
-                this.displayModal = false;
-              }else*/{
-                let pedidosVehiculo:any[] = [];
-                // ////////////console.log(this.pedidosCliente);
-                for(let pedido of vehiculo.pedidos){
-                  //////console.log('this.pedidosCliente',this.pedidosCliente);
-                 ////// //// ////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
-                  let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
-                 ////console.log('infoPedido',infoPedido);
-                  /*
-                  let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
-                  let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
-                  let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
+        //       if(vehiculo.pedidos.length == 0){
+        //         this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado pedidos`});
+        //         error = true;
+        //         this.displayModal = false;
+        //       }else/* if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
+        //         this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
+        //         error = false;
+        //         this.displayModal = false;
+        //       }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length >1 && this.condicion_tpt=='TRANSP'){
+        //         this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} solo se le puede asignar un solo item de flete`});
+        //         error = true;
+        //         this.displayModal = false;
+        //       }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length == vehiculo.pedidos.length && this.condicion_tpt=='TRANSP'){
+        //         this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado items de materialies`});
+        //         error = false;
+        //         this.displayModal = false;
+        //       }else*/{
+        //         let pedidosVehiculo:any[] = [];
+        //         // ////////////console.log(this.pedidosCliente);
+        //         for(let pedido of vehiculo.pedidos){
+        //           //////console.log('this.pedidosCliente',this.pedidosCliente);
+        //          ////// //// ////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
+        //           let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
+        //          ////console.log('infoPedido',infoPedido);
+        //           /*
+        //           let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
+        //           let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
+        //           let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
                   
-                  let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
+        //           let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
           
-                  let tipoproducto = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].tipoprod;
-                  */
+        //           let tipoproducto = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].tipoprod;
+        //           */
           
-                  let email_vendedor = infoPedido[0].email_vendedor;
-                  let vendedor = infoPedido[0].vendedor;
-                  let dependencia = infoPedido[0].dependencia;
-                  let localidad = infoPedido[0].localidad;
-                  let tipoproducto = infoPedido[0].tipoprod;
-                  let tarifa_tonelada = this.condicion_tpt=='TRANSP' && pedido.itemcode.startsWith('SF')?infoPedido[0].precio_coniva:0; 
-                  let nombre_asistente = infoPedido[0].nombre_asistente;
-                  let email_asistente = infoPedido[0].email_asistente;
-                  let Maneja_lote = infoPedido[0].Maneja_Lote;
-                  let tipo_documento = infoPedido[0].tipo_pedido;
-                  let objectType = infoPedido[0].ObjType;
-                  let vicepresidencia = infoPedido[0].vicepresidencia;
-                  let ivacode = infoPedido[0].ivacode;
-                  let precio_lista = infoPedido[0].precio_lista;
-                  let precio_vendedor = infoPedido[0].precio_vendedor;
-                  let precio_gerente = infoPedido[0].precio_gerente;
-                  let categoria_item = infoPedido[0].categoria_item;
-                  let subcategoria_item = infoPedido[0].subcategoria_item;
-                  let almacen_fpp = infoPedido[0].almacen_fpp;
-                  let bodega_destino = infoPedido[0].bodega_destino;
-                  let bodega_final = infoPedido[0].bodega_final;
-                  let ubicacion = infoPedido[0].ubicacion;
-                  let codigo_vendedor = infoPedido[0].codigo_vendedor;
-                  let precio_unitario = infoPedido[0].precio_unitario;
-                  let tipo_operacion = infoPedido[0].tipo_operacion;
-                  
-                  
-          
-          
-                 // let flete_tonelada = this.verFletes?pedido.flete:0;
-                 let flete_tonelada = 0;
-          
-          
-                  pedidosVehiculo.push({
-                    pedidonum:pedido.pedido,
-                    docentry:pedido.docentry,
-                    itemcode:pedido.itemcode,
-                    itemname:pedido.itemname,
-                    cantidad_pedido:pedido.cantidad_pedido,
-                    cantidad:pedido.cantidad,
-                    bodega: pedido.bodega,
-                    CardCode: pedido.CardCode,
-                    CardName: pedido.CardName,
-                    email_vendedor: email_vendedor,
-                    linea:pedido.linenum,
-                    municipioentrega:pedido.municipioentrega,
-                    lugarentrega:pedido.lugarentrega,
-                    dependencia,
-                    localidad,
-                    tipoproducto,
-                    vendedor,
-                    tarifa_tonelada,
-                    flete_tonelada,
-                    nombre_asistente,
-                    email_asistente,
-                    Maneja_lote,
-                    tipo_documento,
-                    objectType,
-                    vicepresidencia,
-                    ivacode,
-                    precio_lista,
-                    precio_vendedor,
-                    precio_gerente,
-                    categoria_item,
-                    subcategoria_item,
-                    almacen_fpp,
-                    bodega_destino,
-                    ubicacion,
-                    codigo_vendedor,
-                    precio_unitario,
-                    tipo_operacion,
-                    bodega_final
-          
-                  });
+        //           let email_vendedor = infoPedido[0].email_vendedor;
+        //           let vendedor = infoPedido[0].vendedor;
+        //           let dependencia = infoPedido[0].dependencia;
+        //           let localidad = infoPedido[0].localidad;
+        //           let tipoproducto = infoPedido[0].tipoprod;
+        //           let tarifa_tonelada = this.condicion_tpt=='TRANSP' && pedido.itemcode.startsWith('SF')?infoPedido[0].precio_coniva:0; 
+        //           let nombre_asistente = infoPedido[0].nombre_asistente;
+        //           let email_asistente = infoPedido[0].email_asistente;
+        //           let Maneja_lote = infoPedido[0].Maneja_Lote;
+        //           let tipo_documento = infoPedido[0].tipo_pedido;
+        //           let objectType = infoPedido[0].ObjType;
+        //           let vicepresidencia = infoPedido[0].vicepresidencia;
+        //           let ivacode = infoPedido[0].ivacode;
+        //           let precio_lista = infoPedido[0].precio_lista;
+        //           let precio_vendedor = infoPedido[0].precio_vendedor;
+        //           let precio_gerente = infoPedido[0].precio_gerente;
+        //           let categoria_item = infoPedido[0].categoria_item;
+        //           let subcategoria_item = infoPedido[0].subcategoria_item;
+        //           let almacen_fpp = infoPedido[0].almacen_fpp;
+        //           let bodega_destino = infoPedido[0].bodega_destino;
+        //           let bodega_final = infoPedido[0].bodega_final;
+        //           let ubicacion = infoPedido[0].ubicacion;
+        //           let codigo_vendedor = infoPedido[0].codigo_vendedor;
+        //           let precio_unitario = infoPedido[0].precio_unitario;
+        //           let tipo_operacion = infoPedido[0].tipo_operacion;
                   
                   
           
-                }
+          
+        //          // let flete_tonelada = this.verFletes?pedido.flete:0;
+        //          let flete_tonelada = 0;
           
           
-                detalle_solicitud.push({
-                  fechacita:vehiculo.fechacargue,
-                  horacita:vehiculo.horacargue,
-                  lugarentrega:vehiculo.sitioentrega,
-                  municipioentrega:vehiculo.municipioentrega,
-                  observacion:vehiculo.observacion!=''?`${vehiculo.observacion};`:'',
-                  condiciontpt: this.condicion_tpt,
-                  transportadora:this.transportadoras.find(transportadora => transportadora.code === vehiculo.transportadora).id,
-                  vehiculo:this.vehiculos.find(vehiculoo => vehiculoo.code === vehiculo.placa).id,
-                  conductor:this.conductores.find(conductor=>conductor.code === vehiculo.conductor).id,
-                  locacion:this.almacenSeleccionado.code,
-                  pedidos_detalle_solicitud:pedidosVehiculo,
-                  tipo:'ENTREGA'
-                });
-              }
-            }
+        //           pedidosVehiculo.push({
+        //             pedidonum:pedido.pedido,
+        //             docentry:pedido.docentry,
+        //             itemcode:pedido.itemcode,
+        //             itemname:pedido.itemname,
+        //             cantidad_pedido:pedido.cantidad_pedido,
+        //             cantidad:pedido.cantidad,
+        //             bodega: pedido.bodega,
+        //             CardCode: pedido.CardCode,
+        //             CardName: pedido.CardName,
+        //             email_vendedor: email_vendedor,
+        //             linea:pedido.linenum,
+        //             municipioentrega:pedido.municipioentrega,
+        //             lugarentrega:pedido.lugarentrega,
+        //             dependencia,
+        //             localidad,
+        //             tipoproducto,
+        //             vendedor,
+        //             tarifa_tonelada,
+        //             flete_tonelada,
+        //             nombre_asistente,
+        //             email_asistente,
+        //             Maneja_lote,
+        //             tipo_documento,
+        //             objectType,
+        //             vicepresidencia,
+        //             ivacode,
+        //             precio_lista,
+        //             precio_vendedor,
+        //             precio_gerente,
+        //             categoria_item,
+        //             subcategoria_item,
+        //             almacen_fpp,
+        //             bodega_destino,
+        //             ubicacion,
+        //             codigo_vendedor,
+        //             precio_unitario,
+        //             tipo_operacion,
+        //             bodega_final
           
-            if (!error) {
+        //           });
+                  
+                  
           
-                let clientesSolicitud:any[] = this.multiplesClientes?
-                                                  this.clienteSeleccionado.map((cliente: { id: any; }) =>{return cliente.id}):
-                                                  [this.clienteSeleccionado].map((cliente: { id: any; }) =>{return cliente.id});
-                const newSolicitud:any = {
-                  clientes: clientesSolicitud,
-                  detalle_solicitud
-                }
+        //         }
+          
+          
+        //         detalle_solicitud.push({
+        //           fechacita:vehiculo.fechacargue,
+        //           horacita:vehiculo.horacargue,
+        //           lugarentrega:vehiculo.sitioentrega,
+        //           municipioentrega:vehiculo.municipioentrega,
+        //           observacion:vehiculo.observacion!=''?`${vehiculo.observacion};`:'',
+        //           condiciontpt: this.condicion_tpt,
+        //           transportadora:this.transportadoras.find(transportadora => transportadora.code === vehiculo.transportadora).id,
+        //           vehiculo:this.vehiculos.find(vehiculoo => vehiculoo.code === vehiculo.placa).id,
+        //           conductor:this.conductores.find(conductor=>conductor.code === vehiculo.conductor).id,
+        //           locacion:this.almacenSeleccionado.code,
+        //           pedidos_detalle_solicitud:pedidosVehiculo,
+        //           tipo:'ENTREGA'
+        //         });
+        //       }
+        //     }
+          
+        //     if (!error) {
+          
+        //         let clientesSolicitud:any[] = this.multiplesClientes?
+        //                                           this.clienteSeleccionado.map((cliente: { id: any; }) =>{return cliente.id}):
+        //                                           [this.clienteSeleccionado].map((cliente: { id: any; }) =>{return cliente.id});
+        //         const newSolicitud:any = {
+        //           clientes: clientesSolicitud,
+        //           detalle_solicitud
+        //         }
                
-               ////console.log('newSolicitud',newSolicitud);
+        //        ////console.log('newSolicitud',newSolicitud);
                 
                 
-               this.solicitudTurnoService.create(newSolicitud)
-                    .subscribe({
-                          next:async (result)=>{
+        //        this.solicitudTurnoService.create(newSolicitud)
+        //             .subscribe({
+        //                   next:async (result)=>{
                            
-                            if(this.completeTimer){
-                              this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
-                              this.displayModal = false;
-                              this.loadingCargue = false;
+        //                     if(this.completeTimer){
+        //                       this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
+        //                       this.displayModal = false;
+        //                       this.loadingCargue = false;
                               
-                            }
-                            this.completeCargue = true;
-                            this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
+        //                     }
+        //                     this.completeCargue = true;
+        //                     this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
                             
                             
-                            this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
-                                .subscribe({
-                                      next:async (solicitud)=>{
-                                        //await this.bloqueoPedidosSolicitud(solicitud);
-                                        await this.configEmails(solicitud);
-                                      },
-                                      error:(err)=>{
-                                        console.error(err);
-                                        this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});            
-                                      }
-                            });
+        //                     this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
+        //                         .subscribe({
+        //                               next:async (solicitud)=>{
+        //                                 //await this.bloqueoPedidosSolicitud(solicitud);
+        //                                 await this.configEmails(solicitud);
+        //                               },
+        //                               error:(err)=>{
+        //                                 console.error(err);
+        //                                 this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});            
+        //                               }
+        //                     });
           
                             
                             
-                          },
-                          error:(err)=>{
-                            this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                            console.error(err);
-                            this.displayModal = false;
-                            this.loadingCargue = false;
-                          }
-                });
+        //                   },
+        //                   error:(err)=>{
+        //                     this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+        //                     console.error(err);
+        //                     this.displayModal = false;
+        //                     this.loadingCargue = false;
+        //                   }
+        //         });
                 
                   
-            }
-        }
+        //     }
+        // }
 
         async grabarSolicitud(){
 
-          //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
+          console.log(this.vehiculosEnSolicitud);
           this.displayModal = true;
           this.loadingCargue = true;
           this.completeCargue=false;

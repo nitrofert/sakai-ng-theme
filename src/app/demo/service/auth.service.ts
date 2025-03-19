@@ -76,6 +76,25 @@ import { UrlApiService } from "./url-api.service";
     localStorage.removeItem('token');
    }
 
+   validateTokenToLogin(token:string):Observable<any>{
+    
+    const headers:any = {
+        "Authorization": [ "Bearer " + token ],
+        "Content-Type": [ "application/json" ],
+    }
+    console.log('headers',headers)
+    const url:string = `${this.api_url}/api/auth/login-by-token`;
+    // return  this.http.get<any>(url,{ 
+    //     headers, 
+    //     params:{token},
+        
+    // });
+
+    return  this.http.get<any>(url);
+
+
+}
+
   
    
 

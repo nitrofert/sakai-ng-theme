@@ -9,6 +9,7 @@ import { AppLayoutComponent } from 'src/app/layout/app.layout.component';
         { path: 'error', loadChildren: () => import('./error/error.module').then(m => m.ErrorModule) },
         { path: 'access', loadChildren: () => import('./access/access.module').then(m => m.AccessModule) },
         { path: 'login',canActivate:[LoggedInGuard] , loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
+        { path: 'login-by-token', canActivate:[LoggedInGuard] , loadChildren: () => import('./login-by-token/login-by-token.module').then(m => m.LoginByTokenModule) },
         { path: 'forgot-password', canActivate:[LoggedInGuard] , loadChildren: () => import('./forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule) },
         { path: 'change-password', canActivate:[LoggedInGuard] , loadChildren: () => import('./change-password/change-password.module').then(m => m.ChangePasswordModule) },
         { path: 'logout',component: AppLayoutComponent,canActivate:[AuthGuard] , loadChildren: () => import('./logout/logout.module').then(m => m.LogoutModule) },

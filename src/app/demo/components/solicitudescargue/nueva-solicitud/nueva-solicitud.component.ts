@@ -577,7 +577,36 @@ getConductores(){
 
 
 filtrarCliente(event: any) {
-this.clientesFiltrados = this.filter(event,this.clientes);
+  
+  // this.clientesFiltrados = this.filter(event,this.clientes);
+  console.log(event)
+
+  const filtered: any[] = [];
+  const query = event.query;
+  for (let i = 0; i < this.clientes.length; i++) {
+      const linea = this.clientes[i];
+      if (linea.FederalTaxID.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+          filtered.push(linea);
+      }
+
+    
+
+    // FederalTaxID
+
+  }
+  this.clientesFiltrados = filtered;
+}
+
+
+
+onRightClick(event:MouseEvent,bloquear:boolean){
+  if(bloquear) event.preventDefault();
+}
+
+onKeyDownClientes(event: KeyboardEvent) {
+  if (event.ctrlKey && event.key === 'v') {
+    event.preventDefault();
+  }
 }
 
 filtrarCondicion(event: any) {
@@ -1675,20 +1704,14 @@ setTimer(){
 
 grabarSolicitud(){
 
-  //////////////////////////// //// ////////////console.log(this.vehiculosEnSolicitud);
-  this.displayModal = true;
-  this.loadingCargue = true;
-  this.completeCargue=false;
-  this.completeTimer = false;
-
-  //setTimeout(this.setTimer,2500);
-  setTimeout(()=>{this.setTimer()},2500);
+  //console.log(this.vehiculosEnSolicitud);
+ 
  
   //Validar existencia de pedidos en vehiculos
   let error = false;
   let detalle_solicitud:any[] = [];
 
-  
+  let clientes_pedidos:any[] = [];
   
   for(let vehiculo of this.vehiculosEnSolicitud){
 
@@ -1728,6 +1751,16 @@ grabarSolicitud(){
        ////// //// ////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
         let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
        ////console.log('infoPedido',infoPedido);
+       if(clientes_pedidos.filter(cliente=>cliente.CardCode === pedido.CardCode).length ===0){
+         clientes_pedidos.push({ CardCode:pedido.CardCode, CardName:pedido.CardName, pedidos:[pedido.pedido]})
+       }else{
+          
+          let indexCliente:any = clientes_pedidos.findIndex(cliente=>cliente.CardCode === pedido.CardCode);
+          if(clientes_pedidos[indexCliente].pedidos.filter((item: any)=>item === pedido.pedido).length===0){
+            clientes_pedidos[indexCliente].pedidos.push(pedido.pedido)
+          }
+          
+       }
         /*
         let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
         let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
@@ -1843,45 +1876,88 @@ grabarSolicitud(){
         detalle_solicitud
       }
      
-     ////console.log('newSolicitud',newSolicitud);
-      
-      
-     this.solicitudTurnoService.create(newSolicitud)
-          .subscribe({
-                next:async (result)=>{
-                 
-                  if(this.completeTimer){
-                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
-                    this.displayModal = false;
-                    this.loadingCargue = false;
-                    
-                  }
-                  this.completeCargue = true;
-                  this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
-                  
-                  
-                  this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
-                      .subscribe({
-                            next:async (solicitud)=>{
-                              await this.bloqueoPedidosSolicitud(solicitud);
-                              await this.configEmails(solicitud);
-                            },
-                            error:(err)=>{
-                              console.error(err);
-                              this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});            
-                            }
-                  });
+     console.log('clientes_pedidos',clientes_pedidos);
 
-                  
-                  
-                },
-                error:(err)=>{
-                  this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                  console.error(err);
-                  this.displayModal = false;
-                  this.loadingCargue = false;
-                }
-      });
+     let line_clientes_pedidos:string = "";
+     for(let cliente_pedido of  clientes_pedidos){
+      line_clientes_pedidos +=`${cliente_pedido.CardName} (`;
+        let line_pedidos:string = "";
+        for(let pedido of cliente_pedido.pedidos){
+          line_pedidos+=`${pedido},`
+        }
+        line_clientes_pedidos+=`${line_pedidos.substring(0,line_pedidos.length-1)}) `;
+     }
+
+     console.log('line_clientes_pedidos',line_clientes_pedidos);
+
+     this.confirmationService.confirm({
+      message: `Esta seguro de grabar la solicitud de cargue de los sigientes clientes - pedidos: ${line_clientes_pedidos}`  ,
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+
+            this.displayModal = true;
+            this.loadingCargue = true;
+            this.completeCargue=false;
+            this.completeTimer = false;
+          
+            //setTimeout(this.setTimer,2500);
+            setTimeout(()=>{this.setTimer()},2500);
+
+             this.solicitudTurnoService.create(newSolicitud)
+                  .subscribe({
+                        next:async (result)=>{
+                        
+                          if(this.completeTimer){
+                            this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
+                            this.displayModal = false;
+                            this.loadingCargue = false;
+                            
+                          }
+                          this.completeCargue = true;
+                          this.messageComplete = `Se completo correctamente el porceso de registro de la solicitud.`;
+                          
+                          
+                          this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
+                              .subscribe({
+                                    next:async (solicitud)=>{
+                                      await this.bloqueoPedidosSolicitud(solicitud);
+                                      await this.configEmails(solicitud);
+                                    },
+                                    error:(err)=>{
+                                      console.error(err);
+                                      this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});            
+                                    }
+                          });
+
+                          
+                          
+                        },
+                        error:(err)=>{
+                          this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+                          console.error(err);
+                          this.displayModal = false;
+                          this.loadingCargue = false;
+                        }
+             });
+       
+
+
+      },
+      reject: (type: any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+              break;
+              case ConfirmEventType.CANCEL:
+                  //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+              break;
+          }
+      }
+    });
+      
+      
+    
       
         
   }
@@ -1960,6 +2036,11 @@ for (let i = 0; i < arrayFiltrar.length; i++) {
     if (linea.label.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
         filtered.push(linea);
     }
+
+   
+
+   // FederalTaxID
+
 }
 
 return filtered.slice(0,10);

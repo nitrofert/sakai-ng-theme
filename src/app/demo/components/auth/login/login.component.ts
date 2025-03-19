@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api'
 import { AuthService } from 'src/app/demo/service/auth.service';
@@ -19,7 +19,7 @@ import { DialogService } from 'primeng/dynamicdialog';
         
     `]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
     valCheck: string[] = ['remember'];
 
@@ -38,6 +38,11 @@ export class LoginComponent {
                 private router: Router,
                 //public dialogService: DialogService
                 ) {}
+
+    async ngOnInit(): Promise<void> {
+        let obj_parseUrl:any = this.router.parseUrl(this.router.url)
+        console.log('obj_parseUrl',obj_parseUrl);
+    }
     
     login(){
         this.submit = true;
