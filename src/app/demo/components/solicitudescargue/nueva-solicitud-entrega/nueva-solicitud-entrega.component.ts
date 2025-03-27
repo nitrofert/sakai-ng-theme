@@ -146,6 +146,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
         completeCargue:boolean = false;
         completeTimer:boolean = false;
         messageComplete:string = "";
+        error:boolean = false;
 
         vehiculosSeleccionadoPedidos:any[] = [];
 
@@ -1195,7 +1196,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
                 //console.log(this.vehiculosSeleccionadoPedidos);
 
-                this.vehiculosSeleccionadoPedidos = vehiculos;
+                this.vehiculosSeleccionadoPedidos = vehiculos.map((vehiculo)=>{ vehiculo.label = `${vehiculo.placa} (${vehiculo.cantidad} TON)`; return vehiculo;});
                 
 
                 let clienteSeleccionado:any;
@@ -1524,13 +1525,13 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
 
         async seleccionarPedidosAlmacenCliente(event:any){
  
-             ////console.log('pedidos seleccionados',event);
+             console.log('pedidos seleccionados',event);
              this.envioLineaCarguePedido =true;
 
              let toneladasVehiculos = 0;
 
              for(let vehiculo of this.vehiculosSeleccionadoPedidos){
-                ////console.log('vehiculo seleccionado',vehiculo);
+                console.log('vehiculo seleccionado',vehiculo);
                 toneladasVehiculos+=vehiculo.cantidad;     
              }
              ////console.log('toneladasVehiculos', toneladasVehiculos);
@@ -2034,6 +2035,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             if(vehiculo.pedidos.length == 0){
               this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado pedidos`});
               error = true;
+              this.error = true;
               this.displayModal = false;
             }else/* if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
               this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
@@ -2230,6 +2232,7 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                         error:(err)=>{
                           this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
                           console.error(err);
+                          this.error = true;
                           this.displayModal = false;
                           this.loadingCargue = false;
                         }
@@ -2847,7 +2850,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
           }
 
         goToSolicitudes(){
-            this.router.navigate(['/portal/solicitudes-de-cargue'])
+          
+           if(!this.error) this.router.navigate(['/portal/solicitudes-de-cargue'])
         }
           
         formatCurrency(value: number) {
@@ -3019,7 +3023,8 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                                 municipioentrega:'',
                                 observacion:'',
                                 key:`${placa}${id_despacho}`,
-                                pedidos:[]
+                                pedidos:[],
+                                producto:item
     
     
                               })

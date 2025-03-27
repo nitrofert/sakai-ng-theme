@@ -210,7 +210,7 @@
                                 [styleClass]="'p-datatable-gridlines p-datatable-sm  shadow-4 '"
                                 tableStyleClass="w-full"
                                 [paginator]="true"
-                                [globalFilterFields]="['placa','cedula','conductor','transportadora','itemCode','itemName','pedido','motonave']"
+                                [globalFilterFields]="['placa','cedula','conductor','transportadora','itemCode','itemName','pedido','motonave','producto']"
                                 selectionMode="multiple"
                                 [(selection)]="vehiculosSolicitudSelected"
                                 responsiveLayout="scroll"
@@ -278,7 +278,7 @@
                                                 Placa
                                                 <p-columnFilter
                                                     type="text"
-                                                    field="lote"
+                                                    field="placa"
                                                     display="menu"
                                                     placeholder="Buscar por placa vehículo"
                                                 ></p-columnFilter>
@@ -292,7 +292,7 @@
                                                 Cedula conductor
                                                 <p-columnFilter
                                                     type="text"
-                                                    field="lote"
+                                                    field="conductor"
                                                     display="menu"
                                                     placeholder="Buscar por cedula conductor vehículo"
                                                 ></p-columnFilter>
@@ -320,9 +320,23 @@
                                                 Empresa de trasnporte
                                                 <p-columnFilter
                                                     type="text"
-                                                    field="lote"
+                                                    field="transportadora"
                                                     display="menu"
                                                     placeholder="Buscar por transportadora"
+                                                ></p-columnFilter>
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <div
+                                                class="flex justify-content-between align-items-center"
+                                            >
+                                                Producto
+                                                <p-columnFilter
+                                                    type="text"
+                                                    field="producto"
+                                                    display="menu"
+                                                    placeholder="Buscar por producto"
                                                 ></p-columnFilter>
                                             </div>
                                         </th>
@@ -332,11 +346,7 @@
                                                 class="flex justify-content-between align-items-center"
                                             >
                                                 Fecha de carague
-                                                <p-columnFilter
-                                                    type="date"
-                                                    field="created_at"
-                                                    display="menu"
-                                                ></p-columnFilter>
+                                               
                                             </div>
                                         </th>
 
@@ -345,11 +355,7 @@
                                                 class="flex justify-content-between align-items-center"
                                             >
                                                 Hora de carague
-                                                <p-columnFilter
-                                                    type="date"
-                                                    field="created_at"
-                                                    display="menu"
-                                                ></p-columnFilter>
+                                                
                                             </div>
                                         </th>
 
@@ -360,7 +366,7 @@
                                                 Motonave
                                                 <p-columnFilter
                                                     type="text"
-                                                    field="lote"
+                                                    field="motonave"
                                                     display="menu"
                                                     placeholder="Buscar por motonave"
                                                 ></p-columnFilter>
@@ -375,7 +381,7 @@
                                                 Número Pedido
                                                 <p-columnFilter
                                                     type="text"
-                                                    field="lote"
+                                                    field="pedido"
                                                     display="menu"
                                                     placeholder="Buscar por número de pedido"
                                                 ></p-columnFilter>
@@ -389,7 +395,7 @@
                                                 Item
                                                 <p-columnFilter
                                                     type="text"
-                                                    field="lote"
+                                                    field="itemName"
                                                     display="menu"
                                                     placeholder="Buscar por item"
                                                 ></p-columnFilter>
@@ -428,6 +434,10 @@
 
                                         <td style="min-width: 12rem">
                                             {{ vehiculo.nombre_transportadora }}
+                                        </td>
+
+                                        <td style="min-width: 12rem">
+                                            {{ vehiculo.producto }}
                                         </td>
                 
                                         <td style="min-width: 12rem">
