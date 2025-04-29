@@ -228,6 +228,12 @@ export class SolicitudTurnoService {
         const infoTurno = await lastValueFrom(infoTurno$);
         return infoTurno;
     }
+
+    trasladoAduanaTransito(data:any):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/traslado-aduana-transito`;
+        return this.http.post<any>(url,data);
+    }
+
    
 
     

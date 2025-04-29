@@ -1,0 +1,1377 @@
+<p-toast></p-toast>
+<p-confirmDialog
+    [style]="{ width: '50vw' }"
+    [baseZIndex]="10000"
+    rejectButtonStyleClass="p-button-text"
+></p-confirmDialog>
+<app-breadcrumb></app-breadcrumb>
+<!-- Control seleccion de fecha-->
+<!-- <div class="grid">
+    <div class="col-12">
+        <div
+            class="card"
+            style="
+                background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png');
+                background-size: cover;
+            "
+        >
+            <div class="field col-12">
+                <span class="p-float-label">
+                    <p-calendar
+                        id="rangoFecha"
+                        [(ngModel)]="filtroRnagoFechas"
+                        selectionMode="range"
+                        [readonlyInput]="true"
+                        [showIcon]="true"
+                        [numberOfMonths]="1"
+                        styleClass="w-full"
+                        (ngModelChange)="cambioFecha($event)"
+                    ></p-calendar>
+                    <label for="rangoFecha"
+                        ><h6>Seleccionar rango de fecha</h6></label
+                    >
+                </span>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!-- Control de seleccion de locacion -->
+<div class="grid">
+    <div class="col-12">
+        <div class="card" style="
+        background-image: url('https://nitrofert.com.co/wp-content/uploads/2023/05/Recurso_17@2x.png');
+        background-size: cover;
+    ">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 mt-3">
+                    <span class="p-float-label">
+                        <p-skeleton
+                            *ngIf="almacenes.length == 0"
+                            height="2rem"
+                            styleClass="mb-2"
+                        ></p-skeleton>
+                        <p-autoComplete
+                            id="almacen"
+                            *ngIf="almacenes.length > 0"
+                            [(ngModel)]="localidadSeleccionada"
+                            [suggestions]="localidadesFiltradas"
+                            (completeMethod)="filtrarLocalidad($event)"
+                            field="label"
+                            [dropdown]="true"
+                            (onSelect)="
+                                seleccionarLocalidad(localidadSeleccionada)
+                            "
+                        >
+                        </p-autoComplete>
+                        <label for="cliente"
+                            ><h6>Seleccione una localidad</h6></label
+                        >
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Tabla de turnos locacion fecha seleccionada -->
+<div *ngIf="showTraslados" class="grid">
+    <div class="col-12">
+        <div class="card">
+            <div class="col-12">
+                <div class="card">
+                    <p-table
+                        #dt1
+                        [value]="trasladosBuqueLocalidad"
+                        [dataKey]="dataKey"
+                        [rows]="10"
+                        [rowsPerPageOptions]="[10, 50, 100]"
+                        [loading]="loading"
+                        [rowHover]="true"
+                        [styleClass]="
+                            'p-datatable-gridlines p-datatable-sm border-1 '
+                        "
+                        [paginator]="true"
+                        [globalFilterFields]="globalFilterFields"
+                        [selectionMode]="selectionMode"
+                        [(selection)]="selectedItem"
+                        responsiveLayout="scroll"
+                    >
+                        <ng-template pTemplate="caption">
+                            <div
+                                class="flex justify-content-between flex-column sm:flex-row"
+                            >
+                                <div>
+                                    <button
+                                        pButton
+                                        pTooltip="Limpiar"
+                                        tooltipPosition="bottom"
+                                        placeholder="Bottom"
+                                        class="p-button-outlined mb-2 mr-2 p-button-sm"
+                                        icon="pi pi-filter-slash"
+                                        (click)="clear(dt1)"
+                                    ></button>
+
+                                    <button
+                                        pButton
+                                        *ngIf="showBtnAdmin"
+                                        [pTooltip]="'Detalle operación'"
+                                        tooltipPosition="bottom"
+                                        placeholder="Bottom"
+                                        class="p-button-outlined mb-2 mr-2 p-button-warning p-button-sm"
+                                        icon="pi pi-truck"
+                                        [disabled]="
+                                            selectedItem.length == 0 ||
+                                            selectedItem.length > 1
+                                        "
+                                        (click)="detalleOperacion()"
+                                    ></button>
+
+                                    <!-- <button
+                                        pButton
+                                        *ngIf="showBtnPdf"
+                                        [pTooltip]="'Generar PDF Solicitud'"
+                                        tooltipPosition="bottom"
+                                        placeholder="Bottom"
+                                        class="p-button-outlined mb-2 mr-2 p-button-danger p-button-sm"
+                                        icon="pi pi-file-pdf"
+                                        [disabled]="
+                                            selectedItem.length == 0 ||
+                                            selectedItem.length > 1
+                                        "
+                                        (click)="documentos(selectedItem[0])"
+                                    ></button>
+
+                                    <button
+                                        pButton
+                                        *ngIf="showBtnExp"
+                                        pTooltip="Exportar a excel"
+                                        tooltipPosition="bottom"
+                                        placeholder="Bottom"
+                                        class="p-button-outlined mb-2 mr-2 p-button-info p-button-sm"
+                                        icon="pi pi-file-excel"
+                                        (click)="exportExcel()"
+                                    ></button> -->
+
+                                </div>
+                                <div>
+                                    <span class="p-input-icon-left mb-2">
+                                        <i class="pi pi-search"></i>
+                                        <input
+                                            pInputText
+                                            type="text"
+                                            #filter
+                                            (input)="
+                                                onGlobalFilter(dt1, $event)
+                                            "
+                                            placeholder="Buscar por palabra clave"
+                                            class="w-min p-inputtext-sm"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    <!--<p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
+                                </th>
+
+                                <!-- <th
+                                    pSortableColumn="detalle_solicitudes_turnos_tipo"
+                                    style="min-width: 11rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">No. Traslado</div>
+                                        <div>
+                                            
+                                            <p-sortIcon
+                                                field="detalle_solicitudes_turnos_tipo"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                field="detalle_solicitudes_turnos_tipo"
+                                                matchMode="equals"
+                                                display="menu"
+                                                placeholder="Buscar por tipo turno"
+                                                [showMatchModes]="false"
+                                                [showOperator]="false"
+                                                [showAddButton]="false"
+                                                [showApplyButton]="false"
+                                            >
+                                                <ng-template
+                                                    pTemplate="filter"
+                                                    let-value
+                                                    let-filter="filterCallback"
+                                                >
+                                                    <p-dropdown
+                                                        [ngModel]="value"
+                                                        [options]="tiposTurno"
+                                                        (onChange)="
+                                                            filter($event.value)
+                                                        "
+                                                        placeholder="Cualquiera"
+                                                    >
+                                                        <ng-template
+                                                            pTemplate="selectedItem"
+                                                        >
+                                                            <div>{{ value }}</div>
+                                                        </ng-template>
+                                                        <ng-template
+                                                            let-option
+                                                            pTemplate="item"
+                                                        >
+                                                            <span
+                                                                [class]="
+                                                                    'customer-badge status-' +
+                                                                    option.name
+                                                                "
+                                                                >{{ option.name }}</span
+                                                            >
+                                                        </ng-template>
+                                                    </p-dropdown>
+                                                </ng-template>
+                                            </p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                pSortableColumn="tipo_operacion"
+                                style="min-width: 15rem"
+                            >
+                                <div
+                                    class="flex justify-content-between align-items-center"
+                                >
+                                    <div class="text-center">Tipo operación</div>
+                                    <div>
+                                        <p-sortIcon
+                                            field="tipo_operacion"
+                                        ></p-sortIcon>
+                                        <p-columnFilter
+                                            type="text"
+                                            field="tipo_operacion"
+                                            display="menu"
+                                            placeholder="Buscar por tipo operación"
+                                        ></p-columnFilter>
+                                    </div>
+                                </div>
+                                </th>
+                                <th
+                                    pSortableColumn="detalle_solicitudes_turnos_estado"
+                                    style="min-width: 11rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">
+                                            Estado turno
+                                        </div>
+                                        <div>
+                                           
+                                            <p-sortIcon
+                                                field="detalle_solicitudes_turnos_estado"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                field="detalle_solicitudes_turnos_estado"
+                                                matchMode="equals"
+                                                display="menu"
+                                                placeholder="Buscar por estado"
+                                                [showMatchModes]="false"
+                                                [showOperator]="false"
+                                                [showAddButton]="false"
+                                                [showApplyButton]="false"
+                                            >
+                                                <ng-template
+                                                    pTemplate="filter"
+                                                    let-value
+                                                    let-filter="filterCallback"
+                                                >
+                                                    <p-dropdown
+                                                        [ngModel]="value"
+                                                        [options]="estadosTurno"
+                                                        (onChange)="
+                                                            filter($event.value)
+                                                        "
+                                                        placeholder="Cualquiera"
+                                                    >
+                                                        <ng-template
+                                                            pTemplate="selectedItem"
+                                                        >
+                                                            <div>
+                                                                {{ value }}
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template
+                                                            let-option
+                                                            pTemplate="item"
+                                                        >
+                                                            <span
+                                                                [class]="
+                                                                    'customer-badge status-' +
+                                                                    option.name
+                                                                "
+                                                                >{{
+                                                                    option.name
+                                                                }}</span
+                                                            >
+                                                        </ng-template>
+                                                    </p-dropdown>
+                                                </ng-template>
+                                            </p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                
+                                <th
+                                    pSortableColumn="detalle_solicitudes_turnos_fechacita"
+                                    style="min-width: 13rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">
+                                            Fecha cita/turno
+                                        </div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="detalle_solicitudes_turnos_fechacita"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="date"
+                                                field="detalle_solicitudes_turnos_fechacita"
+                                                display="menu"
+                                                placeholder="Buscar por fecha turno"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="detalle_solicitudes_turnos_horacita2"
+                                    style="min-width: 13rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">
+                                            Hora cita/turno
+                                        </div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="detalle_solicitudes_turnos_horacita2"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                #filterTi
+                                                type="date"
+                                                field="detalle_solicitudes_turnos_horacita2"
+                                                display="menu"
+                                                placeholder="Buscar por hora turno"
+                                            >
+                                                <ng-template
+                                                    pTemplate="filter"
+                                                    let-value
+                                                    let-filter="filterCallback"
+                                                >
+                                                    <p-calendar
+                                                        #calendar2
+                                                        [ngModel]="value"
+                                                        id="time"
+                                                        (onSelect)="
+                                                            filter(
+                                                                calendar2.value
+                                                            )
+                                                        "
+                                                        [timeOnly]="true"
+                                                        [hourFormat]="'12'"
+                                                    ></p-calendar>
+                                                </ng-template>
+                                            </p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th> -->
+
+                                <th
+                                    pSortableColumn="DocNum"
+                                    style="min-width: 8rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">No. Traslado</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="DocNum"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="numeric"
+                                                field="DocNum"
+                                                display="menu"
+                                                placeholder="Buscar por número traslado"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="WhsName"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Origen</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="WhsName"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="WhsName"
+                                                display="menu"
+                                                placeholder="Buscar por bodega origen"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="Bodega_Destino"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Destino</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="Bodega_Destino"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="Bodega_Destino"
+                                                display="menu"
+                                                placeholder="Buscar por bodega destino"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="U_NF_MOTONAVE"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Motonave</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="U_NF_MOTONAVE"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="U_NF_MOTONAVE"
+                                                display="menu"
+                                                placeholder="Buscar por motonave"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="ItemCode"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Código item</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="ItemCode"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="ItemCode"
+                                                display="menu"
+                                                placeholder="Buscar por código item"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="Dscription"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Nombre item</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="Dscription"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="Dscription"
+                                                display="menu"
+                                                placeholder="Buscar por nombre item"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="Quantity"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Cant. traslado solicitado</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="Quantity"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="Quantity"
+                                                display="menu"
+                                                placeholder="Buscar por cantidad a trasladar"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                pSortableColumn="SALDO"
+                                style="min-width: 10rem"
+                            >
+                                <div
+                                    class="flex justify-content-between align-items-center"
+                                >
+                                    <div class="text-center">Cant. saldo traslado</div>
+                                    <div>
+                                        <p-sortIcon
+                                            field="SALDO"
+                                        ></p-sortIcon>
+                                        <p-columnFilter
+                                            type="text"
+                                            field="SALDO"
+                                            display="menu"
+                                            placeholder="Buscar por cantidad saldo traslado"
+                                        ></p-columnFilter>
+                                    </div>
+                                </div>
+                                </th>
+
+                                <th
+                                pSortableColumn="totalTrasladoTransito"
+                                style="min-width: 10rem"
+                            >
+                                <div
+                                    class="flex justify-content-between align-items-center"
+                                >
+                                    <div class="text-center">Cant. traslado - transito</div>
+                                    <div>
+                                        <p-sortIcon
+                                            field="SALDO"
+                                        ></p-sortIcon>
+                                        <p-columnFilter
+                                            type="text"
+                                            field="totalTrasladoTransito"
+                                            display="menu"
+                                            placeholder="Buscar por cantidad saldo traslado"
+                                        ></p-columnFilter>
+                                    </div>
+                                </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="totalPuertoEntregado"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Total puerto entregado</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="totalPuertoEntregado"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="totalPuertoEntregado"
+                                                display="menu"
+                                                placeholder="Buscar por cantidad entregada"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="totalBasculaEntregado"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Total bascula entregado</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="totalBasculaEntregado"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="totalBasculaEntregado"
+                                                display="menu"
+                                                placeholder="Buscar por cantidad entregada"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="totalPuertoEnOpercion"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Total puerto en operación</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="totalPuertoEnOpercion"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="totalPuertoEnOpercion"
+                                                display="menu"
+                                                placeholder="Buscar por cantidad en operación"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="totalPendienteEnOpercion"
+                                    style="min-width: 10rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Total pendiente operación</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="totalPendienteEnOpercion"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="totalPendienteEnOpercion"
+                                                display="menu"
+                                                placeholder="Buscar por cantidad pendiente operación"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                             
+
+                                <!-- <th
+                                    pSortableColumn="transportadoras_nombre"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">
+                                            Transportadora
+                                        </div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="transportadoras_nombre"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="transportadoras_nombre"
+                                                display="menu"
+                                                placeholder="Buscar por transportadora"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="vehiculos_placa"
+                                    style="min-width: 9rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Placa</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="vehiculos_placa"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="vehiculos_placa"
+                                                display="menu"
+                                                placeholder="Buscar por placa vehículo"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+                                
+                                <th
+                                    pSortableColumn="label_conductor"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">Conductor</div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="label_conductor"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="label_conductor"
+                                                display="menu"
+                                                placeholder="Buscar por conductor"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="telefonos_conductor"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">
+                                            Telefonos conductor
+                                        </div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="telefonos_conductor"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="telefonos_conductor"
+                                                display="menu"
+                                                placeholder="Buscar por teléfonos conductor"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th
+                                    pSortableColumn="detalle_solicitudes_turnos_condiciontpt"
+                                    style="min-width: 15rem"
+                                >
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        <div class="text-center">
+                                            Condición tpt
+                                        </div>
+                                        <div>
+                                            <p-sortIcon
+                                                field="detalle_solicitudes_turnos_condiciontpt"
+                                            ></p-sortIcon>
+                                            <p-columnFilter
+                                                type="text"
+                                                field="detalle_solicitudes_turnos_condiciontpt"
+                                                display="menu"
+                                                placeholder="Buscar por condición tpt"
+                                            ></p-columnFilter>
+                                        </div>
+                                    </div>
+                                </th> -->
+                                
+
+                                <th></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-itemData>
+                            <tr [pSelectableRow]="itemData">
+                                <td>
+                                    <p-tableCheckbox
+                                        [value]="itemData"
+                                        [id]="'selectRow' + itemData['index']"
+                                    ></p-tableCheckbox>
+                                </td>
+
+                                <td class="text-center">
+                                    {{
+                                        itemData.DocNum
+                                    }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{
+                                        itemData.WhsName
+                                    }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.Nombre_Bod_Destino }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.U_NF_MOTONAVE }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.ItemCode }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.Dscription }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.Quantity | number:'1.0-2' }} TON
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.SALDO | number:'1.0-2' }} TON
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.totalTrasladoTransito | number:'1.0-2' }} TON
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.totalPuertoEntregado | number:'1.0-2' }} TON
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.totalBasculaEntregado | number:'1.0-2' }} TON
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.totalPuertoEnOpercion | number:'1.0-2' }} TON
+                                </td>
+
+                                <td class="text-center">
+                                    {{ itemData.totalPendienteEnOpercion | number:'1.0-2' }} TON
+                                </td>
+
+                                
+
+                                <td></td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td
+                                    [colSpan]="columnsTable"
+                                    class="text-center"
+                                >
+                                    No se econtraron registros.
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="loadingbody">
+                            <tr>
+                                <td
+                                    [colSpan]="columnsTable"
+                                    class="text-center"
+                                >
+                                    Cargando registros. Por favor espere
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dialog loading -->
+<p-dialog
+    header="Cargando"
+    [(visible)]="displayModal"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+    
+>
+    <p class="m-0"></p>
+
+    <div
+        *ngIf="loadingCargue"
+        class="field col flex justify-content-center align-items-center"
+    >
+        <!--<p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>-->
+        <!--<p-progressSpinner></p-progressSpinner>-->
+        <img src="assets/layout/images/Rhombus.gif" alt="" />
+    </div>
+    <div
+        *ngIf="completeCargue"
+        class="field col flex justify-content-center align-items-center animation-duration-1000 animation-ease-out"
+    >
+        <div class="text-center">
+            <span>{{ messageComplete }}</span>
+            <span
+                >Esta ventana se cerrara automaticamente en unos segundos, si
+                esto no ocurre puede cerrarla manualmente.</span
+            >
+        </div>
+    </div>
+</p-dialog>
+<!--Fin Dialog loading-->
+
+<!-- Dialog Pedidos cliente en locación-->
+<p-dialog
+    [header]="'Detalle operación'"
+    [(visible)]="dialogDetalleOperacion"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [maximizable]="true"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="clase"
+                                type="text"
+                                disabled
+                                [value]="operacionSeleccionada.DocNum"
+                                
+                            />
+                            <label for="clase"><h6>No. Traslado</h6></label>
+                        </span>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="clase"
+                                type="text"
+                                disabled
+                                [value]="operacionSeleccionada.U_NF_MOTONAVE"
+                                
+                            />
+                            <label for="clase"><h6>Motonave</h6></label>
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="clase"
+                                type="text"
+                                disabled
+                                [value]="operacionSeleccionada.WhsName"
+                                
+                            />
+                            <label for="clase"><h6>Bodega origen</h6></label>
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="clase"
+                                type="text"
+                                disabled
+                                [value]="operacionSeleccionada.Bodega_Destino"
+                                
+                            />
+                            <label for="clase"><h6>Bodega destino</h6></label>
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cantidad"
+                                    type="number"
+                                    disabled
+                                    [value]="operacionSeleccionada.Quantity"
+                                    
+                                />
+                                <label for="cantidad"><h6>Cant. traslado solicitada</h6></label>
+                            </span>
+                            <span class="p-inputgroup-addon">TON</span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="SALDO"
+                                    type="number"
+                                    disabled
+                                    [value]="operacionSeleccionada.SALDO"
+                                    
+                                />
+                                <label for="SALDO"><h6>Cant. saldo traslado</h6></label>
+                            </span>
+                            <span class="p-inputgroup-addon">TON</span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="totalTrasladoTransito"
+                                    type="number"
+                                    disabled
+                                    [value]="operacionSeleccionada.totalTrasladoTransito"
+                                    
+                                />
+                                <label for="totalTrasladoTransito"><h6>Total traslado - transito</h6></label>
+                            </span>
+                            <span class="p-inputgroup-addon">TON</span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cantidad"
+                                    type="number"
+                                    disabled
+                                    [value]="operacionSeleccionada.totalPuertoEntregado"
+                                    
+                                />
+                                <label for="cantidad"><h6>Total entregado</h6></label>
+                            </span>
+                            <span class="p-inputgroup-addon">TON</span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cantidad"
+                                    type="number"
+                                    disabled
+                                    [value]="operacionSeleccionada.totalPuertoEnOpercion"
+                                    
+                                />
+                                <label for="cantidad"><h6>Total en operación</h6></label>
+                            </span>
+                            <span class="p-inputgroup-addon">TON</span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-float-label">
+                                <input
+                                    pInputText
+                                    id="cantidad"
+                                    type="number"
+                                    disabled
+                                    [value]="operacionSeleccionada.totalPendienteEnOpercion"
+                                    
+                                />
+                                <label for="cantidad"><h6>Cantidad pendiente</h6></label>
+                            </span>
+                            <span class="p-inputgroup-addon">TON</span>
+                        </div>
+                    </div>
+                    <!-- <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <p-autoComplete
+                                id="vhiculo"
+                                [(ngModel)]="vehiculoSeleccionado"
+                                [suggestions]="vehiculosFiltrados"
+                                (completeMethod)="filtrarVehiculo($event)"
+                                field="label"
+                                [dropdown]="true"
+                                [disabled]="true"
+                                (onSelect)="
+                                    seleccionarVehiculo(vehiculoSeleccionado)
+                                "
+                                [ngClass]="{
+                                    'ng-invalid ng-dirty':
+                                        envioLineaCarguePedido &&
+                                        vehiculoSeleccionado.length == 0
+                                }"
+                            >
+                            </p-autoComplete>
+                            <label for="vhiculo"><h6>Vehículo</h6></label>
+                        </span>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="clase"
+                                type="text"
+                                disabled
+                                [value]="
+                                    !vehiculoSeleccionado.clase
+                                        ? ''
+                                        : vehiculoSeleccionado.clase.tipo
+                                "
+                                [ngClass]="{
+                                    'ng-invalid ng-dirty':
+                                        envioLineaCarguePedido &&
+                                        vehiculoSeleccionado.length == 0
+                                }"
+                            />
+                            <label for="clase"><h6>Tipo</h6></label>
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"> TON </span>
+                            <span class="p-float-label">
+                                <input
+                                    type="number"
+                                    inputId="capacidadvh"
+                                    disabled
+                                    pInputText
+                                    [(ngModel)]="capacidadvh"
+                                    [ngClass]="{
+                                        'ng-invalid ng-dirty':
+                                            envioLineaCarguePedido &&
+                                            vehiculoSeleccionado.length == 0
+                                    }"
+                                />
+                                <label for="capacidadvh"
+                                    ><h6>Capacidad</h6></label
+                                >
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"> TON </span>
+                            <span class="p-float-label">
+                                <input
+                                    type="number"
+                                    inputId="cpadisponiblevh"
+                                    disabled
+                                    pInputText
+                                    [(ngModel)]="capacidadDisponibleVehiculo"
+                                />
+                                <label for="cpadisponiblevh"
+                                    ><h6>Disponible</h6></label
+                                >
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"> TON </span>
+                            <span class="p-float-label">
+                                <input
+                                    type="number"
+                                    inputId="pesovacio"
+                                    disabled
+                                    pInputText
+                                    [(ngModel)]="peso_bruto"
+                                />
+                                <label for="pesovacio"
+                                    ><h6>Peso vacio</h6></label
+                                >
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"> TON </span>
+                            <span class="p-float-label">
+                                <input
+                                    type="number"
+                                    inputId="pesoneto"
+                                    disabled
+                                    pInputText
+                                    [(ngModel)]="pesomax"
+                                />
+                                <label for="pesoneto"><h6>Peso neto</h6></label>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 mt-3">
+                        <span class="p-float-label">
+                            <p-autoComplete
+                                id="cliente"
+                                [(ngModel)]="clienteSeleccionado"
+                                [suggestions]="clientesFiltrados"
+                                (completeMethod)="filtrarCliente($event)"
+                                field="label"
+                                [dropdown]="true"
+                                [multiple]="false"
+                                (onSelect)="
+                                    seleccionarCliente(clienteSeleccionado)
+                                "
+                            >
+                            </p-autoComplete>
+                            <label for="cliente"
+                                ><h6>Seleccione un cliente</h6></label
+                            >
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                           
+                            <p-autoComplete
+                                id="municipios"
+                                [(ngModel)]="municipioSeleccionado"
+                                [suggestions]="municipiosFiltrados"
+                                (completeMethod)="filtrarMunicipio($event)"
+                                field="label"
+                                [dropdown]="true"
+                                (onSelect)="seleccionarMunicipio()"
+                                [ngClass]="{
+                                    'ng-invalid ng-dirty':
+                                        envioLineaCarguePedido &&
+                                        municipioSeleccionado.length == 0
+                                }"
+                            >
+                                <ng-template let-value pTemplate="selectedItem">
+                                    <span style="font-size: 18px">{{
+                                        value.label
+                                    }}</span>
+                                </ng-template>
+                            </p-autoComplete>
+                            <label for="email"
+                                ><h6>Municipio de entrega</h6></label
+                            >
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                inputId="sitioentrega"
+                                [(ngModel)]="sitioentrega"
+                                pInputText
+                                maxlength="100"
+                                [ngClass]="{
+                                    'ng-invalid ng-dirty':
+                                        envioLineaCarguePedido &&
+                                        sitioentrega == ''
+                                }"
+                            />
+
+                            <label for="sitioentrega"
+                                ><h6>Sitio de entrega</h6></label
+                            >
+                        </span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <p-treeTable [value]="turnosTrasladoSeleccionado" 
+                [columns]="cols" 
+                selectionMode="checkbox" 
+                
+                class="col-12 min-w-min">
+               <!-- <ng-template pTemplate="caption">
+                   <div class="flex justify-content-between flex-column sm:flex-row">
+                       <div>
+                           <button pButton
+                                   pTooltip="Adicionar vehículo" tooltipPosition="bottom" placeholder="Bottom"  
+                                   class="p-button-outlined mb-2 mr-2 p-button-success p-button-sm" 
+                                   icon="pi pi-plus"
+                                   label="Turno vehículo"
+                                   (click)="adicionarVehiculo()">
+                           </button>
+                           
+                       </div>
+                       <div>
+                           <button pButton
+                                   pTooltip="Grabar soliitud" tooltipPosition="bottom" placeholder="Bottom"  
+                                   class="p-button-outlined mb-2 mr-2 p-button-primary p-button-sm" 
+                                   icon="pi pi-save"
+                                   label="Grabar solicitud"
+                                   [disabled]="this.vehiculosEnSolicitud.length ==0"
+                                   (click)="grabarSolicitud()">
+                           </button>
+                       </div>
+                   </div>
+               </ng-template> -->
+               <ng-template pTemplate="header" let-columns>
+                   <tr>
+                       <th *ngFor="let col of columns" style="width: 6rem">
+                           {{col.header}}
+                           
+                       </th>
+                       <!-- <th style="width:4rem">
+
+                       </th> -->
+                   </tr>
+               </ng-template>
+               <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                   <tr>
+                       <td *ngFor="let col of columns; let i = index" style="width: 6rem">
+                            <div  class="flex justify-content-between flex-column sm:flex-row">
+                                <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0"></p-treeTableToggler>
+                                <div *ngIf="col.type==='number'" class="text-left" >
+                                    {{ rowData[col.field] | number: '1.0-2' }}  
+                                </div>
+
+                                <div *ngIf="col.type==='string'" class="text-left" >
+                                    {{rowData[col.field]}}  
+                                </div>
+                                
+                            </div>
+                       </td>
+                       
+                    
+                   </tr>
+               </ng-template>
+                </p-treeTable>
+            </div>
+        </div>
+    </div>
+    
+
+    <ng-template pTemplate="footer">
+        <p-button
+            icon="pi pi-check"
+            (click)="confirmarTraslado()"
+            label="Realizar traslado a Bodega transito"
+            styleClass="p-button-text"
+        ></p-button>
+    </ng-template>
+</p-dialog>
+<!-- Fin Dialog pedidos cliente-->
+<!-- <app-usb-port></app-usb-port> -->

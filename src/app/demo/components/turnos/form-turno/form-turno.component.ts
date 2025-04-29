@@ -309,6 +309,8 @@ tipoTurno:string = 'RETIRO';
 
 tipoOperacion:string ='';
 
+turnoBase:number =0;
+
 
 
   constructor( private messageService: MessageService,
@@ -742,6 +744,10 @@ tipoOperacion:string ='';
                   this.configSplitButton(this.estado,this.permisosModulo);
                   if(this.turno.tipo==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==="ENTREGA").length>0){
                     this.tipoOperacion='ENTREGA';
+                  }
+
+                  if(this.turno.tipo==='ENTREGA' && this.turno.turno_base!=0){
+                    this.turnoBase=this.turno.turno_base;
                   }
                    
               },

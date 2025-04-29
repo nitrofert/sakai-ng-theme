@@ -2097,7 +2097,12 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 //Si el tipo de operacion es igual a traslado, buscar webservice de lotes segun item , linea y numero documento de traslado sap
                 let lotesItemDoc:any[] = [];
                 if(tipo_operacion==='TRASLADO'){
+                  console.log('pedido.itemcode',pedido.itemcode)
+                  console.log('pedido.linenum',pedido.linenum)
+                  console.log('pedido.pedido',pedido.pedido)
+                  
                   let lotesItem = await this.pedidosService.lotesItemDocnum(pedido.itemcode,pedido.linenum,pedido.pedido)
+                  console.log('lotesItem',lotesItem)
                   for(let index in lotesItem)  {
                     lotesItemDoc.push({
                       cantidad_bodega_lote:lotesItem[index].Cantidad,

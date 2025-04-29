@@ -156,11 +156,28 @@ export class PedidosService {
     }
 
     async lotesItemDocnum(itemcode:string,linenum:string,docnum:any):Promise<any>{
-        let lotesItemDoc$ = await this.getLotesItemDocnum(itemcode,linenum,docnum);
-        let lotesItemDoc = lastValueFrom(lotesItemDoc$);
+        let lotesItemDoc$ =  this.getLotesItemDocnum(itemcode,linenum,docnum);
+        let lotesItemDoc = await lastValueFrom(lotesItemDoc$);
 
         return lotesItemDoc;
     }
+
+    getTurnosQuery(params:any):Observable<any[]> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/solicitud-turnos/turnos-query`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url,{params:{where:JSON.stringify(params)}});
+    }
+
+    
+    async getTurnosByQuery(params?:any):Promise<any[]> {
+        const turnos$ = this.getTurnosQuery(params);
+        const turnos = await lastValueFrom(turnos$);
+        return turnos;
+    }
+   
 
    
 
