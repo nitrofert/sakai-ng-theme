@@ -519,11 +519,11 @@ export class CostadoBuqueComponent implements OnInit {
               if(turno.estado === EstadosDealleSolicitud.ENTREGADO){
                 if(turno.detalle_solicitud_turnos_pedido.filter((item:{docentry_traslado:number;})=>item.docentry_traslado===0).lenght>0){
                   totalPuertoEntregado+=item.cantidad;
-                  totalBasculaEntregado +=((item.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
+                  
                 }else{
                   totalTrasladoTransito +=item.cantidad;
                 }
-                
+                totalBasculaEntregado +=((item.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
               }else{
                 totalPuertoEnOpercion+=item.cantidad;
               }
