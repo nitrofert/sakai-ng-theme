@@ -375,10 +375,11 @@ export class CostadoBuqueComponent implements OnInit {
               docentry_traslado: number; cantidad: number; linea: any; })=>{
               if(pedido.linea === trasladoBuqueLocalidad.LineNum && pedido.docentry_traslado ===0){
                 totalPuertoEntregado +=pedido.cantidad;
-                totalBasculaEntregado +=((pedido.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
+                
               }else{
                 totalTrasladoTransito+=pedido.cantidad;
               }
+              totalBasculaEntregado +=((pedido.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
             })
           }
           trasladoBuqueLocalidad.totalBasculaEntregado = totalBasculaEntregado;
@@ -664,7 +665,7 @@ export class CostadoBuqueComponent implements OnInit {
         accept: () => {
          
           console.log('infoTrasladoSAP',infoTrasladoSAP);
-
+          this.displayModal = true;
           this.solicitudTurnoService.trasladoAduanaTransito(infoTrasladoSAP)
               .subscribe({
                   next:(result)=>{
@@ -678,9 +679,12 @@ export class CostadoBuqueComponent implements OnInit {
                     }else{
                       this.messageService.add({severity:'error', summary:'Error', detail:`Ocurio un error al momento de realizar el traslado a la bodega de transtio ${operacionSeleccionada.Nombre_Bod_Destino}`});
                     }
+
+                    this.displayModal = false;
                   },
                   error:(err)=>{
                       console.error(err);
+                      this.displayModal = false;
                   }
           })
 
