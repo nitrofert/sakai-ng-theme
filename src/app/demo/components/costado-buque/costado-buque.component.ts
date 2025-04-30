@@ -513,7 +513,7 @@ export class CostadoBuqueComponent implements OnInit {
             let totalTrasladoTransito:number =0;
 
             // let pedidosTurno:any = turno.detalle_solicitud_turnos_pedido.filter((pedido: { linea: any; })=>pedido.linea === itemTraslado.LineNum);
-            // console.log("pedidosTurno",pedidosTurno)
+            console.log("turno",turno)
 
             await turno.detalle_solicitud_turnos_pedido.filter((pedido: { linea: any; })=>pedido.linea === itemTraslado.LineNum).map((item: { cantidad: number; })=>{
               if(turno.estado === EstadosDealleSolicitud.ENTREGADO){
