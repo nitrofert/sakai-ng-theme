@@ -139,7 +139,13 @@ export class CostadoBuqueComponent implements OnInit {
     { field: 'totalPendienteEnOpercion', header: 'Total pendiente operación', type:'number' }
   ];
 
- 
+  totalTrasladoSolicitado:number=0;
+  totalSladoTrasladoSolicitado:number=0;
+  totalTrasladoTransito:number=0;
+  totalTrasladoEntregado:number=0;
+  totalTrasladoEnOperacion:number=0;
+  totalTrasladoPendienteOperacion:number=0;
+
 
   constructor(
     private messageService: MessageService,
@@ -371,16 +377,24 @@ export class CostadoBuqueComponent implements OnInit {
           let turnosLocalidadItemTrasladoEntregado = turnosLocalidadItemTraslado.filter(turno=>turno.estado===EstadosDealleSolicitud.ENTREGADO);
           //console.log('turnosLocalidadItemTrasladoEntregado',turnosLocalidadItemTrasladoEntregado);
           for(let turno of turnosLocalidadItemTrasladoEntregado){
-            turno.detalle_solicitud_turnos_pedido.map((pedido: {
-              docentry_traslado: number; cantidad: number; linea: any; })=>{
+            console.log('turno', turno)
+            console.log('peso carga turno', turno.peso_neto-turno.peso_vacio)
+
+            turno.detalle_solicitud_turnos_pedido.map((pedido: {docentry_traslado: number; cantidad: number; linea: any; itemname:any })=>{
+              console.log('peso item turno',pedido.itemname, pedido.cantidad)
+              console.log('% peso item en carga turno', ((pedido.cantidad*100)/(turno.peso_neto-turno.peso_vacio)))
+
               if(pedido.linea === trasladoBuqueLocalidad.LineNum && pedido.docentry_traslado ===0){
                 totalPuertoEntregado +=pedido.cantidad;
                 
               }else{
                 totalTrasladoTransito+=pedido.cantidad;
               }
-              totalBasculaEntregado +=((pedido.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
+              //totalBasculaEntregado +=((pedido.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
+              
             })
+
+            totalBasculaEntregado +=(turno.peso_neto-turno.peso_vacio);
           }
           trasladoBuqueLocalidad.totalBasculaEntregado = totalBasculaEntregado;
           trasladoBuqueLocalidad.totalPuertoEntregado = totalPuertoEntregado;
@@ -485,11 +499,28 @@ export class CostadoBuqueComponent implements OnInit {
 
     console.log("itemsOperacionSeleccionada",itemsOperacionSeleccionada)
 
+    let totalTrasladoSolicitado = 0;
+    let totalSladoTrasladoSolicitado =0;
+    let totalTrasladoTransito =0;
+    let totalTrasladoEntregado =0;
+    let totalTrasladoEnOperacion = 0;
+    let totalTrasladoPendienteOperacion =0;
+
+
+
     this.dialogDetalleOperacion = true;
 
     let turnos :any[] = [];
 
     for(let itemTraslado of itemsOperacionSeleccionada){
+
+      totalTrasladoSolicitado+=itemTraslado.Quantity;
+      totalSladoTrasladoSolicitado+=itemTraslado.SALDO;
+      totalTrasladoTransito+=itemTraslado.totalTrasladoTransito;
+      totalTrasladoEntregado+=itemTraslado.totalPuertoEntregado;
+      totalTrasladoEnOperacion+=itemTraslado.totalPuertoEnOpercion;
+      totalTrasladoPendienteOperacion+=itemTraslado.totalPendienteEnOpercion
+
         let data = {
                     "data":{
                           itemCode:itemTraslado.ItemCode,
@@ -517,13 +548,15 @@ export class CostadoBuqueComponent implements OnInit {
 
             await turno.detalle_solicitud_turnos_pedido.filter((pedido: { linea: any; })=>pedido.linea === itemTraslado.LineNum).map((item: { cantidad: number; })=>{
               if(turno.estado === EstadosDealleSolicitud.ENTREGADO){
-                if(turno.detalle_solicitud_turnos_pedido.filter((item:{docentry_traslado:number;})=>item.docentry_traslado===0).lenght>0){
+                
+                if(turno.detalle_solicitud_turnos_pedido.filter((item:{docentry_traslado:number;})=>item.docentry_traslado===0).length>0){
                   totalPuertoEntregado+=item.cantidad;
                   
                 }else{
                   totalTrasladoTransito +=item.cantidad;
                 }
-                totalBasculaEntregado +=((item.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
+                //totalBasculaEntregado +=((item.cantidad*100)/(turno.peso_neto-turno.peso_vacio)*(turno.peso_neto-turno.peso_vacio))/100;
+                totalBasculaEntregado +=(turno.peso_neto-turno.peso_vacio);
               }else{
                 totalPuertoEnOpercion+=item.cantidad;
               }
@@ -549,6 +582,13 @@ export class CostadoBuqueComponent implements OnInit {
         }
         turnos.push(data);
     }
+
+    this.totalTrasladoSolicitado=totalTrasladoSolicitado;
+    this.totalSladoTrasladoSolicitado=totalSladoTrasladoSolicitado;
+    this.totalTrasladoTransito=totalTrasladoTransito;
+    this.totalTrasladoEntregado=totalTrasladoEntregado;
+    this.totalTrasladoEnOperacion=totalTrasladoEnOperacion;
+    this.totalTrasladoPendienteOperacion=totalTrasladoPendienteOperacion
     
     console.log("turnos",turnos)
 
