@@ -775,7 +775,7 @@
                     </div>
 
 
-                    <div *ngIf="(estado === estadosTurno.PESADOF || estado === estadosTurno.DESPACHADO) && tipoOperacion!='ENTREGA' && turnoBase!=0" class="field col-12">
+                    <div *ngIf="(estado === estadosTurno.PESADOF || estado === estadosTurno.DESPACHADO) && (tipoOperacion!='ENTREGA' || turnoBase!=0)" class="field col-12">
                         <app-remisiones [turno]="turno" [getRemisionesPorCliente]="getRemisiones" (onGetRemisiones)="setRemisiones($event)"></app-remisiones>
                     </div>
                 </div>

@@ -742,13 +742,17 @@ turnoBase:number =0;
                   
                   this.configTablePedidosAlmacenCliente();
                   this.configSplitButton(this.estado,this.permisosModulo);
-                  if(this.turno.tipo==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==="ENTREGA").length>0){
-                    this.tipoOperacion='ENTREGA';
-                  }
 
-                  if(this.turno.tipo==='ENTREGA' && this.turno.turno_base!=0){
-                    this.turnoBase=this.turno.turno_base;
-                  }
+                  // if(this.turno.tipo==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==="ENTREGA").length>0){
+                  //   this.tipoOperacion='ENTREGA';
+                  // }
+
+                  // if(this.turno.tipo==='ENTREGA' && this.turno.turno_base!=0){
+                  //   this.turnoBase=this.turno.turno_base;
+                  // }
+
+                  this.tipoOperacion=this.turno.tipo;
+                  this.turnoBase=this.turno.turno_base;
                    
               },
               error:(err)=>{
@@ -1749,6 +1753,8 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   async entregaTurno(){
+
+    
     if(await this.validarFormulario()){
       this.accion = 'entregar'
       this.formEstadoTurno = true;
@@ -2656,7 +2662,8 @@ async validarHoraCargue():Promise<boolean>{
 
   async validarFormulario():Promise<boolean> {
       let valido:boolean = false;
-
+      console.log('tipoOperacion',this.tipoOperacion);
+      console.log('turnoBase',this.turnoBase);
      //console.log(this.tablaPedidosTurno.data);
       // if(this.tablaPedidosTurno.data[0].remision==undefined){
       //   ////////console.log('remisión no definida');
