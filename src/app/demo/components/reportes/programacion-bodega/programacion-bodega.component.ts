@@ -153,7 +153,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     this.almacenesService.getAlmacenes()
         .subscribe({
             next:(almacenes)=>{
-
+              console.log('almacenes',almacenes);
              
               let almacenesTMP:any[] = [];
              
@@ -222,7 +222,7 @@ export class ProgramacionBodegaComponent implements OnInit {
 
   seleccionarLocacion(locacion:any){
     ////// ////console.log('allbodegas',this.allbodegas);
-    ////// ////console.log('locacion',locacion);
+    console.log('locacion',locacion);
 
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
     //console.log(bodegas_locacion);

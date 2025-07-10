@@ -52,24 +52,17 @@ export class ListadoSolicitudesComponent implements OnInit {
   permisosModulo!: any[];
 
   showBtnNew: boolean = false;
+
+  showBtnNewRetira: boolean = false;
+  showBtnNewEntrega: boolean = false;
+
   showBtnEdit: boolean = false;
   showBtnExp: boolean = false;
   showBtnDelete: boolean = false;
   showBtnPdf: boolean = false;
   infoUsuario!: any;
 
-  itemsNuevaSolicitud:any[] = [{
-    label: 'Retiro',
-    command: () => {
-        this.nuevaSolicitud('');
-    }
-},
-{
-    label: 'Entrega',
-    command: () => {
-        this.nuevaSolicitudEntrega();
-    }
-}]
+  itemsNuevaSolicitud:any[] = []
 
 
 
@@ -227,6 +220,27 @@ export class ListadoSolicitudesComponent implements OnInit {
           this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'borrar').valor;
           this.showBtnPdf = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'crearPdf').valor;
 
+          this.showBtnNewRetira = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'RETIRA').valor;
+          if(this.showBtnNewRetira){
+            this.itemsNuevaSolicitud.push({
+                                              label: 'Retiro',
+                                              command: () => {
+                                                  this.nuevaSolicitud('');
+                                              }
+                                          }
+                                         );
+          }
+          this.showBtnNewEntrega = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'ENTREGA').valor;
+          if(this.showBtnNewEntrega){
+            this.itemsNuevaSolicitud.push(
+                                          {
+                                              label: 'Entrega',
+                                              command: () => {
+                                                  this.nuevaSolicitudEntrega();
+                                              }
+                                          }
+                                        );
+          }
 
           this.infoUsuario = await this.usuariosService.infoUsuario();
           //////////////////////console.log(this.infoUsuario);

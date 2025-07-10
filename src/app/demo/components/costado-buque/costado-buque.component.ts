@@ -598,7 +598,9 @@ export class CostadoBuqueComponent implements OnInit {
 
   confirmarTraslado(){
 
-    let operacionSeleccionada = this.selectedItem[0];
+
+    if(this.operacionSeleccionada.Exceso ==="NO"){
+      let operacionSeleccionada = this.selectedItem[0];
     this.operacionSeleccionada = this.selectedItem[0];
     let itemsOperacionSeleccionada:any[] = this.trasladosBuqueLocalidad.filter(traslado=>traslado.DocNum ===  operacionSeleccionada.DocNum);
     //console.log("itemsOperacionSeleccionada",itemsOperacionSeleccionada);
@@ -743,6 +745,11 @@ export class CostadoBuqueComponent implements OnInit {
     }else{
       this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La cantidad a trasladar para cada uno de los items debe ser mayor a cero' });
     }
+    }else{
+      this.messageService.add({severity:'error', summary:'Error', detail:`La operación seleccionada no puede ser trasladada a la bodega de transito por ser un exceso de material.`});
+    }
+
+    
   }
 
 

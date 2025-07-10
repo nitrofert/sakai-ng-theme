@@ -80,7 +80,9 @@ import { TiempoAccionesTurnoComponent } from './tiempo-acciones-turno/tiempo-acc
     NovedadesComponent,
     ToneladasAdicionalesComponent,
     IncumplimientosTurnosComponent,
-    ComportamientoBodegasComponent
+    ComportamientoBodegasComponent,
+    FormFacturaComponent,
+    ListadoFacturasComponent
   ]
 })
 export class ReportesModule { }

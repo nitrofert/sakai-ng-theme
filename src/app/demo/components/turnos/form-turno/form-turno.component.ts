@@ -1829,7 +1829,7 @@ async validarHoraCargue():Promise<boolean>{
 
     }else if(await this.validarARL()){
 
-    }else{
+    }else {
       this.confirmationService.confirm({
         message: 'Esta seguro de '+this.accion+' la orden de cargue No. '+this.turnoId+'?',
         header: 'Confirmación',
@@ -1841,11 +1841,11 @@ async validarHoraCargue():Promise<boolean>{
             //Validar adjuntos para el estado cargado
              //console.log(this.filesToUpload);
 
-            //if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0 && this.uploadActivo){
+            // if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0 && this.uploadActivo){
             //  this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
             //   this.cambioEstado = false;
               
-            //}else{
+            // }else{
               
               this.updateTurno(data);
             
@@ -2698,9 +2698,9 @@ async validarHoraCargue():Promise<boolean>{
       }else if((this.tablaPedidosTurno.data[0].cubicacion==undefined  && this.estado === this.estadosTurno.CARGANDO) || 
                 (this.tablaPedidosTurno.data.filter((linea: { cubicacion: null;  itemcode:string })=>linea.cubicacion == null && !linea.itemcode.startsWith('SF')).length>0  && this.estado === this.estadosTurno.CARGANDO)){
                 this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar la cubicación para cada linea de producto-destino.'});
-      }else/* if(this.estado === this.estadosTurno.CARGANDO && await this.validarEvidenciasItemPedido()=== false){
-
-      }else*/{
+      }else if(this.estado === this.estadosTurno.CARGANDO && await this.validarEvidenciasItemPedido()=== false){
+          this.messageService.add({severity:'error', summary: '!Error¡', detail: `No se han adjuntado evidencias del cargue`});
+      }else{
         valido = await this.validarCantidadesCarga();
       }
 
@@ -2761,7 +2761,7 @@ async validarHoraCargue():Promise<boolean>{
 
   async validarEvidenciasItemPedido(severity:string='error', summary:string='!Error¡'):Promise<boolean> {
     let valido = true;
-
+    let totalEvidencias =0;
     for(let item of this.tablaPedidosTurno.data){
      // ////console.log(item);
       if(!item.itemcode.startsWith('SF')){
@@ -2771,13 +2771,15 @@ async validarHoraCargue():Promise<boolean>{
         let filesAtach$ = this.functionsService.loadFiles({id_relacion,proceso,entidad});
         let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
 
-        if(filesAtachByEstadoHistorialTurno.length === 0){
-          valido = false;
-          this.messageService.add({severity, summary, detail: `No se han adjuntado evidencias del cargue del item ${item.itemcode} - ${item.itemname} del pedido ${item.docnum}`});
-        }
+        // if(filesAtachByEstadoHistorialTurno.length === 0){
+        //   valido = false;
+        //   this.messageService.add({severity, summary, detail: `No se han adjuntado evidencias del cargue del item ${item.itemcode} - ${item.itemname} del pedido ${item.docnum}`});
+        // }
+        totalEvidencias = totalEvidencias+ filesAtachByEstadoHistorialTurno.length
       }
       
     }
+    if(totalEvidencias===0) valido = false;
 
     return valido;
   }

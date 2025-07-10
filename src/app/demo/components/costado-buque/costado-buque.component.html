@@ -945,7 +945,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="p-fluid p-formgrid grid">
-                    <div class="field col-12 md:col-6">
+                    <div class="field col-12 md:col-4">
                         <span class="p-float-label">
                             <input
                                 pInputText
@@ -958,7 +958,7 @@
                             <label for="clase"><h6>No. Traslado</h6></label>
                         </span>
                     </div>
-                    <div class="field col-12 md:col-6">
+                    <div class="field col-12 md:col-4">
                         <span class="p-float-label">
                             <input
                                 pInputText
@@ -969,6 +969,20 @@
                                 
                             />
                             <label for="clase"><h6>Motonave</h6></label>
+                        </span>
+                    </div>
+
+                    <div class="field col-12 md:col-4">
+                        <span class="p-float-label">
+                            <input
+                                pInputText
+                                id="Exceso"
+                                type="text"
+                                disabled
+                                [value]="operacionSeleccionada.Exceso"
+                                
+                            />
+                            <label for="clase"><h6>Exceso</h6></label>
                         </span>
                     </div>
 
@@ -1000,7 +1014,7 @@
                         </span>
                     </div>
 
-                    <div class="field col-12 md:col-3">
+                    <div class="field col-12 md:col-6">
                         <div class="p-inputgroup">
                             <span class="p-float-label">
                                 <input
@@ -1017,7 +1031,7 @@
                         </div>
                     </div>
 
-                    <div class="field col-12 md:col-3">
+                    <div class="field col-12 md:col-6">
                         <div class="p-inputgroup">
                             <span class="p-float-label">
                                 <input

@@ -28,6 +28,7 @@ import { RoleAccesGuard } from './demo/components/auth/guard/rol-acces.guard';
                     { path: 'clientes', loadChildren: () => import('./demo/components/clientes/clientes.module').then(m => m.ClientesModule) },
 
                     { path: 'buques', loadChildren: () => import('./demo/components/costado-buque/costado-buque.module').then(m => m.CostadoBuqueModule) },
+                    { path: 'finanzas', loadChildren: () => import('./demo/components/finanzas/finanzas.module').then(m => m.FinanzasModule) },
 
                     { path: 'uikit', canActivate:[RoleAccesGuard], data:{expectedRole:'ADMIN'}, loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
                     { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
