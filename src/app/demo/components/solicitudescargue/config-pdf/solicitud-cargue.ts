@@ -853,7 +853,7 @@ export class PdfSolicitudCargue {
                         //Columna titulo doc
                         {
                             margin:[0,10,0,0],
-                            text:'ORDEN DE CARGUE '+turno,
+                            text:'SOLICITUD DE CARGUE '+turno,
                             fontSize:16,
                             alignment:'center'
                         },

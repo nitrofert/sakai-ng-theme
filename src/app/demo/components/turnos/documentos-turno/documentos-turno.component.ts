@@ -26,6 +26,7 @@ import { PdfSolicitudCargue } from '../../solicitudescargue/config-pdf/solicitud
 import { PdfInspeccionCargue } from '../../solicitudescargue/config-pdf/inspeccion-cargue';
 import { PdfOrdenCargue } from '../../solicitudescargue/config-pdf/orden-cargue';
 import { PdfRemision } from '../../solicitudescargue/config-pdf/remision';
+import { PdfTiqueteBascula } from '../../solicitudescargue/config-pdf/tiquete-turno';
 
 @Component({
   selector: 'app-documentos-turno',
@@ -95,7 +96,8 @@ tipoTurno:string="";
               private pdfSolicitudCargue:PdfSolicitudCargue,
               private pdfInspeccionCargue:PdfInspeccionCargue,
               private pdfOrdenCargue:PdfOrdenCargue,
-              private pdfRemision:PdfRemision
+              private pdfRemision:PdfRemision,
+              private PpfTiqueteBascula:PdfTiqueteBascula,
             
               ) { }
 
@@ -179,7 +181,7 @@ tipoTurno:string="";
                   this.tipoTurno = this.turno.tipo;
 
                   if(this.tipoTurno==='RETIRO'){
-                    this.documentos = [{label:"Solicitud de cargue", tipo:"solicitud",value:''},{label:"Orden de cargue", tipo:"orden_cargue",value:''},{label:"inspección de cargue", tipo:"inspeccion",value:''}];
+                    this.documentos = [{label:"Solicitud de cargue", tipo:"solicitud",value:''},{label:"Orden de cargue", tipo:"orden_cargue",value:''},{label:"inspección de cargue", tipo:"inspeccion",value:''},{label:"Tiquete de bascula", tipo:"tiquete_bascula",value:''}];
                   }
 
                   let remisiones_turno:any[] = [];
@@ -304,6 +306,10 @@ tipoTurno:string="";
           this.pdfRemisionTurno(valor);
         break;
 
+        case 'tiquete_bascula':
+          this.pdfTiqueteBasculaTurno();
+        break;
+
 
       }
   }
@@ -334,6 +340,19 @@ tipoTurno:string="";
 
   await this.pdfRemision.generarPDF(this.turno.id,remision);
  }
+
+ async pdfTiqueteBasculaTurno():Promise<void>{
+
+  if(this.infoTurno.estado != this.estadosTurno.PESADOF && this.infoTurno.estado != this.estadosTurno.DESPACHADO && this.infoTurno.estado != this.estadosTurno.ENTREGADO){
+      this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "Solo puede generar el tiquete de bascula, si y solo si se haya realizado el pesado final" });
+    }else {
+      await this.PpfTiqueteBascula.generarPDF(this.infoTurno);
+    }
+
+  
+ }
+
+ 
 
 
 

@@ -158,7 +158,7 @@
                                 }"
                             />
                             <label for="pesomax"
-                                ><h6>Peso Neto permitido</h6></label
+                                ><h6>Peso Bruto permitido</h6></label
                             >
                         </span>
                         <span class="p-inputgroup-addon">TON</span>
@@ -408,7 +408,7 @@
                                 }"
                             />
                             <label for="peso_neto"
-                                ><h6>Peso Neto vehículo</h6></label
+                                ><h6>Peso Bruto vehículo</h6></label
                             >
                         </span>
                         <span class="p-inputgroup-addon">TON</span>
@@ -1783,8 +1783,24 @@
                                         
                                     </div>
                                 </th>
+
+                                 <th>
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        Cantidad comprometida
+                                        
+                                    </div>
+                                </th>
     
-        
+                                 <th>
+                                    <div
+                                        class="flex justify-content-between align-items-center"
+                                    >
+                                        Cantidad disponible
+                                        
+                                    </div>
+                                </th>
                                 
                                 
                                 
@@ -1808,6 +1824,14 @@
         
                                 <td style="min-width: 12rem">
                                     {{ lote.cantidad_bodega_lote }}
+                                </td>
+
+                                <td style="min-width: 12rem">
+                                    {{ lote.cantidad_comprometida }}
+                                </td>
+
+                                <td style="min-width: 12rem">
+                                    {{ lote.saldo }}
                                 </td>
         
                                 <td>

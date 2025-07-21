@@ -180,6 +180,31 @@ export class PedidosService {
    
 
    
+    getQuery2(ruote:string,where?:any,relations?:any):Observable<any[]> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        let params:any ={};
+        if(where){ params.where = JSON.stringify(where)};
+        //if(relations){ params.relations = JSON.stringify(relations)};
+        if(relations){ params.relations = relations};
+
+        const url:string = `${this.api_url}/api/query/${ruote}`;
+        //return this.http.get<any>(url, requestOptions);
+        //return this.http.get<any>(url,{params:{where:JSON.stringify(where)}});
+        return this.http.get<any>(url,{params});
+        //return this.http.get<any>(url,{params:{where:params}});
+    }
+
+    
+    async getAsyncQuery2(ruote:string,where?:any,relations?:any):Promise<any[]> {
+        console.log('where',where)
+        const query$ = this.getQuery2(ruote,where,relations);
+        const query = await lastValueFrom(query$);
+        return query;
+    }
+   
+
 
     
 }

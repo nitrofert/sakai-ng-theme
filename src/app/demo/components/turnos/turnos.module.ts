@@ -38,6 +38,7 @@ import { WebCamModule } from 'src/app/layout/shared/webcam/webcam.module';
 import { RemisionesComponent } from './remisiones/remisiones.component';
 import { UsbPortModule } from 'src/app/layout/shared/usb-port/usb-port.module';
 import { PdfRemision } from '../solicitudescargue/config-pdf/remision';
+import { PdfTiqueteBascula } from '../solicitudescargue/config-pdf/tiquete-turno';
 
 
 
@@ -81,6 +82,7 @@ import { PdfRemision } from '../solicitudescargue/config-pdf/remision';
              PdfSolicitudCargue,
              PdfInspeccionCargue,
              PdfOrdenCargue,
+             PdfTiqueteBascula,
              PdfRemision],
   
 })

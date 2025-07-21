@@ -4045,6 +4045,8 @@ async validarHoraCargue():Promise<boolean>{
     const itemcode = this.itemLineSelected[0].itemcode;
     const bodega = this.itemLineSelected[0].bodega;
 
+    console.log('this.itemLineSelected[0]',this.itemLineSelected[0])
+
     this.pedidosService.getInventarioLotesItemBodega(itemcode,bodega)
         .subscribe({
             next:async (result)=>{
@@ -4052,7 +4054,9 @@ async validarHoraCargue():Promise<boolean>{
               let lotesItemBodega:any[] = [];
               //Cargar array de lotes item bodega ws sap
               for(let item in result){
-                lotesItemBodega.push({lote:result[item].Lote, fecha_vencimiento:result[item].Fechavencimiento, cantidad_bodega_lote:result[item].Stock,estado:'A'})
+                let comprometido = await this.comprometidoItemLoteInTurno(this.itemLineSelected[0].id,itemcode,result[item].Lote)
+                 comprometido = comprometido+ await this.comprometidoOtrosTurnos(this.turno.locacion,this.itemLineSelected[0].bodega,this.itemLineSelected[0].id,result[item].Lote,itemcode)
+                lotesItemBodega.push({lote:result[item].Lote, fecha_vencimiento:result[item].Fechavencimiento, cantidad_bodega_lote:result[item].Stock,estado:'A', cantidad_comprometida:comprometido, saldo:result[item].Stock-comprometido})
               }
               //console.log('lotesItemBodega',lotesItemBodega);
               this.lotesItemBodega = await this.filtrarLotesSAP(this.lotesItemLine,lotesItemBodega)
@@ -4063,6 +4067,73 @@ async validarHoraCargue():Promise<boolean>{
                 console.error(err);
             }
         })
+  }
+
+  async comprometidoItemLoteInTurno(idLinea:any, itemcode:any, lote:any,pedidosTurno?:any):Promise<any>{
+    let cantidadComprometidaItemLote = 0;
+
+    //obtener lineas de items diferentes al id linea seleccioanda e igual al item seleccionado
+    let itemsTurno = !pedidosTurno?this.pedidosTurno.filter(item=>item.id != idLinea && item.itemcode === itemcode):pedidosTurno.filter((item: { id: any; itemcode: any; })=>item.id != idLinea && item.itemcode === itemcode);
+    console.log('itemsTurno',itemsTurno);
+    //recorrer los items del turno diferentes a la linea seleccionada, 
+    for(let itemTurno of itemsTurno){
+      //obtener los lotes que sean igual al item seleccionado y lote seleccioando
+      let lotesItem:any = itemTurno.detalle_lotes_item_turno.filter((item: { lote: any; }) => item.lote === lote)
+      console.log('lotesItem',lotesItem);
+      for(let loteItem of lotesItem){
+        cantidadComprometidaItemLote = cantidadComprometidaItemLote+parseFloat(loteItem.cantidad_cargue_lote)
+      }
+    }
+
+    return cantidadComprometidaItemLote;
+  }
+
+  async comprometidoOtrosTurnos(locacion:any, bodega:any, idLinea:any,lote:any, itemcode:any ):Promise<any>{
+    let cantidadComprometidaItemLote = 0;
+
+    //Buscar turnos abiertos de la locacion y bodega
+
+    
+
+    let ruote:string = 'turnos'
+    let where:any = {"locacion":{"equal":locacion}, "estado":{"in":[
+                                                                      `${this.estadosTurno.AUTORIZADO}`,
+                                                                      `${this.estadosTurno.ARRIBO}`,
+                                                                      `${this.estadosTurno.PESADO}`,
+                                                                      `${this.estadosTurno.CARGANDO}`,
+                                                                      `${this.estadosTurno.CARGADO}`,
+                                                                      `${this.estadosTurno.PESADOF}`,
+                                                                      `${this.estadosTurno.PESADO}`,
+                                                                      `${this.estadosTurno.PESADO}`,
+                                                                      `${this.estadosTurno.PESADO}`,
+
+                                                                    ]}}
+    // let relations:any = {
+    //             detalle_solicitud_turnos_pedido:{
+    //                 detalle_lotes_item_turno:true
+    //             },
+    //             vehiculo:true,
+    //             conductor:true,
+    //             transportadora:true
+    //         }
+
+      let relations:any = ['detalle_solicitud_turnos_pedido','detalle_solicitud_turnos_pedido.detalle_lotes_item_turno','vehiculo','conductor','transportadora']                                                                      
+
+     let turnos = await this.pedidosService.getAsyncQuery2(ruote,where,relations);
+     console.log('turnos',turnos)
+
+     //Filtrar turnos cuya bodega en items sea igual a al abodega de la linea seleccionada
+     let turnosBodegaLote:any = turnos.filter(turno=> turno.detalle_solicitud_turnos_pedido.filter((item: { bodega: string; detalle_lotes_item_turno:any })=>item.bodega === bodega && item.detalle_lotes_item_turno.filter((itemLote: { lote: any; })=>itemLote.lote == lote).length >0).length >0 )
+
+     console.log('turnosBodegaLote',bodega, lote,turnosBodegaLote)
+    //Recorrer los turnos y obtener las cantidades comprometidas asociadas a la bodega y el lote                                                          
+     for(let turnoBodegaLote of turnosBodegaLote){
+       
+        cantidadComprometidaItemLote = cantidadComprometidaItemLote+ await this.comprometidoItemLoteInTurno(idLinea,itemcode,lote,turnoBodegaLote.detalle_solicitud_turnos_pedido);
+     }
+
+     console.log('cantidadComprometidaItemLote',cantidadComprometidaItemLote)
+    return cantidadComprometidaItemLote;
   }
 
   async filtrarLotesSAP(lotesItem:any[],lotesItemBodegaSap:any[]):Promise<any[]>{
@@ -4101,7 +4172,8 @@ async validarHoraCargue():Promise<boolean>{
         id:this.itemLineSelected[0].id,
         lote:loteItemBodega.lote,
         fecha_vencimiento:loteItemBodega.fecha_vencimiento,
-        cantidad_bodega_lote:loteItemBodega.cantidad_bodega_lote,
+        //cantidad_bodega_lote:loteItemBodega.cantidad_bodega_lote,
+        cantidad_bodega_lote:loteItemBodega.saldo,
         cantidad_cargue_lote:0,
         cantidad_sacos_lote:0,
         //lineaUpdate:{create:true,update:false}
@@ -4219,6 +4291,8 @@ async validarHoraCargue():Promise<boolean>{
     let totalTon = this.totalTonItem.nativeElement.value;
     let totalSacos = this.totalSacosItem.nativeElement.value;
     let idLinea = this.itemLineSelected[0].id;
+
+    //console.log('this.itemLineSelected',this.itemLineSelected);
     
 
     if(parseFloat(totalTon) ===0 || parseFloat(totalSacos)===0 ){
