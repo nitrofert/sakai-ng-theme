@@ -201,6 +201,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
               codigo_vendedor:linea_detalle.codigo_vendedor,
               manifiesto:0,
               tipo_operacion:linea_detalle.tipo_operacion,
+              tipo_documento: linea_detalle.objectType=='17'?'FPD':linea_detalle.objectType=='1250000001'?linea_detalle.tipo_operacion==='TRASLADO'?'TRASLADO':'CONSIGNA':linea_detalle.objectType=='13'?'FPP':'' ,
               detalle_remision:[
                                   {
                                     id:linea_detalle.id,
@@ -223,9 +224,9 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
                                     bodega_destino:linea_detalle.bodega_destino,
                                     ubicacion:linea_detalle.ubicacion,
                                     vendedor:linea_detalle.vendedor,
-                                    
                                     ivacode:linea_detalle.ivacode,
                                     precio_unitario:linea_detalle.precio_unitario,
+                                    codigo_ubicacion:linea_detalle.codigo_ubicacion
 
   
                                   }
@@ -287,6 +288,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
                   
                   ivacode:linea_detalle.ivacode,
                   precio_unitario:linea_detalle.precio_unitario,
+                  codigo_ubicacion:linea_detalle.codigo_ubicacion
   
               }
             )
@@ -379,7 +381,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
       clientes.push({
           CardCode:cliente.CardCode,
           CardName:cliente.CardName,
-          remisiones: await cliente.remisiones.map((remision: { fecha: any; turnoid: any; base_docnum: any; base_docentry: any; base_objectType: any; municipioentrega: any; lugarentrega: any; CardCode: any; CardName: any; codigo_vendedor: any; manifiesto: any; tipo_operacion: any; detalle_remision: any; })=>{
+          remisiones: await cliente.remisiones.map((remision: { fecha: any; turnoid: any; base_docnum: any; base_docentry: any; base_objectType: any; municipioentrega: any; lugarentrega: any; CardCode: any; CardName: any; codigo_vendedor: any; manifiesto: any; tipo_operacion: any;tipo_documento:any; detalle_remision: any; })=>{
             return {
               fecha:remision.fecha,
                 turnoid:remision.turnoid,
@@ -393,6 +395,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
                 codigo_vendedor:remision.codigo_vendedor,
                 manifiesto:remision.manifiesto,
                 tipo_operacion:remision.tipo_operacion,
+                tipo_documento:remision.tipo_documento,
                 detalle_remision:remision.detalle_remision
             }
           })

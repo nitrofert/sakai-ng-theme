@@ -8,6 +8,7 @@ export const environment = {
   env:'dev',
   url_backend:'localhost:5001',
   url_ssl:false,
+  //companySAP:'PRUEBAS_NITROFERT_PRD_OCT27',
   companySAP:'PRUEBAS_NITROFERT_PRD_OCT27',
   companyMySQL:'nitrosap',
   ID_google_analytis:'',

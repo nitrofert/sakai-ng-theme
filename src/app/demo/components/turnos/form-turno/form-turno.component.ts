@@ -1829,6 +1829,8 @@ async validarHoraCargue():Promise<boolean>{
 
     }else if(await this.validarARL()){
 
+    }else  if(this.estado === this.estadosTurno.PESADOF && !(await this.validarUbicacionRemisiones())){
+          //console.log('validacion',await this.validarUbicacionRemisiones())
     }else {
       this.confirmationService.confirm({
         message: 'Esta seguro de '+this.accion+' la orden de cargue No. '+this.turnoId+'?',
@@ -1837,13 +1839,13 @@ async validarHoraCargue():Promise<boolean>{
         accept: async () => {
   
             let data:any = await this.configDataTurno();
-            //////// //////////console.log(data);
+            console.log(data);
             //Validar adjuntos para el estado cargado
              //console.log(this.filesToUpload);
 
             // if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0 && this.uploadActivo){
             //  this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
-            //   this.cambioEstado = false;
+             // this.cambioEstado = false;
               
             // }else{
               
@@ -1944,6 +1946,29 @@ async validarHoraCargue():Promise<boolean>{
     return error;
   }
 
+  async validarUbicacionRemisiones():Promise<boolean>{
+    let valido = false;
+
+    console.log('this.remisionesPorCliente',this.remisionesPorCliente)
+
+    // let remisiones_tipo_consigna:any[] = [];
+
+    // for(let cliente of this.remisionesPorCliente){
+    //   for(let remision of cliente.remisiones){
+    //       //buscar las remisiones tipo
+    //   }
+    // }
+
+    console.log(this.remisionesPorCliente.filter(cliente=>cliente.remisiones.filter((remision: {tipo_documento:string; detalle_remision:any[]})=>remision.tipo_documento==='CONSIGNA' && remision.detalle_remision.filter(item=>item.codigo_ubicacion=="" ).length>0).length>0))
+
+    if(this.remisionesPorCliente.filter(cliente=>cliente.remisiones.filter((remision: {tipo_documento:string; detalle_remision:any[]})=>remision.tipo_documento==='CONSIGNA' && remision.detalle_remision.filter(item=>item.codigo_ubicacion=="" ).length>0).length>0).length>0){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail: `Se produjo un error al momento de realizar las remisiones: Verificar que las ubicaciones de la bodega de consignación exista en SAP` });
+    }else{
+      valido = true;
+    }
+
+    return valido;
+  }
   
 
   async configDataTurno():Promise<any> {
@@ -3348,12 +3373,12 @@ async validarHoraCargue():Promise<boolean>{
 
     almacenesConStockItem = await this.functionsService.groupArray(almacenesConStockItem,'label');
 
-    //////////// ////////////console.log(almacenesConStockItem);
-
+   console.log('almacenesConStockItem',almacenesConStockItem);
+   console.log('this.locaciones',this.locaciones);
     let bodegas:any[] =[];
 
     for(let almacen of almacenesConStockItem){
-      ////////////// ////////////console.log(this.locaciones.find(item=>item.code == almacen.locacion_codigo2 ));
+      console.log('almacen.locacion_codigo2',almacen.locacion_codigo2,this.locaciones.find(item=>item.code == almacen.locacion_codigo2 ));
       if(this.locaciones.find(item=>item.code == almacen.locacion_codigo2 )){
         bodegas.push(almacen);
       }

@@ -628,6 +628,10 @@ export class CalendarioTurnosComponent implements OnInit {
           backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGANDO).backgroundColor;
         break;
 
+          case this.estadosTurno.DESCARGANDO:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESCARGANDO).backgroundColor;
+        break;
+
         case this.estadosTurno.PESADOF:
           backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PESADOF).backgroundColor;
         break;
@@ -635,9 +639,17 @@ export class CalendarioTurnosComponent implements OnInit {
         case this.estadosTurno.CARGADO:
           backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGADO).backgroundColor;
         break;
+
+         case this.estadosTurno.DESCARGADO:
+          backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESCARGADO).backgroundColor;
+        break;
       
       case this.estadosTurno.DESPACHADO:
         backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESPACHADO).backgroundColor;
+        break;
+
+        case this.estadosTurno.ENTREGADO:
+        backgroundColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.ENTREGADO).backgroundColor;
         break;
 
         case this.estadosTurno.CANCELADO:
@@ -675,6 +687,10 @@ export class CalendarioTurnosComponent implements OnInit {
           textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGANDO).textColor;
         break;
 
+         case this.estadosTurno.DESCARGANDO:
+          textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESCARGANDO).textColor;
+        break;
+
         case this.estadosTurno.PESADOF:
           textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.PESADOF).textColor;
         break;
@@ -682,9 +698,17 @@ export class CalendarioTurnosComponent implements OnInit {
         case this.estadosTurno.CARGADO:
           textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.CARGADO).textColor;
         break;
+
+        case this.estadosTurno.DESCARGADO:
+          textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESCARGADO).textColor;
+        break;
       
       case this.estadosTurno.DESPACHADO:
         textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.DESPACHADO).textColor;
+        break;
+
+        case this.estadosTurno.ENTREGADO:
+        textColor=this.estadosTurno2.find((item: { name: any; })=>item.name ===this.estadosTurno.ENTREGADO).textColor;
         break;
 
         case this.estadosTurno.CANCELADO:

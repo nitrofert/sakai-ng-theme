@@ -31,6 +31,12 @@ export class SolicitudTurnoService {
     {name:EstadosDealleSolicitud.PESADOF, value:EstadosDealleSolicitud.PESADOF, backgroundColor:'green-100', textColor:'gray-900',icon:'pi pi-compass',order:11},
     {name:EstadosDealleSolicitud.DESPACHADO, value:EstadosDealleSolicitud.DESPACHADO, backgroundColor:'green-600', textColor:'surface-50',icon:'pi pi-truck',order:12},
     {name:EstadosDealleSolicitud.CANCELADO, value:EstadosDealleSolicitud.CANCELADO, backgroundColor:'bluegray-600', textColor:'surface-50',icon:'pi pi-times-circle',order:13},
+
+    {name:EstadosDealleSolicitud.DESCARGANDO, value:EstadosDealleSolicitud.DESCARGANDO, backgroundColor:'primary-300', textColor:'gray-900',icon:'pi pi-download',order:9},
+    {name:EstadosDealleSolicitud.DESCARGADO, value:EstadosDealleSolicitud.DESCARGADO, backgroundColor:'primary-600', textColor:'surface-50',icon:'pi pi-box',order:10},
+    {name:EstadosDealleSolicitud.ENTREGADO, value:EstadosDealleSolicitud.ENTREGADO, backgroundColor:'green-600', textColor:'surface-50',icon:'pi pi-truck',order:12},
+
+
     ];
 
 
@@ -232,6 +238,11 @@ export class SolicitudTurnoService {
     trasladoAduanaTransito(data:any):Observable<any> {
         const url:string = `${this.api_url}/api/solicitud-turnos/traslado-aduana-transito`;
         return this.http.post<any>(url,data);
+    }
+
+     getTurnosPorRangoFechas(fechaInicio?:any,fechaFin?:any):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/rango-fechas`;
+        return this.http.get<any>(url, {params:{fechaInicio,fechaFin}});
     }
 
    

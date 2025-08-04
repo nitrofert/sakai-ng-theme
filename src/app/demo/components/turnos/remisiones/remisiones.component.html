@@ -23,6 +23,7 @@
                                     id="cliente"
                                     type="text"
                                     readonly
+                                    
                                     [value]="remision.base_objectType=='17'?'FPD':remision.base_objectType=='1250000001'?remision.tipo_operacion==='TRASLADO'?'TRASLADO':'CONSIGNA':remision.base_objectType=='13'?'FPP':'' "
                                     class="p-inputtext-sm" placeholder="Small"
                                 />

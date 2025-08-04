@@ -183,7 +183,7 @@ export class DashboardComponentTurno implements OnInit {
 
 tablaFletesTurnos:any[] = [];
 
-
+conductoresARL:any[] = [];
 
 
   constructor(private almacenesService:AlmacenesService,
@@ -471,8 +471,10 @@ async getSolicitudesTurno(){
           //await this.setTableFletes(solicitudesTurnos.raw);
        }
        
-       ////console.log('this.solicitudesExtendida',this.solicitudesExtendida);
+       console.log('solicitudesTurnos.raw.',solicitudesTurnos);
        this.loading = false;
+
+
     },
     error:(err)=>{
       
@@ -481,19 +483,45 @@ async getSolicitudesTurno(){
     }
   });
 
-  /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
+  this.solicitudTurnoService.getTurnosPorRangoFechas(params.fechainicio,params.fechafin)
       .subscribe({
-          next:(solicitud)=>{
-            //////////////console.log(solicitud);
+          next:async (turnos)=>{
+           console.log('turnos conductoresArl',turnos);
 
-           
+           for(let turno of turnos){
+              if(turno.conductor.historial_arl.length>0){
+                let linea_arl_activa = turno.conductor.historial_arl.filter((arl: { estado: string; })=>arl.estado ==='ACTIVO');
+                let fecha_vencimiento_arl_activa = new Date(linea_arl_activa[0].fechafin);
+                let dias_vence = await this.functionsService.dateDif(fecha_vencimiento_arl_activa, new Date())
+                console.log('dias_vence',dias_vence)
+
+                if(dias_vence <= 5 ){
+                  if(this.conductoresARL.filter(conductor=>conductor.id === turno.conductor.id).length===0){
+                     turno.conductor.arl = 'SI';
+                    turno.conductor.dias_arl = dias_vence;
+                    turno.conductor.fecha_vencimiento_arl =linea_arl_activa[0].fechafin;
+                    this.conductoresARL.push(turno.conductor)
+                  }
+                }
+
+              }else{
+                  if(this.conductoresARL.filter(conductor=>conductor.id === turno.conductor.id).length===0){
+                    turno.conductor.arl = 'NO';
+                    turno.conductor.dias_arl = 0;
+                    turno.conductor.fecha_vencimiento_arl ='';
+                    this.conductoresARL.push(turno.conductor)
+                  }
+
+                
+              }
+           }
 
             
           },
           error:(error)=>{
               console.error(error);
           }
-  });*/
+  });
   
 }
 

@@ -458,11 +458,12 @@ getSaldosPedidos(){
                   subcategoria_item:saldosPedidos[indexPedido].Subcategoria_Item,
                   almacen_fpp:saldosPedidos[indexPedido].AlmacenFPP,
                   bodega_destino:saldosPedidos[indexPedido].Bodega_Destino,
-                  ubicacion:saldosPedidos[indexPedido].Bodega_Destino==='CONSIGNA'?`CONSIGNA-${saldosPedidos[indexPedido].CardCode}`:'',
+                  ubicacion:saldosPedidos[indexPedido].TIPOPEDIDO==='CONSIGNA'?`${saldosPedidos[indexPedido].Bodega_Destino}-${saldosPedidos[indexPedido].CardCode}`:'',
                   codigo_vendedor:saldosPedidos[indexPedido].Codigo_Vendedor,
                   precio_unitario:saldosPedidos[indexPedido].Precio_Unitario,
                   tipo_operacion:saldosPedidos[indexPedido].Tipo_Movimiento,
                   bodega_final:saldosPedidos[indexPedido].Bodega_Fin,
+                  codigo_ubicacion:saldosPedidos[indexPedido].Ubicacion_Bodega,
 
                   
                 })
@@ -1234,7 +1235,7 @@ async getCantidadComprometidaItemPedidoOtrasBodegas(pedido:any, itemcode:string,
 }
 
 configTablePedidosAlmacenCliente(){
-  //// //// ////////////console.log(this.pedidosAlmacenCliente);
+  console.log(this.pedidosAlmacenCliente);
   let headersTable:any= this.configHeadersPedidos();
   let dataTable:any = this.configDataTablePedidos(this.pedidosAlmacenCliente);
    
@@ -1306,6 +1307,7 @@ configDataTablePedidos(arregloPedido:any){
         comprometida:pedido.comprometida,
         disponible:(pedido.pendiente-pedido.comprometida),
         cargada:0,
+        //codigo_ubicacion:pedido.codigo_ubicacion
         //flete:0
         
       });
@@ -1350,7 +1352,7 @@ confirmarSeleccionPedidosAlmacenCliente(){
 
 async seleccionarPedidosAlmacenCliente(event:any){
  
- //////console.log(event);
+ 
   this.envioLineaCarguePedido =true;
 
 
@@ -1359,7 +1361,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
       this.showItemsSelectedPedidosAlmacenCliente=false;
   }else{
     const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-   //////console.log('pedidos seleccionados',pedidosSeleccionados);
+  console.log('pedidos seleccionados',pedidosSeleccionados);
   
     if(pedidosSeleccionados.length > 0){
         
@@ -1464,7 +1466,8 @@ async seleccionarPedidosAlmacenCliente(event:any){
                           lugarentrega:this.sitioentrega,
                           cliente:this.clienteSeleccionado2.CardName,
                           flete:this.verFletes?pedido.flete:0,
-                          Maneja_lote:pedido.Maneja_Lote
+                          Maneja_lote:pedido.Maneja_Lote,
+                          //codigo_ubicacion:pedido.codigo_ubicacion
   
                     });
 
@@ -1796,7 +1799,7 @@ grabarSolicitud(){
         let codigo_vendedor = infoPedido[0].codigo_vendedor;
         let precio_unitario = infoPedido[0].precio_unitario;
         let tipo_operacion = infoPedido[0].tipo_operacion;
-        
+        let codigo_ubicacion = infoPedido[0].codigo_ubicacion
         
 
 
@@ -1841,7 +1844,8 @@ grabarSolicitud(){
           codigo_vendedor,
           precio_unitario,
           tipo_operacion,
-          bodega_final
+          bodega_final,
+          codigo_ubicacion
 
         });
         
