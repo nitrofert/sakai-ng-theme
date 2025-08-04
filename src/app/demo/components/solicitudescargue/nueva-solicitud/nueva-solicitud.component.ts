@@ -2146,8 +2146,10 @@ async emailsClientes(solicitud:any):Promise<void> {
 
       //clienteTurno.turnos = cliente.turnos;
       let objectMail = {
-        to:infoUsuario.email,
+        //to:infoUsuario.email,
         //to:this.domain=='localhost'?'ralbor@nitrofert.com.co':cliente.email,
+        to:this.domain.includes('dev') || this.domain.includes('test') || this.domain.includes('localhost')?'ralbor@nitrofert.com.co':cliente.email,
+       
         from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
         subject:`Solicitud de cargue # ${solicitud.id}`,
         template:'./notificacion_solicitud',
@@ -2262,7 +2264,7 @@ async emailsVendedores(solicitud:any): Promise<void>{
   turnosVendedor.forEach(async (vendedor)=>{
     if(vendedor.email!='' && vendedor.email!=null){
       let objectMail = {
-        to:this.domain=='localhost'?'ralbor@nitrofert.com.co':vendedor.email,
+        to:this.domain.includes('dev') || this.domain.includes('test') || this.domain.includes('localhost')?'ralbor@nitrofert.com.co':vendedor.email,
         //to:'ralbor@nitrofert.com.co',
         from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
         subject:`Solicitud de cargue # ${solicitud.id}`,
@@ -2321,7 +2323,7 @@ async emailBodegaEstado(solicitud:any): Promise<void>{
 
         let objectMail = {
       
-          to:this.domain=='localhost'?'ralbor@nitrofert.com.co':flujoAP.email_responsable,
+          to:this.domain.includes('dev') || this.domain.includes('test') || this.domain.includes('localhost')?'ralbor@nitrofert.com.co':flujoAP.email_responsable,
           //to:'ralbor@nitrofert.com.co',
           from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
           subject:`Solicitud de cargue # ${solicitud.id}`,
@@ -2415,7 +2417,7 @@ async emailTransp(solicitud:any): Promise<void>{
 
   let objectMail = {
     //to:'ralbor@nitrofert.com.co',
-    to:this.domain=='localhost'?'ralbor@nitrofert.com.co':'turnostransporte@nitrofert.com.co',
+    to:this.domain.includes('dev') || this.domain.includes('test') || this.domain.includes('localhost')?'ralbor@nitrofert.com.co':'turnostransporte@nitrofert.com.co',
     from:`"Portal de autogestión Nitrofert" <notificacionapp@nitrofert.com.co>`,
     subject:`Solicitud de cargue # ${solicitud.id}`,
     template:'./notificacion_solicitud2',
@@ -2456,6 +2458,7 @@ async emailCreador(solicitud:any): Promise<void>{
       
     });
   });
+console.log(this.domain);
 
   let objectMail = {
     to:infoUsuario.email,
