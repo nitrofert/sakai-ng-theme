@@ -3210,10 +3210,10 @@ async validarHoraCargue():Promise<boolean>{
           console.log('this.capacidadDisponibleVehiculo',this.capacidadDisponibleVehiculo)
           
     
-          if(!error && totalCarga> this.capacidadDisponibleVehiculo){
-              this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
-              error = true;
-          }
+          // if(!error && totalCarga> this.capacidadDisponibleVehiculo){
+          //     this.messageService.add({severity:'error', summary: '!Error¡', detail:  `El total a cargar de los pedidos seleccionados, supera la capacidad disponible del vehículo seleccionado`});
+          //     error = true;
+          // }
     
           // TODO:: Si es transporta sociedad validar si exite linea de flete en seleccion
           if(!error && this.condicion_tpt=="TRANSP" && pedidosSeleccionados.filter((pedidoSeleccionado: { itemcode: string; }) =>pedidoSeleccionado.itemcode.toLowerCase().startsWith('sf')).length ===0){
