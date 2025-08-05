@@ -1431,7 +1431,7 @@
                                 pInputText
                                 id="item"
                                 type="text"
-                                readonly
+                                [readonly]="itemLineSelected.length===0 || (itemLineSelected[0].maneja_lote==='Y')"
                                 #totalSacosItem
                                 [disabled]="itemLineSelected.length===0 || (itemLineSelected[0].maneja_lote==='Y')"
                                 [value]="itemLineSelected.length> 0 && (itemLineSelected[0].maneja_lote==='N')?itemLineSelected[0].cantidad_sacos:0 "
