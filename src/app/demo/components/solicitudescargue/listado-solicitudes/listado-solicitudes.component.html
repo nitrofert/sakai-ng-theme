@@ -912,6 +912,54 @@
                         </th>
 
                         <th
+                            pSortableColumn="tiene_arl"
+                            style="min-width: 15rem"
+                        >
+                            <div
+                                class="flex justify-content-between align-items-center"
+                            >
+                                <div class="text-center">
+                                    ¿Tiene ARL?
+                                </div>
+                                <div>
+                                    <p-sortIcon
+                                        field="tiene_arl"
+                                    ></p-sortIcon>
+                                    <p-columnFilter
+                                        type="text"
+                                        field="tiene_arl"
+                                        display="menu"
+                                        placeholder="Buscar por ARL"
+                                    ></p-columnFilter>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th
+                            pSortableColumn="arl_vigente"
+                            style="min-width: 15rem"
+                        >
+                            <div
+                                class="flex justify-content-between align-items-center"
+                            >
+                                <div class="text-center">
+                                    ¿ARL vigente?
+                                </div>
+                                <div>
+                                    <p-sortIcon
+                                        field="arl_vigente"
+                                    ></p-sortIcon>
+                                    <p-columnFilter
+                                        type="text"
+                                        field="arl_vigente"
+                                        display="menu"
+                                        placeholder="Buscar por ARL"
+                                    ></p-columnFilter>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th
                             pSortableColumn="detalle_solicitudes_turnos_condiciontpt"
                             style="min-width: 15rem"
                         >
@@ -1179,6 +1227,14 @@
 
                         <td class="text-center">
                             {{ itemData.telefonos_conductor }}
+                        </td>
+
+                        <td class="text-center">
+                            {{ itemData.tiene_arl }}
+                        </td>
+
+                        <td class="text-center">
+                            {{ itemData.arl_vigente }}
                         </td>
 
                         <td class="text-center">

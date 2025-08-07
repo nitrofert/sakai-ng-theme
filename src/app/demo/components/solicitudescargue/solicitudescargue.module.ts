@@ -28,6 +28,8 @@ import { PdfSolicitudCargue } from './config-pdf/solicitud-cargue';
 import { PdfInspeccionCargue } from './config-pdf/inspeccion-cargue';
 import { PdfOrdenCargue } from './config-pdf/orden-cargue';
 import { NuevaSolicitudEntregaComponent } from './nueva-solicitud-entrega/nueva-solicitud-entrega.component';
+import { PdfTiqueteBascula } from './config-pdf/tiquete-turno';
+import { PdfRemision } from './config-pdf/remision';
 
 
 
@@ -65,7 +67,9 @@ import { NuevaSolicitudEntregaComponent } from './nueva-solicitud-entrega/nueva-
               DependenciasService,
               PdfSolicitudCargue,
               PdfInspeccionCargue,
-              PdfOrdenCargue
+              PdfOrdenCargue,
+              PdfTiqueteBascula,
+              PdfRemision
    ]
 })
 export class SolicitudescargueModule { }

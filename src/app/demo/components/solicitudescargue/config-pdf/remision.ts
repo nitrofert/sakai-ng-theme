@@ -1940,28 +1940,29 @@ export class PdfRemision {
 
         for(let pedido of detalle_pedidos_turno){
             let linea_detalle_remision = {
-            pedidonum:pedido.pedidonum,
-            linea:pedido.linea,
-            bodega:pedido.bodega,
-            itemcode:pedido.itemcode,
-            itemname:pedido.itemname,
-            cantidad:pedido.cantidad,
-            cantidad_sacos:pedido.cantidad_sacos,
-            lote:'',
-            unidad:'TONELADA'
+                pedidonum:pedido.pedidonum,
+                linea:pedido.linea,
+                bodega:pedido.bodega,
+                itemcode:pedido.itemcode,
+                itemname:pedido.itemname,
+                cantidad:pedido.cantidad,
+                cantidad_sacos:pedido.cantidad_sacos,
+                lote:'',
+                unidad:'TONELADA'
             }
             //Si la linea del pedido no tiene lotes asignar linea_detalle_remision
             if(pedido.detalle_lotes_item_turno!=undefined && pedido.detalle_lotes_item_turno.length ===0){
-            detalle_remision.push(linea_detalle_remision);
-            }else{
-            for(let lote of pedido.detalle_lotes_item_turno){
-                linea_detalle_remision.cantidad = lote.cantidad_cargue_lote;
-                linea_detalle_remision.cantidad_sacos = lote.cantidad_sacos_lote;
-                linea_detalle_remision.lote = lote.lote;
-
                 detalle_remision.push(linea_detalle_remision);
+            }else{
+                for(let lote of pedido.detalle_lotes_item_turno){
+                    let new_linea_lote = JSON.parse(JSON.stringify(linea_detalle_remision));
+                    new_linea_lote.cantidad = lote.cantidad_cargue_lote;
+                    new_linea_lote.cantidad_sacos = lote.cantidad_sacos_lote;
+                    new_linea_lote.lote = lote.lote;
 
-            }
+                    detalle_remision.push(new_linea_lote);
+
+                }
             }
         }
 

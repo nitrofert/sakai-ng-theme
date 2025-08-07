@@ -176,6 +176,8 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
 
   async setDataRemisiones(infoTurno:any):Promise<any[]>{
 
+    console.log('setDataRemisiones infoTurno',infoTurno)
+
     let remisiones:any[] = [];
 
     let treTableLotes:any[] = [];
@@ -187,7 +189,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
       //console.log(JSON.parse(JSON.stringify(remisiones)))
 
        if(/*!linea_detalle.itemcode.startsWith('SF') && */linea_detalle.estado ==='A'){
-          if(remisiones.filter(remision=>remision.base_docnum === linea_detalle.pedidonum && remision.lugarentrega == linea_detalle.lugarentrega && remision.municipioentrega == linea_detalle.municipioentrega).length ===0){
+          if(remisiones.filter(remision=>remision.base_docnum === linea_detalle.pedidonum && remision.lugarentrega == linea_detalle.lugarentrega && remision.municipioentrega == linea_detalle.municipioentrega && remision.bodega ==  linea_detalle.bodega).length ===0){
             remisiones.push({
               fecha:new Date(),
               turnoid:infoTurno.id,
@@ -262,7 +264,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
 
             
           }else{
-            let index = remisiones.findIndex(remision=>remision.base_docnum === linea_detalle.pedidonum && remision.lugarentrega == linea_detalle.lugarentrega && remision.municipioentrega == linea_detalle.municipioentrega);
+            let index = remisiones.findIndex(remision=>remision.base_docnum === linea_detalle.pedidonum && remision.lugarentrega == linea_detalle.lugarentrega && remision.municipioentrega == linea_detalle.municipioentrega && remision.bodega ==  linea_detalle.bodega);
             remisiones[index].detalle_remision.push(
               {
                   id:linea_detalle.id,
