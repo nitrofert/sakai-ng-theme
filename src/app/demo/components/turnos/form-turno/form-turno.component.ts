@@ -4099,7 +4099,7 @@ async validarHoraCargue():Promise<boolean>{
               let lotesItemBodega:any[] = [];
               //Cargar array de lotes item bodega ws sap
               for(let item in result){
-                let comprometido = await this.comprometidoItemLoteInTurno(this.itemLineSelected[0].id,itemcode,result[item].Lote)
+                let comprometido = await this.comprometidoItemLoteInTurno(this.itemLineSelected[0].id,itemcode,result[item].Lote, bodega)
                  comprometido = comprometido+ await this.comprometidoOtrosTurnos(this.turno.locacion,this.itemLineSelected[0].bodega,this.itemLineSelected[0].id,result[item].Lote,itemcode)
                 lotesItemBodega.push({lote:result[item].Lote, fecha_vencimiento:result[item].Fechavencimiento, cantidad_bodega_lote:result[item].Stock,estado:'A', cantidad_comprometida:comprometido, saldo:result[item].Stock-comprometido})
               }
@@ -4114,11 +4114,11 @@ async validarHoraCargue():Promise<boolean>{
         })
   }
 
-  async comprometidoItemLoteInTurno(idLinea:any, itemcode:any, lote:any,pedidosTurno?:any):Promise<any>{
+  async comprometidoItemLoteInTurno(idLinea:any, itemcode:any, lote:any,bodega:any, pedidosTurno?:any):Promise<any>{
     let cantidadComprometidaItemLote = 0;
 
-    //obtener lineas de items diferentes al id linea seleccioanda e igual al item seleccionado
-    let itemsTurno = !pedidosTurno?this.pedidosTurno.filter(item=>item.id != idLinea && item.itemcode === itemcode):pedidosTurno.filter((item: { id: any; itemcode: any; })=>item.id != idLinea && item.itemcode === itemcode);
+    //obtener lineas de items diferentes al id linea seleccioanda e igual al item seleccionado y bodega
+    let itemsTurno = !pedidosTurno?this.pedidosTurno.filter(item=>item.id != idLinea && item.itemcode === itemcode && item.bodega == bodega):pedidosTurno.filter((item: { id: any; itemcode: any; bodega:any })=>item.id != idLinea && item.itemcode === itemcode && item.bodega == bodega);
     //console.log('itemsTurno',itemsTurno);
     //recorrer los items del turno diferentes a la linea seleccionada, 
     for(let itemTurno of itemsTurno){

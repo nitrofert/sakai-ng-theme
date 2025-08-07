@@ -2069,14 +2069,14 @@ export class PdfRemision {
         let observaciones:any = observacionesArray.map((data:any)=>{
             return { observacion:data.trim() };
         })
-
-       //console.log('observaciones',observaciones);
+       console.log('remisiones_turno[0].fecha',remisiones_turno[0].fecha); 
+       console.log('new Date( remisiones_turno[0].fecha',new Date( `${remisiones_turno[0].fecha}T05:00:00.000Z`));
 
 
         let dataPdf: any = {
-            diaSolicitud: new Date( remisiones_turno[0].fecha).getDate(),
-            mesSolicitud: new Date(remisiones_turno[0].fecha).getMonth() + 1,
-            anioSolicitud: new Date(remisiones_turno[0].fecha).getFullYear(),
+            diaSolicitud: new Date( `${remisiones_turno[0].fecha}T05:00:00.000Z`).getDate(),
+            mesSolicitud: new Date( `${remisiones_turno[0].fecha}T05:00:00.000Z`).getMonth() + 1,
+            anioSolicitud: new Date( `${remisiones_turno[0].fecha}T05:00:00.000Z`).getFullYear(),
             cliente,
             comercial,
             trasnportadora,

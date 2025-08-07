@@ -189,7 +189,14 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
       //console.log(JSON.parse(JSON.stringify(remisiones)))
 
        if(/*!linea_detalle.itemcode.startsWith('SF') && */linea_detalle.estado ==='A'){
-          if(remisiones.filter(remision=>remision.base_docnum === linea_detalle.pedidonum && remision.lugarentrega == linea_detalle.lugarentrega && remision.municipioentrega == linea_detalle.municipioentrega).length ===0){
+          if(remisiones.filter(remision=>remision.base_docnum === linea_detalle.pedidonum && 
+                                         remision.lugarentrega == linea_detalle.lugarentrega && 
+                                         remision.municipioentrega == linea_detalle.municipioentrega 
+                                         && (remision.detalle_remision.filter((item: { bodega: any;  })=>item.bodega === linea_detalle.bodega).length >0
+                                              ||
+                                            remision.detalle_remision.filter((item: {  linea:any })=>item.linea === linea_detalle.linea).length == 0
+                                            )
+                                        ).length ===0){
             remisiones.push({
               fecha:new Date(),
               turnoid:infoTurno.id,
@@ -262,9 +269,18 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
               
             })
 
+            console.log(JSON.parse(JSON.stringify(remisiones)))
+
             
           }else{
-            let index = remisiones.findIndex(remision=>remision.base_docnum === linea_detalle.pedidonum && remision.lugarentrega == linea_detalle.lugarentrega && remision.municipioentrega == linea_detalle.municipioentrega);
+            let index = remisiones.findIndex(remision=>remision.base_docnum === linea_detalle.pedidonum && 
+                                                       remision.lugarentrega == linea_detalle.lugarentrega && 
+                                                       remision.municipioentrega == linea_detalle.municipioentrega 
+                                                       && (remision.detalle_remision.filter((item: { bodega: any;  })=>item.bodega ==linea_detalle.bodega).length >0
+                                                          ||
+                                                          remision.detalle_remision.filter((item: {  linea:any })=>item.linea ==linea_detalle.linea).length == 0
+                                                          )
+                                                      );
             remisiones[index].detalle_remision.push(
               {
                   id:linea_detalle.id,
@@ -290,7 +306,8 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
                   
                   ivacode:linea_detalle.ivacode,
                   precio_unitario:linea_detalle.precio_unitario,
-                  codigo_ubicacion:linea_detalle.codigo_ubicacion
+                  codigo_ubicacion:linea_detalle.codigo_ubicacion,
+                  
   
               }
             )
@@ -319,6 +336,8 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
   
               
             });
+
+            console.log(JSON.parse(JSON.stringify(remisiones)))
           }
       }
         
