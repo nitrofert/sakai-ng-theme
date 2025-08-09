@@ -2182,8 +2182,6 @@ async validarHoraCargue():Promise<boolean>{
                //console.log("turno actualizado",turno);
 
                this.turno.detalle_solicitud_turnos_historial = turno.detalle_solicitud_turnos_historial;
-
-
                 
                 if(this.filesToUpload.length > 0 && this.uploadActivo){
                   for(let anexo of this.filesToUpload){
@@ -2317,8 +2315,11 @@ async validarHoraCargue():Promise<boolean>{
                         }
 
                     });
-              
-
+                console.log('turno.estado',turno.estado)
+                    // if(turno.estado!=this.estadosTurno.PESADOF){
+                      this.cambioEstado = false;
+                    // }
+                
             },
             error:(err)=> {
               this.cambioEstado = false;
