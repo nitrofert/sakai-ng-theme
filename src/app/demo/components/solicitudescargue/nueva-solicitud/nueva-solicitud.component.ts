@@ -1705,7 +1705,7 @@ setTimer(){
   
 }
 
-grabarSolicitud(){
+  async grabarSolicitud(){
 
   //console.log(this.vehiculosEnSolicitud);
  
@@ -1717,6 +1717,8 @@ grabarSolicitud(){
   let clientes_pedidos:any[] = [];
   
   for(let vehiculo of this.vehiculosEnSolicitud){
+
+    console.log(vehiculo.pedidos);
 
     if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
       this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
@@ -1734,11 +1736,11 @@ grabarSolicitud(){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le han asignado pedidos`});
       error = true;
       this.displayModal = false;
-    }else/* if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length ==0 && this.condicion_tpt=='TRANSP'){
-      this.messageService.add({severity:'warn', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} no se le ha asignado el item de flete`});
-      error = false;
+    }else if(!  ( await this.validaCamposNull(vehiculo.pedidos))){
+      this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Ocurrio un error: alguno de los datos del pedido de SAP estan en null`});
+      error = true;
       this.displayModal = false;
-    }else if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length >1 && this.condicion_tpt=='TRANSP'){
+    }else/* if(vehiculo.pedidos.filter((pedidoVh: { itemcode: string; }) =>pedidoVh.itemcode.toLowerCase().startsWith("sf")).length >1 && this.condicion_tpt=='TRANSP'){
       this.messageService.add({severity:'error', summary: '!Error¡', detail:  `Al vehículo ${vehiculo.placa} solo se le puede asignar un solo item de flete`});
       error = true;
       this.displayModal = false;
@@ -1911,6 +1913,7 @@ grabarSolicitud(){
              this.solicitudTurnoService.create(newSolicitud)
                   .subscribe({
                         next:async (result)=>{
+
                         
                           if(this.completeTimer){
                             this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud.`});
@@ -1965,6 +1968,22 @@ grabarSolicitud(){
       
         
   }
+}
+
+async validaCamposNull(pedidos:any[]):Promise<boolean>{
+  let valido = true;
+//console.log('pedidos',pedidos)
+  for(let item of pedidos){
+    //if(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === item.pedido && pedidoCliente.itemcode === item.itemcode && item.ObjType ===null || item.ObjType ===0  || item.ObjType ==="").length>0){
+    //console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === item.pedido && pedidoCliente.itemcode === item.itemcode && (pedidoCliente.ivacode ===null || pedidoCliente.ivacode ===0  || pedidoCliente.ivacode ==="")));
+    if(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === item.pedido && pedidoCliente.itemcode === item.itemcode && (pedidoCliente.ObjType ===null || pedidoCliente.ObjType ===0  || pedidoCliente.ObjType ==="")).length>0){
+      valido = false
+    }
+  }
+
+  //console.log('valido',valido)
+
+  return valido
 }
 
 async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
