@@ -2315,6 +2315,7 @@ async validarHoraCargue():Promise<boolean>{
 
             },
             error:(err)=> {
+              this.cambioEstado = false;
               console.error(err);
               this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
                 console.error(err);

@@ -211,6 +211,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
               manifiesto:0,
               tipo_operacion:linea_detalle.tipo_operacion,
               tipo_documento: linea_detalle.objectType=='17'?'FPD':linea_detalle.objectType=='1250000001'?linea_detalle.tipo_operacion==='TRASLADO'?'TRASLADO':'CONSIGNA':linea_detalle.objectType=='13'?'FPP':'' ,
+              createat_linea:linea_detalle.createdAt,
               detalle_remision:[
                                   {
                                     id:linea_detalle.id,
@@ -402,7 +403,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
       clientes.push({
           CardCode:cliente.CardCode,
           CardName:cliente.CardName,
-          remisiones: await cliente.remisiones.map((remision: { fecha: any; turnoid: any; base_docnum: any; base_docentry: any; base_objectType: any; municipioentrega: any; lugarentrega: any; CardCode: any; CardName: any; codigo_vendedor: any; manifiesto: any; tipo_operacion: any;tipo_documento:any; detalle_remision: any; })=>{
+          remisiones: await cliente.remisiones.map((remision: { fecha: any; turnoid: any; base_docnum: any; base_docentry: any; base_objectType: any; municipioentrega: any; lugarentrega: any; CardCode: any; CardName: any; codigo_vendedor: any; manifiesto: any; tipo_operacion: any;tipo_documento:any; detalle_remision: any; createat_linea:any })=>{
             return {
               fecha:remision.fecha,
                 turnoid:remision.turnoid,
@@ -417,7 +418,9 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
                 manifiesto:remision.manifiesto,
                 tipo_operacion:remision.tipo_operacion,
                 tipo_documento:remision.tipo_documento,
-                detalle_remision:remision.detalle_remision
+                detalle_remision:remision.detalle_remision,
+                createat_linea:remision.createat_linea
+                
             }
           })
       })

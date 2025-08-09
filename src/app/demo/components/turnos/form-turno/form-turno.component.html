@@ -786,6 +786,7 @@
     <ng-template pTemplate="footer">
         <p-button
             icon="pi pi-check"
+            [disabled]="cambioEstado"
             (click)="cambiarEstadoTurno()"
             label="Cambiar estado"
             styleClass="p-button-text"
