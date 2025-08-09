@@ -1817,20 +1817,26 @@ async validarHoraCargue():Promise<boolean>{
 
     if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para ${this.accion} el turno, debe seleccionar una novedad.` });
+      this.cambioEstado = false;
     }else if((this.accion == 'solicitud produccion' ) && ( this.solictudProduccionSeleccionada.length==0)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe seleccionar el tipo de solicitud.` });
+      this.cambioEstado = false;
     }else if((this.accion == 'validar revision inventario' ) && ( !this.comentario)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe ingesar un comentario.` });
+      this.cambioEstado = false;
     }else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.CARGADO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad de unidades a recibir en la inspección debe ser mayor a cero.` });
+      this.cambioEstado = false;
     } else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.PESADOF /*|| this.estado === this.estadosTurno.DESPACHADO*/) && (this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Debe ingresar el número del mafiesto de carga para cada remisión.` });
+      this.cambioEstado = false;
     }else if(await this.validarFechaEstado()){
-
+      this.cambioEstado = false;
     }else if(await this.validarARL()){
-
+      this.cambioEstado = false;
     }else  if(this.estado === this.estadosTurno.PESADOF && !(await this.validarUbicacionRemisiones())){
           ////console.log('validacion',await this.validarUbicacionRemisiones())
+          this.cambioEstado = false;
     }else {
       this.confirmationService.confirm({
         message: 'Esta seguro de '+this.accion+' la orden de cargue No. '+this.turnoId+'?',
