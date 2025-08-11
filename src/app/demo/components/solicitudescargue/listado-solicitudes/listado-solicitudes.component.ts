@@ -599,6 +599,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       conductores_nombre: 'Conductor',
       conductores_cedula:'Cedula',
       conductores_numerocelular: 'Télefono Conductor',
+      tiene_arl:'¿Tiene ARL?',
+      arl_vigente:'¿ARL vigente?',
       detalle_solicitudes_turnos_condiciontpt: 'Condición de transporte',
       lugarentrega: 'Lugar Entrega',
       remision: 'Remisión'
