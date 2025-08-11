@@ -396,7 +396,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   async setTablaTurnosLocalidad(turnos:any): Promise<any>{
 
-    console.log('turnos',turnos);
+    console.log('turnosssssssss',turnos);
     let turnosLocalidad:any[] = [];
     let turnosLocalidadCliente:any[] = [];
 
@@ -447,7 +447,7 @@ export class CalendarioTurnosComponent implements OnInit {
         lineaTurno.label_cliente = clienteTurno.CardName;
         lineaTurno.CardCode = clienteTurno.CardCode;
         lineaTurno.cantidad = clienteTurno.cantidad;
-        lineaTurno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.placa}-${clienteTurno.CardCode}`;
+        lineaTurno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.placa}-${clienteTurno.CardCode}-${turno.detalle_solicitud_turnos_pedido[0].id}`;
         lineaTurno.tipo_operacion = tipo_operacion;
         turnosLocalidadCliente.push(lineaTurno);
 
