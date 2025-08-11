@@ -1787,7 +1787,7 @@ export class PdfSolicitudCargue {
                 private usuarioService:UsuarioService){}
     
     async generarPDF(data:any):Promise<void>{
-       //console.log('datakey',data.dataKey);
+        console.log('datakey',data.dataKey);
         let datakey = data.dataKey.split('-');
         let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
         let infoTurno = await lastValueFrom(infoTurno$);
@@ -1832,18 +1832,18 @@ export class PdfSolicitudCargue {
        //console.log('infoUsuario',infoUsuario);
 
 
-
+        console.log('infoTurno',infoTurno);
         let cliente: any = {
-            nombre: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].CardName,
-            nit: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].FederalTaxID,
-            contacto: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].nombre_contacto,
-            contactotelefono: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].telefono_contacto,
-            contatoemail: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-1])[0].email_contacto
+            nombre: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].CardName,
+            nit: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].FederalTaxID,
+            contacto: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].nombre_contacto,
+            contactotelefono: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].telefono_contacto,
+            contatoemail: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].email_contacto
         }
        //console.log('cliente',cliente);
 
         let comercial:any =  {
-            nombre: infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: { CardCode: any; })=>pedido.CardCode === datakey[datakey.length-1])[0].vendedor
+            nombre: infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: { CardCode: any; })=>pedido.CardCode === datakey[datakey.length-2])[0].vendedor
         }
        //console.log('comercial',comercial);
 

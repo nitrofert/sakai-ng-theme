@@ -191,7 +191,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     this.localidades = await this.localidadesService.getLocalidades();
     ////////console.log(this.localidades); 
     this.getDependencias();
-  }
+  } 
 
   async getDependencias() {
     this.dependencias = await this.dependenciasService.getDependencias();
@@ -773,7 +773,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   documentos(item:any){
 
-   ////console.log(item);
+   console.log(item);
 
     let solicitud:any = this.solicitudesEntidad.find(solicitudEntidad =>solicitudEntidad.id === item.solicitudes_turno_id);
     let turno:any = solicitud.detalle_solicitud_turnos.find((turnoSolicitud: { id: any; }) => turnoSolicitud.id === item.detalle_solicitudes_turnos_id);

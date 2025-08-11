@@ -108,7 +108,7 @@ tipoTurno:string="";
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
     this.infoTurno = this.config.data.info;
-    ////console.log('this.infoTurno',this.infoTurno);
+    console.log('this.infoTurno',this.infoTurno);
     this.getPermisosModulo();
    
 
@@ -288,6 +288,9 @@ tipoTurno:string="";
   }
 
   generarPDF(tipo:string,valor?:any){
+
+      console.log('tipo',tipo);
+      console.log('valor',valor);
 
       switch(tipo){
         case 'solicitud':
