@@ -1906,7 +1906,7 @@ export class PdfInspeccionCargue {
         }
         ////console.log('conductor',conductor);
 
-        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-1] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; CardName:any, lote_produccion:any, toneladas_metircas:any, cantidad_sacos:any, remision:any, cubicacion:any }) => {
+        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-2] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; CardName:any, lote_produccion:any, toneladas_metircas:any, cantidad_sacos:any, remision:any, cubicacion:any }) => {
             return {
               locacion: `${locaciones.filter((locacion: { code: any; })=>locacion.code === infoTurno.locacion )[0].locacion} -- Dirección: ${locaciones.filter((locacion: { code: any; })=>locacion.code === infoTurno.locacion )[0].direccion}`,
               cliente: `${linea.CardName}`,

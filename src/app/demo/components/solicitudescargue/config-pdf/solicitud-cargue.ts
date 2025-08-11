@@ -1863,7 +1863,7 @@ export class PdfSolicitudCargue {
         }
        //console.log('conductor',conductor);
 
-        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-1] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; cantidad_sacos:any}) => {
+        let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-2] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; cantidad_sacos:any}) => {
 
            
 
