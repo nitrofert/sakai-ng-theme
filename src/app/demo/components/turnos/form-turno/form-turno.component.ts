@@ -347,7 +347,7 @@ turnoBase:number =0;
     this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
-    ////console.log(new Date().toTimeString());
+    console.log(this.config.data);
     this.getPermisosModulo();
     this.getCiudades();
 
@@ -569,7 +569,7 @@ turnoBase:number =0;
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-               //console.log('turno',(turno));
+               console.log('turno',(turno));
                  
                  ////console.log('Cargue informacion del turno',new Date().toTimeString());
                   this.turno = turno;

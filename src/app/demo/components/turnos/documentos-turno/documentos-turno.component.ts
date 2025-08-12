@@ -177,7 +177,8 @@ tipoTurno:string="";
                   this.displayModal = false;
                   this.loadingCargue = false;
 
-                  this.evidencias_cargue = await this.getEvidenciasCargue(turno);
+                  //this.evidencias_cargue = await this.getEvidenciasCargue(turno);
+                  this.evidencias_cargue = []
                   this.tipoTurno = this.turno.tipo;
 
                   if(this.tipoTurno==='RETIRO'){
