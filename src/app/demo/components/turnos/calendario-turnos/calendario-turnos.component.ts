@@ -391,7 +391,7 @@ export class CalendarioTurnosComponent implements OnInit {
                     this.displayModal = false;
                     this.loadingCargue = false;
                   }
-
+ 
                   
 
                   this.completeCargue = true;
