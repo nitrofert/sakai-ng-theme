@@ -406,7 +406,7 @@ export class CalendarioTurnosComponent implements OnInit {
                   //console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
 
                   //this.getCalendar();
-                  this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
+                  //this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
                   //// ////////////console.log(this.boxEstados);
               },
               error:(err)=>{
@@ -526,24 +526,24 @@ export class CalendarioTurnosComponent implements OnInit {
     return turnosLocalidad;
   }
 
-  async setBoxEstadosDate(date:Date, estados:any, turnos:any):Promise<any>{
-    console.log('setBoxEstadosDate')
-    let boxEstados:any[] = [];
+  // async setBoxEstadosDate(date:Date, estados:any, turnos:any):Promise<any>{
+  //   console.log('setBoxEstadosDate')
+  //   let boxEstados:any[] = [];
 
-    let dateString = date.toISOString().split('T')[0];
+  //   let dateString = date.toISOString().split('T')[0];
 
-    for(let estado of estados){
-      let boxEstado:any = {
-        estado:estado.name,
-        total: turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length
-      }
-      boxEstados.push(boxEstado);
-      estado.total = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length;
-      estado.turnos = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString)
-    }
+  //   for(let estado of estados){
+  //     let boxEstado:any = {
+  //       estado:estado.name,
+  //       total: turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length
+  //     }
+  //     boxEstados.push(boxEstado);
+  //     estado.total = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString).length;
+  //     estado.turnos = turnos.filter((turno: { estado: any; fechacita: string; })=>turno.estado === estado.name && turno.fechacita === dateString)
+  //   }
 
-    return boxEstados;
-  }
+  //   return boxEstados;
+  // }
   
   gestionarSolicitud(){
    console.log('turno seleccionado',this.selectedItem);
