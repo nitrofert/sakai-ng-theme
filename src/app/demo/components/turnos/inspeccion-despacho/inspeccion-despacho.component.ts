@@ -205,9 +205,9 @@ filesInspeccion:any[] = [];
 
   async setFormInspeccion(){
 
-    ////console.log('Pedidos items',this.pedidos)
+    ///console.log('Pedidos items',this.pedidos)
 
-    //console.log('Turno',this.turno)
+    console.log('Turno inspeccion',this.turno)
     
     let fecha_accion!:any;
     let hora_accion!:any;

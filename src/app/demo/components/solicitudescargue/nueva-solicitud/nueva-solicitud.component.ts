@@ -662,6 +662,8 @@ async seleccionarCliente(clienteSeleccionado:any){
           this.pedidosCliente = [...this.pedidosCliente, ...pedidosCliente]
       }
     }
+
+    console.log('this.pedidosCliente',this.pedidosCliente);
   
     this.pedidos = this.pedidosCliente
     this.almacenSeleccionado = [];
@@ -785,6 +787,8 @@ async getSaldosPedidosCliente(cliente:string, condiciontpt:string):Promise<any>{
     }
 
     return pedidosClientes;
+
+    
 
 
   // this.pedidosService.getSaldosPedidosCliente(cliente,condiciontpt)

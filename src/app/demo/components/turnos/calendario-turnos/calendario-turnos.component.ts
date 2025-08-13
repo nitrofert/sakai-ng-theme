@@ -488,7 +488,6 @@ export class CalendarioTurnosComponent implements OnInit {
 
     return boxEstados;
   }
-
   
   gestionarSolicitud(){
    console.log('turno seleccionado',this.selectedItem);
@@ -535,9 +534,6 @@ export class CalendarioTurnosComponent implements OnInit {
       });
   }
 
-
-
-
   getCalendar(){
 
     this.calendarOptions = {
@@ -567,8 +563,6 @@ export class CalendarioTurnosComponent implements OnInit {
   
 
   }
-
-
   
   getEvents(){
     
@@ -721,14 +715,6 @@ export class CalendarioTurnosComponent implements OnInit {
     return this.documentStyle.getPropertyValue(`--${textColor}`);
   }
 
- 
-
-
-  
-
- 
-
-
   setTimer(){
     if(this.completeCargue){
       this.displayModal = false;
@@ -737,28 +723,10 @@ export class CalendarioTurnosComponent implements OnInit {
     
   }
 
- 
-
- 
-
-  
   async filtrarLocalidad(event:any){
     this.localidadesFiltradas = await this.functionsService.filter(event,this.localidades);
   }
 
-  /*filter(event: any, arrayFiltrar:any[]) {
-
-    //////////////// ////////////console.log((arrayFiltrar);
-    const filtered: any[] = [];
-    const query = event.query;
-    for (let i = 0; i < arrayFiltrar.length; i++) {
-        const linea = arrayFiltrar[i];
-        if (linea.label.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-            filtered.push(linea);
-        }
-    }
-    return filtered;
-  }*/
 
   handleDateSelect(selectInfo: DateSelectArg) {
     /*const title = prompt('Please enter a new title for your event');
@@ -824,11 +792,6 @@ export class CalendarioTurnosComponent implements OnInit {
   createEventId(){
     //return String(this.eventGuid++);
   }
-
-
- 
-
-  
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');

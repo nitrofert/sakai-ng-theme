@@ -413,7 +413,8 @@ turnoBase:number =0;
               this.condicion_tpt="TRANSP";
             }*/
 
-             this.getTurno(this.turnoId);
+             //this.getTurno(this.turnoId);
+             this.getInfoTurno(this.config.data.infoTurno);
             },
             error:(err)=>{
                 console.error(err);
@@ -563,7 +564,7 @@ turnoBase:number =0;
         });
   }
 
-  async getTurno(id: number){
+async getTurno(id: number){
     
     //let orden = await this.ordenesCargueService.getOrdenesByID(id);
     this.solicitudTurnoService.getTurnosByID(id)
@@ -763,6 +764,145 @@ turnoBase:number =0;
         });
 
 
+  }
+
+  async getInfoTurno(turno:any){
+    
+     ////console.log('Cargue informacion del turno',new Date().toTimeString());
+                  this.turno = turno;
+                  this.tipoTurno = this.turno.tipo;
+                  
+                  
+                  this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
+                  this.localidad = turno.locacion;
+                  this.nombreLocalidad = turno.locacion;
+                  this.fechacargue = new Date(turno.fechacita);
+                  let hora = 60 * 60000;
+
+                  let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
+                  this.fechacargue = fechacargue;
+                  
+                  
+                  let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+                  //this.horacargue = new Date(turno.horacita);
+                  this.horacargue = horacargue;
+                  this.condicion_tpt = turno.condiciontpt;
+                  //this.horacargue = new Date();
+                  this.placa = turno.vehiculo.placa;
+                  this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
+                  this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
+                  //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
+                  ////////////////// ////////////// //////////////console.log(this.vehiculoSeleccionado);
+                  this.pesomax = this.vehiculoSeleccionado.pesomax;
+                  this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
+
+                 this.adicional = turno.adicional;
+
+                  this.observaciones = turno.observacion;
+                  this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
+                  ////console.log('this.observacionesCargue',this.observacionesCargue);
+                  this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
+                      cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
+                      return cliente;
+                  });
+
+                  ////console.log(this.clientesTurno);
+
+                  this.clienteSeleccionado = this.clientesTurno[0];
+                  
+                 
+                  
+                  this.capacidadvh = this.vehiculoSeleccionado.capacidad;
+                  
+                  this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
+                  ////////////////////// ////////////// //////////////console.log('transportadoras',this.transportadoras);
+                  //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
+                  this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
+                  this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
+                  this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
+                  //his.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
+                  ////////////////////////// ////////////// //////////////console.log(this.estadoSeleccionado);
+                  this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
+
+                  console.log('this.pedidosTurno',this.pedidosTurno);
+                  
+                  this.pedidosTurno.map((pedido)=>{
+                    pedido.lineaUpdate = {update:false, create:false};
+                    pedido.cantidadOld =pedido.cantidad;
+                    if(pedido.detalle_lotes_item_turno.length>0){
+                      pedido.detalle_lotes_item_turno.map((lote: { lineaUpdate: { update: boolean; create: boolean; }; })=>{
+                        lote.lineaUpdate = {update:false, create:false};
+                      })
+                    }
+                  });
+
+                 ////console.log('pedidosTurno',this.pedidosTurno);
+                  this.telefono = turno.conductor.numerotelefono;
+                  this.celular = turno.conductor.numerocelular;
+                  this.email = turno.conductor.email;
+                  
+                  let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  //console.log(this.peso_neto-this.peso_bruto);
+                  ////console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
+                  this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
+
+                  //console.log('cantidad',this.cantidad);
+                  //console.log('turno.peso_neto',turno.peso_neto);
+                 
+                  this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
+                  //this.peso_neto = this.peso_bruto+this.cantidad;
+                  this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
+                  this.totalCarga = totalesTabla[0].cantidad;
+                  
+                  this.estado = turno.estado;
+                  this.remision = turno.remision;
+                  this.sitioentrega = turno.lugarentrega;
+                  this.municipioentrega = turno.municipioentrega;
+                  this.editCantidad = await this.validarEditarCampoCantidad();
+
+
+
+                  if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
+                    ////////////// ////////////// //////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
+                    ////////////////// ////////////// //////////////console.log(this.horainicio, this.horafin);
+                    this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
+                    this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
+
+                    this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
+                    this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
+                    this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
+                
+                    ////////////// ////////////// //////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
+                    await this.seleccionarFechaCita();
+                  }else{
+                    //Establecer horarios locacion
+                    this.diasNoAtencion = [];
+                    this.horariosLocacion = [];
+                    this.horariosSeleccionados =[];
+                  }
+
+                  let historial!:any;
+
+                  if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+                      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+                  }else{
+                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+                      if(historial.length>0){
+                        this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+                      }
+                  }
+                  
+
+                 
+                  this.configTablePedidosAlmacenCliente();
+                  this.configSplitButton(this.estado,this.permisosModulo);
+
+
+                  this.tipoOperacion=this.turno.tipo;
+                  this.turnoBase=this.turno.turno_base;
+
+                  this.displayModal = false;
+                  this.loadingCargue = false;
   }
 
 
@@ -1625,7 +1765,8 @@ async validarHoraCargue():Promise<boolean>{
 
     const ref = this.dialogService.open(ListaHistorialTurnoComponent, {
       data: {
-          id: (idTutno)
+          id: (idTutno),
+          historial:this.turno.detalle_solicitud_turnos_historial
       },
       header: `Historial Orden de cargue: ${idTutno}` ,
       width: '70%',
@@ -1862,6 +2003,7 @@ async validarHoraCargue():Promise<boolean>{
   
         },
         reject: (type: any) => {
+            this.cambioEstado = false;
             switch(type) {
                 case ConfirmEventType.REJECT:
                     //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
@@ -2175,7 +2317,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   updateTurno(data:any){
-
+   
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
       .subscribe({
             next:async (turno)=>{
@@ -2976,7 +3118,7 @@ async validarHoraCargue():Promise<boolean>{
     this.pedidosService.getSaldosPedidos(CardCode,locacion)
         .subscribe({
             next:async (saldosPedidos)=>{
-             ////////////////console.log('saldosPedidos',saldosPedidos);
+             console.log('saldosPedidos',saldosPedidos);
              
              let pedidosClientes:any[] = [];
              for(let indexPedido in saldosPedidos){
@@ -3032,10 +3174,28 @@ async validarHoraCargue():Promise<boolean>{
                     total_documento:saldosPedidos[indexPedido].LineTotal,
                     total_impuesto:0,
                     total_linea_siniva:0,
-                    vicepresidencia:saldosPedidos[indexPedido].DEPENDENCIA,
+                    vicepresidencia:saldosPedidos[indexPedido].VICEPRESIDENCIA,
                     email_vendedor:saldosPedidos[indexPedido].Email,
                     tipoprod:saldosPedidos[indexPedido].TIPOPROD,
                     vendedor:saldosPedidos[indexPedido].SlpName,
+                    email_asistente:saldosPedidos[indexPedido].Correo_Asistente,
+                    nombre_asistente:saldosPedidos[indexPedido].Nombre_Asistente,
+                    Maneja_Lote:saldosPedidos[indexPedido].Maneja_Lote,
+                    ObjType:saldosPedidos[indexPedido].ObjType,
+                    ivacode:saldosPedidos[indexPedido].IvaCode,
+                    precio_lista:saldosPedidos[indexPedido].ListaPrecio,
+                    precio_vendedor:saldosPedidos[indexPedido].PrecioVendedor,
+                    precio_gerente:saldosPedidos[indexPedido].PrecioGerente,
+                    categoria_item:saldosPedidos[indexPedido].Categoria_Item,
+                    subcategoria_item:saldosPedidos[indexPedido].Subcategoria_Item,
+                    almacen_fpp:saldosPedidos[indexPedido].AlmacenFPP,
+                    bodega_destino:saldosPedidos[indexPedido].Bodega_Destino,
+                    ubicacion:saldosPedidos[indexPedido].TIPOPEDIDO==='CONSIGNA'?`${saldosPedidos[indexPedido].Bodega_Destino}-${saldosPedidos[indexPedido].CardCode}`:'',
+                    codigo_vendedor:saldosPedidos[indexPedido].Codigo_Vendedor,
+                    precio_unitario:saldosPedidos[indexPedido].Precio_Unitario,
+                    tipo_operacion:saldosPedidos[indexPedido].Tipo_Movimiento,
+                    bodega_final:saldosPedidos[indexPedido].Bodega_Fin,
+                    codigo_ubicacion:saldosPedidos[indexPedido].Ubicacion_Bodega,
                     
                   })
   
@@ -3280,15 +3440,46 @@ async validarHoraCargue():Promise<boolean>{
                  
                 }else{
 
-                  let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
+                  let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0];
 
-                  let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
+                  ///let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
+                  let email_vendedor = infoPedido.email_vendedor;
+
+                  //let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
+                  let vendedor = infoPedido.vendedor;
 
                         //////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia)
 
-                  let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
+                  //let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
+                  let dependencia = infoPedido.dependencia;
         
-                  let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
+                  //let localidad = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].localidad;
+                  let localidad = infoPedido.localidad;
+
+                  let tarifa_tonelada = this.condicion_tpt=='TRANSP' && pedido.itemcode.startsWith('SF')?infoPedido.precio_coniva:0; 
+                  let nombre_asistente = infoPedido.nombre_asistente;
+                  let email_asistente = infoPedido.email_asistente;
+                  let Maneja_lote = infoPedido.Maneja_Lote;
+                  let tipo_documento = infoPedido.tipo_pedido;
+                  let objectType = infoPedido.ObjType;
+                  let vicepresidencia = infoPedido.vicepresidencia;
+                  let ivacode = infoPedido.ivacode;
+                  let precio_lista = infoPedido.precio_lista;
+                  let precio_vendedor = infoPedido.precio_vendedor;
+                  let precio_gerente = infoPedido.precio_gerente;
+                  let categoria_item = infoPedido.categoria_item;
+                  let subcategoria_item = infoPedido.subcategoria_item;
+                  let almacen_fpp = infoPedido.almacen_fpp;
+                  let bodega_destino = infoPedido.bodega_destino;
+                  let bodega_final = infoPedido.bodega_final;
+                  let ubicacion = infoPedido.ubicacion;
+                  let codigo_vendedor = infoPedido.codigo_vendedor;
+                  let precio_unitario = infoPedido.precio_unitario;
+                  let tipo_operacion = infoPedido.tipo_operacion;
+                  let codigo_ubicacion = infoPedido.codigo_ubicacion
+
+                  let flete_tonelada = pedido.flete;
+        
 
                   //////////////console.log('pedido a adicionar',pedido);
 
@@ -3324,6 +3515,28 @@ async validarHoraCargue():Promise<boolean>{
                             dependencia,
                             localidad,
                             tipoproducto,
+                            tarifa_tonelada,
+                            flete_tonelada,
+                            nombre_asistente,
+                            email_asistente,
+                            Maneja_lote,
+                            tipo_documento,
+                            objectType,
+                            vicepresidencia,
+                            ivacode,
+                            precio_lista,
+                            precio_vendedor,
+                            precio_gerente,
+                            categoria_item,
+                            subcategoria_item,
+                            almacen_fpp,
+                            bodega_destino,
+                            ubicacion,
+                            codigo_vendedor,
+                            precio_unitario,
+                            tipo_operacion,
+                            bodega_final,
+                            codigo_ubicacion
                             
                             //cliente:this.clienteSeleccionado.CardName,
                       });

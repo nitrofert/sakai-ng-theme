@@ -79,7 +79,7 @@ evidencias_cargue:any[] = []
 
 tipoTurno:string="";
 
-
+remisiones:any[] =[];
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private ordenesCargueService: OrdenesCargueService, 
@@ -108,7 +108,7 @@ tipoTurno:string="";
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
     this.infoTurno = this.config.data.info;
-    console.log('this.infoTurno',this.infoTurno);
+    ////console.log('this.infoTurno',this.infoTurno);
     this.getPermisosModulo();
    
 
@@ -121,11 +121,11 @@ tipoTurno:string="";
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    ////////console.log(modulo);
+    ////////////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////// ////////////console.log(permisos);
+              ////////////////////////// ////////////// ////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -135,7 +135,7 @@ tipoTurno:string="";
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////// ////////////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// ////////////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -145,11 +145,12 @@ tipoTurno:string="";
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////// ////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// ////////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
            
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
         
-             this.getTurno(this.turnoId);
+             //this.getTurno(this.turnoId);
+             this.getDocumentos(this.infoTurno)
 
             // this.displayModal = false;
              //this.loadingCargue = false;
@@ -162,105 +163,48 @@ tipoTurno:string="";
   }
 
 
-
- 
-
-  async getTurno(id: number){
+ async getTurno(id: number):Promise<any>{
     
     //let orden = await this.ordenesCargueService.getOrdenesByID(id);
-    this.solicitudTurnoService.getTurnosByID(id)
-        .subscribe({
-              next:async (turno)=>{
-                //console.log('turno docs',turno);
-                  
-                  this.turno = turno;
-                  this.displayModal = false;
-                  this.loadingCargue = false;
+    
+    let turno$ = this.solicitudTurnoService.getTurnosByID(id)
+    let turno = await lastValueFrom(turno$);
+       
+    return turno
 
-                  //this.evidencias_cargue = await this.getEvidenciasCargue(turno);
-                  this.evidencias_cargue = []
-                  this.tipoTurno = this.turno.tipo;
+  }
+ 
 
-                  if(this.tipoTurno==='RETIRO'){
-                    this.documentos = [{label:"Solicitud de cargue", tipo:"solicitud",value:''},{label:"Orden de cargue", tipo:"orden_cargue",value:''},{label:"inspección de cargue", tipo:"inspeccion",value:''},{label:"Tiquete de bascula", tipo:"tiquete_bascula",value:''}];
-                  }
+  async getDocumentos(turno:any){
 
-                  let remisiones_turno:any[] = [];
+    console.log('turnos',turno)
+    
+    this.turno = turno;
+    this.displayModal = false;
+    this.loadingCargue = false;
 
-                  for(let remision of turno.detalle_solicitud_turnos_remisiones){
-                    this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
+    this.evidencias_cargue = await this.getEvidenciasCargue(turno);
+    //this.evidencias_cargue = []
+    this.tipoTurno = this.turno.tipo;
 
-                    // let linea_remision:any = {
-                    //   numero:remision.docnum,
-                    //   pedido:remision.base_docnum,
-                    //   cliente: turno.solicitud.clientes.filter((socio_negocio: { CardCode: any; })=>socio_negocio.CardCode === remision.CardCode)[0],
-                    //   destino: `${remision.municipioentrega} - ${remision.lugarentrega}`,
-                    //   vehiculo:turno.vehiculo,
-                    //   transportadora:turno.transportadora,
-                    //   conductor:turno.conductor,
-                    //   tara:turno.peso_vacio,
-                    //   peso_carga:turno.peso_neto - turno.peso_vacio,
-                    //   neto:turno.peso_neto,
-                    // }
+    if(this.tipoTurno==='RETIRO'){
+      this.documentos = [{label:"Solicitud de cargue", tipo:"solicitud",value:''},{label:"Orden de cargue", tipo:"orden_cargue",value:''},{label:"inspección de cargue", tipo:"inspeccion",value:''},{label:"Tiquete de bascula", tipo:"tiquete_bascula",value:''}];
+    }
 
-                    // let detalle_remision:any[] = [];
-                    // //Buscar en detalle_pedidos_turno los items coincidentes con la remision.docnum
+    let remisiones_turno:any[] = [];
 
-                    // let detalle_pedidos_turno = turno.detalle_solicitud_turnos_pedido.filter((pedido:{remision:any})=>pedido.remision === remision.docnum);
+    if(!turno.detalle_solicitud_turnos_remisiones){
+      let infoTurno:any = await this.getTurno(this.turnoId);
+       for(let remision of infoTurno.detalle_solicitud_turnos_remisiones){
+        this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
+      }
+    }else{
+      for(let remision of turno.detalle_solicitud_turnos_remisiones){
+        this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
+      }
+    }
 
-                    // for(let pedido of detalle_pedidos_turno){
-                    //   let linea_detalle_remision = {
-                    //     pedidonum:pedido.pedidonum,
-                    //     linea:pedido.linea,
-                    //     bodega:pedido.bodega,
-                    //     itemcode:pedido.itemcode,
-                    //     itemname:pedido.itemname,
-                    //     cantidad:pedido.cantidad,
-                    //     cantidad_sacos:pedido.cantidad_sacos,
-                    //     lote:'',
-                    //     unidad:'TONELADA'
-                    //   }
-                    //   //Si la linea del pedido no tiene lotes asignar linea_detalle_remision
-                    //   if(pedido.detalle_lotes_item_turno!=undefined && pedido.detalle_lotes_item_turno.length ===0){
-                    //     detalle_remision.push(linea_detalle_remision);
-                    //   }else{
-                    //     for(let lote of pedido.detalle_lotes_item_turno){
-                    //       linea_detalle_remision.cantidad = lote.cantidad_cargue_lote;
-                    //       linea_detalle_remision.cantidad_sacos = lote.cantidad_sacos_lote;
-                    //       linea_detalle_remision.lote = lote.lote;
-
-                    //       detalle_remision.push(linea_detalle_remision);
-
-                    //     }
-                    //   }
-                    // }
-
-                    // linea_remision.detalle_remision = detalle_remision;
-                    // remisiones_turno.push(linea_remision);
-
-                     
-
-                  }
-
-                   
-
-                    //console.log('remisiones_turno',remisiones_turno)
-
-                    
-
-                    
-
-
-                    
-                  
-              },
-              error:(err)=>{
-                console.error(err);
-                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
-
-              }
-        });
-
+    
 
   }
 
@@ -268,30 +212,52 @@ tipoTurno:string="";
     let itemsTurno = turno.detalle_solicitud_turnos_pedido;
     let evidenciasItemTurno:any[] = [];
     let entidad = 'pedidos-turno';
-
+    let array_id_items:any[] = [];
     for(let itemTurno of itemsTurno){
-      let filesAtach$ = this.functionsService.loadFiles({id_relacion:itemTurno.id,entidad});
-      let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
+      array_id_items.push(itemTurno.id);
+       //let filesAtach$ = this.functionsService.loadFiles({id_relacion:itemTurno.id,entidad});
+      // let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
 
-      for(let file of filesAtachByEstadoHistorialTurno){
-        evidenciasItemTurno.push({cliente:itemTurno.CardName,producto:itemTurno.itemcode+' '+itemTurno.itemname, evidencia:file.nombre, linkS3:file.linkS3 });
-      }
+      // for(let file of filesAtachByEstadoHistorialTurno){
+      //   evidenciasItemTurno.push({cliente:itemTurno.CardName,producto:itemTurno.itemcode+' '+itemTurno.itemname, evidencia:file.nombre, linkS3:file.linkS3 });
+      // }
     }
 
-   ////console.log(evidenciasItemTurno);
+    let filesItemsTurno$ = this.functionsService.loadFilesItemsTurno({array_id_items,entidad})
+    let filesItemsTurno = await lastValueFrom(filesItemsTurno$);
+
+    //evidenciasItemTurno = filesItemsTurno;
+
+   ////console.log('filesItemsTurno',filesItemsTurno);
+
+   for(let file of filesItemsTurno){
+      let infoItem:any = itemsTurno.find((item: { id: any; })=>item.id === file.id_relacion)
+      //evidenciasItemTurno.push({cliente:infoItem.CardName,producto:infoItem.itemcode+' '+infoItem.itemname, evidencia:file.nombre, linkS3:file.linkS3 });
+      file.cliente = infoItem.CardName;
+      file.producto = infoItem.itemcode+' '+infoItem.itemname;
+      file.evidencia = file.nombre
+   }
+
+   evidenciasItemTurno = filesItemsTurno;
 
     return evidenciasItemTurno;
 
   }
 
-  downloadFile(url:any){
-    window.open(url);
+  async downloadFile(data:any){
+    ////console.log('data',data)
+    let fileItemTurno$ = this.functionsService.getFile({data:JSON.stringify(data)})
+    let fileItemTurno:any = await lastValueFrom(fileItemTurno$);
+
+    ////console.log('fileItemTurno',fileItemTurno)
+    window.open(fileItemTurno.linkS3);
+
   }
 
   generarPDF(tipo:string,valor?:any){
 
-      console.log('tipo',tipo);
-      console.log('valor',valor);
+      ////console.log('tipo',tipo);
+      ////console.log('valor',valor);
 
       switch(tipo){
         case 'solicitud':

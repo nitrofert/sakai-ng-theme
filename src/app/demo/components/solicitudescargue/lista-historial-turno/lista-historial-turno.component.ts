@@ -40,6 +40,8 @@ export class ListaHistorialTurnoComponent implements OnInit {
 
   estadosTurno2!:any;
 
+  infoHistorial:any[] = []
+
 
   historialTurno:any = {
     header: [{
@@ -69,9 +71,12 @@ export class ListaHistorialTurnoComponent implements OnInit {
 
 ngOnInit() {
   this.turnoId = this.config.data.id;
+  console.log(this.config.data);
+
   this.estadosTurno2  = this.solicitudTurnoService.estadosTurno;
-  this.getTurno(this.turnoId);
-  
+  this.infoHistorial = this.config.data.historial;
+  //this.getTurno(this.turnoId);
+  this.getHistoial(this.infoHistorial);
   
 }
 
@@ -124,8 +129,6 @@ async getNovedades():Promise<void>{
       });
 }
 
-
-
 async getTurno(id: number){
   this.displayModal = true;
   this.loadingCargue = true;
@@ -133,7 +136,7 @@ async getTurno(id: number){
   this.solicitudTurnoService.getTurnosByID(id)
       .subscribe({
             next:async (turno)=>{
-               //////////console.log('turno',turno);
+               console.log('turno',turno.detalle_solicitud_turnos_historial);
 
                
 
@@ -201,6 +204,66 @@ async getTurno(id: number){
 
 }
 
+async getHistoial(data:any){
+  this.displayModal = true;
+  this.loadingCargue = true;
+  
+   let historial = data.map(  (linea: {
+                  novedades: any;
+                  usuario: any;
+                  comentario: any;
+                  hora_accion: any;
+                  fecha_accion: any; id: any; estado: any; 
+                  //disponibilidad:any, fechadisponibilidad:any
+                  //tipo_solicitud:any
+})=>{
+                  let novedades =  linea.novedades.map((novedad: { novedad: any; })=>{return novedad.novedad});
+                  let comentario ="";
+                  //let disponibilidad ="";
+                  //let fechadisponibilidad = "";
+                  //let tipo_solicitud = ""
+
+                  if(linea.comentario!=null){
+                    
+                    comentario =  this.functionsService.bufferToString(linea.comentario)           
+                  }
+
+                 /* if(linea.disponibilidad!=null){
+                    
+                    disponibilidad =  linea.disponibilidad;
+                    fechadisponibilidad = linea.fechadisponibilidad;
+                    
+                  }
+
+                  if(linea.tipo_solicitud){
+                    tipo_solicitud = linea.tipo_solicitud
+                  }*/
+                 
+                
+                  return {
+                    index:linea.id,
+                    estado: linea.estado,
+                    fecha: linea.fecha_accion,
+                    hora:new Date(linea.fecha_accion+' '+linea.hora_accion).toLocaleTimeString("en-US", { hour12: true, timeZone:'America/Bogota' }),
+                    usuario:linea.usuario.nombrecompleto,
+                    comentario,
+                    novedades,
+                    //disponibilidad,
+                    //fechadisponibilidad,
+                    //tipo_solicitud
+                  }
+                });
+
+                
+
+                await this.setEventsTimeLine(historial);
+
+                this.historialTurno.data = historial;
+                this.loadingCargue = false;
+
+
+}
+
 async setEventsTimeLine(data:any):Promise<void>{
 
   //////////console.log(data, this.estadosTurno2);
@@ -253,9 +316,12 @@ async setEventsTimeLine(data:any):Promise<void>{
                   usuario:event.usuario,
                   comentario:event.comentario,
                   novedades:event.novedades, 
-                  disponibilidad:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).disponibilidad,
-                  fechadisponibilidad:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).fechadisponibilidad,
-                  tipo_solicitud:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).tipo_solicitud,
+                  //disponibilidad:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).disponibilidad,
+                  disponibilidad:this.infoHistorial.find((linea:any) =>linea.id === event.index).disponibilidad,
+                  //fechadisponibilidad:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).fechadisponibilidad,
+                  fechadisponibilidad:this.infoHistorial.find((linea:any) =>linea.id === event.index).fechadisponibilidad,
+                  //tipo_solicitud:this.turno.detalle_solicitud_turnos_historial.find((linea:any) =>linea.id === event.index).tipo_solicitud,
+                  tipo_solicitud:this.infoHistorial.find((linea:any) =>linea.id === event.index).tipo_solicitud,
                   icon: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).icon, 
                   textColor: this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).textColor, 
                   backgroundColor:this.estadosTurno2.find((estado: { name: any; })=>estado.name === event.estado).backgroundColor,
