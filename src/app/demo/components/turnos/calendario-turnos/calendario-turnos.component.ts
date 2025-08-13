@@ -203,9 +203,10 @@ export class CalendarioTurnosComponent implements OnInit {
     this.almacenesService.getLocaciones()
         .subscribe({
             next:(locaciones)=>{
-               ////////////console.log(locaciones);
+               console.log('locaciones',locaciones);
               this.locaciones = locaciones;
-              this.getAlmacenes();
+              //this.getAlmacenes();
+              this.getLocalidades2()
             },
             error:(err)=>{
               console.error(err);
@@ -217,6 +218,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.almacenesService.getAlmacenes()
         .subscribe({
             next:(almacenes)=>{
+               console.log('locaciones',almacenes);
               let almacenesTMP:any[] = [];
              
               for(let index in almacenes){
@@ -256,12 +258,65 @@ export class CalendarioTurnosComponent implements OnInit {
               let data = {
                 code:almacen.locacion_codigo2, 
                 name:almacen.locacion2,
-                label:almacen.locacion2
+                label:almacen.code+' - '+almacen.locacion
               }
               localidadesAlmacenes.push(data);
             }
            
           }
+          
+        }
+      }
+
+     
+     
+    }else{
+      for(let almacen of this.infousuario.locaciones){
+        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == almacen.code).length===0){
+        
+          //TODO: Buscar datos del almacen en array de almacenes
+         
+          
+            let data = {
+              code:almacen.code, 
+              name:almacen.locacion,
+              label:almacen.code+' - '+almacen.locacion
+            }
+            localidadesAlmacenes.push(data);
+          
+          
+        }
+      }
+    }
+
+    this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
+     ////////////console.log(this.localidades);
+    
+
+    
+    ////// ////////////console.log('localidades',this.localidades);
+  }
+
+  getLocalidades2(){
+    
+    let localidadesAlmacenes: any[] = [];
+   
+    if(this.infousuario.locaciones.length ==0){
+      
+  
+      for(let locacion of this.locaciones){
+        if(localidadesAlmacenes.filter(localidadAlmacen => localidadAlmacen.code == locacion.code).length===0){
+        
+          //TODO: Buscar datos del almacen en array de almacenes
+         
+          
+            let data = {
+              code:locacion.code, 
+              name:locacion.locacion,
+              label:locacion.code+' - '+locacion.locacion
+            }
+            localidadesAlmacenes.push(data);
+          
           
         }
       }
@@ -305,16 +360,16 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   seleccionarLocalidad(localidad:any){
-
+    console.log(localidad);
     this.getTurnosPorLocalidad(localidad.code)
-   ////console.log(this.localidadSeleccionada);
+   ////
     
     //this.getCalendar();
     //this.showCalendar = true;
   }
 
   async getTurnosPorLocalidad(localidad:string){
-
+    console.log('getTurnosPorLocalidad')
     this.displayModal = true;
     this.loadingCargue = true;
     this.completeCargue=false;
@@ -395,7 +450,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
 
   async setTablaTurnosLocalidad(turnos:any): Promise<any>{
-
+    console.log('setTablaTurnosLocalidad')
     //console.log('turnosssssssss',turnos);
     let turnosLocalidad:any[] = [];
     let turnosLocalidadCliente:any[] = [];
@@ -472,6 +527,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   async setBoxEstadosDate(date:Date, estados:any, turnos:any):Promise<any>{
+    console.log('setBoxEstadosDate')
     let boxEstados:any[] = [];
 
     let dateString = date.toISOString().split('T')[0];
@@ -535,6 +591,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   getCalendar(){
+    console.log('getCalendar')
 
     this.calendarOptions = {
       initialDate: new Date(),
@@ -565,7 +622,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
   
   getEvents(){
-    
+    console.log('getEvents')
     //////console.log(this.turnosLocalidad);
 
     let events:any[] = [];
@@ -746,6 +803,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: any) {
+    console.log('handleEventClick')
    /*if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove();
     }*/
@@ -762,7 +820,8 @@ export class CalendarioTurnosComponent implements OnInit {
     
     const ref = this.dialogService.open(FormTurnoComponent, {
       data: {
-          id: parseInt(orden)
+          id: parseInt(orden),
+          infoTurno:this.selectedItem[0]
       },
       header: `Orden de cargue: ${orden}` ,
       width: '70%',
@@ -781,6 +840,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   handleEvents(events: EventApi[]) {
+    console.log('handleEvents')
     this.currentEvents = events;
     this.changeDetector.detectChanges();
   }

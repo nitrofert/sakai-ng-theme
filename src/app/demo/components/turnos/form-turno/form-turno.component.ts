@@ -2321,7 +2321,7 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
       .subscribe({
             next:async (turno)=>{
-               //console.log("turno actualizado",turno);
+               console.log("turno actualizado",turno);
 
                this.turno.detalle_solicitud_turnos_historial = turno.detalle_solicitud_turnos_historial;
                 

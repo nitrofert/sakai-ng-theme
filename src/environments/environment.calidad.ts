@@ -3,7 +3,7 @@ export const environment = {
     env:'calidad',
     url_backend:'backend-test-autogestion.nitrofert.com.co',
     url_ssl:false,
-    companySAP:'CIERRE_2024_NITROFERT_PROD',
+    companySAP:'PRUEBAS_NITROFERT_PRD_OCT27',
     companyMySQL:'nitrosap',
     ID_google_analytis:'',
     ID_google_tag:''
