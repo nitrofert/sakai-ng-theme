@@ -206,6 +206,7 @@ export class CalendarioTurnosComponent implements OnInit {
                console.log('locaciones',locaciones);
               this.locaciones = locaciones;
               //this.getAlmacenes();
+              
               this.getLocalidades2()
             },
             error:(err)=>{
@@ -297,6 +298,7 @@ export class CalendarioTurnosComponent implements OnInit {
     ////// ////////////console.log('localidades',this.localidades);
   }
 
+  
   getLocalidades2(){
     
     let localidadesAlmacenes: any[] = [];
