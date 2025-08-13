@@ -413,8 +413,8 @@ turnoBase:number =0;
               this.condicion_tpt="TRANSP";
             }*/
 
-             //this.getTurno(this.turnoId);
-             this.getInfoTurno(this.config.data.infoTurno);
+             this.getTurno(this.turnoId);
+             //this.getInfoTurno(this.config.data.infoTurno);
             },
             error:(err)=>{
                 console.error(err);

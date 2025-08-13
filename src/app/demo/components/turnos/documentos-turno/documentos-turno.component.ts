@@ -148,9 +148,10 @@ remisiones:any[] =[];
               ////////////////// ////////////// ////////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
            
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
-        
-             //this.getTurno(this.turnoId);
-             this.getDocumentos(this.infoTurno)
+             console.log('llama a cargar datos del turno',this.turnoId)
+             let turno = await this.getTurno(this.turnoId);
+             console.log('termina llamado',this.turnoId)
+             this.getDocumentos(turno)
 
             // this.displayModal = false;
              //this.loadingCargue = false;
@@ -178,13 +179,20 @@ remisiones:any[] =[];
   async getDocumentos(turno:any){
 
     console.log('turnos',turno)
+
+    // turno.map((item: { dataKey: string; solicitud: { id: any; clientes: { CardCode: any; }[]; }; id: any; vehiculo: { id: any; }; detalle_solicitud_turnos_pedido: { id: any; }[]; })=>{
+    //   item.dataKey = `${item.solicitud.id}-${item.id}-${item.vehiculo.id}-${item.solicitud.clientes[0].CardCode}-${item.detalle_solicitud_turnos_pedido[0].id}`
+    // })
+
+    turno.dataKey = `${turno.solicitud.id}-${turno.id}-${turno.vehiculo.id}-${turno.solicitud.clientes[0].CardCode}-${turno.detalle_solicitud_turnos_pedido[0].id}`
     
     this.turno = turno;
+    this.infoTurno = turno;
     this.displayModal = false;
     this.loadingCargue = false;
 
-    this.evidencias_cargue = await this.getEvidenciasCargue(turno);
-    //this.evidencias_cargue = []
+    //this.evidencias_cargue = await this.getEvidenciasCargue(turno);
+    this.evidencias_cargue = []
     this.tipoTurno = this.turno.tipo;
 
     if(this.tipoTurno==='RETIRO'){
@@ -194,10 +202,12 @@ remisiones:any[] =[];
     let remisiones_turno:any[] = [];
 
     if(!turno.detalle_solicitud_turnos_remisiones){
-      let infoTurno:any = await this.getTurno(this.turnoId);
-       for(let remision of infoTurno.detalle_solicitud_turnos_remisiones){
-        this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
-      }
+
+      //let infoTurno:any = await this.getTurno(this.turnoId);
+      //  for(let remision of infoTurno.detalle_solicitud_turnos_remisiones){
+      //   this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
+      // }
+      console.log('remisones no')
     }else{
       for(let remision of turno.detalle_solicitud_turnos_remisiones){
         this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})

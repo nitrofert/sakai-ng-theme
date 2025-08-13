@@ -329,7 +329,7 @@ export class CalendarioTurnosComponent implements OnInit {
         .subscribe({
               next:async (turnosLocalidad)=>{
 
-                //console.log('turnosLocalidad',turnosLocalidad);
+                console.log('turnosLocalidad',turnosLocalidad);
                   
                   if(this.completeTimer){
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
