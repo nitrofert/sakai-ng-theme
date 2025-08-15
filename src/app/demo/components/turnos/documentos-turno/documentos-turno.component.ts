@@ -180,6 +180,19 @@ remisiones:any[] =[];
 
     console.log('turnos',turno)
 
+
+    let clientes:any[] = JSON.parse(JSON.stringify(turno.solicitud.clientes));
+    for(let cliente of clientes){
+      let turnoCliente:any = JSON.parse(JSON.stringify(turno));
+      let dataKey:string = `${turnoCliente.solicitud.id}-${turnoCliente.id}-${turnoCliente.vehiculo.id}-${cliente.CardCode}-${turnoCliente.detalle_solicitud_turnos_pedido[0].id}`;
+      let detalle_pedido_cliente:any[] = turnoCliente.detalle_solicitud_turnos_pedido.filter((item: { CardCode: any; })=>item.CardCode === cliente.CardCode);
+      turnoCliente.detalle_solicitud_turnos_pedido = detalle_pedido_cliente;
+      turnoCliente.dataKey = dataKey;
+      cliente.turno =turnoCliente;
+    }
+
+
+
     // turno.map((item: { dataKey: string; solicitud: { id: any; clientes: { CardCode: any; }[]; }; id: any; vehiculo: { id: any; }; detalle_solicitud_turnos_pedido: { id: any; }[]; })=>{
     //   item.dataKey = `${item.solicitud.id}-${item.id}-${item.vehiculo.id}-${item.solicitud.clientes[0].CardCode}-${item.detalle_solicitud_turnos_pedido[0].id}`
     // })
@@ -196,7 +209,16 @@ remisiones:any[] =[];
     this.tipoTurno = this.turno.tipo;
 
     if(this.tipoTurno==='RETIRO'){
-      this.documentos = [{label:"Solicitud de cargue", tipo:"solicitud",value:''},{label:"Orden de cargue", tipo:"orden_cargue",value:''},{label:"inspección de cargue", tipo:"inspeccion",value:''},{label:"Tiquete de bascula", tipo:"tiquete_bascula",value:''}];
+
+      for(let cliente of clientes){
+        this.documentos.push({label:`Solicitud de cargue ${cliente.CardName}` , tipo:"solicitud",value:cliente.turno});
+        this.documentos.push({label:`Orden de cargue ${cliente.CardName}` , tipo:"orden_cargue",value:cliente.turno});
+      }
+
+      this.documentos.push({label:"inspección de cargue", tipo:"inspeccion",value:''});
+      this.documentos.push({label:"Tiquete de bascula", tipo:"tiquete_bascula",value:''});
+
+      //this.documentos = [{label:"Solicitud de cargue", tipo:"solicitud",value:''},{label:"Orden de cargue", tipo:"orden_cargue",value:''},{label:"inspección de cargue", tipo:"inspeccion",value:''},{label:"Tiquete de bascula", tipo:"tiquete_bascula",value:''}];
     }
 
     let remisiones_turno:any[] = [];
@@ -271,7 +293,7 @@ remisiones:any[] =[];
 
       switch(tipo){
         case 'solicitud':
-            this.pdfSolicitud();
+            this.pdfSolicitud(valor);
         break;
 
         case 'inspeccion':
@@ -279,7 +301,7 @@ remisiones:any[] =[];
         break;
 
         case 'orden_cargue':
-            this.pdfOrden();
+            this.pdfOrden(valor);
         break;
 
         case 'remision':
@@ -296,8 +318,9 @@ remisiones:any[] =[];
  
   
  
-  async pdfSolicitud():Promise<void> {
-    await this.pdfSolicitudCargue.generarPDF(this.infoTurno);
+  async pdfSolicitud(turno?:any):Promise<void> {
+    //await this.pdfSolicitudCargue.generarPDF(this.infoTurno);
+    await this.pdfSolicitudCargue.generarPDF(turno);
   }
 
   async pdfInspeccion():Promise<void> {
@@ -312,8 +335,9 @@ remisiones:any[] =[];
     
   }
 
- async pdfOrden():Promise<void> {
-  await this.pdfOrdenCargue.generarPDF(this.infoTurno);
+ async pdfOrden(turno?:any):Promise<void> {
+  //await this.pdfOrdenCargue.generarPDF(this.infoTurno);
+  await this.pdfOrdenCargue.generarPDF(turno);
  }
 
  async pdfRemisionTurno(remision:any):Promise<void>{

@@ -2321,7 +2321,7 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
       .subscribe({
             next:async (turno)=>{
-               console.log("turno actualizado",turno);
+               //console.log("turno actualizado",turno);
 
                this.turno.detalle_solicitud_turnos_historial = turno.detalle_solicitud_turnos_historial;
                 
@@ -3591,7 +3591,8 @@ async validarHoraCargue():Promise<boolean>{
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     
-     ////console.log(inventariosItemBodega);
+    console.log('inventariosItemBodega',inventariosItemBodega);
+    console.log('locaciones',this.locaciones);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
 
     //////////////console.log(arrayInventariosItemBodega);
@@ -3614,7 +3615,7 @@ async validarHoraCargue():Promise<boolean>{
 
     almacenesConStockItem = await this.functionsService.groupArray(almacenesConStockItem,'label');
 
-   //console.log('almacenesConStockItem',almacenesConStockItem);
+   console.log('almacenesConStockItem',almacenesConStockItem);
    //console.log('this.locaciones',this.locaciones);
     let bodegas:any[] =[];
 
