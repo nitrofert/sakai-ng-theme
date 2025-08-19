@@ -108,7 +108,7 @@ remisiones:any[] =[];
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
     this.infoTurno = this.config.data.info;
-    ////console.log('this.infoTurno',this.infoTurno);
+    //////console.log('this.infoTurno',this.infoTurno);
     this.getPermisosModulo();
    
 
@@ -121,11 +121,11 @@ remisiones:any[] =[];
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    ////////////console.log(modulo);
+    //////////////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////// ////////////////console.log(permisos);
+              ////////////////////////// ////////////// //////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -135,7 +135,7 @@ remisiones:any[] =[];
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////// ////////////////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// //////////////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -145,12 +145,12 @@ remisiones:any[] =[];
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////// ////////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// //////////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
            
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
-             console.log('llama a cargar datos del turno',this.turnoId)
+             //console.log('llama a cargar datos del turno',this.turnoId)
              let turno = await this.getTurno(this.turnoId);
-             console.log('termina llamado',this.turnoId)
+             //console.log('termina llamado',this.turnoId)
              this.getDocumentos(turno)
 
             // this.displayModal = false;
@@ -168,7 +168,8 @@ remisiones:any[] =[];
     
     //let orden = await this.ordenesCargueService.getOrdenesByID(id);
     
-    let turno$ = this.solicitudTurnoService.getTurnosByID(id)
+    let turno$ = this.solicitudTurnoService.getDocumentosTurnosByID(id)
+    //let turno$ = this.solicitudTurnoService.getTurnosByID(id)
     let turno = await lastValueFrom(turno$);
        
     return turno
@@ -178,7 +179,7 @@ remisiones:any[] =[];
 
   async getDocumentos(turno:any){
 
-    console.log('turnos',turno)
+    //console.log('turnos',turno)
 
 
     let clientes:any[] = JSON.parse(JSON.stringify(turno.solicitud.clientes));
@@ -229,7 +230,7 @@ remisiones:any[] =[];
       //  for(let remision of infoTurno.detalle_solicitud_turnos_remisiones){
       //   this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
       // }
-      console.log('remisones no')
+      //console.log('remisones no')
     }else{
       for(let remision of turno.detalle_solicitud_turnos_remisiones){
         this.documentos.push({label:`Remision No. ${remision.docnum}`, tipo:"remision", value:remision.docnum})
@@ -260,7 +261,7 @@ remisiones:any[] =[];
 
     //evidenciasItemTurno = filesItemsTurno;
 
-   ////console.log('filesItemsTurno',filesItemsTurno);
+   //////console.log('filesItemsTurno',filesItemsTurno);
 
    for(let file of filesItemsTurno){
       let infoItem:any = itemsTurno.find((item: { id: any; })=>item.id === file.id_relacion)
@@ -277,19 +278,19 @@ remisiones:any[] =[];
   }
 
   async downloadFile(data:any){
-    ////console.log('data',data)
+    //////console.log('data',data)
     let fileItemTurno$ = this.functionsService.getFile({data:JSON.stringify(data)})
     let fileItemTurno:any = await lastValueFrom(fileItemTurno$);
 
-    ////console.log('fileItemTurno',fileItemTurno)
+    //////console.log('fileItemTurno',fileItemTurno)
     window.open(fileItemTurno.linkS3);
 
   }
 
   generarPDF(tipo:string,valor?:any){
 
-      ////console.log('tipo',tipo);
-      ////console.log('valor',valor);
+      //////console.log('tipo',tipo);
+      //////console.log('valor',valor);
 
       switch(tipo){
         case 'solicitud':
@@ -319,11 +320,17 @@ remisiones:any[] =[];
   
  
   async pdfSolicitud(turno?:any):Promise<void> {
+    console.log('turno pdfSolicitud',turno)
     //await this.pdfSolicitudCargue.generarPDF(this.infoTurno);
     await this.pdfSolicitudCargue.generarPDF(turno);
   }
 
   async pdfInspeccion():Promise<void> {
+    console.log('turno pdfInspeccion',this.turno)
+    let inspeccion$ = this.solicitudTurnoService.getInspeccionTurnosByID(this.turno.id);
+    let inspeccion = await lastValueFrom(inspeccion$);
+    this.infoTurno.detalle_solicitud_turnos_inspeccion = inspeccion.detalle_solicitud_turnos_inspeccion;
+
     if(this.infoTurno.estado != this.estadosTurno.DESPACHADO){
       this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "Solo puede generar el pdf de inspección de cargue, si el turno se encuentra remisionado" });
     }else if(this.turno.detalle_solicitud_turnos_inspeccion.length == 0){
@@ -341,12 +348,13 @@ remisiones:any[] =[];
  }
 
  async pdfRemisionTurno(remision:any):Promise<void>{
-
-  await this.pdfRemision.generarPDF(this.turno.id,remision);
+  console.log('turno pdfRemisionTurno',this.turno)
+  await this.pdfRemision.generarPDF(this.turno,remision);
+  //await this.pdfRemision.generarPDF(this.turno.id,remision);
  }
 
  async pdfTiqueteBasculaTurno():Promise<void>{
-
+   console.log('turno pdfTiqueteBasculaTurno',this.turno)
   if(this.infoTurno.estado != this.estadosTurno.PESADOF && this.infoTurno.estado != this.estadosTurno.DESPACHADO && this.infoTurno.estado != this.estadosTurno.ENTREGADO){
       this.messageService.add({ severity: 'error', summary: '!Error¡', detail: "Solo puede generar el tiquete de bascula, si y solo si se haya realizado el pesado final" });
     }else {

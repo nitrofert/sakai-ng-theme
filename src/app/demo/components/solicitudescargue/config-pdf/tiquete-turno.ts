@@ -1717,8 +1717,9 @@ export class PdfTiqueteBascula {
     async generarPDF(data:any):Promise<void>{
        //console.log('datakey',data.dataKey);
         let datakey = data.dataKey.split('-');
-        let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
-        let infoTurno = await lastValueFrom(infoTurno$);
+        // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
+        // let infoTurno = await lastValueFrom(infoTurno$);
+        let infoTurno = data
        console.log('infoTurno',infoTurno);
         let locaciones$ = this.almacenesService.getLocaciones()
         let locaciones = await lastValueFrom(locaciones$);
@@ -1733,9 +1734,12 @@ export class PdfTiqueteBascula {
 
         let horaIngreso ="";
         
+          let historial$ = this.solicitudTurnoService.getHistorialTurnosByID(datakey[1]);
+        let historial = await lastValueFrom(historial$);
+        
 
-        if (infoTurno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO).length > 0){
-            let historialIngreso = infoTurno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0];
+        if (historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO).length > 0){
+            let historialIngreso = historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0];
             horaIngreso = `${historialIngreso.fecha_accion} ${historialIngreso.hora_accion}`
 
            //console.log('horaIngreso',horaIngreso);
@@ -1832,8 +1836,8 @@ export class PdfTiqueteBascula {
         })
 
        //console.log('observaciones',observaciones);
-       let pesadoInicial = infoTurno.detalle_solicitud_turnos_historial.filter((item: { estado: string; })=>item.estado === 'Pesado')[0]
-       let pesadoFinal = infoTurno.detalle_solicitud_turnos_historial.filter((item: { estado: string; })=>item.estado === 'Pesado final')[0]
+       let pesadoInicial = historial.detalle_solicitud_turnos_historial.filter((item: { estado: string; })=>item.estado === 'Pesado')[0]
+       let pesadoFinal = historial.detalle_solicitud_turnos_historial.filter((item: { estado: string; })=>item.estado === 'Pesado final')[0]
        let dataBascula:any = {
             pesoInicial:{
                 fecha: pesadoInicial.fecha_accion   ,

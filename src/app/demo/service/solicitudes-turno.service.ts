@@ -127,6 +127,23 @@ export class SolicitudTurnoService {
         return this.http.get<any>(url);
     }
 
+     getInspeccionTurnosByID(id:number):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/inspeccion-turno/${id}`;
+        return this.http.get<any>(url);
+    }
+
+    getHistorialTurnosByID(id:number):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/historial-turno/${id}`;
+        return this.http.get<any>(url);
+    }
+
+    
+
+    getDocumentosTurnosByID(id:number):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/documentos-turno/${id}`;
+        return this.http.get<any>(url);
+    }
+
     async infoTurno(id?:any):Promise<any> {
         const turno$ = this.getTurnosByID(id);
         const turno = await lastValueFrom(turno$);

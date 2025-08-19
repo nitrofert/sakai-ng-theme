@@ -1820,8 +1820,11 @@ export class PdfInspeccionCargue {
         
        //console.log('datakey',data.dataKey);
         let datakey = data.dataKey.split('-');
-        let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
-        let infoTurno = await lastValueFrom(infoTurno$);
+        // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
+        // let infoTurno = await lastValueFrom(infoTurno$);
+
+        let infoTurno = data
+
 
         let locaciones$ = this.almacenesService.getLocaciones()
         let locaciones = await lastValueFrom(locaciones$);
@@ -1833,6 +1836,11 @@ export class PdfInspeccionCargue {
         //console.log('infoTurno',infoTurno);
 
         let inspeccion_turno = infoTurno.detalle_solicitud_turnos_inspeccion;
+
+          let historial$ = this.solicitudTurnoService.getHistorialTurnosByID(datakey[1]);
+        let historial = await lastValueFrom(historial$);
+
+        
 
         let inspector$ = this.usuarioService.getInfoUsuario();
         let inspector = await lastValueFrom(inspector$);
@@ -1853,7 +1861,7 @@ export class PdfInspeccionCargue {
        //////console.log(filesAtachByEstadoHistorialTurno[0]);
 
 
-       
+        console.log('inspeccion_turno',inspeccion_turno)
 
         let fileInspeccion$ = this.functionsService.filesToBase64({id_relacion:inspeccion_turno[0].id,
                                                            proceso:'firma-conductor',
@@ -1946,7 +1954,7 @@ export class PdfInspeccionCargue {
             productos,
             observaciones,
             observacion:infoTurno.observacion,
-            historial:infoTurno.detalle_solicitud_turnos_historial,
+            historial:historial.detalle_solicitud_turnos_historial,
             locacion: locacion[0]
 
         }

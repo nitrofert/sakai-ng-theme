@@ -1789,8 +1789,10 @@ export class PdfSolicitudCargue {
     async generarPDF(data:any):Promise<void>{
         console.log('datakey',data.dataKey);
         let datakey = data.dataKey.split('-');
-        let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
-        let infoTurno = await lastValueFrom(infoTurno$);
+        // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
+        // let infoTurno = await lastValueFrom(infoTurno$);
+
+        let infoTurno = data
 
         let locaciones$ = this.almacenesService.getLocaciones()
         let locaciones = await lastValueFrom(locaciones$);

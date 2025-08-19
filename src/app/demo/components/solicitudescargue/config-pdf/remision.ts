@@ -1897,9 +1897,9 @@ export class PdfRemision {
     async generarPDF(turno:any,remision:any):Promise<void>{
        //console.log('datakey',data.dataKey);
         //let datakey = data.dataKey.split('-');
-        let infoTurno$ = this.solicitudTurnoService.getTurnosByID(turno);
-        let infoTurno = await lastValueFrom(infoTurno$);
-
+        // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(turno);
+        // let infoTurno = await lastValueFrom(infoTurno$);
+        let infoTurno = turno;
         console.log('infoTurno',infoTurno);
 
         let locaciones$ = this.almacenesService.getLocaciones()
@@ -1914,6 +1914,8 @@ export class PdfRemision {
 
 
         let remisiones_turno:any[] = [];
+
+        console.log('infoTurno.detalle_solicitud_turnos_remisiones',infoTurno.detalle_solicitud_turnos_remisiones)
 
         let infoRemison:any = infoTurno.detalle_solicitud_turnos_remisiones.find((itemremision: { docnum: any; })=>itemremision.docnum === remision);
        
