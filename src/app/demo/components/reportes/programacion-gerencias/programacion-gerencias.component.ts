@@ -10,6 +10,7 @@ import { SolicitudTurnoService } from 'src/app/demo/service/solicitudes-turno.se
 import { UsuarioService } from 'src/app/demo/service/usuario.service';
 import { TipoRol } from '../../admin/roles/roles.enum';
 import { EstadosDealleSolicitud } from '../../turnos/estados-turno.enum';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-programacion-gerencias',
@@ -465,6 +466,12 @@ export class ProgramacionGerenciasComponent implements OnInit {
     for(let linea of data){
 
       let infoTruno = await this.solicitudTurnoService.infoTurno(linea.turnos_id);
+
+      let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(linea.turnos_id);
+      let historialTurno = await lastValueFrom(historialTurno$);
+
+      infoTruno.detalle_solicitud_turnos_historial = historialTurno.detalle_solicitud_turnos_historial
+      
 
       let ultimaPausa = (await this.functionsService.sortArrayObject(infoTruno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.PAUSADO),'id', 'DESC'))[0];
       //////console.log(ultimaPausa);
