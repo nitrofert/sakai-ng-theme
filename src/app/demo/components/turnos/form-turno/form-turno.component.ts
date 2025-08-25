@@ -311,7 +311,7 @@ tipoOperacion:string ='';
 
 turnoBase:number =0;
 
-
+infoHistorialTurno:any;
 
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
@@ -683,13 +683,27 @@ async getTurno(id: number){
                     this.horariosSeleccionados =[];
                   }
 
+                  // let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(turno.id);
+                  // this.infoHistorialTurno = await lastValueFrom(historialTurno$);
+
+                  await this.getHistorialTurno(turno.id)
                   let historial!:any;
 
-                  if(turno.estado===EstadosDealleSolicitud.PAUSADO){
-                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+                  // if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+                  //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+                  //     this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+                  // }else{
+                  //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+                  //     if(historial.length>0){
+                  //       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+                  //     }
+                  // }
+
+                   if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+                      historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
                       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
                   }else{
-                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+                      historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
                       if(historial.length>0){
                         this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
                       }
@@ -766,145 +780,151 @@ async getTurno(id: number){
 
   }
 
-  async getInfoTurno(turno:any){
+  // async getInfoTurno(turno:any){
     
-     ////console.log('Cargue informacion del turno',new Date().toTimeString());
-                  this.turno = turno;
-                  this.tipoTurno = this.turno.tipo;
+  //    ////console.log('Cargue informacion del turno',new Date().toTimeString());
+  //                 this.turno = turno;
+  //                 this.tipoTurno = this.turno.tipo;
                   
                   
-                  this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
-                  this.localidad = turno.locacion;
-                  this.nombreLocalidad = turno.locacion;
-                  this.fechacargue = new Date(turno.fechacita);
-                  let hora = 60 * 60000;
+  //                 this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
+  //                 this.localidad = turno.locacion;
+  //                 this.nombreLocalidad = turno.locacion;
+  //                 this.fechacargue = new Date(turno.fechacita);
+  //                 let hora = 60 * 60000;
 
-                  let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
-                  this.fechacargue = fechacargue;
+  //                 let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
+  //                 this.fechacargue = fechacargue;
                   
                   
-                  let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
-                  //this.horacargue = new Date(turno.horacita);
-                  this.horacargue = horacargue;
-                  this.condicion_tpt = turno.condiciontpt;
-                  //this.horacargue = new Date();
-                  this.placa = turno.vehiculo.placa;
-                  this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
-                  this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
-                  //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
-                  ////////////////// ////////////// //////////////console.log(this.vehiculoSeleccionado);
-                  this.pesomax = this.vehiculoSeleccionado.pesomax;
-                  this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
+  //                 let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+  //                 //this.horacargue = new Date(turno.horacita);
+  //                 this.horacargue = horacargue;
+  //                 this.condicion_tpt = turno.condiciontpt;
+  //                 //this.horacargue = new Date();
+  //                 this.placa = turno.vehiculo.placa;
+  //                 this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
+  //                 this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
+  //                 //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
+  //                 ////////////////// ////////////// //////////////console.log(this.vehiculoSeleccionado);
+  //                 this.pesomax = this.vehiculoSeleccionado.pesomax;
+  //                 this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
 
-                 this.adicional = turno.adicional;
+  //                this.adicional = turno.adicional;
 
-                  this.observaciones = turno.observacion;
-                  this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
-                  ////console.log('this.observacionesCargue',this.observacionesCargue);
-                  this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
-                      cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
-                      return cliente;
-                  });
+  //                 this.observaciones = turno.observacion;
+  //                 this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
+  //                 ////console.log('this.observacionesCargue',this.observacionesCargue);
+  //                 this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
+  //                     cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
+  //                     return cliente;
+  //                 });
 
-                  ////console.log(this.clientesTurno);
+  //                 ////console.log(this.clientesTurno);
 
-                  this.clienteSeleccionado = this.clientesTurno[0];
+  //                 this.clienteSeleccionado = this.clientesTurno[0];
                   
                  
                   
-                  this.capacidadvh = this.vehiculoSeleccionado.capacidad;
+  //                 this.capacidadvh = this.vehiculoSeleccionado.capacidad;
                   
-                  this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
-                  ////////////////////// ////////////// //////////////console.log('transportadoras',this.transportadoras);
-                  //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
-                  this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
-                  this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
-                  this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
-                  //his.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
-                  ////////////////////////// ////////////// //////////////console.log(this.estadoSeleccionado);
-                  this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
+  //                 this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
+  //                 ////////////////////// ////////////// //////////////console.log('transportadoras',this.transportadoras);
+  //                 //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
+  //                 this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
+  //                 this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
+  //                 this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
+  //                 //his.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
+  //                 ////////////////////////// ////////////// //////////////console.log(this.estadoSeleccionado);
+  //                 this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
 
-                  console.log('this.pedidosTurno',this.pedidosTurno);
+  //                 console.log('this.pedidosTurno',this.pedidosTurno);
                   
-                  this.pedidosTurno.map((pedido)=>{
-                    pedido.lineaUpdate = {update:false, create:false};
-                    pedido.cantidadOld =pedido.cantidad;
-                    if(pedido.detalle_lotes_item_turno.length>0){
-                      pedido.detalle_lotes_item_turno.map((lote: { lineaUpdate: { update: boolean; create: boolean; }; })=>{
-                        lote.lineaUpdate = {update:false, create:false};
-                      })
-                    }
-                  });
+  //                 this.pedidosTurno.map((pedido)=>{
+  //                   pedido.lineaUpdate = {update:false, create:false};
+  //                   pedido.cantidadOld =pedido.cantidad;
+  //                   if(pedido.detalle_lotes_item_turno.length>0){
+  //                     pedido.detalle_lotes_item_turno.map((lote: { lineaUpdate: { update: boolean; create: boolean; }; })=>{
+  //                       lote.lineaUpdate = {update:false, create:false};
+  //                     })
+  //                   }
+  //                 });
 
-                 ////console.log('pedidosTurno',this.pedidosTurno);
-                  this.telefono = turno.conductor.numerotelefono;
-                  this.celular = turno.conductor.numerocelular;
-                  this.email = turno.conductor.email;
+  //                ////console.log('pedidosTurno',this.pedidosTurno);
+  //                 this.telefono = turno.conductor.numerotelefono;
+  //                 this.celular = turno.conductor.numerocelular;
+  //                 this.email = turno.conductor.email;
                   
-                  let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  //console.log(this.peso_neto-this.peso_bruto);
-                  ////console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
-                  this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
+  //                 let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  //console.log(this.peso_neto-this.peso_bruto);
+  //                 ////console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
+  //                 this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
 
-                  //console.log('cantidad',this.cantidad);
-                  //console.log('turno.peso_neto',turno.peso_neto);
+  //                 //console.log('cantidad',this.cantidad);
+  //                 //console.log('turno.peso_neto',turno.peso_neto);
                  
-                  this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
-                  //this.peso_neto = this.peso_bruto+this.cantidad;
-                  this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
-                  this.totalCarga = totalesTabla[0].cantidad;
+  //                 this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
+  //                 //this.peso_neto = this.peso_bruto+this.cantidad;
+  //                 this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
+  //                 this.totalCarga = totalesTabla[0].cantidad;
                   
-                  this.estado = turno.estado;
-                  this.remision = turno.remision;
-                  this.sitioentrega = turno.lugarentrega;
-                  this.municipioentrega = turno.municipioentrega;
-                  this.editCantidad = await this.validarEditarCampoCantidad();
+  //                 this.estado = turno.estado;
+  //                 this.remision = turno.remision;
+  //                 this.sitioentrega = turno.lugarentrega;
+  //                 this.municipioentrega = turno.municipioentrega;
+  //                 this.editCantidad = await this.validarEditarCampoCantidad();
 
 
 
-                  if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
-                    ////////////// ////////////// //////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
-                    ////////////////// ////////////// //////////////console.log(this.horainicio, this.horafin);
-                    this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
-                    this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
+  //                 if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
+  //                   ////////////// ////////////// //////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
+  //                   ////////////////// ////////////// //////////////console.log(this.horainicio, this.horafin);
+  //                   this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
+  //                   this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
 
-                    this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
-                    this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
-                    this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
+  //                   this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
+  //                   this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
+  //                   this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
                 
-                    ////////////// ////////////// //////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
-                    await this.seleccionarFechaCita();
-                  }else{
-                    //Establecer horarios locacion
-                    this.diasNoAtencion = [];
-                    this.horariosLocacion = [];
-                    this.horariosSeleccionados =[];
-                  }
+  //                   ////////////// ////////////// //////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
+  //                   await this.seleccionarFechaCita();
+  //                 }else{
+  //                   //Establecer horarios locacion
+  //                   this.diasNoAtencion = [];
+  //                   this.horariosLocacion = [];
+  //                   this.horariosSeleccionados =[];
+  //                 }
 
-                  let historial!:any;
+  //                 let historial!:any;
 
-                  if(turno.estado===EstadosDealleSolicitud.PAUSADO){
-                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
-                      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
-                  }else{
-                      historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
-                      if(historial.length>0){
-                        this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
-                      }
-                  }
+  //                 if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+  //                     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+  //                     this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+  //                 }else{
+  //                     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+  //                     if(historial.length>0){
+  //                       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+  //                     }
+  //                 }
                   
 
                  
-                  this.configTablePedidosAlmacenCliente();
-                  this.configSplitButton(this.estado,this.permisosModulo);
+  //                 this.configTablePedidosAlmacenCliente();
+  //                 this.configSplitButton(this.estado,this.permisosModulo);
 
 
-                  this.tipoOperacion=this.turno.tipo;
-                  this.turnoBase=this.turno.turno_base;
+  //                 this.tipoOperacion=this.turno.tipo;
+  //                 this.turnoBase=this.turno.turno_base;
 
-                  this.displayModal = false;
-                  this.loadingCargue = false;
+  //                 this.displayModal = false;
+  //                 this.loadingCargue = false;
+  // }
+
+  async getHistorialTurno(id:any):Promise<void>{
+
+    let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(id);
+    this.infoHistorialTurno = await lastValueFrom(historialTurno$);
+
   }
-
 
   async validarEditarCampoCantidad():Promise<boolean> {
     let editable = false;
@@ -1285,8 +1305,15 @@ async getTurno(id: number){
         ////////////////console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length);
         ////////////////console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length);
 
-        if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length >0 &&
-           this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length == 0){
+        // if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length >0 &&
+        //    this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length == 0){
+        //     if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Activar turno APNI').valor){
+        //       this.arrayBtnTurnos.push(this.btnActivar);
+        //     }
+        // }
+
+         if(this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length >0 &&
+           this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length == 0){
             if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Activar turno APNI').valor){
               this.arrayBtnTurnos.push(this.btnActivar);
             }
@@ -1766,7 +1793,7 @@ async validarHoraCargue():Promise<boolean>{
     const ref = this.dialogService.open(ListaHistorialTurnoComponent, {
       data: {
           id: (idTutno),
-          historial:this.turno.detalle_solicitud_turnos_historial
+          historial:this.infoHistorialTurno.detalle_solicitud_turnos_historial
       },
       header: `Historial Orden de cargue: ${idTutno}` ,
       width: '70%',
@@ -2025,7 +2052,9 @@ async validarHoraCargue():Promise<boolean>{
 
     let error = false;
     let turno_actual = this.turno.estado;
-    let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.turno.detalle_solicitud_turnos_historial)),'id','ASC')
+    //let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.infoHistorialTurno.detalle_solicitud_turnos_historial)),'id','ASC')
+    console.log('this.infoHistorialTurno.detalle_solicitud_turnos_historial',this.infoHistorialTurno.detalle_solicitud_turnos_historial)
+    let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.infoHistorialTurno.detalle_solicitud_turnos_historial)),'id','ASC')
 
     //console.log('historial_turno',historial_turno);
 
@@ -2323,14 +2352,16 @@ async validarHoraCargue():Promise<boolean>{
             next:async (turno)=>{
                //console.log("turno actualizado",turno);
 
-               this.turno.detalle_solicitud_turnos_historial = turno.detalle_solicitud_turnos_historial;
+               await this.getHistorialTurno(turno.id)
+
+               //this.infoHistorialTurno.detalle_solicitud_turnos_historial = turno.detalle_solicitud_turnos_historial;
                 
                 if(this.filesToUpload.length > 0 && this.uploadActivo){
                   for(let anexo of this.filesToUpload){
                     let body = new FormData();
                     body.append('file', anexo.file, anexo.file.name);
                     body.append('entidad', 'turnos');
-                    body.append('id_relacion', turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].id);
+                    body.append('id_relacion', this.infoHistorialTurno.detalle_solicitud_turnos_historial[this.infoHistorialTurno.detalle_solicitud_turnos_historial.length-1].id);
                     body.append('proceso', turno.estado);
                     body.append('nombre', anexo.file.name);
 

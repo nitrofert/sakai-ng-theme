@@ -129,6 +129,7 @@ async getNovedades():Promise<void>{
       });
 }
 
+
 async getTurno(id: number){
   this.displayModal = true;
   this.loadingCargue = true;
@@ -138,8 +139,12 @@ async getTurno(id: number){
             next:async (turno)=>{
                console.log('turno',turno.detalle_solicitud_turnos_historial);
 
-               
 
+                let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(id);
+                let infoHistorialTurno = await lastValueFrom(historialTurno$);
+
+                turno.detalle_solicitud_turnos_historial = infoHistorialTurno.detalle_solicitud_turnos_historial
+                
                 this.turno = turno;
                 let historial = turno.detalle_solicitud_turnos_historial.map(  (linea: {
                   novedades: any;

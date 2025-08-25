@@ -547,8 +547,14 @@ usuario!:any;
                  let keys:any = this.dataKey.split('-');
                 //console.log('keys',keys);
                   
-                  this.turno = turno;
+                
+                  let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(id);
+                  let infoHistorialTurno = await lastValueFrom(historialTurno$);
+
+                  turno.detalle_solicitud_turnos_historial = infoHistorialTurno.detalle_solicitud_turnos_historial
                   
+                  this.turno = turno;
+
                   
                   this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
                   this.localidad = turno.locacion;

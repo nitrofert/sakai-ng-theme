@@ -111,6 +111,9 @@ dataTableProductosTurno:any = {
 
 filesInspeccion:any[] = [];
 
+historial:any;
+inspeccion:any
+
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private ordenesCargueService: OrdenesCargueService, 
@@ -211,28 +214,53 @@ filesInspeccion:any[] = [];
     
     let fecha_accion!:any;
     let hora_accion!:any;
+
+    let historial$ = this.solicitudTurnoService.getHistorialTurnosByID(this.turno.id);
+    this.historial = await lastValueFrom(historial$);
  
-    if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO).length > 0){
-       fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].fecha_accion;
-       hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].hora_accion;
+    // if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO).length > 0){
+    //    fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].fecha_accion;
+    //    hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].hora_accion;
+    //    this.hora_llegada = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+    // }
+
+    if(this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO).length > 0){
+       fecha_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].fecha_accion;
+       hora_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.ARRIBO)[0].hora_accion;
        this.hora_llegada = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
     }
+
  
-    if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO).length > 0){
-     fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].fecha_accion;
-     hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].hora_accion;
-     this.hora_inicio_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+    // if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO).length > 0){
+    //  fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].fecha_accion;
+    //  hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].hora_accion;
+    //  this.hora_inicio_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+    // }
+
+     if(this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO).length > 0){
+      fecha_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].fecha_accion;
+      hora_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGANDO)[0].hora_accion;
+      this.hora_inicio_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
     }
  
  
-    if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO).length > 0){
-     fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].fecha_accion;
-     hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].hora_accion;
+    // if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO).length > 0){
+    //  fecha_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].fecha_accion;
+    //  hora_accion = this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].hora_accion;
+    //  this.hora_fin_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+    // }
+
+    if(this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO).length > 0){
+     fecha_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].fecha_accion;
+     hora_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].hora_accion;
      this.hora_fin_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
     }
+
+    let inspeccion$ = this.solicitudTurnoService.getInspeccionTurnosByID(this.turno.id);
+    this.inspeccion = await lastValueFrom(inspeccion$);
  
-    if(this.turno.detalle_solicitud_turnos_inspeccion.length > 0){
-       let inspeccion = this.turno.detalle_solicitud_turnos_inspeccion[0];
+    if(this.inspeccion.detalle_solicitud_turnos_inspeccion.length > 0){
+       let inspeccion = this.inspeccion.detalle_solicitud_turnos_inspeccion[0];
        //console.log(inspeccion);
        this.estado_vehiculo = inspeccion.estado_vehiculo;
        this.cantidad_unidades = inspeccion.cantidad_unidades;
@@ -366,7 +394,7 @@ filesInspeccion:any[] = [];
 
  async getFilesInspeccion():Promise<void>{
 
-      let id_relacion = this.turno.detalle_solicitud_turnos_inspeccion[0].id;
+      let id_relacion = this.inspeccion.detalle_solicitud_turnos_inspeccion[0].id;
        let proceso = 'firma-conductor';
        let entidad = 'inspeccion-turno';
     
@@ -379,7 +407,7 @@ filesInspeccion:any[] = [];
     //console.log('this.turno.detalle_solicitud_turnos_inspeccion',this.turno.detalle_solicitud_turnos_inspeccion);
     const ref = this.dialogService.open(DynamicDrawComponent, {
       data: {
-          id_relacion: this.turno.detalle_solicitud_turnos_inspeccion[0].id,
+          id_relacion: this.inspeccion.detalle_solicitud_turnos_inspeccion[0].id,
           entidad: 'inspeccion-turno',
           proceso: 'firma-conductor',
           filename: `firma-inspeccion-turno-${this.turno.id}-conductor-${this.turno.conductor.cedula}.png`,
