@@ -30,5 +30,10 @@ import { UrlApiService } from "./url-api.service";
         return this.http.post<any>(url,data);
     }
 
+    initLoginSAP():Observable<any>{
+        const url:string = `${this.api_url}/api/sb1sl/login-sap`;
+        return this.http.post<any>(url,{});
+    }
+
 
 }

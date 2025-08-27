@@ -46,9 +46,12 @@ export class ListadoSolicitudesComponent implements OnInit {
   @ViewChild('filter') filter!: ElementRef;
 
   hoy = new Date();
-  primerDiaMes: Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
-  ultimoDiaMes: Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth() + 1, 0);
-  filtroRnagoFechas: Date[] = [this.primerDiaMes, this.ultimoDiaMes];
+  // primerDiaMes: Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), 1);
+  // ultimoDiaMes: Date = new Date(this.hoy.getFullYear(), this.hoy.getMonth() + 1, 0);
+  //filtroRnagoFechas: Date[] = [this.primerDiaMes, this.ultimoDiaMes];
+  primerDiaMes!: Date;
+  ultimoDiaMes!: Date;
+  filtroRnagoFechas!: Date[] ;
   permisosModulo!: any[];
 
   showBtnNew: boolean = false;
@@ -179,12 +182,14 @@ export class ListadoSolicitudesComponent implements OnInit {
 
 
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getLocalidades();
 
     Calendar.prototype.getDateFormat = () => 'dd/mm/yy';
     this.estadosTurno = this.solicitudTurnoService.estadosTurno;
-
+    this.primerDiaMes = await this.functionsService.dateAdd(new Date(),-7)
+    this.ultimoDiaMes = await this.functionsService.dateAdd(new Date(), 7)
+    this.filtroRnagoFechas = [this.primerDiaMes,this.ultimoDiaMes]
   }
 
   async getLocalidades() {
@@ -376,19 +381,21 @@ export class ListadoSolicitudesComponent implements OnInit {
         }
       });
 
-    /*this.solicitudTurnoService.getSolicitudesTurnoById(99)
-        .subscribe({
-            next:(solicitud)=>{
-              ////////////////console.log(solicitud);
+      
+
+    // this.solicitudTurnoService.getSolicitudesTurnoById(13719)
+    //     .subscribe({
+    //         next:(solicitud)=>{
+    //           console.log('solicitud',solicitud);
 
              
 
               
-            },
-            error:(error)=>{
-                console.error(error);
-            }
-    });*/
+    //         },
+    //         error:(error)=>{
+    //             console.error(error);
+    //         }
+    // });
 
   }
 

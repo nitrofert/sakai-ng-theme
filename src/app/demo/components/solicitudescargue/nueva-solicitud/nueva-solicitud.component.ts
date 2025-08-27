@@ -609,7 +609,7 @@ onRightClick(event:MouseEvent,bloquear:boolean){
 
 onKeyDownClientes(event: KeyboardEvent) {
   if (event.ctrlKey && event.key === 'v') {
-    event.preventDefault();
+    //event.preventDefault();
   }
 }
 

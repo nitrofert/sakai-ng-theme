@@ -23,6 +23,7 @@ import { CiudadesService } from 'src/app/demo/service/ciudades.service';
 import { FileUpload } from 'primeng/fileupload';
 import { DynamicUploadComponent } from 'src/app/layout/shared/dynamic-upload/dynamic-upload.component';
 import { Table } from 'primeng/table';
+import { SB1SLService } from 'src/app/demo/service/sb1sl.service';
 
 // import { usb, getDeviceList } from 'usb';
 
@@ -329,7 +330,8 @@ infoHistorialTurno:any;
               private almacenesService: AlmacenesService,
               public functionsService:FunctionsService,
               private novedadesService:NovedadesService,
-              private ciudadesService:CiudadesService,) { }
+              private ciudadesService:CiudadesService,
+              private sB1SLService:SB1SLService) { }
 
   ngOnInit() {
 
@@ -1917,6 +1919,15 @@ async validarHoraCargue():Promise<boolean>{
       this.tituloEstado = "Despachar turno "+this.turnoId;
       this.novedad = false;
       this.clonarTablaPedidos();
+      // this.sB1SLService.initLoginSAP()
+      //     .subscribe({
+      //          next:(result)=>{
+      //             console.log(result)
+      //          },
+      //          error:(error)=>{
+      //             console.error(error)
+      //          }
+      //     })
     }
   }
 
