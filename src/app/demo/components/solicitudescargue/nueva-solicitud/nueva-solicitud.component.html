@@ -270,13 +270,13 @@
                         <div class="field col-12 md:col-6 ">
                             <span class="p-float-label">
                                 <p-autoComplete id="vhiculo" 
-                                                [(ngModel)]="vehiculoSeleccionado" 
-                                                [suggestions]="vehiculosFiltrados" 
+                                                [(ngModel)]="vehiculoSeleccionado2" 
+                                                [suggestions]="vehiculosFiltrados2" 
                                                 (completeMethod)="filtrarVehiculo($event)" 
                                                 field="label" 
                                                 [dropdown]="true"
                                                 [disabled]="true"
-                                                (onSelect)="seleccionarVehiculo(vehiculoSeleccionado)"
+                                                (onSelect)="seleccionarVehiculo(vehiculoSeleccionado2)"
                                                 [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado.length==0}">
                                 </p-autoComplete>
                                 <label for="vhiculo"><h6>Vehículo</h6></label>
@@ -284,7 +284,7 @@
                         </div>
                         <div class="field col-12 md:col-6 ">
                             <span class="p-float-label">
-                                <input pInputText id="clase" type="text" disabled [value]="!vehiculoSeleccionado.clase?'':vehiculoSeleccionado.clase.tipo" [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado.length==0}" />
+                                <input pInputText id="clase" type="text" disabled [value]="!vehiculoSeleccionado2?'':vehiculoSeleccionado2.clase.tipo" [ngClass]="{'ng-invalid ng-dirty' : envioLineaCarguePedido && vehiculoSeleccionado2.length==0}" />
                                 <label for="clase"><h6>Tipo</h6></label>
                             </span>
                         </div>

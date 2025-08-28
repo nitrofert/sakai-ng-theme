@@ -162,22 +162,22 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
     }
 
   async ngOnInit() {
-    //////console.log('ngOnInit');
+    ////////console.log('ngOnInit');
     
 
     if(this.rangoFechas){
       this.filtroRnagoFechas = this.rangoFechas;
       this.verEncabezado = false;
     }else{
-      //////console.log('ngOnInit loc-dep');
+      ////////console.log('ngOnInit loc-dep');
       await this.getLocalidades();
       await this.getDependencias();
 
       await this.setReporte();
     }
 
-    ////////////console.log('this.filtroRnagoFechas[0]',this.filtroRnagoFechas[0]);
-    ////////////console.log('this.filtroRnagoFechas[1]',this.filtroRnagoFechas[1]);
+    //////////////console.log('this.filtroRnagoFechas[0]',this.filtroRnagoFechas[0]);
+    //////////////console.log('this.filtroRnagoFechas[1]',this.filtroRnagoFechas[1]);
 
     //
    
@@ -185,11 +185,11 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
   }
 
   async ngOnChanges(changes: SimpleChanges){
-    //////console.log('ngOnChanges');
+    ////////console.log('ngOnChanges');
     this.loading = true;
     await this.getLocalidades();
     await this.getDependencias();
-    //////////////console.log('changes',changes['rangoFechas'].currentValue)
+    ////////////////console.log('changes',changes['rangoFechas'].currentValue)
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.setReporte();
   }
@@ -198,7 +198,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
     
     
     if(event[1]){
-      //////////////console.log(this.filtroRnagoFechas);
+      ////////////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       //this.setReporte();
   
@@ -207,12 +207,12 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
   async getLocalidades():Promise<void>{
     this.localidades =  await this.localidadesService.getLocalidades();
-    //////console.log('this.localidades 0',this.localidades); 
+    ////////console.log('this.localidades 0',this.localidades); 
   }
 
   async getDependencias():Promise<void>{
     this.dependencias_all =  await this.dependenciasService.getDependencias();
-    //////console.log('this.dependencias_all 0',this.dependencias_all); 
+    ////////console.log('this.dependencias_all 0',this.dependencias_all); 
 
    
   }
@@ -227,7 +227,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
     let infoTurnos = (await this.solicitudTurnoService.turnosExtendido(params)).raw;
     
-  //console.log('infoTurnos',infoTurnos);
+  ////console.log('infoTurnos',infoTurnos);
 
     //return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
     return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; pedidos_turno_itemcode:any })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO && !turno.pedidos_turno_itemcode.startsWith('SF') )
@@ -240,15 +240,15 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
   async setReporte():Promise<void>{
 
     let infoTurnos = await this.getInfoTurnos();
-   //console.log('infoTurnos filtrado',infoTurnos);
-    ////console.log(await this.functionsService.concatenarCamposArray( await this.functionsService.clonObject(infoTurnos), ['pedidos_turno_dependencia','locacion_id']));
+   ////console.log('infoTurnos filtrado',infoTurnos);
+    //////console.log(await this.functionsService.concatenarCamposArray( await this.functionsService.clonObject(infoTurnos), ['pedidos_turno_dependencia','locacion_id']));
     this.infoTurnos = infoTurnos;
 
 
     let headerTable = await this.configHeaderTabla();
-    //////////console.log('headerTable',headerTable);
+    ////////////console.log('headerTable',headerTable);
     let dataTable = await this.configDataTabla(infoTurnos);
-    //////////console.log(dataTable);
+    ////////////console.log(dataTable);
     
 
     this.dataTable.header = headerTable;
@@ -256,7 +256,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
     await this.setTablaLocacion(infoTurnos);
 
-    //////console.log();
+    ////////console.log();
 
     //this.dataTable2.header = await this.configHeaderTabla2(infoTurnos);
     //this.dataTable2.data = await this.configDataTabla2(infoTurnos);
@@ -280,13 +280,13 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
     for(;fechaInicio<=fechaFinal; fechaInicio.setDate(fechaInicio.getDate()+1)){
 
-        /*//////////////console.log(fechaInicio.toISOString().split('T')[0].split('-'))
-        //////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[2])
-        //////////////console.log(fechaInicio.getDate());
-        //////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[1])
-        //////////////console.log(fechaInicio.getMonth()+1);
-        //////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[0])
-        //////////////console.log(fechaInicio.getFullYear());*/
+        /*////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-'))
+        ////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[2])
+        ////////////////console.log(fechaInicio.getDate());
+        ////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[1])
+        ////////////////console.log(fechaInicio.getMonth()+1);
+        ////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[0])
+        ////////////////console.log(fechaInicio.getFullYear());*/
         
         let mesStr = this.functionsService.meses.find(mes=>mes.id === fechaInicio.getMonth()+1 ).shortName;
         let labelFecha = `${mesStr} - ${fechaInicio.getDate()} -${fechaInicio.getFullYear()}`;
@@ -309,19 +309,19 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
     this.locaciones = locaciones;
     this.locacionSeleccionada = locaciones[0]
 
-    ////////////console.log('locaciones',locaciones);
+    //////////////console.log('locaciones',locaciones);
 
     let objString:string = "";
     
   
    for(let locacion of locaciones){
-    ////////////console.log('locacion',locacion.label);
+    //////////////console.log('locacion',locacion.label);
     objString=`{"locacion":"${locacion.label}"`
       
       let fechaInicio = new Date(this.filtroRnagoFechas[0].toISOString());
-      //////////////console.log('fechaInicio',fechaInicio);
+      ////////////////console.log('fechaInicio',fechaInicio);
       let fechaFinal = new Date(this.filtroRnagoFechas[1].toISOString());
-      //////////////console.log('fechaFinal',fechaFinal);
+      ////////////////console.log('fechaFinal',fechaFinal);
       let totalTNProg:number =0;
       let totalTNAdd:number =0;
       let totalTNRem:number =0;
@@ -349,11 +349,11 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
           //objString += `,"fecha${fechaInicio.toISOString().split('T')[0]}":${toneladasProg}`;
 
           if(lineasTurnosLocacionFecha.length>0){
-             ////////////console.log('fechaInicio',fechaInicio.toISOString().split('T')[0]);
-             ////////////console.log('lineasTurnosLocacionFecha',lineasTurnosLocacionFecha);
-              ////////////console.log('toneladasProg',toneladasProg);
-              ////////////console.log('toneladasAdd',toneladasAdd); 
-              ////////////console.log('toneladasRem',toneladasRem);
+             //////////////console.log('fechaInicio',fechaInicio.toISOString().split('T')[0]);
+             //////////////console.log('lineasTurnosLocacionFecha',lineasTurnosLocacionFecha);
+              //////////////console.log('toneladasProg',toneladasProg);
+              //////////////console.log('toneladasAdd',toneladasAdd); 
+              //////////////console.log('toneladasRem',toneladasRem);
           }
 
           totalTNProg=totalTNProg+toneladasProg;
@@ -364,7 +364,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
       objString +=`,"total":[{"label":"","value":${totalTNProg}},{"label":"","value":${totalTNAdd}},{"label":"","value":${totalTNRem}}]}`
       //objString +=`,"total":{"totalTNProg":${totalTNProg},"totalTNAdd":${totalTNAdd},"totalTNRem":${totalTNRem}}}`
       //objString +=`,"total":${totalTNProg}}`
-      //////////////console.log('objString',JSON.parse(objString))
+      ////////////////console.log('objString',JSON.parse(objString))
      dataTable.push(JSON.parse(objString));
    }
 
@@ -448,7 +448,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
   async seleccionarLocacion(){
     
-    ////////////console.log(this.locacionSeleccionada);
+    //////////////console.log(this.locacionSeleccionada);
     this.toneladasAdicionalLocaciones =[];
     await this.setTablaLocacion(this.infoTurnos)
   }
@@ -470,7 +470,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
         })
       }
 
-      //////////console.log(this.toneladasAdicionalLocaciones);
+      ////////////console.log(this.toneladasAdicionalLocaciones);
   }
 
 
@@ -501,7 +501,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
         objString += `,"meta":${this.meta}`;
         objString += `,"cumplimiento":${(toneladasProg+toneladasAdd)!=0?(toneladasRem/(toneladasProg+toneladasAdd))*100:0}}`;
 
-        //////////console.log(objString);
+        ////////////console.log(objString);
 
         dataTable.push(JSON.parse(objString));
     }
@@ -522,13 +522,13 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
     for(;fechaInicio<=fechaFinal; fechaInicio.setDate(fechaInicio.getDate()+1)){
 
-        /*//////////////console.log(fechaInicio.toISOString().split('T')[0].split('-'))
-        //////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[2])
-        //////////////console.log(fechaInicio.getDate());
-        //////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[1])
-        //////////////console.log(fechaInicio.getMonth()+1);
-        //////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[0])
-        //////////////console.log(fechaInicio.getFullYear());*/
+        /*////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-'))
+        ////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[2])
+        ////////////////console.log(fechaInicio.getDate());
+        ////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[1])
+        ////////////////console.log(fechaInicio.getMonth()+1);
+        ////////////////console.log(fechaInicio.toISOString().split('T')[0].split('-')[0])
+        ////////////////console.log(fechaInicio.getFullYear());*/
         
         let mesStr = this.functionsService.meses.find(mes=>mes.id === fechaInicio.getMonth()+1 ).shortName;
         let labelFecha = `${mesStr} - ${fechaInicio.getDate()} -${fechaInicio.getFullYear()}`;
@@ -595,11 +595,11 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
     //lineaStrCumplimiento+=`,"total":${totalTNProg!=0?((totalTNProg+totalTNAdd)/totalTNProg)*100:0}}`;
     lineaStrCumplimiento+=`,"total":${totalTNProg!=0?(totalTNRem/totalTNProg)*100:0}}`;
 
-    //////////console.log(lineaStrTonProg);
-    //////////console.log(lineaStrTonAdd);
-    //////////console.log(lineaStrTonrem);
-    //////////console.log(lineaStrMeta);
-    //////////console.log(lineaStrCumplimiento);
+    ////////////console.log(lineaStrTonProg);
+    ////////////console.log(lineaStrTonAdd);
+    ////////////console.log(lineaStrTonrem);
+    ////////////console.log(lineaStrMeta);
+    ////////////console.log(lineaStrCumplimiento);
     dataTable.push(JSON.parse(lineaStrTonProg));
     dataTable.push(JSON.parse(lineaStrTonAdd)),
     dataTable.push(JSON.parse(lineaStrTonrem));
@@ -613,7 +613,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
 
   async setTablasGerenciasZona(infoTurnos:any):Promise<void>{
 
-      //////console.log('this.dependencias_all',this.dependencias_all)
+      ////////console.log('this.dependencias_all',this.dependencias_all)
 
       let lineasGerencias =   await this.functionsService.sortArrayObject(await this.functionsService.groupArray( await this.functionsService.clonObject(infoTurnos),'pedidos_turno_dependencia',[{pedidos_turno_cantidad:0}]),'pedidos_turno_dependencia','ASC');
       let gerencias = lineasGerencias.map( (gerencia)=>{
@@ -672,14 +672,14 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
           })
       }
 
-      ////////console.log('gerencias', gerencias);
+      //////////console.log('gerencias', gerencias);
 
       
   }
 
   async setTablasGerenciasZonaLocaciones(infoTurnos:any):Promise<void>{
 
-    //////console.log('this.dependencias_all',this.dependencias_all)
+    ////////console.log('this.dependencias_all',this.dependencias_all)
 
     let lineasGerencias = await this.functionsService.sortArrayObject(await this.functionsService.groupArray( await this.functionsService.clonObject(infoTurnos),'datakey',[{pedidos_turno_cantidad:0}]),'datakey','ASC')  ;
     let gerencias = lineasGerencias.map( (gerencia)=>{
@@ -721,9 +721,9 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
         })*/
     }
 
-    ////////console.log('dataTableGerenciasLocaciones', this.dataTableGerenciasLocaciones);
+    //////////console.log('dataTableGerenciasLocaciones', this.dataTableGerenciasLocaciones);
 
-    ////////console.log('gerencias', gerencias);
+    //////////console.log('gerencias', gerencias);
 
     
 }
@@ -738,7 +738,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
       let totalTnProgZona = lineasTnProgZona.length === 0?0:(await this.functionsService.groupArray(lineasTnProgZona,'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
 
       let lineasTnAddZona =  (await this.functionsService.clonObject(infoTurnos)).filter((turno: { pedidos_turno_dependencia:any; pedidos_turno_localidad: any; turnos_adicional:number })=>turno.pedidos_turno_dependencia === gerencia.code && turno.pedidos_turno_localidad === zona.code &&  turno.turnos_adicional==1);
-      ////////console.log('lineasTnAddZona',lineasTnAddZona);
+      //////////console.log('lineasTnAddZona',lineasTnAddZona);
       let totalTnAddZona = lineasTnAddZona.length === 0?0:(await this.functionsService.groupArray(lineasTnAddZona,'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
 
       objString=`{"zona":"${zona.label}","totalTon":${zona.totalToneladasZona},"tonProg":${totalTnProgZona},"prcTonProg":${zona.totalToneladasZona==0?0:(totalTnProgZona/zona.totalToneladasZona)*100},"tonAdd":${totalTnAddZona},"prcTonAdd":${zona.totalToneladasZona==0?0:(totalTnAddZona/zona.totalToneladasZona*100)}}`;
@@ -760,7 +760,7 @@ headerToneladasAdicionalGerenciaZonaLocacion:any[] = [{"zona":{"label":"Zona","t
       let totalTnProgZona = lineasTnProgZona.length === 0?0:(await this.functionsService.groupArray(lineasTnProgZona,'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
 
       let lineasTnAddZona =  (await this.functionsService.clonObject(infoTurnos)).filter((turno: { pedidos_turno_dependencia:any; pedidos_turno_localidad: any; turnos_adicional:number ; locacion_locacion:any })=>turno.pedidos_turno_dependencia === gerencia.code && turno.pedidos_turno_localidad === zona.code && turno.locacion_locacion === zona.locacion &&  turno.turnos_adicional==1);
-      ////////console.log('lineasTnAddZona',lineasTnAddZona);
+      //////////console.log('lineasTnAddZona',lineasTnAddZona);
       let totalTnAddZona = lineasTnAddZona.length === 0?0:(await this.functionsService.groupArray(lineasTnAddZona,'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
 
       objString=`{"zona":"${zona.label}","locacion":"${zona.locacion}","totalTon":${zona.totalToneladasZona},"tonProg":${totalTnProgZona},"prcTonProg":${zona.totalToneladasZona==0?0:(totalTnProgZona/zona.totalToneladasZona)*100},"tonAdd":${totalTnAddZona},"prcTonAdd":${zona.totalToneladasZona==0?0:(totalTnAddZona/zona.totalToneladasZona*100)}}`;

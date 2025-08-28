@@ -17,13 +17,13 @@ export class USBPortComponent {
   async connectUSB() {
     try {
       // Solicita al usuario que seleccione un dispositivo USB
-     //console.log(await (navigator as any).usb)
+     ////console.log(await (navigator as any).usb)
       const device = await (navigator as any).usb.requestDevice({ filters: [{ vendorId: 0x2341 }] });
       await device.open();
       await device.selectConfiguration(1);
       await device.claimInterface(0);
 
-     //console.log('Dispositivo USB conectado:', device.productName);
+     ////console.log('Dispositivo USB conectado:', device.productName);
 
       // Ejemplo de lectura de datos
       const result = await device.transferIn(5, 64); // Lee desde el endpoint 5

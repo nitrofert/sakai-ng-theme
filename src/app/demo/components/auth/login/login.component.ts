@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit{
 
     async ngOnInit(): Promise<void> {
         let obj_parseUrl:any = this.router.parseUrl(this.router.url)
-        console.log('obj_parseUrl',obj_parseUrl);
+        //console.log('obj_parseUrl',obj_parseUrl);
     }
     
     login(){
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit{
             this.authService.login(dataLogin)
                 .subscribe({
                     next: (data)=>{
-                        //////////console.log(data);
+                        ////////////console.log(data);
                         
                             
                             this.verifycodeStatus = true;
@@ -98,11 +98,11 @@ export class LoginComponent implements OnInit{
             this.authService.verifyCode(dataVerifyCode)
                 .subscribe({
                     next: (data)=>{
-                        //////////console.log(data);
+                        ////////////console.log(data);
 
                         if(data.token){
                             this.usuario = data.usuario;
-                            //////////console.log(this.usuario);
+                            ////////////console.log(this.usuario);
                             //TODO: Registrar token
                             localStorage.setItem('token', data.token);
                             this.messageService.add({severity:'success', summary: `Notificación`, detail: `Bienvenid@ ${this.usuario.nombrecompleto}`});    

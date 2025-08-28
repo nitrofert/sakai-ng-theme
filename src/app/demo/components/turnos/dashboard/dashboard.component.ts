@@ -203,7 +203,7 @@ conductoresARL:any[] = [];
     this.getPermisosModulo();
     
    
-   //////////////console.log(this.infousuario);
+   ////////////////console.log(this.infousuario);
     //this.configTablaProgramacionDiaria();
 
     
@@ -215,7 +215,7 @@ conductoresARL:any[] = [];
 
   async getPermisosModulo(){
     const modulo = this.router.url;
-    ////console.log(modulo);
+    //////console.log(modulo);
     
 
     this.showBtnNew =  await this.usuariosService.permisoModuloAccion('/portal/solicitudes-de-cargue','crear');
@@ -226,7 +226,7 @@ conductoresARL:any[] = [];
 
 
     this.verFletes = await this.usuariosService.permisoModuloAccion('/dashboard-logistica','ver fletes');
-    //console.log(this.verFletes);
+    ////console.log(this.verFletes);
 
     this.getLocalidades();
     
@@ -286,12 +286,12 @@ conductoresARL:any[] = [];
                 locacion.label = locacion.locacion
               })
               //this.locaciones = locaciones;
-            // //////////////////////////////////////console.log(locaciones);
+            // ////////////////////////////////////////console.log(locaciones);
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               this.locacionSeleccionada = this.locaciones[0];
               this.seleccionarLocacion(this.locacionSeleccionada);
-              ////console.log('aqui va');
-              ////////////////////////////////////////console.log();
+              //////console.log('aqui va');
+              //////////////////////////////////////////console.log();
             },
             error:(err)=>{
               console.error(err);
@@ -316,14 +316,14 @@ conductoresARL:any[] = [];
 
 
   seleccionarLocacion(locacion:any){
-    //////////////////console.log(locacion);
+    ////////////////////console.log(locacion);
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
-    //////////////////console.log(bodegas_locacion);
+    ////////////////////console.log(bodegas_locacion);
     if(bodegas_locacion.length==0){
       //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La locación ${locacion.label} no tiene bodegas asociadas`});
-      ////////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
+      //////////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
     }else{
-      //////////////////console.log(bodegas_locacion);
+      ////////////////////console.log(bodegas_locacion);
       this.bodegas = bodegas_locacion;
       this.bodegaSeleccionada = this.bodegas[0];
       this.seleccionarBodega(this.bodegaSeleccionada);
@@ -334,7 +334,7 @@ conductoresARL:any[] = [];
   }
 
   seleccionarBodega(bodega:any){
-    //////////////console.log(bodega);
+    ////////////////console.log(bodega);
    
   }
 
@@ -349,7 +349,7 @@ conductoresARL:any[] = [];
     /*this.loadingPDB = true;
     //this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && linea.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
     this.lineasProgramacionDiariaBodega = this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code);
-    //////////////console.log(this.lineasProgramacionDiariaBodega);
+    ////////////////console.log(this.lineasProgramacionDiariaBodega);
     this.configTablaProgramacionDiaria();
     this.lineasConsolidadoProgramacionDiariaBodega = (await this.getInfoTablaConsolidadoProgramacionDiaria()).consolidadoItems;
     this.configTablaConsolidadoProgramacionDiaria();
@@ -359,7 +359,7 @@ conductoresARL:any[] = [];
                                                                                         linea.turnos_estado != EstadosDealleSolicitud.CANCELADO &&
                                                                                         linea.turnos_estado != EstadosDealleSolicitud.SOLINVENTARIO );
     
-    //////////////console.log(this.lineasProgramacionDiariaGerencia);
+    ////////////////console.log(this.lineasProgramacionDiariaGerencia);
     this.configTablaProgramacionGerencia();*/
     
 }
@@ -406,12 +406,12 @@ async getSolicitudesTurno(){
                                                             let hoy = new Date();
                                                             hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
                                                             solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
-                                                            ////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+                                                            //////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
                                                             if(this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado)){
                                                               solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
                                                               solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
                                                             }else{
-                                                              //////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+                                                              ////////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
                                                               solicitud.bgColor = 'indigo-50';
                                                               solicitud.txtColor = 'primary-900';
                                                             }
@@ -454,7 +454,7 @@ async getSolicitudesTurno(){
 
                                                             solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia)?this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name:'';
                                                             solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
-                                                            ////////console.log(solicitud);
+                                                            //////////console.log(solicitud);
                                                             
 
         //return solicitud
@@ -463,7 +463,7 @@ async getSolicitudesTurno(){
       //await this.configPieChart(dataPieChart);
       //await this.configBarSatckChart(dataBarStackChart);
 
-       ////////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+       //////////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
        
        this.solicitudesExtendida =solicitudesTurnos.raw.filter((data: { detalle_solicitudes_turnos_estado: EstadosDealleSolicitud; })=>data.detalle_solicitudes_turnos_estado===EstadosDealleSolicitud.SOLICITADO);
        
@@ -471,7 +471,7 @@ async getSolicitudesTurno(){
           //await this.setTableFletes(solicitudesTurnos.raw);
        }
        
-       console.log('solicitudesTurnos.raw.',solicitudesTurnos);
+       //console.log('solicitudesTurnos.raw.',solicitudesTurnos);
        this.loading = false;
 
 
@@ -493,7 +493,7 @@ async getSolicitudesTurno(){
                 let linea_arl_activa = turno.conductor.historial_arl.filter((arl: { estado: string; })=>arl.estado ==='ACTIVO');
                 let fecha_vencimiento_arl_activa = new Date(linea_arl_activa[0].fechafin);
                 let dias_vence = await this.functionsService.dateDif(fecha_vencimiento_arl_activa, new Date())
-                console.log('dias_vence',dias_vence)
+                //console.log('dias_vence',dias_vence)
 
                 if(dias_vence <= 5 ){
                   if(this.conductoresARL.filter(conductor=>conductor.id === turno.conductor.id).length===0){
@@ -527,7 +527,7 @@ async getSolicitudesTurno(){
 
 async setTableFletes(turnos:any[]):Promise<void>{
 
- //console.log(turnos);
+ ////console.log(turnos);
 
  let tablaFletesTurnos = turnos.filter(turno=>turno.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF') )
  this.tablaFletesTurnos = tablaFletesTurnos;
@@ -540,7 +540,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     
     
     if(event[1]){
-      //////console.log(this.filtroRnagoFechas);
+      ////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.rangoFechas = this.filtroRnagoFechas;
       this.getSolicitudesTurno();
@@ -565,10 +565,10 @@ async setTableFletes(turnos:any[]):Promise<void>{
    if(index>0){
     index+=1;
    }
-   ////////////////////console.log(index);
+   //////////////////////console.log(index);
 
    filtro[index].value = value;*/
-   ////////////////////console.log(field,value, filtro,other,other2 );
+   //////////////////////console.log(field,value, filtro,other,other2 );
    //table.filter(value,field,filtro[0].matchMode);
  
   }
@@ -595,7 +595,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   nuevaSolicitud(event: any){
-    ////////////////////////console.log(event);
+    //////////////////////////console.log(event);
     //this.router.navigate(['/portal/solicitudes-de-cargue/nueva'],);
     
 
@@ -606,7 +606,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   gestionarSolicitud(){
-    ////console.log(this.selectedItem);
+    //////console.log(this.selectedItem);
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar la solicitud No. ${this.selectedItem[0].solicitudes_turno_id} turno de cargue No. ${this.selectedItem[0].detalle_solicitudes_turnos_id}?`,
       header: 'Confirmación',
@@ -627,7 +627,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// ////////////console.log(("Refresh calendar");
+          //////////// //////////////console.log(("Refresh calendar");
           this.getSolicitudesTurno();
           this.selectedItem=[];
         });
@@ -648,7 +648,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   gestionarFletes(){
-  //console.log(this.selectedItemFletes);
+  ////console.log(this.selectedItemFletes);
     
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar el flete del turno No. ${this.selectedItemFletes[0].detalle_solicitudes_turnos_id}?`,
@@ -670,7 +670,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// ////////////console.log(("Refresh calendar");
+          //////////// //////////////console.log(("Refresh calendar");
           this.getSolicitudesTurno();
           this.selectedItemFletes=[];
         });
@@ -735,7 +735,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
   /*filter(event: any, arrayFiltrar:any[]) {
 
-    ////////////////////////////////////////////////////console.log((arrayFiltrar);
+    //////////////////////////////////////////////////////console.log((arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -752,7 +752,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   /*
 
  async seleccionarFecha(){
-    ////////////////////////////////////console.log(this.fechaProgramacion)
+    //////////////////////////////////////console.log(this.fechaProgramacion)
     this.turnosFehaSeleccionada = await this.getInfoTablaProgramacionDiaria();
     this.setDashboard();
   }
@@ -769,15 +769,15 @@ async setTableFletes(turnos:any[]):Promise<void>{
     }
 
     if(this.infousuario.roles.find((rol: { nombre: any; })=>rol.nombre === TipoRol.CLIENTELOGISTICA)){
-      //////////////console.log(this.infousuario.clientes);
+      ////////////////console.log(this.infousuario.clientes);
       let clientes:any = this.infousuario.clientes.map((cliente: { id: any; })=>{return cliente.id;});
-      //////////////console.log(clientes);
+      ////////////////console.log(clientes);
       params.clientes = JSON.stringify(clientes);
     }
-    ////////////////////////////////////console.log(this.fechaProgramacion);
+    //////////////////////////////////////console.log(this.fechaProgramacion);
 
     let programacionBodega = await this.solicitudTurnoService.turnosExtendido(params);
-    ////console.log(programacionBodega);
+    //////console.log(programacionBodega);
 
     programacionBodega.raw.forEach((solicitud: {
      
@@ -789,14 +789,14 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
           solicitud.pedidos_turno_dependencia_label = this.dependencias_all.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.pedidos_turno_dependencia)?this.dependencias_all.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.pedidos_turno_dependencia).name:'';
           solicitud.pedidos_turno_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.pedidos_turno_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.pedidos_turno_localidad).name:'';
-         ////////////console.log(solicitud.pedidos_turno_dependencia);
-         ////////////console.log(solicitud.pedidos_turno_localidad);
+         //////////////console.log(solicitud.pedidos_turno_dependencia);
+         //////////////console.log(solicitud.pedidos_turno_localidad);
           
 
     //return solicitud
     });
 
-    //////////console.log(programacionBodega.raw);
+    ////////////console.log(programacionBodega.raw);
     return programacionBodega.raw;
   }
 
@@ -861,7 +861,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
     let consolidadoItems:any = await this.functionsService.groupArray(this.lineasProgramacionDiariaBodega,'pedidos_turno_itemcode');
     let totalToneladas:number = (await this.functionsService.sumColArray(this.lineasProgramacionDiariaBodega,[{pedidos_turno_cantidad:0}]))[0].pedidos_turno_cantidad;
-    //////////////////////////////////////console.log('consolidadoItems',consolidadoItems);
+    ////////////////////////////////////////console.log('consolidadoItems',consolidadoItems);
     
     await consolidadoItems.map(async (linea:any)=>{
         
@@ -869,8 +869,8 @@ async setTableFletes(turnos:any[]):Promise<void>{
         linea.totalToneladas = totalToneladas;
         linea.prcItemBodega = prcItemBodega;
 
-        ////////////////////////////////////////console.log('itemcode',linea.pedidos_turno_itemcode);
-        ////////////////////////////////////////console.log(this.lineasProgramacionDiariaBodega.filter(item=>item.pedidos_turno_itemcode === linea.pedidos_turno_itemcode));
+        //////////////////////////////////////////console.log('itemcode',linea.pedidos_turno_itemcode);
+        //////////////////////////////////////////console.log(this.lineasProgramacionDiariaBodega.filter(item=>item.pedidos_turno_itemcode === linea.pedidos_turno_itemcode));
     });
 
     let consolidadoProgramacionBodega:any = {
@@ -879,7 +879,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
     };
 
-    //////////////////////////////////////console.log(consolidadoProgramacionBodega);
+    ////////////////////////////////////////console.log(consolidadoProgramacionBodega);
     
     return consolidadoProgramacionBodega;
   }
@@ -904,7 +904,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     this.chartPieData = await this.functionsService.setDataPieDoughnutChart(tabla.data,{label:'itemname',value:'cantidad'});
     
    
-    //////////////////////////////////console.log(this.tablaConsolidadoProgramacionDiariaBodega.data.length);
+    ////////////////////////////////////console.log(this.tablaConsolidadoProgramacionDiariaBodega.data.length);
 
   }
 
@@ -941,10 +941,10 @@ async setTableFletes(turnos:any[]):Promise<void>{
   async getPlacasCompartidas(){
     this.tablaPlacasCompartidasBodegas.data = [];
     let turnosFehaSeleccionadaConfirmados = this.turnosFehaSeleccionada.filter(turno=>turno.turnos_estado === EstadosDealleSolicitud.AUTORIZADO);
-    //////console.log(turnosFehaSeleccionadaConfirmados)
+    ////////console.log(turnosFehaSeleccionadaConfirmados)
     let configPlacasCompartidas = await this.configHeaderTablaPlacasCompartidasBodegas(turnosFehaSeleccionadaConfirmados);
     this.tablaPlacasCompartidasBodegas.header = configPlacasCompartidas.headersTable;
-    ////////////////////////////////console.log(turnosFehaSeleccionadaConfirmados,configPlacasCompartidas);
+    //////////////////////////////////console.log(turnosFehaSeleccionadaConfirmados,configPlacasCompartidas);
 
     
     this.tablaPlacasCompartidasBodegas.data = await this.configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas,turnosFehaSeleccionadaConfirmados);
@@ -952,7 +952,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     let colsSum = await this.configSumTabla(configPlacasCompartidas.headersTable,this.tablaPlacasCompartidasBodegas.data);
 
     this.tablaPlacasCompartidasBodegas.colsSum = colsSum;
-    ////////////////////////////console.log(this.tablaPlacasCompartidasBodegas.colsSum);
+    //////////////////////////////console.log(this.tablaPlacasCompartidasBodegas.colsSum);
     this.loadingPC = false;
   }
 
@@ -983,7 +983,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     //objString = objString.substring(0,objString.length-1);
     objString +='"total":{"label":"Total placa","type":"number","sizeCol":"6rem","align":"center","currency":"TON","side":"rigth","editable":false,"sum":true}}]'
 
-    ////////////////////////////////console.log(objString)
+    //////////////////////////////////console.log(objString)
 
     let headersTable:any[] = JSON.parse(objString);
 
@@ -998,7 +998,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
   async configDataTablaPlacasCompartidasBodegas(configPlacasCompartidas:any, turnos:any[]):Promise<any>{
 
-    ////////console.log(configPlacasCompartidas);
+    //////////console.log(configPlacasCompartidas);
     this.loadingPC = true;
     let placas:any[] = configPlacasCompartidas.placas;
     let bodegas:any[] = configPlacasCompartidas.bodegas;
@@ -1011,15 +1011,15 @@ async setTableFletes(turnos:any[]):Promise<void>{
       let totalPlaca:number =0;
       for(let bodega of bodegas){
 
-        //////////////////////////////////console.log(headersTable[0]['bodega'+idBodega].label);
+        ////////////////////////////////////console.log(headersTable[0]['bodega'+idBodega].label);
         let cantidadBodegaPlaca =0;
         let codeBodega = headersTable[0]['bodega'+idBodega].label;
         
         if(bodega.code === codeBodega && turnos.find(turno=>turno.vehiculos_placa === placa.code && turno.pedidos_turno_bodega === bodega.code)){
           let turnosPlacaBodega = turnos.filter(turno=>turno.vehiculos_placa === placa.code && turno.pedidos_turno_bodega === bodega.code);
-          ////console.log('turnosPlacaBodega',turnosPlacaBodega);
+          //////console.log('turnosPlacaBodega',turnosPlacaBodega);
           let cantidadTotalTurnosPlacaBodega = await this.functionsService.sumColArray(turnosPlacaBodega,[{'pedidos_turno_cantidad':0}]);
-          ////console.log(cantidadTotalTurnosPlacaBodega);
+          //////console.log(cantidadTotalTurnosPlacaBodega);
           cantidadBodegaPlaca = cantidadTotalTurnosPlacaBodega[0].pedidos_turno_cantidad;
         }
        
@@ -1031,12 +1031,12 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
       objString +=`"total":"${totalPlaca}"}`
 
-      ////////////////////////////////console.log(objString);
+      //////////////////////////////////console.log(objString);
       dataTable.push(JSON.parse(objString));
 
     }
     
-    //////////////////////////////console.log(dataTable);
+    ////////////////////////////////console.log(dataTable);
 
 
     return dataTable;
@@ -1046,30 +1046,30 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
   async configSumTabla(headersTable:any[],dataTable:any[]):Promise<any>{
     let colsSum:any[] = [];
-    ////////////////////////////console.log(dataTable);
-    ////////////////////////////////console.log(Object.keys(headersTable[0]));
+    //////////////////////////////console.log(dataTable);
+    //////////////////////////////////console.log(Object.keys(headersTable[0]));
     let objString:string = "";
     let colsSumSwitch:boolean = false;
     for(let key of Object.keys(headersTable[0])){
       objString+=`"${key}":`
       if(headersTable[0][key].sum){
-        ////////////////////////////////console.log(key);
+        //////////////////////////////////console.log(key);
         colsSumSwitch = true;
         let total = await this.functionsService.sumColArray(dataTable,JSON.parse(`[{"${key}":0}]`));
-        ////////////////////////////////console.log(total[0][key]);
+        //////////////////////////////////console.log(total[0][key]);
         objString+=`${parseFloat(total[0][key])},`
       }else{
         objString+=`"",`
       }
     }
     objString = `{${objString.substring(0,objString.length-1)}}`;
-    ////////////////////////////////console.log(objString);
+    //////////////////////////////////console.log(objString);
     if(colsSumSwitch){
       colsSum.push(JSON.parse(objString));
     }
     
 
-    ////////////////////////////////console.log(colsSum);
+    //////////////////////////////////console.log(colsSum);
 
     return colsSum;
 
@@ -1081,36 +1081,36 @@ async setTableFletes(turnos:any[]):Promise<void>{
     this.dependencias = [];
 
     let headerTabla =   this.configHeaderTablaProgramacionDiariaGerencia();
-    ////////////////////console.log(this.lineasProgramacionDiariaGerencia);
+    //////////////////////console.log(this.lineasProgramacionDiariaGerencia);
     let dependencias = await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_dependencia');
-    //////////////console.log(dependencias);
+    ////////////////console.log(dependencias);
 
     for(let dependencia of dependencias ){
 
       let lineasProgramacionDiariaDependencia = this.lineasProgramacionDiariaGerencia.filter(linea=>linea.pedidos_turno_dependencia === dependencia.pedidos_turno_dependencia);
       
-      //////////console.log(lineasProgramacionDiariaDependencia);
+      ////////////console.log(lineasProgramacionDiariaDependencia);
       let dataDependencia =  await this.configDataTablaProgramacionDiariaaGerencia(lineasProgramacionDiariaDependencia);
-      //////////////////////console.log(dataDependencia);
+      ////////////////////////console.log(dataDependencia);
       let colsSumDependencia = await this.configSumTabla(headerTabla,dataDependencia)
-      //////////////////////console.log(colsSumDependencia);
+      ////////////////////////console.log(colsSumDependencia);
       
       let lineasProgramacionDiariaDependenciaTipoProducto = await this.functionsService.groupArray(lineasProgramacionDiariaDependencia,'pedidos_turno_tipoproducto',[{pedidos_turno_cantidad:0}]);
-      //////////////////////console.log(lineasProgramacionDiariaDependenciaTipoProducto);
+      ////////////////////////console.log(lineasProgramacionDiariaDependenciaTipoProducto);
       let consolidadoTipoProductoDependencia = await this.configDataTablaConsolidadoTipoProducto(lineasProgramacionDiariaDependenciaTipoProducto);
-      //////////////////////console.log(consolidadoTipoProductoDependencia);
+      ////////////////////////console.log(consolidadoTipoProductoDependencia);
       let colSumConsolidadoTipoProductoDependencia = await this.configSumTabla(this.tablaConsolidadoTipoProducto.header,consolidadoTipoProductoDependencia)
-      //////////////////////console.log(colSumConsolidadoTipoProductoDependencia);
+      ////////////////////////console.log(colSumConsolidadoTipoProductoDependencia);
 
       let chartDataConsolidadoTipoProducto = await this.functionsService.setDataBasicChart(consolidadoTipoProductoDependencia,{label:'tipo',value:'cantidad'});
 
 
       let lineasProgramacionDiariaDependenciaModTPT = await this.functionsService.groupArray(lineasProgramacionDiariaDependencia,'turnos_condiciontpt',[{pedidos_turno_cantidad:0}]);
-      //////////////////////console.log(lineasProgramacionDiariaDependenciaTipoProducto);
+      ////////////////////////console.log(lineasProgramacionDiariaDependenciaTipoProducto);
       let consolidadoModTPT = await this.configDataTablaConsolidadooModTPT(lineasProgramacionDiariaDependenciaModTPT);
-      //////////////////////console.log(consolidadoTipoProductoDependencia);
+      ////////////////////////console.log(consolidadoTipoProductoDependencia);
       let colSumConsolidadoModTPT = await this.configSumTabla(this.tablaConsolidadoModTPT.header,consolidadoModTPT)
-      //////////////////////console.log(colSumConsolidadoTipoProductoDependencia);
+      ////////////////////////console.log(colSumConsolidadoTipoProductoDependencia);
 
       let chartDataConsolidadoModTPT = await this.functionsService.setDataBasicChart(consolidadoModTPT,{label:'tipo',value:'cantidad'});
       
@@ -1131,7 +1131,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     
     let toneladasZonaPedido = await this.functionsService.groupArray(this.lineasProgramacionDiariaGerencia,'pedidos_turno_localidad',[{pedidos_turno_cantidad:0}]);
 
-    ////////////console.log(toneladasZonaPedido);
+    //////////////console.log(toneladasZonaPedido);
    
     let tablaToneladasZonaPedido:any = {
       header:  this.configHeaderTablaToneladasZona(),
@@ -1142,7 +1142,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     this.tablaToneladasZona = tablaToneladasZonaPedido;
     this.tablaToneladasZona.colsSum = colsSum;
 
-    //////////////////////console.log(this.tablaToneladasZona);
+    ////////////////////////console.log(this.tablaToneladasZona);
 
     //this.chartDataConsolidadoZona = await this.setConsolidadoZonaDataChart(this.tablaToneladasZona.data)
 
@@ -1172,7 +1172,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
   async configDataTablaProgramacionDiariaaGerencia(data:any[]){
 
-    //////////////console.log(data);
+    ////////////////console.log(data);
     
 
     let dataTable:any[] = [];
@@ -1189,12 +1189,12 @@ async setTableFletes(turnos:any[]):Promise<void>{
           
         });
     }
-    ////////////console.log(dataTable);
+    //////////////console.log(dataTable);
     //Agrupar por pedido
     dataTable = await this.functionsService.groupArray(dataTable,'pedido',[{cantidad:0}]);
     //Ordenar por Dependencia - bodega 
     //dataTable = await this.functionsService.sortArrayObject(dataTable,'bodega','ASC')
-    //////////console.log(dataTable.filter(line=>line.dependencia === null));
+    ////////////console.log(dataTable.filter(line=>line.dependencia === null));
     if(dataTable.filter(line=>line.dependencia === null).length==0){
       dataTable.sort((a,b)=> (a.dependencia.localeCompare(b.dependencia) || a.bodega.localeCompare(b.bodega)));
     }
@@ -1246,7 +1246,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
   async configDataTablaConsolidadoTipoProducto(data:any[]){
 
-    //////////////////////console.log(data);
+    ////////////////////////console.log(data);
     
 
     let dataTable:any[] = [];
@@ -1277,7 +1277,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
   async configDataTablaConsolidadooModTPT(data:any[]){
 
-    //////////////////////console.log(data);
+    ////////////////////////console.log(data);
     
 
     let dataTable:any[] = [];

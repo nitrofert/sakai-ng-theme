@@ -27,7 +27,7 @@ export class WebCamComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-   //console.log('cambios webcam',changes);
+   ////console.log('cambios webcam',changes);
   }
 
   iniciarCamara() {
@@ -58,7 +58,7 @@ export class WebCamComponent implements OnInit, OnChanges {
     // Convertir la imagen del canvas a formato base64
     const imagenDataURL = canvas.toDataURL('image/png');
     this.imagenDataURL = imagenDataURL;
-   //console.log(imagenDataURL);  // Aquí puedes hacer algo con la imagen capturada
+   ////console.log(imagenDataURL);  // Aquí puedes hacer algo con la imagen capturada
   }
 
   guadarFoto(){

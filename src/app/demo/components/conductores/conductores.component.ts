@@ -99,7 +99,7 @@ export class ConductoresComponent implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////console.log(permisos);
+              //////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -116,7 +116,7 @@ export class ConductoresComponent implements  OnInit{
   
               
               this.infoUsuario = await this.usuariosService.infoUsuario();
-              //////////console.log(this.infoUsuario);
+              ////////////console.log(this.infoUsuario);
               this.getConductores();
   
             },
@@ -131,7 +131,7 @@ export class ConductoresComponent implements  OnInit{
     this.conductoresService.getConductores2()
     .subscribe({
         next:(conductores)=>{
-          ////console.log(clientes)
+          //////console.log(clientes)
 
           let dataConductores:any[] = [];
               for(let conductor of conductores){
@@ -174,7 +174,7 @@ export class ConductoresComponent implements  OnInit{
   }
 
   editar(event:any){
-    //console.log(event)
+    ////console.log(event)
     const ref = this.dialogService.open(FormConductorComponent, {
       data: {
        id: event
@@ -200,7 +200,7 @@ export class ConductoresComponent implements  OnInit{
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-        //console.log(event);
+        ////console.log(event);
         let idsInactivar = event.map((item: { id: any; })=>{
           return item.id;
         })
@@ -247,7 +247,7 @@ export class ConductoresComponent implements  OnInit{
       header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        //console.log(event);
+        ////console.log(event);
         let idsActivar = event.map((item: { id: any; })=>{
           return item.id;
         })

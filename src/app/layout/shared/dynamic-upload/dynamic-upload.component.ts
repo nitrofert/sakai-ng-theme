@@ -33,12 +33,12 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
               ){}
 
   ngOnInit(): void {
-   ////console.log(this.anchoVentana,this.alturaVentana);
+   //////console.log(this.anchoVentana,this.alturaVentana);
    this.dataUpload = this.config.data;
   }
 
   ngAfterViewInit(): void {
-    //console.log(this.turno);
+    ////console.log(this.turno);
     this.render();
     
   }
@@ -59,13 +59,13 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
  
 
   async clearUploader(uploaderFiles: FileUpload){
-    //console.log(uploaderFiles,this.filesToUpload);
+    ////console.log(uploaderFiles,this.filesToUpload);
     //uploaderFiles.onClear;
     
  }
 
  removeFile($event:any,uploaderFiles: FileUpload){
-     ////console.log('remove',$event,)
+     //////console.log('remove',$event,)
      //this.filesToUpload = [];
      //let currentFiles = uploaderFiles.files.filter((file: any)=>file != $event.file);
      //uploaderFiles.files = currentFiles;
@@ -73,10 +73,10 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
  }
 
  loadFiles(uploaderFiles: any ){
-   ////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
+   //////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
    //let currentFiles = uploaderFiles;
    //for(let currentFile of currentFiles){
-     ////console.log('currentFile',currentFile);
+     //////console.log('currentFile',currentFile);
      //const [file] = currentFile;
      //this.filesToUpload.push({
      //  file:currentFile,
@@ -84,14 +84,14 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
     // })
   // }
 
-   ////console.log('this.filesToUpload',this.filesToUpload);
+   //////console.log('this.filesToUpload',this.filesToUpload);
  }
 
  UploadFiles(event:any,uploaderFiles: FileUpload){
   
- //console.log(event)
+ ////console.log(event)
   for(let file of uploaderFiles.files){
-     //console.log(file);
+     ////console.log(file);
 
       let body = new FormData();
       body.append('file', file, file.name);
@@ -100,12 +100,12 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
       body.append('proceso', this.dataUpload.proceso);
       body.append('nombre', file.name);
 
-     //console.log(body)
+     ////console.log(body)
 
       this.functionsService.uploadFile(body)
           .subscribe({
             next:(result)=>{
-              ////console.log('Upload ok',result);
+              //////console.log('Upload ok',result);
               
               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${file.name}`});
               
@@ -121,7 +121,7 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
  }
 
  progressUpload(event :any){
- //console.log('progress ',event)
+ ////console.log('progress ',event)
  }
 
  guardarFoto(file:any){
@@ -133,14 +133,14 @@ export class DynamicUploadComponent implements OnInit, AfterViewInit {
     body.append('proceso', this.dataUpload.proceso);
     body.append('nombre', `capture_${Date.now()}.png`);
 
-   //console.log('guardarFoto',body)
+   ////console.log('guardarFoto',body)
 
     
 
     this.functionsService.uploadFile(body)
           .subscribe({
             next:(result)=>{
-             //console.log('Upload ok',result);
+             ////console.log('Upload ok',result);
               
               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo capture_${Date.now()}.png`});
               this.loading = false;

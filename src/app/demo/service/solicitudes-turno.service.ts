@@ -55,8 +55,20 @@ export class SolicitudTurnoService {
         return this.http.get<SolicitudInterface[]>(url);
     }
 
+    getSolicitudByID(id:number):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/solicitud/${id}`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<SolicitudInterface>(url);
+    }
+
     getSolicitudesTurnoById(id:number):Observable<SolicitudInterface> {
         const url:string = `${this.api_url}/api/solicitud-turnos/${id}`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<SolicitudInterface>(url);
+    }
+
+     getSolicitudesTurnoByIdQB(id:number):Observable<SolicitudInterface> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/qb/${id}`;
         //return this.http.get<any>(url, requestOptions);
         return this.http.get<SolicitudInterface>(url);
     }
@@ -117,7 +129,7 @@ export class SolicitudTurnoService {
 
     async getListaTurnosLocacion(localidad:string):Promise<void>{
         this.turnosLocacion = await lastValueFrom(this.getTurnosPorLocalidad(localidad));
-       //////////////console.log(this.turnosLocacion);
+       ////////////////console.log(this.turnosLocacion);
         this.turnosLocacion$.next(this.turnosLocacion);
     }
 
@@ -134,6 +146,12 @@ export class SolicitudTurnoService {
 
     getHistorialTurnosByID(id:number):Observable<any> {
         const url:string = `${this.api_url}/api/solicitud-turnos/historial-turno/${id}`;
+        return this.http.get<any>(url);
+    }
+
+
+     getPedidosTurno(id:number):Observable<any> {
+        const url:string = `${this.api_url}/api/solicitud-turnos/pedidos-turno/${id}`;
         return this.http.get<any>(url);
     }
 
@@ -158,7 +176,7 @@ export class SolicitudTurnoService {
     }
 
     updateFletesTruno(id:number,data:any):Observable<any> {
-       //console.log(id,data);
+       ////console.log(id,data);
         const url:string = `${this.api_url}/api/solicitud-turnos/fletes-turno/${id}`;
         return this.http.patch<any>(url,data);
     }
@@ -216,7 +234,7 @@ export class SolicitudTurnoService {
 
         let turno:any = await this.infoTurno(turnoid);
 
-        //console.log(turno);
+        ////console.log(turno);
 
         flete = turno.detalle_solicitud_turnos_pedido.filter((item: { itemcode: string; })=>item.itemcode.startsWith('SF'));
 

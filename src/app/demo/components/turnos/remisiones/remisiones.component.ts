@@ -104,8 +104,8 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
     //this.displayModal = true;
     //this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
-   ////console.log('ngOnInit inspeccion');
-   //////console.log('turno estado inspeccion', this.estado);
+   //////console.log('ngOnInit inspeccion');
+   ////////console.log('turno estado inspeccion', this.estado);
     this.getPermisosModulo();
     
     
@@ -114,19 +114,19 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges){
-    //////////////////console.log('changes',changes['rangoFechas'].currentValue)
+    ////////////////////console.log('changes',changes['rangoFechas'].currentValue)
 
-    ////console.log('ngOnChanges inspeccion')
+    //////console.log('ngOnChanges inspeccion')
    
     //this.estado = changes['estado'].currentValue;
     this.turno = changes['turno'].currentValue;
     //this.pedidos = changes['pedidos'].currentValue;
-    ////console.log('turno estado inspeccion',this.estado);
-   //console.log('turno remision',this.turno);
+    //////console.log('turno estado inspeccion',this.estado);
+   ////console.log('turno remision',this.turno);
     this.remisiones = await this.setDataRemisiones(this.turno);
-    console.log('remisiones',this.remisiones);
-    this.clientes = await this.getClientesPedidos(this.turno);////console.log('turno pedidos',this.pedidos);
-   //console.log(this.clientes);
+    //console.log('remisiones',this.remisiones);
+    this.clientes = await this.getClientesPedidos(this.turno);//////console.log('turno pedidos',this.pedidos);
+   ////console.log(this.clientes);
 
     // this.getRemisionesPorCliente = changes['getRemisionesPorCliente'].currentValue;
     // if(this.getRemisionesPorCliente){
@@ -137,11 +137,11 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    //////console.log(modulo);
+    ////////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////// //////////console.log(permisos);
+              ////////////////////////// ////////////// ////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -151,7 +151,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////// //////////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// ////////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -161,7 +161,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////// //////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// ////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
              
             
 
@@ -176,7 +176,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
 
   async setDataRemisiones(infoTurno:any):Promise<any[]>{
 
-    console.log('setDataRemisiones infoTurno',infoTurno)
+    //console.log('setDataRemisiones infoTurno',infoTurno)
 
     let remisiones:any[] = [];
 
@@ -185,8 +185,8 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
     //Armar array de remisiones
     for(let linea_detalle of infoTurno.detalle_solicitud_turnos_pedido){
 
-      console.log('linea_detalle',linea_detalle);
-      //console.log(JSON.parse(JSON.stringify(remisiones)))
+      //console.log('linea_detalle',linea_detalle);
+      ////console.log(JSON.parse(JSON.stringify(remisiones)))
 
        if(/*!linea_detalle.itemcode.startsWith('SF') && */linea_detalle.estado ==='A'){
           if(remisiones.filter(remision=>remision.base_docnum === linea_detalle.pedidonum && 
@@ -270,7 +270,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
               
             })
 
-            console.log(JSON.parse(JSON.stringify(remisiones)))
+            //console.log(JSON.parse(JSON.stringify(remisiones)))
 
             
           }else{
@@ -338,13 +338,13 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
               
             });
 
-            console.log(JSON.parse(JSON.stringify(remisiones)))
+            //console.log(JSON.parse(JSON.stringify(remisiones)))
           }
       }
         
     }
 
-    console.log('remisiones ---', remisiones);
+    //console.log('remisiones ---', remisiones);
     return remisiones;
 }
 
@@ -426,7 +426,7 @@ export class RemisionesComponent implements  OnInit ,  OnChanges {
       })
     }
 
-    console.log('clientes remisiones',clientes);
+    //console.log('clientes remisiones',clientes);
     this.onGetRemisiones.emit(clientes)
     //this.onGetRemisiones.emit(this.clientes)
   }

@@ -37,7 +37,7 @@ export class CalendarioTurnosComponent implements OnInit {
     
     if (e.target.id === 'canvasFirma') {
       //this.write(e);
-     ////console.log(e);
+     //////console.log(e);
       this.coordenadasMouseMove = e;
     }
   }*/
@@ -147,7 +147,7 @@ export class CalendarioTurnosComponent implements OnInit {
     
     let estadosTurno2:any[]  = this.solicitudTurnoService.estadosTurno;
     this.estadosTurno2 = estadosTurno2.filter(estado=>estado.name !== EstadosDealleSolicitud.ACTIVADO);
-    //// ////////////console.log(this.estadosTurno2);
+    //// //////////////console.log(this.estadosTurno2);
 
     this.hoy = await this.functionsService.formatDate(new Date(), 'DDDD, dd MMMMM YYYY');
     //this.hoy = new Date()
@@ -163,7 +163,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////// ////////////console.log(permisos);
+              ////////////// //////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -173,7 +173,7 @@ export class CalendarioTurnosComponent implements OnInit {
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////// ////////////console.log(this.multiplesClientes);
+              ////////////////////////// //////////////console.log(this.multiplesClientes);
   
              this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
              this.showBtnPdf = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'crearPdf').valor;
@@ -185,9 +185,9 @@ export class CalendarioTurnosComponent implements OnInit {
               this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
               */
          
-              ////////////// ////////////console.log(this.condicion_tpt);
+              ////////////// //////////////console.log(this.condicion_tpt);
               this.infousuario = await this.usuariosService.infoUsuario();
-              //// ////////////console.log(this.infousuario);
+              //// //////////////console.log(this.infousuario);
               this.getLocaciones();
               
   
@@ -203,7 +203,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.almacenesService.getLocaciones()
         .subscribe({
             next:(locaciones)=>{
-               console.log('locaciones',locaciones);
+               //console.log('locaciones',locaciones);
               this.locaciones = locaciones;
               //this.getAlmacenes();
               
@@ -219,7 +219,7 @@ export class CalendarioTurnosComponent implements OnInit {
     this.almacenesService.getAlmacenes()
         .subscribe({
             next:(almacenes)=>{
-               console.log('locaciones',almacenes);
+               //console.log('locaciones',almacenes);
               let almacenesTMP:any[] = [];
              
               for(let index in almacenes){
@@ -231,7 +231,7 @@ export class CalendarioTurnosComponent implements OnInit {
              
               }
               this.almacenes = almacenesTMP;
-               ////////////console.log(this.almacenes);
+               //////////////console.log(this.almacenes);
               this.getLocalidades(this.almacenes);
             },
             error:(err)=>{
@@ -291,11 +291,11 @@ export class CalendarioTurnosComponent implements OnInit {
     }
 
     this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
-     ////////////console.log(this.localidades);
+     //////////////console.log(this.localidades);
     
 
     
-    ////// ////////////console.log('localidades',this.localidades);
+    ////// //////////////console.log('localidades',this.localidades);
   }
 
   
@@ -343,18 +343,18 @@ export class CalendarioTurnosComponent implements OnInit {
     }
 
     this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
-     ////////////console.log(this.localidades);
+     //////////////console.log(this.localidades);
     
 
     
-    ////// ////////////console.log('localidades',this.localidades);
+    ////// //////////////console.log('localidades',this.localidades);
   }
 
 
   cambioFecha(event:any){
-   ////console.log(this.localidadSeleccionada)
+   //////console.log(this.localidadSeleccionada)
     if(event[1]){
-       if(this.localidadSeleccionada.length > 0){
+       if(this.localidadSeleccionada.length > 0 || Object.keys(this.localidadSeleccionada).length >0){
         this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
        }
     }
@@ -362,7 +362,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   seleccionarLocalidad(localidad:any){
-    console.log(localidad);
+    //console.log(localidad);
     this.getTurnosPorLocalidad(localidad.code)
    ////
     
@@ -371,14 +371,14 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   async getTurnosPorLocalidad(localidad:string){
-    console.log('getTurnosPorLocalidad')
+    //console.log('getTurnosPorLocalidad')
     this.displayModal = true;
     this.loadingCargue = true;
     this.completeCargue=false;
     this.completeTimer = false;
 
     //setTimeout(this.setTimer,2500);
-   setTimeout(()=>{this.setTimer()},2500);
+   //setTimeout(()=>{this.setTimer()},2500);
 
     
 
@@ -386,14 +386,17 @@ export class CalendarioTurnosComponent implements OnInit {
         .subscribe({
               next:async (turnosLocalidad)=>{
 
-                console.log('turnosLocalidad',turnosLocalidad);
+                //console.log('turnosLocalidad',turnosLocalidad);
                   
-                  if(this.completeTimer){
+                  // if(this.completeTimer){
+                  //   this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
+                  //   this.displayModal = false;
+                  //   this.loadingCargue = false;
+                  // }
+ 
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                     this.displayModal = false;
                     this.loadingCargue = false;
-                  }
- 
                   
 
                   this.completeCargue = true;
@@ -405,11 +408,11 @@ export class CalendarioTurnosComponent implements OnInit {
 
                   this.tablaTurnosLocalidad = await this.setTablaTurnosLocalidad(await this.functionsService.clonObject(turnosLocalidad));
 
-                  //console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
+                  ////console.log(' this.tablaTurnosLocalidad', this.tablaTurnosLocalidad)
 
                   //this.getCalendar();
                   //this.boxEstados =await this.setBoxEstadosDate(new Date(),this.estadosTurno2, this.turnosLocalidad);
-                  //// ////////////console.log(this.boxEstados);
+                  //// //////////////console.log(this.boxEstados);
               },
               error:(err)=>{
                 this.messageService.add({severity:'error', summary: '!Error¡', detail:  err});
@@ -423,12 +426,12 @@ export class CalendarioTurnosComponent implements OnInit {
         let a:any;
         await this.solicitudTurnoService.getListaTurnosLocacion(localidad);
         this.turnosLocalidad$ = this.solicitudTurnoService.getTurnosLcacion$(localidad);
-       //// ////////////console.log(this.turnosLocalidad$);
+       //// //////////////console.log(this.turnosLocalidad$);
         this.turnosLocalidad$.subscribe(turno=>a = turno);
-       //// ////////////console.log(a);
+       //// //////////////console.log(a);
         this.turnosLocalidad$.subscribe({
               next:async (turnosLocalidad)=>{
-               //// ////////////console.log(turnosLocalidad);
+               //// //////////////console.log(turnosLocalidad);
                 if(this.completeTimer){
                   this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el cargue de los turnos de la localidad.`});
                   this.displayModal = false;
@@ -452,8 +455,8 @@ export class CalendarioTurnosComponent implements OnInit {
 
 
   async setTablaTurnosLocalidad(turnos:any): Promise<any>{
-    console.log('setTablaTurnosLocalidad')
-    //console.log('turnosssssssss',turnos);
+    //console.log('setTablaTurnosLocalidad')
+    ////console.log('turnosssssssss',turnos);
     let turnosLocalidad:any[] = [];
     let turnosLocalidadCliente:any[] = [];
 
@@ -485,19 +488,19 @@ export class CalendarioTurnosComponent implements OnInit {
       let hoy = new Date();
       hoy.setHours(parseInt(horacita.split(":")[0]), parseInt(horacita.split(":")[1]), parseInt(horacita.split(":")[2]));
       turno.horacita2 = hoy;
-      ////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+      //////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
       if (this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado)) {
         turno.bgColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).backgroundColor;
         turno.txtColor = this.estadosTurno2.find((estado: { name: string; }) => estado.name === turno.estado).textColor;
       } else {
-        //////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+        ////////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
         turno.bgColor = 'indigo-50';
         turno.txtColor = 'primary-900';
       }
 
       let clientesTurno = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'CardCode',[{cantidad:0}]);
       let tipo_operaciones_turno:any[] = await this.functionsService.groupArray( await this.functionsService.clonObject(turno.detalle_solicitud_turnos_pedido),'tipo_operacion',[{cantidad:0}]);
-      //console.log('tipo_operaciones_turno',(tipo_operaciones_turno.map((operacion)=>{return operacion.tipo_operacion}).join(",")));
+      ////console.log('tipo_operaciones_turno',(tipo_operaciones_turno.map((operacion)=>{return operacion.tipo_operacion}).join(",")));
       let tipo_operacion = (tipo_operaciones_turno.map((operacion)=>{return operacion.tipo_operacion}).join(","));
       for(let clienteTurno of clientesTurno){
         let lineaTurno = await this.functionsService.clonObject(turno);
@@ -508,28 +511,28 @@ export class CalendarioTurnosComponent implements OnInit {
         lineaTurno.tipo_operacion = tipo_operacion;
         turnosLocalidadCliente.push(lineaTurno);
 
-        ////console.log('lineaTurno',await this.functionsService.clonObject(lineaTurno))
+        //////console.log('lineaTurno',await this.functionsService.clonObject(lineaTurno))
       }
 
       
       
     })
 
-    ////console.log('turnosLocalidadCliente',await this.functionsService.clonObject(turnosLocalidadCliente))
-   ////console.log('turnosLocalidadCliente',(turnosLocalidadCliente))
+    //////console.log('turnosLocalidadCliente',await this.functionsService.clonObject(turnosLocalidadCliente))
+   //////console.log('turnosLocalidadCliente',(turnosLocalidadCliente))
 
 
     turnosLocalidad = await this.functionsService.sortArrayObject(turnosLocalidadCliente,'id','DESC')
 
     this.loading = false
 
-    ////console.log('turnosLocalidad',await this.functionsService.clonObject(turnosLocalidad))
+    //////console.log('turnosLocalidad',await this.functionsService.clonObject(turnosLocalidad))
 
     return turnosLocalidad;
   }
 
   // async setBoxEstadosDate(date:Date, estados:any, turnos:any):Promise<any>{
-  //   console.log('setBoxEstadosDate')
+  //   //console.log('setBoxEstadosDate')
   //   let boxEstados:any[] = [];
 
   //   let dateString = date.toISOString().split('T')[0];
@@ -548,7 +551,7 @@ export class CalendarioTurnosComponent implements OnInit {
   // }
   
   gestionarSolicitud(){
-   console.log('turno seleccionado',this.selectedItem);
+   //console.log('turno seleccionado',this.selectedItem);
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar el turno No. ${this.selectedItem[0].id} ?`,
       header: 'Confirmación',
@@ -572,7 +575,7 @@ export class CalendarioTurnosComponent implements OnInit {
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// ////////////console.log(("Refresh calendar");
+          //////////// //////////////console.log(("Refresh calendar");
           this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           this.selectedItem=[];
         });
@@ -593,7 +596,7 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   getCalendar(){
-    console.log('getCalendar')
+    //console.log('getCalendar')
 
     this.calendarOptions = {
       initialDate: new Date(),
@@ -624,13 +627,13 @@ export class CalendarioTurnosComponent implements OnInit {
   }
   
   getEvents(){
-    console.log('getEvents')
-    //////console.log(this.turnosLocalidad);
+    //console.log('getEvents')
+    ////////console.log(this.turnosLocalidad);
 
     let events:any[] = [];
     for(let turno of this.turnosLocalidad.filter(turnotmp=>turnotmp.estado != 'Cancelado')){
     //for(let turno of this.turnosLocalidad){
-     //////// ////////////console.log(turno);
+     //////// //////////////console.log(turno);
       events.push({
         id:`${turno.id}`,
         title:JSON.stringify({placa:turno.vehiculo.placa,
@@ -648,7 +651,7 @@ export class CalendarioTurnosComponent implements OnInit {
       })
     }
 
-    //////console.log(events);
+    ////////console.log(events);
 
     this.ordenesdecargue = events;
 
@@ -805,19 +808,19 @@ export class CalendarioTurnosComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: any) {
-    console.log('handleEventClick')
+    //console.log('handleEventClick')
    /*if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove();
     }*/
     //alert(clickInfo.event.title);
     
-    // ////////////console.log(clickInfo.event.title);
+    // //////////////console.log(clickInfo.event.title);
 
     
     let objectEvent = JSON.parse(clickInfo.event.title);
     let orden = clickInfo.event.id;
 
-    //////////// ////////////console.log((clickInfo)
+    //////////// //////////////console.log((clickInfo)
 
     
     const ref = this.dialogService.open(FormTurnoComponent, {
@@ -835,20 +838,20 @@ export class CalendarioTurnosComponent implements OnInit {
     ref.onClose.subscribe(() => {
       this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       this.getCalendar();
-      //////////// ////////////console.log(("Refresh calendar");
+      //////////// //////////////console.log(("Refresh calendar");
     });
 
 
   }
 
   handleEvents(events: EventApi[]) {
-    console.log('handleEvents')
+    //console.log('handleEvents')
     this.currentEvents = events;
     this.changeDetector.detectChanges();
   }
 
   handleEventsDragStop(event:any){
-    //////////// ////////////console.log((event);
+    //////////// //////////////console.log((event);
   }
 
   createEventId(){
@@ -869,7 +872,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
     let lineasSolicitud = this.selectedItem[0].detalle_solicitud_turnos_pedido;
 
-   ////console.log('orden seleccionada',this.selectedItem[0])
+   //////console.log('orden seleccionada',this.selectedItem[0])
 
     await this.pdfSolicitud(this.selectedItem[0]);
 
@@ -893,7 +896,7 @@ export class CalendarioTurnosComponent implements OnInit {
 
   documentos(item:any){
 
-   ////console.log(item);
+   //////console.log(item);
     
         const ref = this.dialogService.open(DocumentosTurnoComponent, {
           data: {
@@ -910,7 +913,7 @@ export class CalendarioTurnosComponent implements OnInit {
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// ////////////console.log(("Refresh calendar");
+          //////////// //////////////console.log(("Refresh calendar");
           
           this.selectedItem=[];
         });

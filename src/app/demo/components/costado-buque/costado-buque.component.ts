@@ -35,7 +35,7 @@ export class CostadoBuqueComponent implements OnInit {
     
     if (e.target.id === 'canvasFirma') {
       //this.write(e);
-     //console.log(e);
+     ////console.log(e);
       this.coordenadasMouseMove = e;
     }
   }*/
@@ -168,7 +168,7 @@ export class CostadoBuqueComponent implements OnInit {
     
     let estadosTurno2:any[]  = this.solicitudTurnoService.estadosTurno;
     this.estadosTurno2 = estadosTurno2.filter(estado=>estado.name !== EstadosDealleSolicitud.ACTIVADO);
-    //// //////////console.log(this.estadosTurno2);
+    //// ////////////console.log(this.estadosTurno2);
 
     this.hoy = await this.functionsService.formatDate(new Date(), 'DDDD, dd MMMMM YYYY');
     //this.hoy = new Date()
@@ -184,7 +184,7 @@ export class CostadoBuqueComponent implements OnInit {
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////// //////////console.log(permisos);
+              ////////////// ////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -194,7 +194,7 @@ export class CostadoBuqueComponent implements OnInit {
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////// //////////console.log(this.multiplesClientes);
+              ////////////////////////// ////////////console.log(this.multiplesClientes);
   
              this.showBtnExp = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='exportar').valor;
              this.showBtnPdf = this.permisosModulo.find((permiso: { accion: string; }) => permiso.accion === 'crearPdf').valor;
@@ -206,9 +206,9 @@ export class CostadoBuqueComponent implements OnInit {
               this.showBtnDelete = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='borrar').valor;
               */
          
-              ////////////// //////////console.log(this.condicion_tpt);
+              ////////////// ////////////console.log(this.condicion_tpt);
               this.infousuario = await this.usuariosService.infoUsuario();
-              //// //////////console.log(this.infousuario);
+              //// ////////////console.log(this.infousuario);
               this.getLocaciones();
               this.getSaldosPedidos();
               
@@ -225,7 +225,7 @@ export class CostadoBuqueComponent implements OnInit {
     this.almacenesService.getLocaciones()
         .subscribe({
             next:(locaciones)=>{
-               //////////console.log(locaciones);
+               ////////////console.log(locaciones);
               this.locaciones = locaciones;
               this.getAlmacenes();
             },
@@ -250,7 +250,7 @@ export class CostadoBuqueComponent implements OnInit {
              
               }
               this.almacenes = almacenesTMP;
-               //////////console.log(this.almacenes);
+               ////////////console.log(this.almacenes);
               this.getLocalidades(this.almacenes);
             },
             error:(err)=>{
@@ -308,23 +308,23 @@ export class CostadoBuqueComponent implements OnInit {
     }
 
     this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
-     //////////console.log(this.localidades);
+     ////////////console.log(this.localidades);
     
 
     
-    ////// //////////console.log('localidades',this.localidades);
+    ////// ////////////console.log('localidades',this.localidades);
   }
 
   getSaldosPedidos(){
     this.pedidosService.getSaldosOrdenesCompra()
         .subscribe({
             next:async (saldosPedidos)=>{
-                console.log('saldosPedidos',saldosPedidos);
+                //console.log('saldosPedidos',saldosPedidos);
                 let tasladosBuque:any[] = await this.functionsService.objectToArray(saldosPedidos);
 
                 this.trasladosBuque = tasladosBuque.filter((traslado: { Tipo_Movimiento: string; })=>traslado.Tipo_Movimiento==='TRASLADO');
 
-                console.log('trasladosBuque',this.trasladosBuque);
+                //console.log('trasladosBuque',this.trasladosBuque);
             },
             error:(err)=>{
               console.error(err);
@@ -334,7 +334,7 @@ export class CostadoBuqueComponent implements OnInit {
 
 
   cambioFecha(event:any){
-   //console.log(this.localidadSeleccionada)
+   ////console.log(this.localidadSeleccionada)
     if(event[1]){
        if(this.localidadSeleccionada.length > 0){
         //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
@@ -346,7 +346,7 @@ export class CostadoBuqueComponent implements OnInit {
   async seleccionarLocalidad(localidad:any){
     this.loading = true;
     
-    //console.log('localidad seleccionada',localidad)
+    ////console.log('localidad seleccionada',localidad)
     let trasladosBuqueLocalidad:any = this.trasladosBuque.filter(traslado=>traslado.WhsCode_Code === localidad.code);
     this.showTraslados = true;
    
@@ -355,7 +355,7 @@ export class CostadoBuqueComponent implements OnInit {
      
 
       for(let trasladoBuqueLocalidad of trasladosBuqueLocalidad){
-         //console.log('trasladoBuqueLocalidad',parseFloat(trasladoBuqueLocalidad.Quantity))
+         ////console.log('trasladoBuqueLocalidad',parseFloat(trasladoBuqueLocalidad.Quantity))
          trasladoBuqueLocalidad.Quantity = parseFloat(trasladoBuqueLocalidad.Quantity)
          trasladoBuqueLocalidad.SALDO = parseFloat(trasladoBuqueLocalidad.SALDO)
           //pedidos por localidad-item
@@ -373,16 +373,16 @@ export class CostadoBuqueComponent implements OnInit {
                                                                                                         bodega:trasladoBuqueLocalidad.WhsCode_Code
                                                                                                       }
                                                                                       });
-          //console.log('turnosLocalidadItemTraslado',turnosLocalidadItemTraslado)
+          ////console.log('turnosLocalidadItemTraslado',turnosLocalidadItemTraslado)
           let turnosLocalidadItemTrasladoEntregado = turnosLocalidadItemTraslado.filter(turno=>turno.estado===EstadosDealleSolicitud.ENTREGADO);
-          //console.log('turnosLocalidadItemTrasladoEntregado',turnosLocalidadItemTrasladoEntregado);
+          ////console.log('turnosLocalidadItemTrasladoEntregado',turnosLocalidadItemTrasladoEntregado);
           for(let turno of turnosLocalidadItemTrasladoEntregado){
-            console.log('turno', turno)
-            console.log('peso carga turno', turno.peso_neto-turno.peso_vacio)
+            //console.log('turno', turno)
+            //console.log('peso carga turno', turno.peso_neto-turno.peso_vacio)
 
             turno.detalle_solicitud_turnos_pedido.map((pedido: {docentry_traslado: number; cantidad: number; linea: any; itemname:any })=>{
-              console.log('peso item turno',pedido.itemname, pedido.cantidad)
-              console.log('% peso item en carga turno', ((pedido.cantidad*100)/(turno.peso_neto-turno.peso_vacio)))
+              //console.log('peso item turno',pedido.itemname, pedido.cantidad)
+              //console.log('% peso item en carga turno', ((pedido.cantidad*100)/(turno.peso_neto-turno.peso_vacio)))
 
               if(pedido.linea === trasladoBuqueLocalidad.LineNum && pedido.docentry_traslado ===0){
                 totalPuertoEntregado +=pedido.cantidad;
@@ -399,7 +399,7 @@ export class CostadoBuqueComponent implements OnInit {
           trasladoBuqueLocalidad.totalBasculaEntregado = totalBasculaEntregado;
           trasladoBuqueLocalidad.totalPuertoEntregado = totalPuertoEntregado;
           let turnosLocalidadItemTrasladoEnOperacion = turnosLocalidadItemTraslado.filter(turno=>turno.estado!=EstadosDealleSolicitud.ENTREGADO);
-          //console.log('turnosLocalidadItemTrasladoEnOperacion',turnosLocalidadItemTrasladoEnOperacion)
+          ////console.log('turnosLocalidadItemTrasladoEnOperacion',turnosLocalidadItemTrasladoEnOperacion)
           for(let turno of turnosLocalidadItemTrasladoEnOperacion){
             turno.detalle_solicitud_turnos_pedido.map((pedido: { cantidad: number; linea: any; })=>{
               if(pedido.linea === trasladoBuqueLocalidad.LineNum){
@@ -492,12 +492,12 @@ export class CostadoBuqueComponent implements OnInit {
   }
 
   async detalleOperacion(){
-    console.log(this.selectedItem)
+    //console.log(this.selectedItem)
     let operacionSeleccionada = this.selectedItem[0];
     this.operacionSeleccionada = this.selectedItem[0];
     let itemsOperacionSeleccionada:any[] = this.trasladosBuqueLocalidad.filter(traslado=>traslado.DocNum ===  operacionSeleccionada.DocNum);
 
-    console.log("itemsOperacionSeleccionada",itemsOperacionSeleccionada)
+    //console.log("itemsOperacionSeleccionada",itemsOperacionSeleccionada)
 
     let totalTrasladoSolicitado = 0;
     let totalSladoTrasladoSolicitado =0;
@@ -544,7 +544,7 @@ export class CostadoBuqueComponent implements OnInit {
             let totalTrasladoTransito:number =0;
 
             // let pedidosTurno:any = turno.detalle_solicitud_turnos_pedido.filter((pedido: { linea: any; })=>pedido.linea === itemTraslado.LineNum);
-            console.log("turno",turno)
+            //console.log("turno",turno)
 
             await turno.detalle_solicitud_turnos_pedido.filter((pedido: { linea: any; })=>pedido.linea === itemTraslado.LineNum).map((item: { cantidad: number; })=>{
               if(turno.estado === EstadosDealleSolicitud.ENTREGADO){
@@ -590,7 +590,7 @@ export class CostadoBuqueComponent implements OnInit {
     this.totalTrasladoEnOperacion=totalTrasladoEnOperacion;
     this.totalTrasladoPendienteOperacion=totalTrasladoPendienteOperacion
     
-    console.log("turnos",turnos)
+    //console.log("turnos",turnos)
 
     this.turnosTrasladoSeleccionado = turnos as TreeNode[];
 
@@ -603,7 +603,7 @@ export class CostadoBuqueComponent implements OnInit {
       let operacionSeleccionada = this.selectedItem[0];
     this.operacionSeleccionada = this.selectedItem[0];
     let itemsOperacionSeleccionada:any[] = this.trasladosBuqueLocalidad.filter(traslado=>traslado.DocNum ===  operacionSeleccionada.DocNum);
-    //console.log("itemsOperacionSeleccionada",itemsOperacionSeleccionada);
+    ////console.log("itemsOperacionSeleccionada",itemsOperacionSeleccionada);
     let infoTrasladoSAP:any = {
               fecha:new Date(),
               //turnoid:infoTurno.id,
@@ -643,7 +643,7 @@ export class CostadoBuqueComponent implements OnInit {
     
     let lineas_items:any[] = [];
     for(let item of itemsOperacionSeleccionada){
-      console.log("itemOperacionSeleccionada",item);
+      //console.log("itemOperacionSeleccionada",item);
       let lotes_item:any[] = [];
         let cantidada_a_trasladar =0;
         for(let turnoItem of item.turnosLocalidadItemTraslado){
@@ -651,7 +651,7 @@ export class CostadoBuqueComponent implements OnInit {
               for(let detalleTurno of turnoItem.detalle_solicitud_turnos_pedido){
                 if(detalleTurno.linea === item.LineNum && detalleTurno.docentry_traslado===0){
                     cantidada_a_trasladar+= detalleTurno.cantidad;
-                   // console.log('detalleTurno',detalleTurno);
+                   // //console.log('detalleTurno',detalleTurno);
                     infoTrasladoSAP.lineas_items.push(detalleTurno.id)
                    
                     for(let itemLote of detalleTurno.detalle_lotes_item_turno){
@@ -706,12 +706,12 @@ export class CostadoBuqueComponent implements OnInit {
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
          
-          console.log('infoTrasladoSAP',infoTrasladoSAP);
+          //console.log('infoTrasladoSAP',infoTrasladoSAP);
           this.displayModal = true;
           this.solicitudTurnoService.trasladoAduanaTransito(infoTrasladoSAP)
               .subscribe({
                   next:(result)=>{
-                    console.log('resuslt',result)
+                    //console.log('resuslt',result)
 
                     if(result.status===200){
                       this.messageService.add({severity:'success', summary:'!Ok¡', detail:`Se ha realizado satisfactoriamente el traslado ${result.resultDocumentSAP.DocNum} a la bodega de transtio ${operacionSeleccionada.Nombre_Bod_Destino}`});

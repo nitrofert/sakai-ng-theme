@@ -111,7 +111,7 @@ export class CargueSoporteFacturasComponent  implements  OnInit{
     this.info_usuario = await this.usuarioService.infoUsuario();
     this.rangoFechas = [await this.functionsService.dateAdd(new Date(),-3,'months'),new Date() ];
     //this.getClientesUsuario();
-    ////////////////console.log(await this.functionsService.dateAdd(new Date(),3,'months'));
+    //////////////////console.log(await this.functionsService.dateAdd(new Date(),3,'months'));
 
     this.empresasCredito = [{name:'Nitrofert', image: 'https://nitrofert.com.co/wp-content/uploads/2022/09/NITROFERT.png'},
                             {name:'Nitrocredit', image: 'https://nitrofert.com.co/wp-content/uploads/2023/07/NITROCRE.png'}];
@@ -128,7 +128,7 @@ export class CargueSoporteFacturasComponent  implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: (permisos)=>{
-             // //////////////console.log(permisos);
+             // ////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -154,7 +154,7 @@ export class CargueSoporteFacturasComponent  implements  OnInit{
 
 async getFilter():Promise<void>{
   
-  ////////////console.log(this.rutaActiva);
+  //////////////console.log(this.rutaActiva);
   this.filtros =  this.rutaActiva.snapshot.queryParams;
 
   
@@ -221,7 +221,7 @@ async getClientesUsuario(){
 }
 
 async seleccionarCliente(clienteSeleccionado:any){
-  ////////////////console.log(clienteSeleccionado);
+  //////////////////console.log(clienteSeleccionado);
   //let saldosClienteSeleccionado = await this.sb1XEService.saldosCupoSocioNegocio(this.clienteSeleccionado.CardCode);
   //this.setDashboardCliente(saldosClienteSeleccionado);
   this.loading = true;
@@ -237,27 +237,27 @@ async getFacturasCliente(){
     fechafin:this.rangoFechas[1].toISOString().split('T')[0],
   });
 
-  console.log('facturasCliente',facturasCliente);
+  //console.log('facturasCliente',facturasCliente);
   facturasCliente =(await this.functionsService.objectToArray(facturasCliente));
   this.facturasCliente = facturasCliente;
-  ////////////console.log('facturasCliente',facturasCliente);
+  //////////////console.log('facturasCliente',facturasCliente);
 
   let facturasClienteAgrupada = await  this.functionsService.groupArray(facturasCliente,'DocNum');
 
-  console.log('facturasClienteAgrupada',facturasClienteAgrupada);
+  //console.log('facturasClienteAgrupada',facturasClienteAgrupada);
 
-  ////////////////console.log(Math.ceil(await this.functionsService.dateDif(new Date(), new Date('2023-06-15'), 'days')));
+  //////////////////console.log(Math.ceil(await this.functionsService.dateDif(new Date(), new Date('2023-06-15'), 'days')));
 
   for(let linea of facturasClienteAgrupada){
-    ////////////console.log(linea.DocDueDate);
-    ////////////console.log(new Date(linea.DocDueDate));
+    //////////////console.log(linea.DocDueDate);
+    //////////////console.log(new Date(linea.DocDueDate));
     linea.diasvencimiento = Math.ceil(await this.functionsService.dateDif(new Date(), new Date(linea.DocDueDate), 'days'));
     linea.creditCompany = linea.LIQUITECH=='NO'?'Nitrofert':'Nitrocredit';
     linea.valorPago =0
-    ////////////console.log(linea.diasvencimiento);
+    //////////////console.log(linea.diasvencimiento);
   }
 
- ////////////console.log('facturasClienteAgrupada',facturasClienteAgrupada);
+ //////////////console.log('facturasClienteAgrupada',facturasClienteAgrupada);
 
 
 
@@ -270,7 +270,7 @@ async getFacturasCliente(){
 
 async setFiltros(table: Table):Promise<void>{
 
-  ////////////console.log(table.filters);
+  //////////////console.log(table.filters);
   if(this.filtros.tipo){
       switch(this.filtros.tipo){
         case 'cartera_vencida':
@@ -307,7 +307,7 @@ async resetFiltros(table: Table):Promise<void>{
 
   table.clear()
 
-  ////////////console.log(table.filters);
+  //////////////console.log(table.filters);
   if(this.filtros.tipo){
       switch(this.filtros.tipo){
         case 'cartera_vencida':
@@ -352,7 +352,7 @@ filtrarCliente(event:any){
 
 filter2(event: any, arrayFiltrar:any[]) {
 
-  //////////////////////console.log(arrayFiltrar);
+  ////////////////////////console.log(arrayFiltrar);
   const filtered: any[] = [];
   const query = event.query;
   for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -374,14 +374,14 @@ cambioFecha(){
   if (this.rangoFechas[1]) { // If second date is selected
     this.loading = true;
     this.dateFilter.hideOverlay();
-    //////////////console.log(this.rangoFechas);
+    ////////////////console.log(this.rangoFechas);
     this.getFacturasCliente();
     this.dateFilter.hideOverlay()
   };
 }
 
 verFactura(event:any){
-  //////////////console.log(event);
+  ////////////////console.log(event);
 }
 
 newAccion(){
@@ -393,9 +393,9 @@ editAccion(){
 }
 
 viewAccion(){
-  ////////////////console.log(this.selectedItem);
+  //////////////////console.log(this.selectedItem);
   let detalleFactura = this.facturasCliente.filter(factura => factura.DocNum === this.selectedItem[0].DocNum);
-  //////////////console.log(this.rangoFechas);
+  ////////////////console.log(this.rangoFechas);
 
   const ref = this.dialogService.open(FormFacturaComponent, {
     data: {
@@ -411,7 +411,7 @@ viewAccion(){
 
   ref.onClose.subscribe(() => {
     //this.getVehiculos();
-    ////////////////////console.log("Refresh calendar");
+    //////////////////////console.log("Refresh calendar");
   });
 }
 
@@ -474,10 +474,10 @@ clear(table: Table) {
 async restore(table: Table){
 
   
-  //////////console.log(window.location);
+  ////////////console.log(window.location);
 
   let path = `${window.location.protocol}//${window.location.host}/#/portal/reportes/facturas`;
-  //////////console.log(path);
+  ////////////console.log(path);
 
   window.location.href= (path);
   window.location.reload();
@@ -490,8 +490,8 @@ async restore(table: Table){
 PresionaEnter(event:any, linea?:any){
     
     if (event.key === "Enter") {
-      console.log(linea);
-      ////////////////////console.log('ENTER PRESS');
+      //console.log(linea);
+      //////////////////////console.log('ENTER PRESS');
       if(event.target.value.length ===0 || !event.target.value){
         event.target.value =0;
       }
@@ -511,7 +511,7 @@ PresionaEnter(event:any, linea?:any){
   }
 
    cambio(event:any,linea?:any){
-    console.log(linea);console.log('event.target.value',event.target);
+    //console.log(linea);//console.log('event.target.value',event.target);
     if(event.target.value.length ===0 || !event.target.value){
       event.target.value =0;
     }
@@ -528,14 +528,14 @@ PresionaEnter(event:any, linea?:any){
   }
 
   seleccionLinea(){
-    // console.log('Lineas seleccionadas',this.selectedItem)
+    // //console.log('Lineas seleccionadas',this.selectedItem)
     // this.cntFacturas = this.selectedItem.length
 
     
 
     let lineasSeleccionadas = this.facturasClienteAgrupada.filter(linea=>linea.valorPago!=0 && linea.valorPago!=null);
 
-    console.log('Lineas seleccionadas',lineasSeleccionadas)
+    //console.log('Lineas seleccionadas',lineasSeleccionadas)
 
      this.cntFacturas = lineasSeleccionadas.length
 
@@ -551,12 +551,12 @@ PresionaEnter(event:any, linea?:any){
   }
 
    async clearUploader(uploaderFiles: FileUpload){
-       ////console.log(uploaderFiles,this.filesToUpload);
+       //////console.log(uploaderFiles,this.filesToUpload);
        uploaderFiles.onClear;
     }
   
     removeFile($event:any,uploaderFiles: FileUpload){
-        //////console.log('remove',$event,)
+        ////////console.log('remove',$event,)
         this.filesToUpload = [];
         let currentFiles = uploaderFiles.files.filter((file: any)=>file != $event.file);
         //uploaderFiles.files = currentFiles;
@@ -564,10 +564,10 @@ PresionaEnter(event:any, linea?:any){
     }
   
     loadFiles(uploaderFiles: any ){
-      //////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
+      ////////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
       let currentFiles = uploaderFiles;
       for(let currentFile of currentFiles){
-        //////console.log('currentFile',currentFile);
+        ////////console.log('currentFile',currentFile);
         //const [file] = currentFile;
         this.filesToUpload.push({
           file:currentFile,
@@ -575,7 +575,7 @@ PresionaEnter(event:any, linea?:any){
         })
       }
   
-      //////console.log('this.filesToUpload',this.filesToUpload);
+      ////////console.log('this.filesToUpload',this.filesToUpload);
     }
 
     uploadSoportes(event:any){
@@ -596,7 +596,7 @@ PresionaEnter(event:any, linea?:any){
           this.functionsService.uploadSoportesPago(data)
               .subscribe({
                   next:(result)=>{
-                    //////console.log('Upload ok',result);
+                    ////////console.log('Upload ok',result);
                     //this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
                     // if(this.filesToUpload.length > 0){
                     //     for(let anexo of this.filesToUpload){
@@ -610,7 +610,7 @@ PresionaEnter(event:any, linea?:any){
                     //       this.functionsService.uploadFile(body)
                     //           .subscribe({
                     //             next:(result)=>{
-                    //               //////console.log('Upload ok',result);
+                    //               ////////console.log('Upload ok',result);
                     //               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
                     //             },
                     //             error:(err)=>{

@@ -338,22 +338,22 @@ infoHistorialTurno:any;
     // const devices = getDeviceList();
 
     // for (const device of devices) {
-    //    ////console.log(device); // Legacy device
+    //    ////////console.log(device); // Legacy device
     // }
 
-    //console.log('ayer',this.ayer);
-    //console.log('hoy',this.hoy);
+    //////console.log('ayer',this.ayer);
+    //////console.log('hoy',this.hoy);
 
 
     this.displayModal = true;
     this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
     this.turnoId = this.config.data.id;
-    console.log(this.config.data);
+    ////console.log(this.config.data);
     this.getPermisosModulo();
     this.getCiudades();
 
-    ////////////////////////////// ////////////// //////////////console.log(this.config.data.id);
+    ////////////////////////////// ////////////// //////////////////console.log(this.config.data.id);
     this.configTablePedidosAlmacenCliente();
     this.configNewTablePedidosAlmacenCliente();
     this.configTableCambioPedidosBodega();
@@ -370,11 +370,11 @@ infoHistorialTurno:any;
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    //////////console.log(modulo);
+    //////////////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////// //////////////console.log(permisos);
+              ////////////////////////// ////////////// //////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -384,7 +384,7 @@ infoHistorialTurno:any;
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////// //////////////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// //////////////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -394,29 +394,29 @@ infoHistorialTurno:any;
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////// //////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// //////////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
 
-              await this.getVehiculos();
-              ////console.log('cargue vehiculos',new Date().toTimeString());
-              await this.getConductores();
-              ////console.log('cargue conductores',new Date().toTimeString());
-              await this.getTransportadoras();
-              ////console.log('cargue tranportadoras',new Date().toTimeString());
+              // await this.getVehiculos();
+              // ////////console.log('cargue vehiculos',new Date().toTimeString());
+              // await this.getConductores();
+              // ////////console.log('cargue conductores',new Date().toTimeString());
+              // await this.getTransportadoras();
+              //////console.log('cargue tranportadoras',new Date().toTimeString());
               
              this.updateModulo = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
-             //////////// //////////////console.log(this.updateModulo);
+             //////////// //////////////////console.log(this.updateModulo);
              this.updatePedidosTurno = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar pedidos turno').valor;
-             ////// ////////////// //////////////console.log('updatePedidosTurno',this.updatePedidosTurno); 
+             ////// ////////////// //////////////////console.log('updatePedidosTurno',this.updatePedidosTurno); 
              this.updatePesoBruto = await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.BASCULA);
              this.updateRemision = await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.REMISION);
-             ////////////////// ////////////// //////////////console.log(this.updateModulo ,this.updatePesoBruto); 
-             ////////////////// ////////////// //////////////console.log(!(this.updateModulo && this.updatePesoBruto)?true:false); 
+             ////////////////// ////////////// //////////////////console.log(this.updateModulo ,this.updatePesoBruto); 
+             ////////////////// ////////////// //////////////////console.log(!(this.updateModulo && this.updatePesoBruto)?true:false); 
              /*if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='TRANSP').valor){
               this.condicion_tpt="TRANSP";
             }*/
 
-             this.getTurno(this.turnoId);
-             //this.getInfoTurno(this.config.data.infoTurno);
+             //this.getTurno(this.turnoId);
+             this.getInfoTurno(this.config.data.infoTurno);
             },
             error:(err)=>{
                 console.error(err);
@@ -429,7 +429,7 @@ infoHistorialTurno:any;
     this.ciudadesService.getCiudades()
         .subscribe({
             next:(ciudades)=>{
-             ////// ////////////// //////////////console.log(ciudades);
+             ////// ////////////// //////////////////console.log(ciudades);
               ciudades.map((ciudad:any)=>{
                 ciudad.label = `${ciudad.code} - ${ciudad.nombre}`;
               });
@@ -447,14 +447,14 @@ infoHistorialTurno:any;
     /*this.vehiculosService.getVehiculos()
         .subscribe({
           next: (vehiculos)=>{
-              ////////////////////////////// ////////////// //////////////console.log(vehiculos);
+              ////////////////////////////// ////////////// //////////////////console.log(vehiculos);
               for(let vehiculo of vehiculos){
                 vehiculo.code = vehiculo.placa;
                 vehiculo.name = vehiculo.placa;
                 vehiculo.label = vehiculo.placa;
                 vehiculo.clase = vehiculo.tipo_vehiculo;
               }
-              ////////////////////////////// ////////////// //////////////console.log(conductores);
+              ////////////////////////////// ////////////// //////////////////console.log(conductores);
               this.vehiculos = vehiculos;
           },
           error: (err)=>{
@@ -471,7 +471,7 @@ infoHistorialTurno:any;
       vehiculo.label = vehiculo.placa;
       vehiculo.clase = vehiculo.tipo_vehiculo;
     }
-    //////////////// ////////////// //////////////console.log('vehiculos',vehiculos);
+    //////////////// ////////////// //////////////////console.log('vehiculos',vehiculos);
     this.vehiculos = vehiculos;
 
   }
@@ -486,7 +486,7 @@ infoHistorialTurno:any;
               transportadora.name = transportadora.nombre;
               transportadora.label = transportadora.nit+' - '+transportadora.nombre;
             }
-            ////////////////////////////// ////////////// //////////////console.log(conductores);
+            ////////////////////////////// ////////////// //////////////////console.log(conductores);
             this.transportadoras = transportadoras;
         },
         error: (err)=>{
@@ -501,7 +501,7 @@ infoHistorialTurno:any;
       transportadora.name = transportadora.nombre;
       transportadora.label = transportadora.nit+' - '+transportadora.nombre;
     }
-    //////////////// ////////////// //////////////console.log(transportadoras);
+    //////////////// ////////////// //////////////////console.log(transportadoras);
     this.transportadoras = transportadoras;
   }
   
@@ -515,7 +515,7 @@ infoHistorialTurno:any;
                   conductor.name = conductor.nombre;
                   conductor.label = conductor.cedula+' - '+conductor.nombre;
                 }
-                ////////////////////////////// ////////////// //////////////console.log(conductores);
+                ////////////////////////////// ////////////// //////////////////console.log(conductores);
                 this.conductores = conductores;
             },
             error: (err)=>{
@@ -529,7 +529,7 @@ infoHistorialTurno:any;
         conductor.name = conductor.nombre;
         conductor.label = conductor.cedula+' - '+conductor.nombre;
       }
-      //////////////// ////////////// //////////////console.log(conductores);
+      //////////////// ////////////// //////////////////console.log(conductores);
       this.conductores = conductores;
   }
 
@@ -537,7 +537,7 @@ infoHistorialTurno:any;
     this.almacenesService.getLocaciones()
         .subscribe({
             next:(locaciones)=>{
-                //////////// //////////////console.log('locaciones',locaciones);
+                //////////// //////////////////console.log('locaciones',locaciones);
                 this.locaciones = locaciones;
             },
             error:(err)=>{
@@ -556,7 +556,7 @@ infoHistorialTurno:any;
                     novedad.label = novedad.novedad;
                   });
 
-                  //// //////////////console.log(novedades);
+                  //// //////////////////console.log(novedades);
                   this.novedades = novedades;
               },
               error:(err)=>{
@@ -569,207 +569,227 @@ infoHistorialTurno:any;
 async getTurno(id: number){
     
     //let orden = await this.ordenesCargueService.getOrdenesByID(id);
+    //console.log('infoturno desde calendario',this.config.data.infoTurno)
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-               console.log('turno',(turno));
+               //console.log('turno',(turno));
                  
-                 ////console.log('Cargue informacion del turno',new Date().toTimeString());
-                  this.turno = turno;
-                  this.tipoTurno = this.turno.tipo;
+                 ////////console.log('Cargue informacion del turno',new Date().toTimeString());
+                //   this.turno = turno;
+                //   this.tipoTurno = this.turno.tipo;
                   
                   
-                  this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
-                  this.localidad = turno.locacion;
-                  this.nombreLocalidad = turno.locacion;
-                  this.fechacargue = new Date(turno.fechacita);
-                  let hora = 60 * 60000;
+                //   this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
+                //   this.localidad = turno.locacion;
+                //   this.nombreLocalidad = turno.locacion;
+                //   this.fechacargue = new Date(turno.fechacita);
+                //   let hora = 60 * 60000;
 
-                  let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
-                  this.fechacargue = fechacargue;
+                //   let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
+                //   this.fechacargue = fechacargue;
                   
                   
-                  let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
-                  //this.horacargue = new Date(turno.horacita);
-                  this.horacargue = horacargue;
-                  this.condicion_tpt = turno.condiciontpt;
-                  //this.horacargue = new Date();
-                  this.placa = turno.vehiculo.placa;
-                  this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
-                  this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
-                  //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
-                  ////////////////// ////////////// //////////////console.log(this.vehiculoSeleccionado);
-                  this.pesomax = this.vehiculoSeleccionado.pesomax;
-                  this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
+                //   let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+                //   //this.horacargue = new Date(turno.horacita);
+                //   this.horacargue = horacargue;
+                //   this.condicion_tpt = turno.condiciontpt;
+                //   //this.horacargue = new Date();
+                //   this.placa = turno.vehiculo.placa;
+                //   this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
+                //   //this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
+                //   //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
 
-                 this.adicional = turno.adicional;
+                //   this.turno.vehiculo.code = this.turno.vehiculo.placa;
+                //   this.turno.vehiculo.name = this.turno.vehiculo.placa;
+                //   this.turno.vehiculo.label = this.turno.vehiculo.placa;
+                //   this.turno.vehiculo.clase = this.turno.vehiculo.tipo_vehiculo;
 
-                  this.observaciones = turno.observacion;
-                  this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
-                  ////console.log('this.observacionesCargue',this.observacionesCargue);
-                  this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
-                      cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
-                      return cliente;
-                  });
+                //   this.vehiculoSeleccionado = this.turno.vehiculo
+                //   ////////////////// ////////////// //////////////////console.log(this.vehiculoSeleccionado);
+                //   this.pesomax = this.vehiculoSeleccionado.pesomax;
+                //   this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
 
-                  ////console.log(this.clientesTurno);
+                //  this.adicional = turno.adicional;
 
-                  this.clienteSeleccionado = this.clientesTurno[0];
+                //   this.observaciones = turno.observacion;
+                //   this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
+                //   ////////console.log('this.observacionesCargue',this.observacionesCargue);
+                //   this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
+                //       cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
+                //       return cliente;
+                //   });
+
+                //   ////////console.log(this.clientesTurno);
+
+                //   this.clienteSeleccionado = this.clientesTurno[0];
                   
                  
                   
-                  this.capacidadvh = this.vehiculoSeleccionado.capacidad;
+                //   this.capacidadvh = this.vehiculoSeleccionado.capacidad;
                   
-                  this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
-                  ////////////////////// ////////////// //////////////console.log('transportadoras',this.transportadoras);
-                  //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
-                  this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
-                  this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
-                  this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
-                  //his.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
-                  ////////////////////////// ////////////// //////////////console.log(this.estadoSeleccionado);
-                  this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
-                  
-                  this.pedidosTurno.map((pedido)=>{
-                    pedido.lineaUpdate = {update:false, create:false};
-                    pedido.cantidadOld =pedido.cantidad;
-                    if(pedido.detalle_lotes_item_turno.length>0){
-                      pedido.detalle_lotes_item_turno.map((lote: { lineaUpdate: { update: boolean; create: boolean; }; })=>{
-                        lote.lineaUpdate = {update:false, create:false};
-                      })
-                    }
-                  });
+                //   this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
+                //   ////////////////////// ////////////// //////////////////console.log('transportadoras',this.transportadoras);
+                //   //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
+                //   //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
 
-                 ////console.log('pedidosTurno',this.pedidosTurno);
-                  this.telefono = turno.conductor.numerotelefono;
-                  this.celular = turno.conductor.numerocelular;
-                  this.email = turno.conductor.email;
-                  
-                  let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  //console.log(this.peso_neto-this.peso_bruto);
-                  ////console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
-                  this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
+                //   this.turno.transportadora.code = this.turno.transportadora.nit;
+                //   this.turno.transportadora.name = this.turno.transportadora.nombre;
+                //   this.turno.transportadora.label = this.turno.transportadora.nit+' - '+this.turno.transportadora.nombre;
+                //   this.transportadoraSeleccionada = this.turno.transportadora
 
-                  //console.log('cantidad',this.cantidad);
-                  //console.log('turno.peso_neto',turno.peso_neto);
+                //   this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
+                //   //this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
+                //   //this.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
+
+                //   this.turno.conductor.code = this.turno.conductor.cedula;
+                //   this.turno.conductor.name = this.turno.conductor.nombre;
+                //   this.turno.conductor.label = this.turno.conductor.cedula+' - '+this.turno.conductor.nombre;
+
+                //   this.conductorSeleccionado = this.turno.conductor
+                //   ////////////////////////// ////////////// //////////////////console.log(this.estadoSeleccionado);
+                //   this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
+                  
+                //   this.pedidosTurno.map((pedido)=>{
+                //     pedido.lineaUpdate = {update:false, create:false};
+                //     pedido.cantidadOld =pedido.cantidad;
+                //     if(pedido.detalle_lotes_item_turno.length>0){
+                //       pedido.detalle_lotes_item_turno.map((lote: { lineaUpdate: { update: boolean; create: boolean; }; })=>{
+                //         lote.lineaUpdate = {update:false, create:false};
+                //       })
+                //     }
+                //   });
+
+                //  ////////console.log('pedidosTurno',this.pedidosTurno);
+                //   this.telefono = turno.conductor.numerotelefono;
+                //   this.celular = turno.conductor.numerocelular;
+                //   this.email = turno.conductor.email;
+                  
+                //   let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  //////console.log(this.peso_neto-this.peso_bruto);
+                //   ////////console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
+                //   this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
+
+                //   //////console.log('cantidad',this.cantidad);
+                //   //////console.log('turno.peso_neto',turno.peso_neto);
                  
-                  this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
-                  //this.peso_neto = this.peso_bruto+this.cantidad;
-                  this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
-                  this.totalCarga = totalesTabla[0].cantidad;
-                  this.displayModal = false;
-                  this.loadingCargue = false;
-                  this.estado = turno.estado;
-                  this.remision = turno.remision;
-                  this.sitioentrega = turno.lugarentrega;
-                  this.municipioentrega = turno.municipioentrega;
-                  this.editCantidad = await this.validarEditarCampoCantidad();
+                //   this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
+                //   //this.peso_neto = this.peso_bruto+this.cantidad;
+                //   this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
+                //   this.totalCarga = totalesTabla[0].cantidad;
+                //   this.displayModal = false;
+                //   this.loadingCargue = false;
+                //   this.estado = turno.estado;
+                //   this.remision = turno.remision;
+                //   this.sitioentrega = turno.lugarentrega;
+                //   this.municipioentrega = turno.municipioentrega;
+                //   this.editCantidad = await this.validarEditarCampoCantidad();
 
 
 
-                  if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
-                    ////////////// ////////////// //////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
-                    ////////////////// ////////////// //////////////console.log(this.horainicio, this.horafin);
-                    this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
-                    this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
+                //   if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
+                //     ////////////// ////////////// //////////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
+                //     ////////////////// ////////////// //////////////////console.log(this.horainicio, this.horafin);
+                //     this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
+                //     this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
 
-                    this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
-                    this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
-                    this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
+                //     this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
+                //     this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
+                //     this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
                 
-                    ////////////// ////////////// //////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
-                    await this.seleccionarFechaCita();
-                  }else{
-                    //Establecer horarios locacion
-                    this.diasNoAtencion = [];
-                    this.horariosLocacion = [];
-                    this.horariosSeleccionados =[];
-                  }
+                //     ////////////// ////////////// //////////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
+                //     await this.seleccionarFechaCita();
+                //   }else{
+                //     //Establecer horarios locacion
+                //     this.diasNoAtencion = [];
+                //     this.horariosLocacion = [];
+                //     this.horariosSeleccionados =[];
+                //   }
 
-                  // let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(turno.id);
-                  // this.infoHistorialTurno = await lastValueFrom(historialTurno$);
+                //   // let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(turno.id);
+                //   // this.infoHistorialTurno = await lastValueFrom(historialTurno$);
 
-                  await this.getHistorialTurno(turno.id)
-                  let historial!:any;
+                //   await this.getHistorialTurno(turno.id)
+                //   let historial!:any;
 
-                  // if(turno.estado===EstadosDealleSolicitud.PAUSADO){
-                  //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
-                  //     this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
-                  // }else{
-                  //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
-                  //     if(historial.length>0){
-                  //       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
-                  //     }
-                  // }
+                //   // if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+                //   //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+                //   //     this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+                //   // }else{
+                //   //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+                //   //     if(historial.length>0){
+                //   //       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+                //   //     }
+                //   // }
 
-                   if(turno.estado===EstadosDealleSolicitud.PAUSADO){
-                      historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
-                      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
-                  }else{
-                      historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
-                      if(historial.length>0){
-                        this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
-                      }
-                  }
+                //    if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+                //       historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+                //       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+                //   }else{
+                //       historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+                //       if(historial.length>0){
+                //         this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+                //       }
+                //   }
                   
 
-                  ////console.log('Display informacion del turno',new Date().toTimeString());
+                //   ////////console.log('Display informacion del turno',new Date().toTimeString());
                 
 
-                  ////////////////// ////////////// //////////////console.log(this.estado);
-                  /*
-                  let pedidosTurno:any[] = turno.detalle_solicitud_turnos_pedido;
-                  let clientesTurno:any[] = [];
-                  pedidosTurno.forEach(async pedido=>{
-                    if(clientesTurno.filter(cliente=>cliente.CardCode === pedido.CardCode).length==0){
-                      let EmailAddress = "";
-                      let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(pedido.CardCode);
-                      ////////////////// ////////////// //////////////console.log('usuarioCliente',usuarioCliente);
-                      if(usuarioCliente!=false){
-                        EmailAddress = usuarioCliente.email;
-                        //////////////// ////////////// //////////////console.log('usuarioCliente.email',usuarioCliente.email);
-                      }
+                //   ////////////////// ////////////// //////////////////console.log(this.estado);
+                //   /*
+                //   let pedidosTurno:any[] = turno.detalle_solicitud_turnos_pedido;
+                //   let clientesTurno:any[] = [];
+                //   pedidosTurno.forEach(async pedido=>{
+                //     if(clientesTurno.filter(cliente=>cliente.CardCode === pedido.CardCode).length==0){
+                //       let EmailAddress = "";
+                //       let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(pedido.CardCode);
+                //       ////////////////// ////////////// //////////////////console.log('usuarioCliente',usuarioCliente);
+                //       if(usuarioCliente!=false){
+                //         EmailAddress = usuarioCliente.email;
+                //         //////////////// ////////////// //////////////////console.log('usuarioCliente.email',usuarioCliente.email);
+                //       }
                       
-                      clientesTurno.push({
-                          CardCode:pedido.CardCode,
-                          CardName:pedido.CardName,
-                          EmailAddress
-                        });
-                    }
-                  });
+                //       clientesTurno.push({
+                //           CardCode:pedido.CardCode,
+                //           CardName:pedido.CardName,
+                //           EmailAddress
+                //         });
+                //     }
+                //   });
 
-                  //////////////// ////////////// //////////////console.log('clientesTurno',clientesTurno);
+                //   //////////////// ////////////// //////////////////console.log('clientesTurno',clientesTurno);
                   
-                  let turno2:any = {
-                    conductor:this.conductorSeleccionado,
-                    estado:this.estado,
-                    fechacita:new Date(this.fechacargue).toLocaleDateString(),
-                    horacita: new Date(this.horacargue).toLocaleTimeString(),
-                    id:this.turnoId,
-                    locacion:this.localidad,
-                    lugarentrega:'',
-                    municipioentrega:'',
-                    observacion:'',
-                    peso_vacio:this.peso_bruto,
-                    transportadora:this.transportadoraSeleccionada,
-                    vehiculo:this.vehiculoSeleccionado,
-                    detalle_solicitud_turnos_pedido:this.pedidosTurno
-                  }
+                //   let turno2:any = {
+                //     conductor:this.conductorSeleccionado,
+                //     estado:this.estado,
+                //     fechacita:new Date(this.fechacargue).toLocaleDateString(),
+                //     horacita: new Date(this.horacargue).toLocaleTimeString(),
+                //     id:this.turnoId,
+                //     locacion:this.localidad,
+                //     lugarentrega:'',
+                //     municipioentrega:'',
+                //     observacion:'',
+                //     peso_vacio:this.peso_bruto,
+                //     transportadora:this.transportadoraSeleccionada,
+                //     vehiculo:this.vehiculoSeleccionado,
+                //     detalle_solicitud_turnos_pedido:this.pedidosTurno
+                //   }
 
-                  //////////////// ////////////// //////////////console.log('turno2',turno2);*/
+                //   //////////////// ////////////// //////////////////console.log('turno2',turno2);*/
                   
-                  this.configTablePedidosAlmacenCliente();
-                  this.configSplitButton(this.estado,this.permisosModulo);
+                //   this.configTablePedidosAlmacenCliente();
+                //   this.configSplitButton(this.estado,this.permisosModulo);
 
-                  // if(this.turno.tipo==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==="ENTREGA").length>0){
-                  //   this.tipoOperacion='ENTREGA';
-                  // }
+                //   // if(this.turno.tipo==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==="ENTREGA").length>0){
+                //   //   this.tipoOperacion='ENTREGA';
+                //   // }
 
-                  // if(this.turno.tipo==='ENTREGA' && this.turno.turno_base!=0){
-                  //   this.turnoBase=this.turno.turno_base;
-                  // }
+                //   // if(this.turno.tipo==='ENTREGA' && this.turno.turno_base!=0){
+                //   //   this.turnoBase=this.turno.turno_base;
+                //   // }
 
-                  this.tipoOperacion=this.turno.tipo;
-                  this.turnoBase=this.turno.turno_base;
+                //   this.tipoOperacion=this.turno.tipo;
+                //   this.turnoBase=this.turno.turno_base;
                    
               },
               error:(err)=>{
@@ -782,144 +802,248 @@ async getTurno(id: number){
 
   }
 
-  // async getInfoTurno(turno:any){
+  async getInfoTurno(turno:any){
     
-  //    ////console.log('Cargue informacion del turno',new Date().toTimeString());
-  //                 this.turno = turno;
-  //                 this.tipoTurno = this.turno.tipo;
-                  
-                  
-  //                 this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
-  //                 this.localidad = turno.locacion;
-  //                 this.nombreLocalidad = turno.locacion;
-  //                 this.fechacargue = new Date(turno.fechacita);
-  //                 let hora = 60 * 60000;
+      //console.log('Cargue informacion del turno',turno);
+      this.turno = turno;
+      this.tipoTurno = this.turno.tipo;
+      
+      
+      this.cliente = turno.detalle_solicitud_turnos_pedido[0].CardCode+' - '+turno.detalle_solicitud_turnos_pedido[0].CardName;
+      this.localidad = turno.locacion;
+      this.nombreLocalidad = turno.locacion;
+      this.fechacargue = new Date(turno.fechacita);
+      let hora = 60 * 60000;
 
-  //                 let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
-  //                 this.fechacargue = fechacargue;
-                  
-                  
-  //                 let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
-  //                 //this.horacargue = new Date(turno.horacita);
-  //                 this.horacargue = horacargue;
-  //                 this.condicion_tpt = turno.condiciontpt;
-  //                 //this.horacargue = new Date();
-  //                 this.placa = turno.vehiculo.placa;
-  //                 this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
-  //                 this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
-  //                 //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
-  //                 ////////////////// ////////////// //////////////console.log(this.vehiculoSeleccionado);
-  //                 this.pesomax = this.vehiculoSeleccionado.pesomax;
-  //                 this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
+      let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
+      this.fechacargue = fechacargue;
+      
+      
+      let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+      //this.horacargue = new Date(turno.horacita);
+      this.horacargue = horacargue;
+      this.condicion_tpt = turno.condiciontpt;
+      //this.horacargue = new Date();
+      this.placa = turno.vehiculo.placa;
+      this.tipo = turno.vehiculo.tipo_vehiculo.tipo;
+      //this.vehiculoSeleccionado =  this.vehiculos.find(vehiculo=>vehiculo.code == this.placa);
+      //this.vehiculoSeleccionado = await this.asignarVehiculo(this.placa);
 
-  //                this.adicional = turno.adicional;
+      this.turno.vehiculo.code = this.turno.vehiculo.placa;
+      this.turno.vehiculo.name = this.turno.vehiculo.placa;
+      this.turno.vehiculo.label = this.turno.vehiculo.placa;
+      this.turno.vehiculo.clase = this.turno.vehiculo.tipo_vehiculo;
 
-  //                 this.observaciones = turno.observacion;
-  //                 this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
-  //                 ////console.log('this.observacionesCargue',this.observacionesCargue);
-  //                 this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
-  //                     cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
-  //                     return cliente;
-  //                 });
+      this.vehiculoSeleccionado = this.turno.vehiculo
+      ////////////////// ////////////// //////////////////console.log(this.vehiculoSeleccionado);
+      this.pesomax = this.vehiculoSeleccionado.pesomax;
+      this.peso_bruto = turno.peso_vacio==0?this.vehiculoSeleccionado.pesovacio:turno.peso_vacio;
 
-  //                 ////console.log(this.clientesTurno);
+      this.adicional = turno.adicional;
 
-  //                 this.clienteSeleccionado = this.clientesTurno[0];
-                  
-                 
-                  
-  //                 this.capacidadvh = this.vehiculoSeleccionado.capacidad;
-                  
-  //                 this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
-  //                 ////////////////////// ////////////// //////////////console.log('transportadoras',this.transportadoras);
-  //                 //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
-  //                 this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
-  //                 this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
-  //                 this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
-  //                 //his.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
-  //                 ////////////////////////// ////////////// //////////////console.log(this.estadoSeleccionado);
-  //                 this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
+      
 
-  //                 console.log('this.pedidosTurno',this.pedidosTurno);
-                  
-  //                 this.pedidosTurno.map((pedido)=>{
-  //                   pedido.lineaUpdate = {update:false, create:false};
-  //                   pedido.cantidadOld =pedido.cantidad;
-  //                   if(pedido.detalle_lotes_item_turno.length>0){
-  //                     pedido.detalle_lotes_item_turno.map((lote: { lineaUpdate: { update: boolean; create: boolean; }; })=>{
-  //                       lote.lineaUpdate = {update:false, create:false};
-  //                     })
-  //                   }
-  //                 });
+      this.observaciones = turno.observacion;
+      this.observacionesCargue = await this.setObservacionesCargue(this.observaciones);
+      ////////console.log('this.observacionesCargue',this.observacionesCargue);
+      // this.clientesTurno = turno.solicitud.clientes.map((cliente:any)=>{
+      //     cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
+      //     return cliente;
+      // });
 
-  //                ////console.log('pedidosTurno',this.pedidosTurno);
-  //                 this.telefono = turno.conductor.numerotelefono;
-  //                 this.celular = turno.conductor.numerocelular;
-  //                 this.email = turno.conductor.email;
-                  
-  //                 let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  //console.log(this.peso_neto-this.peso_bruto);
-  //                 ////console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
-  //                 this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
+      let solicitud = await this.functionsService.resolveObservable(this.solicitudTurnoService.getSolicitudByID(turno.solicitud.id)) 
+      //console.log(solicitud)
 
-  //                 //console.log('cantidad',this.cantidad);
-  //                 //console.log('turno.peso_neto',turno.peso_neto);
-                 
-  //                 this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
-  //                 //this.peso_neto = this.peso_bruto+this.cantidad;
-  //                 this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
-  //                 this.totalCarga = totalesTabla[0].cantidad;
-                  
-  //                 this.estado = turno.estado;
-  //                 this.remision = turno.remision;
-  //                 this.sitioentrega = turno.lugarentrega;
-  //                 this.municipioentrega = turno.municipioentrega;
-  //                 this.editCantidad = await this.validarEditarCampoCantidad();
+      this.clientesTurno = solicitud.clientes.map((cliente:any)=>{
+          cliente.label = `${cliente.FederalTaxID} - ${cliente.CardName}`;
+          return cliente;
+      });
+
+      ////////console.log(this.clientesTurno);
+
+      this.clienteSeleccionado = this.clientesTurno[0];
+      
+      
+      
+      this.capacidadvh = this.vehiculoSeleccionado.capacidad;
+      
+      this.transportadora = turno.transportadora.nit+' - '+turno.transportadora.nombre;
+      ////////////////////// ////////////// //////////////////console.log('transportadoras',this.transportadoras);
+      //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.label === this.transportadora);
+      //this.transportadoraSeleccionada = this.transportadoras.find(tpt =>tpt.code === turno.transportadora.nit);
+
+      this.turno.transportadora.code = this.turno.transportadora.nit;
+      this.turno.transportadora.name = this.turno.transportadora.nombre;
+      this.turno.transportadora.label = this.turno.transportadora.nit+' - '+this.turno.transportadora.nombre;
+      this.transportadoraSeleccionada = this.turno.transportadora
+
+      this.conductor = turno.conductor.cedula+' - '+turno.conductor.nombre;
+      //this.conductorSeleccionado = this.conductores.find(conductor=>conductor.label == this.conductor);
+      //this.estadoSeleccionado = this.estados.find(estado => estado.code == turno.estado);
+
+      this.turno.conductor.code = this.turno.conductor.cedula;
+      this.turno.conductor.name = this.turno.conductor.nombre;
+      this.turno.conductor.label = this.turno.conductor.cedula+' - '+this.turno.conductor.nombre;
+
+      this.conductorSeleccionado = this.turno.conductor
+
+      let conductor = await this.functionsService.resolveObservable(this.conductoresService.getConductorById(this.turno.conductor.id)) 
+      //console.log('conductor',conductor)
+      this.turno.conductor.historial_arl = conductor.historial_arl
 
 
+      let pedidosTurno = await this.functionsService.resolveObservable(this.solicitudTurnoService.getPedidosTurno(turno.id)) 
 
-  //                 if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
-  //                   ////////////// ////////////// //////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
-  //                   ////////////////// ////////////// //////////////console.log(this.horainicio, this.horafin);
-  //                   this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
-  //                   this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
+      //console.log('pedidosTurno',pedidosTurno)
 
-  //                   this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
-  //                   this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
-  //                   this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
-                
-  //                   ////////////// ////////////// //////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
-  //                   await this.seleccionarFechaCita();
-  //                 }else{
-  //                   //Establecer horarios locacion
-  //                   this.diasNoAtencion = [];
-  //                   this.horariosLocacion = [];
-  //                   this.horariosSeleccionados =[];
-  //                 }
+      this.turno.detalle_solicitud_turnos_pedido = pedidosTurno;
+      ////////////////////////// ////////////// //////////////////console.log(this.estadoSeleccionado);
+      this.pedidosTurno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
 
-  //                 let historial!:any;
+      //this.pedidosTurno = await this.calcularDisponibilidadPedido(pedidosTurno);
+      
+      this.pedidosTurno.map((pedido)=>{
+        pedido.lineaUpdate = {update:false, create:false};
+        pedido.cantidadOld =pedido.cantidad;
+        if(pedido.detalle_lotes_item_turno.length>0){
+          pedido.detalle_lotes_item_turno.map((lote: { lineaUpdate: { update: boolean; create: boolean; }; })=>{
+            lote.lineaUpdate = {update:false, create:false};
+          })
+        }
+      });
 
-  //                 if(turno.estado===EstadosDealleSolicitud.PAUSADO){
-  //                     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
-  //                     this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
-  //                 }else{
-  //                     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
-  //                     if(historial.length>0){
-  //                       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
-  //                     }
-  //                 }
-                  
+      ////////console.log('pedidosTurno',this.pedidosTurno);
+      this.telefono = turno.conductor.numerotelefono;
+      this.celular = turno.conductor.numerocelular;
+      this.email = turno.conductor.email;
+      
+      let totalesTabla = await this.functionsService.sumColArray(this.pedidosTurno.filter(pedido=>!pedido.itemcode.startsWith('SF') && pedido.estado=='A'),[{cantidad:0, comprometida:0, cantidadbodega:0, disponible:0 }]);                  //////console.log(this.peso_neto-this.peso_bruto);
+      ////////console.log('turno.peso_neto-turno.peso_bruto',turno.peso_neto,turno.peso_vacio,parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio));
+      this.cantidad = turno.peso_neto===0?totalesTabla[0].cantidad:Number((parseFloat(turno.peso_neto)-parseFloat(turno.peso_vacio)).toFixed(2));
 
-                 
-  //                 this.configTablePedidosAlmacenCliente();
-  //                 this.configSplitButton(this.estado,this.permisosModulo);
+      //////console.log('cantidad',this.cantidad);
+      //////console.log('turno.peso_neto',turno.peso_neto);
+      
+      this.capacidadDisponibleVehiculo = this.capacidadvh-this.cantidad;
+      //this.peso_neto = this.peso_bruto+this.cantidad;
+      this.peso_neto = turno.peso_neto===0?this.peso_bruto+this.cantidad:turno.peso_neto;
+      this.totalCarga = totalesTabla[0].cantidad;
+      
+      this.estado = turno.estado;
+      this.remision = turno.remision;
+      this.sitioentrega = turno.lugarentrega;
+      this.municipioentrega = turno.municipioentrega;
+      this.editCantidad = await this.validarEditarCampoCantidad();
 
 
-  //                 this.tipoOperacion=this.turno.tipo;
-  //                 this.turnoBase=this.turno.turno_base;
 
-  //                 this.displayModal = false;
-  //                 this.loadingCargue = false;
-  // }
+      if(this.locaciones.filter(locacion=>locacion.code === this.localidad).length>0){
+        ////////////// ////////////// //////////////////console.log(this.locaciones.filter(locacion=>locacion.code === this.localidad));
+        ////////////////// ////////////// //////////////////console.log(this.horainicio, this.horafin);
+        this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion);
+        this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].horarios_locacion;
+
+        this.nombreLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].locacion;
+        this.direccionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].direccion;
+        this.ubicacionLocalidad = this.locaciones.filter(locacion=>locacion.code === this.localidad)[0].ubicacion;
+    
+        ////////////// ////////////// //////////////////console.log('horariosLocacion', this.nombreLocalidad,this.direccionLocalidad,this.ubicacionLocalidad,this.horariosLocacion);
+        await this.seleccionarFechaCita();
+      }else{
+        //Establecer horarios locacion
+        this.diasNoAtencion = [];
+        this.horariosLocacion = [];
+        this.horariosSeleccionados =[];
+      }
+
+      // let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(turno.id);
+      // this.infoHistorialTurno = await lastValueFrom(historialTurno$);
+
+      await this.getHistorialTurno(turno.id)
+      let historial!:any;
+
+      // if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+      //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+      //     this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+      // }else{
+      //     historial = turno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+      //     if(historial.length>0){
+      //       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+      //     }
+      // }
+
+        if(turno.estado===EstadosDealleSolicitud.PAUSADO){
+          historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { estado: EstadosDealleSolicitud; }) =>linea.estado === EstadosDealleSolicitud.PAUSADO);
+          this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:`El turno se encuentra pausado debido a la siguente novedad: ${JSON.stringify(historial[historial.length-1].novedades.map((novedad: { novedad: any; })=>{return novedad.novedad}).join())}`});
+      }else{
+          historial = this.infoHistorialTurno.detalle_solicitud_turnos_historial.filter((linea: { comentario: any; estado: EstadosDealleSolicitud; }) =>linea.estado != EstadosDealleSolicitud.PAUSADO && linea.comentario!=null);
+          if(historial.length>0){
+            this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail:` ${this.functionsService.bufferToString(historial[historial.length-1].comentario)}`});
+          }
+      }
+      
+
+      ////////console.log('Display informacion del turno',new Date().toTimeString());
+    
+
+      ////////////////// ////////////// //////////////////console.log(this.estado);
+      /*
+      let pedidosTurno:any[] = turno.detalle_solicitud_turnos_pedido;
+      let clientesTurno:any[] = [];
+      pedidosTurno.forEach(async pedido=>{
+        if(clientesTurno.filter(cliente=>cliente.CardCode === pedido.CardCode).length==0){
+          let EmailAddress = "";
+          let usuarioCliente = await this.usuariosService.infoUsuarioByCardCode(pedido.CardCode);
+          ////////////////// ////////////// //////////////////console.log('usuarioCliente',usuarioCliente);
+          if(usuarioCliente!=false){
+            EmailAddress = usuarioCliente.email;
+            //////////////// ////////////// //////////////////console.log('usuarioCliente.email',usuarioCliente.email);
+          }
+          
+          clientesTurno.push({
+              CardCode:pedido.CardCode,
+              CardName:pedido.CardName,
+              EmailAddress
+            });
+        }
+      });
+
+      //////////////// ////////////// //////////////////console.log('clientesTurno',clientesTurno);
+      
+      let turno2:any = {
+        conductor:this.conductorSeleccionado,
+        estado:this.estado,
+        fechacita:new Date(this.fechacargue).toLocaleDateString(),
+        horacita: new Date(this.horacargue).toLocaleTimeString(),
+        id:this.turnoId,
+        locacion:this.localidad,
+        lugarentrega:'',
+        municipioentrega:'',
+        observacion:'',
+        peso_vacio:this.peso_bruto,
+        transportadora:this.transportadoraSeleccionada,
+        vehiculo:this.vehiculoSeleccionado,
+        detalle_solicitud_turnos_pedido:this.pedidosTurno
+      }
+
+      //////////////// ////////////// //////////////////console.log('turno2',turno2);*/
+      
+      this.configTablePedidosAlmacenCliente();
+      this.configSplitButton(this.estado,this.permisosModulo);
+
+      // if(this.turno.tipo==='ENTREGA' && this.turno.detalle_solicitud_turnos_pedido.filter((pedido: { tipo_operacion: string; })=>pedido.tipo_operacion==="ENTREGA").length>0){
+      //   this.tipoOperacion='ENTREGA';
+      // }
+
+      // if(this.turno.tipo==='ENTREGA' && this.turno.turno_base!=0){
+      //   this.turnoBase=this.turno.turno_base;
+      // }
+
+      this.tipoOperacion=this.turno.tipo;
+      this.turnoBase=this.turno.turno_base;
+      this.displayModal = false;
+      this.loadingCargue = false;
+  }
 
   async getHistorialTurno(id:any):Promise<void>{
 
@@ -930,7 +1054,7 @@ async getTurno(id: number){
 
   async validarEditarCampoCantidad():Promise<boolean> {
     let editable = false;
-   ////// ////////////// //////////////console.log(this.estado,this.updatePedidosTurno);
+   ////// ////////////// //////////////////console.log(this.estado,this.updatePedidosTurno);
 
     if((this.estado === this.estadosTurno.SOLICITADO || this.estado === this.estadosTurno.AUTORIZADO || this.estado === this.estadosTurno.ARRIBO ) && this.updatePedidosTurno){
           editable = true;
@@ -952,15 +1076,15 @@ async getTurno(id: number){
   async calcularDisponibilidadPedido(pedidosTurno:any):Promise<any[]>{
     
     for(let pedido of pedidosTurno){
-      //////////////////////////// ////////////// //////////////console.log(pedido);
+      //////////////////////////// ////////////// //////////////////console.log(pedido);
       let cantidadComprometida = 0;
       cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id);
       cantidadComprometida += this.tipoTurno==='RETIRO'?await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id,pedido.linenum):0;
-      //////////////////////// ////////////// //////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
+      //////////////////////// ////////////// //////////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
-      //////////////////////// ////////////// //////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
-     ////console.log('this.tipoTurno',this.tipoTurno);
+      //////////////////////// ////////////// //////////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
+     ////////console.log('this.tipoTurno',this.tipoTurno);
       pedido.disponible = this.tipoTurno==='RETIRO'?((pedido.cantidadbodega-cantidadComprometida)<0?0:(pedido.cantidadbodega-cantidadComprometida)):((pedido.cantidad_pedido-cantidadComprometida)<0?0:pedido.cantidad_pedido-cantidadComprometida);
       
       
@@ -994,22 +1118,22 @@ async getTurno(id: number){
     
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega2(itemcode, bodega);
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
-    ////console.log(inventariosItemBodega);
-    ////////////////////////////// ////////////// //////////////console.log(inventarioItemBodega);
-    const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
     
+    ////////////////////////////// ////////////// //////////////////console.log(inventarioItemBodega);
+    const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
+    ////console.log('arrayInventariosItemBodega',arrayInventariosItemBodega);
 
     const inventarioItemBodega:any[] = arrayInventariosItemBodega.filter((inventario: { ItemCode: string; 
                                                                                   WhsCode: string; 
                                                                                 }) => inventario.ItemCode == itemcode && 
                                                                                       inventario.WhsCode == bodega);
-    //////////////////////////// ////////////// //////////////console.log(inventarioItemBodega);                                                                                  
+    //////////////////////////// ////////////// //////////////////console.log(inventarioItemBodega);                                                                                  
 
     let cantidadInventarioItenBodega:number = 0;
     
      inventarioItemBodega.forEach(function(a){cantidadInventarioItenBodega += parseFloat(a.OnHand);});
 
-    //////////////////////////// ////////////// //////////////console.log(cantidadInventarioItenBodega);    
+    //////////////////////////// ////////////// //////////////////console.log(cantidadInventarioItenBodega);    
   
     return cantidadInventarioItenBodega;
   }
@@ -1020,20 +1144,20 @@ async getTurno(id: number){
       for(let horario of horarios){
         let diasNot:any[] = [];
         let diasAtencionLocacion:any[] = horario.dias_atencion.split(',');
-        ////////////////// ////////////// //////////////console.log(diasAtencionLocacion);
+        ////////////////// ////////////// //////////////////console.log(diasAtencionLocacion);
         for(let dia of diasNoAtencion){
-          ////////////////// ////////////// //////////////console.log(diasAtencionLocacion.includes(dia.fullname));
+          ////////////////// ////////////// //////////////////console.log(diasAtencionLocacion.includes(dia.fullname));
   
           if(!diasAtencionLocacion.includes(dia.fullname)){
               diasNot.push(dia);
           }
-          ////////////////// ////////////// //////////////console.log(dia.fullname,JSON.stringify(diasNot));
+          ////////////////// ////////////// //////////////////console.log(dia.fullname,JSON.stringify(diasNot));
         }
         
         diasNoAtencion = diasNot;
       }
   
-     // //////////////// ////////////// //////////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
+     // //////////////// ////////////// //////////////////console.log(diasNoAtencion.map((dia)=>{ return dia.id}));
   
     return diasNoAtencion.map((dia)=>{ return dia.id});
   }
@@ -1047,9 +1171,9 @@ async getTurno(id: number){
     this.horariosSeleccionados = horariosSeleccionados;
   
     /*for(let horario of this.horariosLocacion){
-      //////////////// ////////////// //////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+      //////////////// ////////////// //////////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
     }*/
-    //////////////// ////////////// //////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+    //////////////// ////////////// //////////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
     await this.cambioHoraCita();
   }
 
@@ -1065,7 +1189,7 @@ async getTurno(id: number){
       //colsSum: await this.configSumTabla(headersTable,dataTable)
     }
 
-    ////console.log('tablaPedidosTurno',this.tablaPedidosTurno.data)
+    ////////console.log('tablaPedidosTurno',this.tablaPedidosTurno.data)
 
     this.loadingPedidosTurno = false;
   }
@@ -1073,7 +1197,7 @@ async getTurno(id: number){
 
 
   configHeadersPedidos(){
-   ////console.log('config header pedidos turno', this.pedidosTurno)
+   ////////console.log('config header pedidos turno', this.pedidosTurno)
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
@@ -1146,13 +1270,13 @@ async getTurno(id: number){
   
   configDataTablePedidos(arregloPedido:any){
 
-      ////// ////////////// //////////////console.log('arregloPedido',arregloPedido);
+      ////// ////////////// //////////////////console.log('arregloPedido',arregloPedido);
       let totalCarga:number=0;
       let dataTable:any[] = [];
       let index:number = 0;
       for (let pedido of arregloPedido){
 
-        ////////console.log('linea pedido',pedido)
+        ////////////console.log('linea pedido',pedido)
         
         if(pedido.estado === 'A'){
           let lineaPedido:any = {
@@ -1223,30 +1347,30 @@ async getTurno(id: number){
 
   async configSumTabla(headersTable:any[],dataTable:any[]):Promise<any>{
     let colsSum:any[] = [];
-    ////////////////////////////// //////////////console.log(dataTable);
-    ////////////////////////////////// //////////////console.log(Object.keys(headersTable[0]));
+    ////////////////////////////// //////////////////console.log(dataTable);
+    ////////////////////////////////// //////////////////console.log(Object.keys(headersTable[0]));
     let objString:string = "";
     let colsSumSwitch:boolean = false;
     for(let key of Object.keys(headersTable[0])){
       objString+=`"${key}":`
       if(headersTable[0][key].sum){
-        ////////////////////////////////// //////////////console.log(key);
+        ////////////////////////////////// //////////////////console.log(key);
         colsSumSwitch = true;
         let total = await this.functionsService.sumColArray(dataTable,JSON.parse(`[{"${key}":0}]`));
-        ////////////////////////////////// //////////////console.log(total[0][key]);
+        ////////////////////////////////// //////////////////console.log(total[0][key]);
         objString+=`${parseFloat(total[0][key])},`
       }else{
         objString+=`"",`
       }
     }
     objString = `{${objString.substring(0,objString.length-1)}}`;
-    ////////////////////////////////// //////////////console.log(objString);
+    ////////////////////////////////// //////////////////console.log(objString);
     if(colsSumSwitch){
       colsSum.push(JSON.parse(objString));
     }
     
 
-    ////////////////////////////////// //////////////console.log(colsSum);
+    ////////////////////////////////// //////////////////console.log(colsSum);
 
     return colsSum;
 
@@ -1268,7 +1392,7 @@ async getTurno(id: number){
   }
 
   async configSplitButton(estadoActual:string, permisosModulo:any){
-    //////////////////////// ////////////// //////////////console.log(estadoActual,permisosModulo);
+    //////////////////////// ////////////// //////////////////console.log(estadoActual,permisosModulo);
 
     this.arrayBtnTurnos = [];
 
@@ -1304,8 +1428,8 @@ async getTurno(id: number){
           this.arrayBtnTurnos.push(this.btnActivar);
         }
 
-        ////////////////console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length);
-        ////////////////console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length);
+        ////////////////////console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length);
+        ////////////////////console.log(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length);
 
         // if(this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.AUTORIZADO).length >0 &&
         //    this.turno.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; }) => historial.estado == EstadosDealleSolicitud.ARRIBO ).length == 0){
@@ -1440,11 +1564,11 @@ async getTurno(id: number){
 
   
   async cambioHoraCita():Promise<void>{
-    //////////////// ////////////// //////////////console.log(this.horacargue.toLocaleTimeString());
+    //////////////// ////////////// //////////////////console.log(this.horacargue.toLocaleTimeString());
     if(await this.validarHoraCargue()){
-      //////////////// ////////////// //////////////console.log('hora valida en horario ');
+      //////////////// ////////////// //////////////////console.log('hora valida en horario ');
     }else{
-      //////////////// ////////////// //////////////console.log('hora invalida en horario');
+      //////////////// ////////////// //////////////////console.log('hora invalida en horario');
     }
   }
 
@@ -1453,21 +1577,21 @@ async validarHoraCargue():Promise<boolean>{
   let horarioValido:boolean = true;
 
   for(let horario of this.horariosSeleccionados){
-    //////////////// ////////////// //////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    //////////////// ////////////// //////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+    //////////////// ////////////// //////////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+    //////////////// ////////////// //////////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
     
-    //////////////// ////////////// //////////////console.log(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]));
+    //////////////// ////////////// //////////////////console.log(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]));
 
-    //////////////// ////////////// //////////////console.log(new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))));
+    //////////////// ////////////// //////////////////console.log(new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2]))));
 
     let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
     let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
     let horacargue = new Date(new Date().setHours(parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargue.toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
 
     if(horainicio<= horacargue && horafin >= horacargue){
-      //////////////// ////////////// //////////////console.log('hora valida en horario id '+horario.id);
+      //////////////// ////////////// //////////////////console.log('hora valida en horario id '+horario.id);
     }else{
-      //////////////// ////////////// //////////////console.log('hora invalida en horario id '+horario.id);
+      //////////////// ////////////// //////////////////console.log('hora invalida en horario id '+horario.id);
       horarioValido = false;
     }
   }
@@ -1491,7 +1615,7 @@ async validarHoraCargue():Promise<boolean>{
     this.vehiculosFiltrados.unshift({
       id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
     });
-    ////////////////////////////// ////////////// //////////////console.log(this.vehiculosFiltrados);
+    ////////////////////////////// ////////////// //////////////////console.log(this.vehiculosFiltrados);
   }
   
   filtrarConductor(event:any){
@@ -1531,13 +1655,13 @@ async validarHoraCargue():Promise<boolean>{
   
   async seleccionarVehiculo(vehiculoSeleccionado:any){
 
-    // //////////////console.log(vehiculoSeleccionado);
+    // //////////////////console.log(vehiculoSeleccionado);
   
     if(vehiculoSeleccionado.id == 0){
         //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
         this.nuevoVehiculo();
     }else{
-        //////////////////// ////////////// //////////////console.log(vehiculoSeleccionado)
+        //////////////////// ////////////// //////////////////console.log(vehiculoSeleccionado)
         if(vehiculoSeleccionado.tipo_vehiculo.capacidad < this.cantidad ){
           //error cantidad a cargar mayor a la capacidad del vehiculo
           this.messageService.add({severity:'error', summary: '!Error¡', detail:`La cantidad a cargar es mayor a la capacidad del vehículo`});
@@ -1562,18 +1686,18 @@ async validarHoraCargue():Promise<boolean>{
 
   /*async asignarVehiculo(code:string):Promise<any>{
     let vehiculoSeleccionado:any =this.vehiculos.find(vehiculo=>vehiculo.code == code);
-    ////////////////// ////////////// //////////////console.log(this.vehiculos,vehiculoSeleccionado,code);
+    ////////////////// ////////////// //////////////////console.log(this.vehiculos,vehiculoSeleccionado,code);
 
     return vehiculoSeleccionado;
   }*/
 
   seleccionarConductor(conductorSeleccionado:any){
-    //////////////// ////////////// //////////////console.log(conductorSeleccionado)
+    //////////////// ////////////// //////////////////console.log(conductorSeleccionado)
     if(conductorSeleccionado.id == 0){
       //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
       this.nuevoConductor();
     }else{
-      //////////////////////// ////////////// //////////////console.log(conductorSeleccionado);
+      //////////////////////// ////////////// //////////////////console.log(conductorSeleccionado);
 
       this.telefono = conductorSeleccionado.numerotelefono;
       this.celular = conductorSeleccionado.numerocelular;
@@ -1596,7 +1720,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getTransportadoras();
-      ////////////////////////////// ////////////// //////////////console.log("Refresh calendar");
+      ////////////////////////////// ////////////// //////////////////console.log("Refresh calendar");
     });
   }
   
@@ -1614,7 +1738,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getVehiculos();
-      ////////////////////////////// ////////////// //////////////console.log("Refresh calendar");
+      ////////////////////////////// ////////////// //////////////////console.log("Refresh calendar");
     });
   }
   
@@ -1632,7 +1756,7 @@ async validarHoraCargue():Promise<boolean>{
   
     ref.onClose.subscribe(async () => {
       await this.getConductores();
-      ////////////////////////////// ////////////// //////////////console.log("Refresh calendar");
+      ////////////////////////////// ////////////// //////////////////console.log("Refresh calendar");
     });
   }
 
@@ -1666,7 +1790,7 @@ async validarHoraCargue():Promise<boolean>{
   async objectToArray(object:any): Promise<any>{
       let array:any[] = [];
 
-      //Object.keys(object).map((key) => { //////////////////////////// ////////////// //////////////console.log(object[key])});
+      //Object.keys(object).map((key) => { //////////////////////////// ////////////// //////////////////console.log(object[key])});
       //array = Object.keys(object).map((key) => [Number(key), object[key]]);
 
       array = Object.keys(object).map((key) => object[key]);
@@ -1690,7 +1814,7 @@ async validarHoraCargue():Promise<boolean>{
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////////////////////////////// ////////////// //////////////console.log(arrayFiltrar);
+    //////////////////////////////// ////////////// //////////////////console.log(arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -1715,7 +1839,7 @@ async validarHoraCargue():Promise<boolean>{
 
     this.grabarCambios =true;
 
-    ////////////////////// ////////////// //////////////console.log(this.transportadoraSeleccionada, this.vehiculoSeleccionado, this.conductorSeleccionado);
+    ////////////////////// ////////////// //////////////////console.log(this.transportadoraSeleccionada, this.vehiculoSeleccionado, this.conductorSeleccionado);
 
 
     if(await this.validarFormulario()){
@@ -1742,7 +1866,7 @@ async validarHoraCargue():Promise<boolean>{
             peso_vacio:this.peso_bruto
           }
 
-          //////////////////////////// ////////////// //////////////console.log(data);
+          //////////////////////////// ////////////// //////////////////console.log(data);
           this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
           .subscribe({
                 next:(reuslt)=>{
@@ -1807,7 +1931,7 @@ async validarHoraCargue():Promise<boolean>{
     ref.onClose.subscribe(() => {
       //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
       //this.getCalendar();
-      //////////////////// ////////////// //////////////console.log(("Refresh calendar");
+      //////////////////// ////////////// //////////////////console.log(("Refresh calendar");
     });
 
 
@@ -1922,7 +2046,7 @@ async validarHoraCargue():Promise<boolean>{
       // this.sB1SLService.initLoginSAP()
       //     .subscribe({
       //          next:(result)=>{
-      //             console.log(result)
+      //             ////console.log(result)
       //          },
       //          error:(error)=>{
       //             console.error(error)
@@ -1974,7 +2098,7 @@ async validarHoraCargue():Promise<boolean>{
   clonarTablaPedidos(){
     let tablaPedidos:any  = JSON.parse(JSON.stringify(this.tablaPedidosTurno))
     this.tablapedidosInspeccion = tablaPedidos;
-    ////console.log('this.tablapedidosInspeccion',this.tablapedidosInspeccion)
+    ////////console.log('this.tablapedidosInspeccion',this.tablapedidosInspeccion)
   }
 
   
@@ -1983,14 +2107,14 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   seleccionarTS(){
-    // ////////////// //////////////console.log(this.solictudProduccionSeleccionada)
+    // ////////////// //////////////////console.log(this.solictudProduccionSeleccionada)
   }
 
  async cambiarEstadoTurno(){
 
-    ////console.log(this.remisionesPorCliente);
+    ////////console.log(this.remisionesPorCliente);
 
-    ////console.log(this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length);
+    ////////console.log(this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length);
 
     this.cambioEstado = true;
 
@@ -2014,7 +2138,7 @@ async validarHoraCargue():Promise<boolean>{
     }else if(await this.validarARL()){
       this.cambioEstado = false;
     }else  if(this.estado === this.estadosTurno.PESADOF && !(await this.validarUbicacionRemisiones())){
-          ////console.log('validacion',await this.validarUbicacionRemisiones())
+          ////////console.log('validacion',await this.validarUbicacionRemisiones())
           this.cambioEstado = false;
     }else {
       this.confirmationService.confirm({
@@ -2024,9 +2148,9 @@ async validarHoraCargue():Promise<boolean>{
         accept: async () => {
   
             let data:any = await this.configDataTurno();
-            //console.log(data);
+            //////console.log(data);
             //Validar adjuntos para el estado cargado
-             ////console.log(this.filesToUpload);
+             ////////console.log(this.filesToUpload);
 
             // if(data.historial.estado === EstadosDealleSolicitud.CARGADO && this.filesToUpload.length === 0 && this.uploadActivo){
             //  this.messageService.add({severity:'error', summary:'Error', detail:'Para el estado cargado, es obligatorio adjuntar evidencias del proceso del cargue. '});
@@ -2059,19 +2183,19 @@ async validarHoraCargue():Promise<boolean>{
 
   async validarFechaEstado():Promise<boolean>{
 
-    ////console.log('estados turno',this.estadosTurno,);
+    ////////console.log('estados turno',this.estadosTurno,);
 
     let error = false;
     let turno_actual = this.turno.estado;
     //let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.infoHistorialTurno.detalle_solicitud_turnos_historial)),'id','ASC')
-    console.log('this.infoHistorialTurno.detalle_solicitud_turnos_historial',this.infoHistorialTurno.detalle_solicitud_turnos_historial)
+    ////console.log('this.infoHistorialTurno.detalle_solicitud_turnos_historial',this.infoHistorialTurno.detalle_solicitud_turnos_historial)
     let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.infoHistorialTurno.detalle_solicitud_turnos_historial)),'id','ASC')
 
-    //console.log('historial_turno',historial_turno);
+    //////console.log('historial_turno',historial_turno);
 
     if(historial_turno.length > 0){
       let ultimoEstado = historial_turno[historial_turno.length-1];
-      //console.log('ultimoEstado',ultimoEstado);
+      //////console.log('ultimoEstado',ultimoEstado);
       let fecha_accion_ultimo_estado = new Date(`${ultimoEstado.fecha_accion} ${ultimoEstado.hora_accion}`);
       
 
@@ -2079,7 +2203,7 @@ async validarHoraCargue():Promise<boolean>{
 
       //fecha_accion_ultimo_estado.setHours(ultimoEstado.hora_accion.split(':')[0],ultimoEstado.hora_accion.split(':')[1],ultimoEstado.hora_accion.split(':')[2]);
 
-      ////console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
+      ////////console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
 
       let fechaaccion = new Date(this.fechaaccion);
 
@@ -2089,8 +2213,8 @@ async validarHoraCargue():Promise<boolean>{
 
       fechaaccion.setHours(horaaccion.getHours(),horaaccion.getMinutes(),horaaccion.getSeconds());
 
-      //console.log('fechaaccion',fechaaccion);
-      //console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
+      //////console.log('fechaaccion',fechaaccion);
+      //////console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
 
       if(fechaaccion < fecha_accion_ultimo_estado){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: `La fecha del nuevo estado ${fechaaccion.toISOString().split('T')[0]} ${fechaaccion.toTimeString().split(' ')[0]} no puede ser menor a fecha de accion del ultimo estado "${ultimoEstado.estado}" ${fecha_accion_ultimo_estado.toISOString().split('T')[0]} ${fecha_accion_ultimo_estado.toTimeString().split(' ')[0]}.` });
@@ -2105,22 +2229,25 @@ async validarHoraCargue():Promise<boolean>{
 
   async validarARL():Promise<boolean>{
 
-    ////console.log('estados turno',this.estadosTurno,);
+    ////////console.log('estados turno',this.estadosTurno,);
 
     let error = false;
     //let estado_turno_actual = this.turno.estado;
     let estado_turno_actual = this.estado;
     let hoy:Date = new Date((new Date() ).setHours(0,0,0));
-    console.log('hoy',hoy)
-    console.log('ayer',this.ayer);
+    ////console.log('hoy',hoy)
+    ////console.log('ayer',this.ayer);
 
+    
 
     //let fecha_vigencia_arl_activa:Date = this.turno.conductor.historial_arl.length===0?new Date((new Date() ).setHours(0,0,0)):new Date(`${this.turno.conductor.historial_arl.find((arl: { estado: string; })=>arl.estado==='ACTIVO').fechafin}T00:00:00`);
 
+    //let fecha_vigencia_arl_activa:Date = this.turno.conductor.historial_arl.length===0?this.ayer: this.turno.conductor.historial_arl.find((arl: { estado: string; })=>arl.estado==='ACTIVO')?new Date(`${this.turno.conductor.historial_arl.find((arl: { estado: string; })=>arl.estado==='ACTIVO').fechafin}T00:00:00`):this.ayer;
+
     let fecha_vigencia_arl_activa:Date = this.turno.conductor.historial_arl.length===0?this.ayer: this.turno.conductor.historial_arl.find((arl: { estado: string; })=>arl.estado==='ACTIVO')?new Date(`${this.turno.conductor.historial_arl.find((arl: { estado: string; })=>arl.estado==='ACTIVO').fechafin}T00:00:00`):this.ayer;
 
-    //console.log('hoy',hoy)
-    //console.log('fecha_vigencia_arl_activa',fecha_vigencia_arl_activa)
+    //////console.log('hoy',hoy)
+    //////console.log('fecha_vigencia_arl_activa',fecha_vigencia_arl_activa)
     
     if(estado_turno_actual === this.estadosTurno.SOLICITADO && this.turno.conductor.historial_arl.length===0 ){
       this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: `El conductor ${this.turno.conductor.nombre} no tiene asociado una ARL` });
@@ -2130,9 +2257,9 @@ async validarHoraCargue():Promise<boolean>{
       //error = true;
     }
 
-    console.log('this.accion',this.accion )
-    console.log('this.estado_turno_actual',estado_turno_actual )
-    console.log('this.estado',this.estado )
+    ////console.log('this.accion',this.accion )
+    ////console.log('this.estado_turno_actual',estado_turno_actual )
+    ////console.log('this.estado',this.estado )
      
     
 
@@ -2153,7 +2280,7 @@ async validarHoraCargue():Promise<boolean>{
   async validarUbicacionRemisiones():Promise<boolean>{
     let valido = false;
 
-    //console.log('this.remisionesPorCliente',this.remisionesPorCliente)
+    //////console.log('this.remisionesPorCliente',this.remisionesPorCliente)
 
     // let remisiones_tipo_consigna:any[] = [];
 
@@ -2163,7 +2290,7 @@ async validarHoraCargue():Promise<boolean>{
     //   }
     // }
 
-    //console.log(this.remisionesPorCliente.filter(cliente=>cliente.remisiones.filter((remision: {tipo_documento:string; detalle_remision:any[]})=>remision.tipo_documento==='CONSIGNA' && remision.detalle_remision.filter(item=>item.codigo_ubicacion=="" ).length>0).length>0))
+    //////console.log(this.remisionesPorCliente.filter(cliente=>cliente.remisiones.filter((remision: {tipo_documento:string; detalle_remision:any[]})=>remision.tipo_documento==='CONSIGNA' && remision.detalle_remision.filter(item=>item.codigo_ubicacion=="" ).length>0).length>0))
 
     if(this.remisionesPorCliente.filter(cliente=>cliente.remisiones.filter((remision: {tipo_documento:string; detalle_remision:any[]})=>remision.tipo_documento==='CONSIGNA' && remision.detalle_remision.filter(item=>item.codigo_ubicacion=="" ).length>0).length>0).length>0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Se produjo un error al momento de realizar las remisiones: Verificar que las ubicaciones de la bodega de consignación exista en SAP` });
@@ -2177,7 +2304,7 @@ async validarHoraCargue():Promise<boolean>{
 
   async configDataTurno():Promise<any> {
     
-   ////console.log('turno para validar estado',this.turno.condiciontpt);
+   ////////console.log('turno para validar estado',this.turno.condiciontpt);
 
     let nuevoEstado = "";
             let mensaje ="";
@@ -2288,7 +2415,7 @@ async validarHoraCargue():Promise<boolean>{
             };
 
             if(this.estado===this.estadosTurno.SOLINVENTARIO){
-              //////// ////////////// //////////////console.log(this.existeInventario);
+              //////// ////////////// //////////////////console.log(this.existeInventario);
               data.historial.disponibilidad = this.existeInventario;
               data.historial.fechadisponibilidad = this.fechadisponibilidad;
             }
@@ -2313,8 +2440,8 @@ async validarHoraCargue():Promise<boolean>{
                 data.peso_neto = this.peso_neto;
                 data.adicional = this.adicional;
 
-                ////console.log('this.lotesItems',this.lotesItems);
-                ////console.log('this.pedidosTurno',this.pedidosTurno);
+                ////////console.log('this.lotesItems',this.lotesItems);
+                ////////console.log('this.pedidosTurno',this.pedidosTurno);
 
                 if(this.lotesItems.length>0){
                   for(let itemPedido of this.pedidosTurno){
@@ -2332,7 +2459,7 @@ async validarHoraCargue():Promise<boolean>{
                 //  data.remision = this.remision;
                 //}
 
-                ////console.log(this.observacionesCargue);
+                ////////console.log(this.observacionesCargue);
 
                 if(this.observacionesCargue.length > 0){
                   data.observacion = this.observacionesCargue.join(';');
@@ -2351,7 +2478,7 @@ async validarHoraCargue():Promise<boolean>{
               data.inspeccion = this.inspeccionTurno;
             }
             
-         console.log('Data update turno',data);
+         ////console.log('Data update turno',data);
 
     return data;
   }
@@ -2361,7 +2488,7 @@ async validarHoraCargue():Promise<boolean>{
     this.solicitudTurnoService.updateInfoTruno(this.turnoId,data)
       .subscribe({
             next:async (turno)=>{
-               //console.log("turno actualizado",turno);
+               //////console.log("turno actualizado",turno);
 
                await this.getHistorialTurno(turno.id)
 
@@ -2379,7 +2506,7 @@ async validarHoraCargue():Promise<boolean>{
                     this.functionsService.uploadFile(body)
                         .subscribe({
                           next:(result)=>{
-                            ////////console.log('Upload ok',result);
+                            ////////////console.log('Upload ok',result);
                             this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
                           },
                           error:(err)=>{
@@ -2392,7 +2519,7 @@ async validarHoraCargue():Promise<boolean>{
 
                 if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
 
-                  ////console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
+                  ////////console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
 
                   let email_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.email:turno.detalle_solicitud_turnos_pedido[0].email_asistente;
                   let nombre_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.nombrecompleto:turno.detalle_solicitud_turnos_pedido[0].nombre_asistente;
@@ -2412,7 +2539,7 @@ async validarHoraCargue():Promise<boolean>{
                 this.pedidosTurno.map((pedido)=>{
                   pedido.lineaUpdate = {update:false, create:false};
                   if(turno.estado===this.estadosTurno.DESPACHADO || turno.estado===this.estadosTurno.ENTREGADO){
-                   ////console.log('pedido',pedido);
+                   ////////console.log('pedido',pedido);
                     
                     pedido.remision = turno.detalle_solicitud_turnos_pedido.filter((lineaPedido: { itemcode: any; id: any; })=>lineaPedido.itemcode === pedido.itemcode && lineaPedido.id === pedido.id)[0].remision;
                   }
@@ -2499,7 +2626,7 @@ async validarHoraCargue():Promise<boolean>{
                         }
 
                     });
-                console.log('turno.estado',turno.estado)
+                ////console.log('turno.estado',turno.estado)
                     // if(turno.estado!=this.estadosTurno.PESADOF){
                       this.cambioEstado = false;
                     // }
@@ -2520,7 +2647,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   setRemisiones(remisiones:any){
-   ////console.log('remisiones',remisiones);
+   ////////console.log('remisiones',remisiones);
     this.remisionesPorCliente = remisiones;
   }
 
@@ -2530,7 +2657,7 @@ async validarHoraCargue():Promise<boolean>{
       let turnosCliente:any[] = []; 
 
       turno.detalle_solicitud_turnos_pedido.forEach((pedido: { CardCode: any; itemcode: string; cantidad: any; CardName: any; })=>{
-          ////////////////// ////////////// //////////////console.log(turno.id, pedido.CardCode);
+          ////////////////// ////////////// //////////////////console.log(turno.id, pedido.CardCode);
             let email_cliente = this.turno.solicitud.clientes.find((cliente: { CardCode: any; })=>cliente.CardCode === pedido.CardCode).EmailAddress;
             if(turnosCliente.filter(cliente=>cliente.codigo===pedido.CardCode).length === 0){
     
@@ -2567,7 +2694,7 @@ async validarHoraCargue():Promise<boolean>{
             }else{
                 
                 let indexCliente = turnosCliente.findIndex(cliente=>cliente.codigo === pedido.CardCode);
-                ////////////////// ////////////// //////////////console.log(turnosCliente[indexCliente]);
+                ////////////////// ////////////// //////////////////console.log(turnosCliente[indexCliente]);
     
                 if(turnosCliente[indexCliente].turnos.filter((turnoCliente: { id: number; })=>turnoCliente.id === turno.id).length ==0){
                   let turnoCliente:any;
@@ -2594,7 +2721,7 @@ async validarHoraCargue():Promise<boolean>{
                   turnosCliente[indexCliente].turnos.push(turnoCliente);
                 }else{
                   let indexTurno = turnosCliente[indexCliente].turnos.findIndex((turnoCliente: { id: number; })=>turnoCliente.id === turno.id)
-                  ////////////////// ////////////// //////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                  ////////////////// ////////////// //////////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                   turnosCliente[indexCliente].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                   if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                     turnosCliente[indexCliente].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -2606,7 +2733,7 @@ async validarHoraCargue():Promise<boolean>{
         });
 
         turnosCliente.forEach(async (cliente)=>{
-          ////////////// ////////////// //////////////console.log('email cliente', cliente.email);
+          ////////////// ////////////// //////////////////console.log('email cliente', cliente.email);
           //if(cliente.email!='' && cliente.email!=null){
       
             cliente.turnos.forEach(async (turnoCliente: any)=>{
@@ -2624,8 +2751,8 @@ async validarHoraCargue():Promise<boolean>{
                             
                 }         
               };
-              //////// ////////////// //////////////console.log('objectMail Cliente',objectMail);
-              ////////// ////////////// //////////////console.log(await this.functionsService.sendMail(objectMail));
+              //////// ////////////// //////////////////console.log('objectMail Cliente',objectMail);
+              ////////// ////////////// //////////////////console.log(await this.functionsService.sendMail(objectMail));
               await this.functionsService.sendMail(objectMail)
 
             });
@@ -2643,7 +2770,7 @@ async validarHoraCargue():Promise<boolean>{
    
       
       turno.detalle_solicitud_turnos_pedido.forEach((pedido: { email_vendedor: any; itemcode: string; cantidad: any; })=>{
-        ////////////////// ////////////// //////////////console.log(turno.id, pedido.CardCode);
+        ////////////////// ////////////// //////////////////console.log(turno.id, pedido.CardCode);
           if(turnosVendedor.filter(vendedor=>vendedor.codigo===pedido.email_vendedor).length === 0){
   
               let turnoVendedor:any;
@@ -2679,7 +2806,7 @@ async validarHoraCargue():Promise<boolean>{
           }else{
               
               let indexVendedor = turnosVendedor.findIndex(vendedor=>vendedor.codigo === pedido.email_vendedor);
-              ////////////////// ////////////// //////////////console.log(turnosCliente[indexCliente]);
+              ////////////////// ////////////// //////////////////console.log(turnosCliente[indexCliente]);
   
               if(turnosVendedor[indexVendedor].turnos.filter((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id).length ==0){
                 let turnoVendedor:any;
@@ -2706,7 +2833,7 @@ async validarHoraCargue():Promise<boolean>{
                 turnosVendedor[indexVendedor].turnos.push(turnoVendedor);
               }else{
                 let indexTurno = turnosVendedor[indexVendedor].turnos.findIndex((turnoVendedor: { id: number; })=>turnoVendedor.id === turno.id)
-                ////////////////// ////////////// //////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
+                ////////////////// ////////////// //////////////////console.log(turnosCliente[indexCliente].turnos[indexTurno]);
                 turnosVendedor[indexVendedor].turnos[indexTurno].detalle_solicitud_turnos_pedido.push(pedido);
                 if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                   turnosVendedor[indexVendedor].turnos[indexTurno].toneladas_turno+=pedido.cantidad;
@@ -2718,7 +2845,7 @@ async validarHoraCargue():Promise<boolean>{
       
     
   
-    //////////////// ////////////// //////////////console.log(turnosVendedor);
+    //////////////// ////////////// //////////////////console.log(turnosVendedor);
   
     turnosVendedor.forEach(async (vendedor)=>{
       if(vendedor.email!='' && vendedor.email!=null){
@@ -2738,8 +2865,8 @@ async validarHoraCargue():Promise<boolean>{
                         
             }         
           };
-          //////// ////////////// //////////////console.log('objectMail vendedor',objectMail);
-          ////////////// ////////////// //////////////console.log(await this.functionsService.sendMail(objectMail));
+          //////// ////////////// //////////////////console.log('objectMail vendedor',objectMail);
+          ////////////// ////////////// //////////////////console.log(await this.functionsService.sendMail(objectMail));
           await this.functionsService.sendMail(objectMail)
         });
 
@@ -2757,7 +2884,7 @@ async validarHoraCargue():Promise<boolean>{
     let emailsTurno = (await this.solicitudTurnoService.emailsTurno({estado_turno:turno.estado,locacion}))
                       .map((email: { email_responsable: any; }) => {return email.email_responsable});
   
-    ////////////// ////////////// //////////////console.log('emailsTurno',emailsTurno.join());
+    ////////////// ////////////// //////////////////console.log('emailsTurno',emailsTurno.join());
   
     if(emailsTurno.join()!=''){
       emailBodega = emailsTurno.join();
@@ -2780,8 +2907,8 @@ async validarHoraCargue():Promise<boolean>{
                     
         }         
       };
-      //////// ////////////// //////////////console.log('objectMail Bodega',objectMail);
-      ////////////// ////////////// //////////////console.log(await this.functionsService.sendMail(objectMail));
+      //////// ////////////// //////////////////console.log('objectMail Bodega',objectMail);
+      ////////////// ////////////// //////////////////console.log(await this.functionsService.sendMail(objectMail));
       await this.functionsService.sendMail(objectMail)
   
     }
@@ -2801,8 +2928,8 @@ async validarHoraCargue():Promise<boolean>{
                   
       }         
     };
-    ////////////// ////////////// //////////////console.log('objectMail Transporta sociedada',objectMail);
-    ////////////// ////////////// //////////////console.log(await this.functionsService.sendMail(objectMail));
+    ////////////// ////////////// //////////////////console.log('objectMail Transporta sociedada',objectMail);
+    ////////////// ////////////// //////////////////console.log(await this.functionsService.sendMail(objectMail));
     await this.functionsService.sendMail(objectMail)
   }
 
@@ -2822,8 +2949,8 @@ async validarHoraCargue():Promise<boolean>{
                   
       }         
     };
-    ////////////// ////////////// //////////////console.log('objectMail usuario creado',objectMail);
-    ////////////// ////////////// //////////////console.log(await this.functionsService.sendMail(objectMail));
+    ////////////// ////////////// //////////////////console.log('objectMail usuario creado',objectMail);
+    ////////////// ////////////// //////////////////console.log(await this.functionsService.sendMail(objectMail));
     await this.functionsService.sendMail(objectMail)
 
   }
@@ -2831,7 +2958,7 @@ async validarHoraCargue():Promise<boolean>{
 
   async configEmails(dataTurno:any, mensaje:string): Promise<void>{
 
-    //////// ////////////// //////////////console.log(dataTurno,mensaje);
+    //////// ////////////// //////////////////console.log(dataTurno,mensaje);
 
     //await this.emailsClientes(dataTurno,mensaje);
     //await this.emailsVendedores(dataTurno,mensaje);
@@ -2850,7 +2977,7 @@ async validarHoraCargue():Promise<boolean>{
     if(event.target.value ===''){
       event.target.value =0;
     }
-    ////////////////// ////////////// //////////////console.log(peso, this.peso_bruto);
+    ////////////////// ////////////// //////////////////console.log(peso, this.peso_bruto);
     this.peso_neto = this.turno.tipo==='RETIRO'?this.cantidad+parseFloat(event.target.value):this.turno.peso_neto;
     this.cantidad =  Number((this.peso_neto-parseFloat(event.target.value)).toFixed(2));
     if(this.pesomax < (this.peso_neto)){
@@ -2872,7 +2999,7 @@ async validarHoraCargue():Promise<boolean>{
     if(event.target.value ===''){
       event.target.value =0;
     }
-    ////////////// ////////////// //////////////console.log(peso, this.peso_bruto, parseFloat(event.target.value));
+    ////////////// ////////////// //////////////////console.log(peso, this.peso_bruto, parseFloat(event.target.value));
     //this.cantidad = parseFloat(event.target.value)-this.peso_bruto;
     this.cantidad =  Number((parseFloat(event.target.value)-this.peso_bruto).toFixed(2));
     if(this.pesomax < (parseFloat(event.target.value))){
@@ -2895,14 +3022,14 @@ async validarHoraCargue():Promise<boolean>{
 
   async validarFormulario():Promise<boolean> {
       let valido:boolean = false;
-      //console.log('tipoOperacion',this.tipoOperacion);
-      //console.log('turnoBase',this.turnoBase);
-     ////console.log(this.tablaPedidosTurno.data);
+      //////console.log('tipoOperacion',this.tipoOperacion);
+      //////console.log('turnoBase',this.turnoBase);
+     ////////console.log(this.tablaPedidosTurno.data);
       // if(this.tablaPedidosTurno.data[0].remision==undefined){
-      //   //////////console.log('remisión no definida');
+      //   //////////////console.log('remisión no definida');
       // }
     
-      //////////console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length);
+      //////////////console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length);
 
       if(!this.fechacargue || 
          !this.horacargue  || 
@@ -2987,7 +3114,7 @@ async validarHoraCargue():Promise<boolean>{
 
       }
 
-      ////////////////// ////////////// //////////////console.log(valido);
+      ////////////////// ////////////// //////////////////console.log(valido);
 
       return valido;
   }
@@ -2996,7 +3123,7 @@ async validarHoraCargue():Promise<boolean>{
     let valido = true;
     let totalEvidencias =0;
     for(let item of this.tablaPedidosTurno.data){
-     // //////console.log(item);
+     // //////////console.log(item);
       if(!item.itemcode.startsWith('SF')){
         let id_relacion = item.index;
         let proceso = 'cargado';
@@ -3043,13 +3170,13 @@ async validarHoraCargue():Promise<boolean>{
       accept: () => {
        
         event.map((linea:any)=>{
-          // ////////////// //////////////console.log(linea);
+          // ////////////// //////////////////console.log(linea);
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).estado = 'I';
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).lineaUpdate.update = true;
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).cantidadOld = parseFloat(this.pedidosTurno.find(item=>item.id === linea.index).cantidadOld);
           this.pedidosTurno.find(item=>item.id === linea.index && item.itemcode == linea.itemcode && item.pedidonum == linea.docnum).cantidad  =0;
         });
-        // ////////////// //////////////console.log(this.pedidosTurno);
+        // ////////////// //////////////////console.log(this.pedidosTurno);
         this.configTablePedidosAlmacenCliente();
       },
         reject: (type: any) => {
@@ -3068,7 +3195,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   cambioValorCampo(arregloCambioCampo:any){
-   // ////////////// //////////////console.log(arregloCambioCampo,arregloCambioCampo.itemData.docnum,arregloCambioCampo.itemData.itemcode,this.pedidosTurno,);
+   // ////////////// //////////////////console.log(arregloCambioCampo,arregloCambioCampo.itemData.docnum,arregloCambioCampo.itemData.itemcode,this.pedidosTurno,);
 
    
    let indexLineaPedido = this.pedidosTurno.findIndex(item=>item.id === arregloCambioCampo.index 
@@ -3077,7 +3204,7 @@ async validarHoraCargue():Promise<boolean>{
                                                             //&& `${item.municipioentrega} - ${item.lugarentrega}` == arregloCambioCampo.itemData.lugarentrega
                                                             );
 
-  // ////////////// //////////////console.log(indexLineaPedido);
+  // ////////////// //////////////////console.log(indexLineaPedido);
    //this.pedidosTurno[indexLineaPedido].lineaUpdate.update = arregloCambioCampo.index==0?false:true;
    this.pedidosTurno[indexLineaPedido].lineaUpdate.update = true;
 
@@ -3120,7 +3247,7 @@ async validarHoraCargue():Promise<boolean>{
 
     }
 
-    //// ////////////// //////////////console.log(this.pedidosTurno);
+    //// ////////////// //////////////////console.log(this.pedidosTurno);
 
   }
 
@@ -3145,7 +3272,7 @@ async validarHoraCargue():Promise<boolean>{
   }
   
   seleccionarMunicipio(){
-   ////// ////////////// //////////////console.log(this.municipioSeleccionado);
+   ////// ////////////// //////////////////console.log(this.municipioSeleccionado);
     this.municipioentrega = this.municipioSeleccionado.label;
   }
 
@@ -3160,12 +3287,12 @@ async validarHoraCargue():Promise<boolean>{
     this.pedidosService.getSaldosPedidos(CardCode,locacion)
         .subscribe({
             next:async (saldosPedidos)=>{
-             console.log('saldosPedidos',saldosPedidos);
+             ////console.log('saldosPedidos',saldosPedidos);
              
              let pedidosClientes:any[] = [];
              for(let indexPedido in saldosPedidos){
               
-                ////////////////console.log(saldosPedidos[indexPedido]);
+                ////////////////////console.log(saldosPedidos[indexPedido]);
   
                   
                   pedidosClientes.push({
@@ -3248,7 +3375,7 @@ async validarHoraCargue():Promise<boolean>{
 
              this.pedidosCliente = await this.calcularCantidadesComprometidas(pedidosClientes);
 
-             //// ////////////// //////////////console.log('pedidosCliente',this.pedidosCliente);
+             //// ////////////// //////////////////console.log('pedidosCliente',this.pedidosCliente);
              this.configNewTablePedidosAlmacenCliente();
              
             },
@@ -3261,7 +3388,7 @@ async validarHoraCargue():Promise<boolean>{
   async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
     for(let pedido of pedidos){
-     ////// ////////////// //////////////console.log(pedido);
+     ////// ////////////// //////////////////console.log(pedido);
       let cantidadComprometida=0; 
       cantidadComprometida += await this.getCantidadComprometidaItemPedidoBodega(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
       //cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
@@ -3285,11 +3412,11 @@ async validarHoraCargue():Promise<boolean>{
  
   
   async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
-    ////////////////////// ////////////// //////////////console.log(pedido, itemcode, bodega);
+    ////////////////////// ////////////// //////////////////console.log(pedido, itemcode, bodega);
       let cantidadComprometida =0;
       /*for(let vehiculo of this.vehiculosEnSolicitud){
           for(let lineaPedido of vehiculo.pedidos){
-           //////////////////////// ////////////// //////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
+           //////////////////////// ////////////// //////////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
               if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
                 
                 cantidadComprometida+=lineaPedido.cantidad;
@@ -3313,7 +3440,7 @@ async validarHoraCargue():Promise<boolean>{
   
   configHeadersNewPedidos(){
 
-   ////console.log('config Header pedidos cleinte', this.pedidosCliente);
+   ////////console.log('config Header pedidos cleinte', this.pedidosCliente);
     let headersTable:any[] = [
       {
         'index': { label:'',type:'', sizeCol:'0rem', align:'center', editable:false},
@@ -3384,7 +3511,7 @@ async validarHoraCargue():Promise<boolean>{
         this.showItemsSelectedPedidosAlmacenCliente=false;
     }else{
       const pedidosSeleccionados = await event.filter((pedido: { cargada: any; }) =>parseFloat(pedido.cargada)> 0);
-     ////console.log('pedidos seleccionados',pedidosSeleccionados);
+     ////////console.log('pedidos seleccionados',pedidosSeleccionados);
     
       if(pedidosSeleccionados.length > 0){
           
@@ -3397,7 +3524,7 @@ async validarHoraCargue():Promise<boolean>{
             if(!pedido.itemcode.toLowerCase().startsWith("sf")){
                 totalCarga+=parseFloat(pedido.cargada);
     
-                ////////////// ////////////// //////////////console.log(pedido);
+                ////////////// ////////////// //////////////////console.log(pedido);
        
                 if(parseFloat(parseFloat(pedido.cargada).toFixed(2))> parseFloat(parseFloat(pedido.disponible).toFixed(2)) ){
                   //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La cantidad a cargar de la linea ${pedido.index+1} supera la cantidad disponible del pedio - item`});
@@ -3426,8 +3553,8 @@ async validarHoraCargue():Promise<boolean>{
                   
           }
 
-          console.log('totalCarga',totalCarga)
-          console.log('this.capacidadDisponibleVehiculo',this.capacidadDisponibleVehiculo)
+          ////console.log('totalCarga',totalCarga)
+          ////console.log('this.capacidadDisponibleVehiculo',this.capacidadDisponibleVehiculo)
           
     
           // if(!error && totalCarga> this.capacidadDisponibleVehiculo){
@@ -3452,12 +3579,12 @@ async validarHoraCargue():Promise<boolean>{
               //let pdidosVehiculo:any[] = this.vehiculosEnSolicitud[indexVehiculo].pedidos;
               let pedidosTurno:any[] = this.pedidosTurno;
 
-              //////////////console.log('pedidosTurno',pedidosTurno);
+              //////////////////console.log('pedidosTurno',pedidosTurno);
               this.loadingPedidosTurno = true;
               
               for(let pedido of pedidosSeleccionados){
                 
-                //////////////console.log('pedido seleccionado',pedido,this.municipioentrega, this.sitioentrega);
+                //////////////////console.log('pedido seleccionado',pedido,this.municipioentrega, this.sitioentrega);
                 
 
 
@@ -3477,7 +3604,7 @@ async validarHoraCargue():Promise<boolean>{
                     pedidosTurno[indexPedido].cantidad += parseFloat(pedido.cargada);
                     
                     pedidosTurno[indexPedido].lineaUpdate = {update:true,create:false}
-                    //// ////////////// //////////////console.log(pedidosTurno[indexPedido].lineaUpdate);
+                    //// ////////////// //////////////////console.log(pedidosTurno[indexPedido].lineaUpdate);
                   }
                  
                 }else{
@@ -3490,7 +3617,7 @@ async validarHoraCargue():Promise<boolean>{
                   //let vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].vendedor;
                   let vendedor = infoPedido.vendedor;
 
-                        //////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia)
+                        //////////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia)
 
                   //let dependencia = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].dependencia;
                   let dependencia = infoPedido.dependencia;
@@ -3523,9 +3650,9 @@ async validarHoraCargue():Promise<boolean>{
                   let flete_tonelada = pedido.flete;
         
 
-                  //////////////console.log('pedido a adicionar',pedido);
+                  //////////////////console.log('pedido a adicionar',pedido);
 
-                  //////////////console.log('this.pedidosCliente',this.pedidosCliente);
+                  //////////////////console.log('this.pedidosCliente',this.pedidosCliente);
 
                   let tipoproducto = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].tipoprod;
                   
@@ -3583,7 +3710,7 @@ async validarHoraCargue():Promise<boolean>{
                             //cliente:this.clienteSeleccionado.CardName,
                       });
                       
-                      //////////////console.log('adicion pedidosTurno',pedidosTurno);
+                      //////////////////console.log('adicion pedidosTurno',pedidosTurno);
 
                 }
     
@@ -3591,17 +3718,17 @@ async validarHoraCargue():Promise<boolean>{
 
               this.envioLineaCarguePedido =false;
               this.dialogPedidosCliente = false;
-              //// ////////////// //////////////console.log(pedidosTurno);
+              //// ////////////// //////////////////console.log(pedidosTurno);
 
               this.pedidosTurno = await this.calcularDisponibilidadPedido(pedidosTurno);
-              //// ////////////// //////////////console.log(this.pedidosTurno);
+              //// ////////////// //////////////////console.log(this.pedidosTurno);
               this.configTablePedidosAlmacenCliente();
               /*
               this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
               this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
               
               this.pedidosAlmacenCliente = await this.calcularCantidadesComprometidas(this.pedidosAlmacenCliente);
-              //////////// ////////////// //////////////console.log(this.vehiculosEnSolicitud);
+              //////////// ////////////// //////////////////console.log(this.vehiculosEnSolicitud);
               this.configTablePedidosAlmacenCliente();
               this.generarTreeTable();
               */
@@ -3633,19 +3760,19 @@ async validarHoraCargue():Promise<boolean>{
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     
-    console.log('inventariosItemBodega',inventariosItemBodega);
-    console.log('locaciones',this.locaciones);
+    ////console.log('inventariosItemBodega',inventariosItemBodega);
+    ////console.log('locaciones',this.locaciones);
     const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
 
-    //////////////console.log(arrayInventariosItemBodega);
+    //////////////////console.log(arrayInventariosItemBodega);
 
     //let almacenesConStockItem:any[] = [];
 
     let almacenesConStockItem:any[] = arrayInventariosItemBodega;
 
     /*for(let pedido of this.pedidosTurno){
-      //////////// //////////////console.log(pedido);
-      // ////////////// //////////////console.log(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
+      //////////// //////////////////console.log(pedido);
+      // ////////////// //////////////////console.log(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
       almacenesConStockItem = almacenesConStockItem.concat(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
     }*/
 
@@ -3653,22 +3780,22 @@ async validarHoraCargue():Promise<boolean>{
       item.label = `${item.Localidad_} - ${item.WhsCode} - ${item.WhsName}`
     });
 
-    //////////// //////////////console.log(almacenesConStockItem);
+    //////////// //////////////////console.log(almacenesConStockItem);
 
     almacenesConStockItem = await this.functionsService.groupArray(almacenesConStockItem,'label');
 
-   console.log('almacenesConStockItem',almacenesConStockItem);
-   //console.log('this.locaciones',this.locaciones);
+   ////console.log('almacenesConStockItem',almacenesConStockItem);
+   //////console.log('this.locaciones',this.locaciones);
     let bodegas:any[] =[];
 
     for(let almacen of almacenesConStockItem){
-      //console.log('almacen.locacion_codigo2',almacen.locacion_codigo2,this.locaciones.find(item=>item.code == almacen.locacion_codigo2 ));
+      //////console.log('almacen.locacion_codigo2',almacen.locacion_codigo2,this.locaciones.find(item=>item.code == almacen.locacion_codigo2 ));
       if(this.locaciones.find(item=>item.code == almacen.locacion_codigo2 )){
         bodegas.push(almacen);
       }
     }
 
-    //////////// //////////////console.log(bodegas);
+    //////////// //////////////////console.log(bodegas);
 
     //this.bodegas = almacenesConStockItem;
 
@@ -3680,7 +3807,7 @@ async validarHoraCargue():Promise<boolean>{
 /*
     this.pedidosCambioBodegaTurno = this.pedidosTurno;
     this.configTableCambioPedidosBodega();
-    // ////////////// //////////////console.log(this.pedidosCambioBodegaTurno);
+    // ////////////// //////////////////console.log(this.pedidosCambioBodegaTurno);
 */
 
   }
@@ -3710,17 +3837,17 @@ async validarHoraCargue():Promise<boolean>{
 
 
     this.loadingCambioBodegaPedidosTurno = true;
-    //////////// //////////////console.log(bodegaSeleccionada);
+    //////////// //////////////////console.log(bodegaSeleccionada);
     //this.pedidosCambioBodegaTurno = new Array() ;
 
     //this.pedidosCambioBodegaTurno= this.pedidosTurno;
  
-    ////////// //////////////console.log(this.pedidosTurno);
+    ////////// //////////////////console.log(this.pedidosTurno);
 
     let pedidosTurnoCambioBodegaTurno:any[] = [];
 
     for(let pedido of this.pedidosTurno){
-      ////console.log('pedido',pedido);
+      ////////console.log('pedido',pedido);
       pedidosTurnoCambioBodegaTurno.push({
         CardCode:pedido.CardCode,
         CardName:pedido.CardName,
@@ -3759,7 +3886,7 @@ async validarHoraCargue():Promise<boolean>{
     
     this.pedidosCambioBodegaTurno = pedidosTurnoCambioBodegaTurno;
 
-    ////////// //////////////console.log(this.pedidosCambioBodegaTurno);
+    ////////// //////////////////console.log(this.pedidosCambioBodegaTurno);
 
     /*this.pedidosCambioBodegaTurno.map((item)=>{
       
@@ -3769,7 +3896,7 @@ async validarHoraCargue():Promise<boolean>{
 
     this.pedidosCambioBodegaTurno = await this.calcularDisponibilidadPedido(this.pedidosCambioBodegaTurno);
 
-    // ////////////// //////////////console.log(this.pedidosCambioBodegaTurno);
+    // ////////////// //////////////////console.log(this.pedidosCambioBodegaTurno);
     this.configTableCambioPedidosBodega();
     this.loadingCambioBodegaPedidosTurno = false;
   }
@@ -3783,9 +3910,9 @@ async validarHoraCargue():Promise<boolean>{
     this.horariosSeleccionadosCambioBodega = horariosSeleccionados;
 
     /*for(let horario of this.horariosLocacion){
-      //////////////// ////////////// //////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
+      //////////////// ////////////// //////////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
     }*/
-    //////////////// ////////////// //////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
+    //////////////// ////////////// //////////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
     if(this.horacargueCambioBodega){
       await this.cambioHoraCitaCambioBodega();
     }
@@ -3794,11 +3921,11 @@ async validarHoraCargue():Promise<boolean>{
 
 
  async cambioHoraCitaCambioBodega():Promise<void>{
-     //////////////// ////////////// //////////////console.log(this.horacargue.toLocaleTimeString());
+     //////////////// ////////////// //////////////////console.log(this.horacargue.toLocaleTimeString());
      if(await this.validarHoraCargueCambioBodega()){
-      //////////// //////////////console.log('hora valida en horario ');
+      //////////// //////////////////console.log('hora valida en horario ');
     }else{
-      //////////// //////////////console.log('hora invalida en horario');
+      //////////// //////////////////console.log('hora invalida en horario');
     }
   }
 
@@ -3812,9 +3939,9 @@ async validarHoraCargue():Promise<boolean>{
       let horacargue = new Date(new Date().setHours(parseInt(this.horacargueCambioBodega.toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(this.horacargueCambioBodega.toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(this.horacargueCambioBodega.toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
   
       if(horainicio<= horacargue && horafin >= horacargue){
-       //////////// //////////////console.log('hora valida en horario id '+horario.id);
+       //////////// //////////////////console.log('hora valida en horario id '+horario.id);
       }else{
-        //////////// //////////////console.log('hora invalida en horario id '+horario.id);
+        //////////// //////////////////console.log('hora invalida en horario id '+horario.id);
         horarioValido = false;
       }
     }
@@ -3833,15 +3960,15 @@ async validarHoraCargue():Promise<boolean>{
       accept: () => {
        
         event.map((linea:any)=>{
-          // ////////////// //////////////console.log(linea);
+          // ////////////// //////////////////console.log(linea);
           let indexLineaCambioBodega = this.pedidosCambioBodegaTurno.findIndex(item=> item.id === linea.index);
           this.pedidosCambioBodegaTurno.splice(indexLineaCambioBodega,1);
-          // ////////////// //////////////console.log(this.pedidosCambioBodegaTurno.splice(indexLineaCambioBodega,1));
-          ////////// //////////////console.log(this.pedidosTurno);
+          // ////////////// //////////////////console.log(this.pedidosCambioBodegaTurno.splice(indexLineaCambioBodega,1));
+          ////////// //////////////////console.log(this.pedidosTurno);
           this.configTableCambioPedidosBodega();
        
         });
-        // ////////////// //////////////console.log(this.pedidosTurno);
+        // ////////////// //////////////////console.log(this.pedidosTurno);
        
       },
         reject: (type: any) => {
@@ -3860,7 +3987,7 @@ async validarHoraCargue():Promise<boolean>{
 
   cambioValorCampoCambioBodega(arregloCambioCampo:any){
 
-    ////////// //////////////console.log(arregloCambioCampo);
+    ////////// //////////////////console.log(arregloCambioCampo);
 
     let indexLineaPedido = this.pedidosCambioBodegaTurno.findIndex(item=>item.id === arregloCambioCampo.index 
                                                              //&& item.pedidonum == arregloCambioCampo.itemData.docnum 
@@ -3886,7 +4013,7 @@ async validarHoraCargue():Promise<boolean>{
  
      }
 
-     ////////// //////////////console.log(this.pedidosCambioBodegaTurno);
+     ////////// //////////////////console.log(this.pedidosCambioBodegaTurno);
  
    }
 
@@ -3909,7 +4036,7 @@ async validarHoraCargue():Promise<boolean>{
         
         accept: async () => {
   
-          //////// //////////////console.log(this.turno.solicitud.clientes);
+          //////// //////////////////console.log(this.turno.solicitud.clientes);
 
           this.displayModal= true;
           this.loadingCargue = true;
@@ -3923,7 +4050,7 @@ async validarHoraCargue():Promise<boolean>{
           for(let item of this.pedidosCambioBodegaTurno){
 
             //Llenar array de cliente para nueva solicitud
-            //////// //////////////console.log(clientesTurnoActual.filter(cliente=>cliente.CardCode == item.CardCode))
+            //////// //////////////////console.log(clientesTurnoActual.filter(cliente=>cliente.CardCode == item.CardCode))
             if(clientesNuevoTurno.filter(cliente=>cliente.CardCode == item.CardCode).length === 0){
               clientesNuevoTurno.push(clientesTurnoActual.filter(cliente=>cliente.CardCode == item.CardCode)[0]);
             }
@@ -3967,9 +4094,9 @@ async validarHoraCargue():Promise<boolean>{
             this.observacionesCargue.push(`Se realizará retiro de ${item.cantidad} TON por la bodega ${this.bodegaSeleccionada.WhsCode}`)
           }
 
-          //////// //////////////console.log(this.pedidosTurno);
-          //////// //////////////console.log(this.pedidosCambioBodegaTurno);
-          ////// //////////////console.log(clientesNuevoTurno);
+          //////// //////////////////console.log(this.pedidosTurno);
+          //////// //////////////////console.log(this.pedidosCambioBodegaTurno);
+          ////// //////////////////console.log(clientesNuevoTurno);
 
           //Crear nuevo turno,
           let horacargueCambioBodega = `${this.fechacargueCambioBodega.toISOString().split("T")[0]}T${this.horacargueCambioBodega.toISOString().split("T")[1]}`;
@@ -3992,12 +4119,12 @@ async validarHoraCargue():Promise<boolean>{
             clientes: clientesNuevoTurno.map((cliente)=>{ return cliente.id}),
             detalle_solicitud
           }
-           //////////////console.log('newSolicitud',newSolicitud);
+           //////////////////console.log('newSolicitud',newSolicitud);
           
           this.solicitudTurnoService.create(newSolicitud)
               .subscribe({
                   next:async (result)=>{
-                    ////// //////////////console.log('nueva solicitud',result);
+                    ////// //////////////////console.log('nueva solicitud',result);
                     this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha realizado correctamente el registro de la solicitud ${result.id}. y el turno ${result.detalle_solicitud_turnos[0].id}`});
                     this.messageComplete =`Actualizando información de pedidos del turno ${this.turnoId}`;
 
@@ -4036,7 +4163,7 @@ async validarHoraCargue():Promise<boolean>{
                     }
 
                     let data:any = await this.configDataTurno();
-                    //////// //////////////console.log(data);
+                    //////// //////////////////console.log(data);
                     this.updateTurno(data);
                   },
                   error:(err)=>{
@@ -4079,12 +4206,12 @@ async validarHoraCargue():Promise<boolean>{
 
 
   async clearUploader(uploaderFiles: FileUpload){
-     //////console.log(uploaderFiles,this.filesToUpload);
+     //////////console.log(uploaderFiles,this.filesToUpload);
      uploaderFiles.onClear;
   }
 
   removeFile($event:any,uploaderFiles: FileUpload){
-      ////////console.log('remove',$event,)
+      ////////////console.log('remove',$event,)
       this.filesToUpload = [];
       let currentFiles = uploaderFiles.files.filter((file: any)=>file != $event.file);
       //uploaderFiles.files = currentFiles;
@@ -4092,10 +4219,10 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   loadFiles(uploaderFiles: any ){
-    ////////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
+    ////////////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
     let currentFiles = uploaderFiles;
     for(let currentFile of currentFiles){
-      ////////console.log('currentFile',currentFile);
+      ////////////console.log('currentFile',currentFile);
       //const [file] = currentFile;
       this.filesToUpload.push({
         file:currentFile,
@@ -4103,16 +4230,16 @@ async validarHoraCargue():Promise<boolean>{
       })
     }
 
-    ////////console.log('this.filesToUpload',this.filesToUpload);
+    ////////////console.log('this.filesToUpload',this.filesToUpload);
   }
 
   onLoad($event:any){
 
     const [ files ] = $event.currentFiles;
-    ////////console.log('files',files);
-    ////////console.log('$event.currentFiles',$event.currentFiles);
+    ////////////console.log('files',files);
+    ////////////console.log('$event.currentFiles',$event.currentFiles);
     for(let currentFile of $event.currentFiles){
-      ////////console.log('currentFile',currentFile);
+      ////////////console.log('currentFile',currentFile);
       //const [file] = currentFile;
       this.filesToUpload.push({
         file:currentFile,
@@ -4133,7 +4260,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   setInsppeccion($event:any){
-    ////////console.log($event);
+    ////////////console.log($event);
 
     this.inspeccionTurno = {
       fecha_inspeccion: new Date($event.fecha_inspeccion),
@@ -4176,12 +4303,12 @@ async validarHoraCargue():Promise<boolean>{
 
     }
 
-    //////console.log(this.inspeccionTurno);
+    //////////console.log(this.inspeccionTurno);
   }
 
   async verUploads($event:any){
 
-    ////console.log('$event',$event);
+    ////////console.log('$event',$event);
     this.uploadedFiles = [];
     let lineaPedido = this.tablaPedidosTurno.data.filter((linea: { index: any; })=>linea.index === $event);
     
@@ -4193,7 +4320,7 @@ async validarHoraCargue():Promise<boolean>{
     let filesAtach$ = this.functionsService.loadFiles({id_relacion,proceso,entidad});
     let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
 
-    ////console.log(filesAtachByEstadoHistorialTurno);
+    ////////console.log(filesAtachByEstadoHistorialTurno);
 
     this.dataTableEvidenciasItemTurno.data =  await filesAtachByEstadoHistorialTurno.map((file)=>{
       return {
@@ -4214,12 +4341,12 @@ async validarHoraCargue():Promise<boolean>{
       
     }
 
-    ////////console.log('lineaPedido seleccionada',lineaPedido,  this.dataFormCargueEvidencias, this.dataTableEvidenciasItemTurno.data)
+    ////////////console.log('lineaPedido seleccionada',lineaPedido,  this.dataFormCargueEvidencias, this.dataTableEvidenciasItemTurno.data)
     this.formEvidenciasCargueTurno = true;
   }
 
   borrarEvidenciaPedidoTurno($event:any){
-    ////////console.log('Borrar evidencia de adjuntos',$event)
+    ////////////console.log('Borrar evidencia de adjuntos',$event)
     this.confirmationService.confirm({
           message: `¿Esta seguro de eliminar los ítems seleccionados?`,
           header: 'Confirmación',
@@ -4229,10 +4356,10 @@ async validarHoraCargue():Promise<boolean>{
               this.functionsService.deleteFiles({id:evidencia.index})
                   .subscribe({
                     next:(result)=>{
-                      //////console.log('Delete ok',result);
+                      //////////console.log('Delete ok',result);
                       this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha eliminado correctamente el anexo ${evidencia.filename}`});
 
-                      //////console.log(this.dataTableEvidenciasItemTurno.data.findIndex((linea: { index: any; })=>linea.index != evidencia.index));
+                      //////////console.log(this.dataTableEvidenciasItemTurno.data.findIndex((linea: { index: any; })=>linea.index != evidencia.index));
                       /*let indexTablaEvidencias:any = this.dataTableEvidenciasItemTurno.data.findIndex((linea: { index: any; })=>linea.index === evidencia.index);
                       this.dataTableEvidenciasItemTurno.data.splice(indexTablaEvidencias,1);*/
 
@@ -4261,7 +4388,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   async uploadEvidenciasPedidoItem(id_linea_pedido_item:any,uploaderFiles: FileUpload){
-    ////////console.log('cargar evidencias',id_linea_pedido_item, this.filesToUpload);
+    ////////////console.log('cargar evidencias',id_linea_pedido_item, this.filesToUpload);
 
 
     if(this.filesToUpload.length > 0 && this.uploadActivo){
@@ -4276,7 +4403,7 @@ async validarHoraCargue():Promise<boolean>{
         this.functionsService.uploadFile(body)
             .subscribe({
               next:(result)=>{
-                ////////console.log('Upload ok',result);
+                ////////////console.log('Upload ok',result);
                 this.dataTableEvidenciasItemTurno.data.push({
                   index:result.id,
                   filename:anexo.file.name,
@@ -4307,7 +4434,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   uploadFiles($event:any){
-    ////console.log($event);
+    ////////console.log($event);
     if($event){
       const ref = this.dialogService.open(DynamicUploadComponent, {
         data: {
@@ -4330,14 +4457,14 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   buttonLine($event:any){
-    ////console.log(this.pedidosTurno)
-    ////console.log($event)
+    ////////console.log(this.pedidosTurno)
+    ////////console.log($event)
     const index =$event.index;
     const campo = $event.campo;
     if(campo==="lote_produccion"){
       //Gestion de lotes de produccion
       this.itemLineSelected = this.pedidosTurno.filter(lineaPedido=>lineaPedido.id === index);
-      //console.log('this.itemLineSelected',this.itemLineSelected);
+      //////console.log('this.itemLineSelected',this.itemLineSelected);
       //Buscar los lotes del item Seleccionado
       
       //this.lotesItemLine = this.lotesItems.filter(line=>line.id=== index);
@@ -4354,12 +4481,12 @@ async validarHoraCargue():Promise<boolean>{
     const itemcode = this.itemLineSelected[0].itemcode;
     const bodega = this.itemLineSelected[0].bodega;
 
-    //console.log('this.itemLineSelected[0]',this.itemLineSelected[0])
+    //////console.log('this.itemLineSelected[0]',this.itemLineSelected[0])
 
     this.pedidosService.getInventarioLotesItemBodega(itemcode,bodega)
         .subscribe({
             next:async (result)=>{
-              ////console.log(result);
+              ////////console.log(result);
               let lotesItemBodega:any[] = [];
               //Cargar array de lotes item bodega ws sap
               for(let item in result){
@@ -4367,7 +4494,7 @@ async validarHoraCargue():Promise<boolean>{
                  comprometido = comprometido+ await this.comprometidoOtrosTurnos(this.turno.locacion,this.itemLineSelected[0].bodega,this.itemLineSelected[0].id,result[item].Lote,itemcode)
                 lotesItemBodega.push({lote:result[item].Lote, fecha_vencimiento:result[item].Fechavencimiento, cantidad_bodega_lote:result[item].Stock,estado:'A', cantidad_comprometida:comprometido, saldo:result[item].Stock-comprometido})
               }
-              ////console.log('lotesItemBodega',lotesItemBodega);
+              ////////console.log('lotesItemBodega',lotesItemBodega);
               this.lotesItemBodega = await this.filtrarLotesSAP(this.lotesItemLine,lotesItemBodega)
               this.formLotesItemBodega = true;
               this.loadingTableLotesItemBodega = false;
@@ -4383,12 +4510,12 @@ async validarHoraCargue():Promise<boolean>{
 
     //obtener lineas de items diferentes al id linea seleccioanda e igual al item seleccionado y bodega
     let itemsTurno = !pedidosTurno?this.pedidosTurno.filter(item=>item.id != idLinea && item.itemcode === itemcode && item.bodega == bodega):pedidosTurno.filter((item: { id: any; itemcode: any; bodega:any })=>item.id != idLinea && item.itemcode === itemcode && item.bodega == bodega);
-    //console.log('itemsTurno',itemsTurno);
+    //////console.log('itemsTurno',itemsTurno);
     //recorrer los items del turno diferentes a la linea seleccionada, 
     for(let itemTurno of itemsTurno){
       //obtener los lotes que sean igual al item seleccionado y lote seleccioando
       let lotesItem:any = itemTurno.detalle_lotes_item_turno.filter((item: { lote: any; }) => item.lote === lote)
-      //console.log('lotesItem',lotesItem);
+      //////console.log('lotesItem',lotesItem);
       for(let loteItem of lotesItem){
         cantidadComprometidaItemLote = cantidadComprometidaItemLote+parseFloat(loteItem.cantidad_cargue_lote)
       }
@@ -4412,9 +4539,7 @@ async validarHoraCargue():Promise<boolean>{
                                                                       `${this.estadosTurno.CARGANDO}`,
                                                                       `${this.estadosTurno.CARGADO}`,
                                                                       `${this.estadosTurno.PESADOF}`,
-                                                                      `${this.estadosTurno.PESADO}`,
-                                                                      `${this.estadosTurno.PESADO}`,
-                                                                      `${this.estadosTurno.PESADO}`,
+                                                                      
 
                                                                     ]}}
     // let relations:any = {
@@ -4426,22 +4551,23 @@ async validarHoraCargue():Promise<boolean>{
     //             transportadora:true
     //         }
 
-      let relations:any = ['detalle_solicitud_turnos_pedido','detalle_solicitud_turnos_pedido.detalle_lotes_item_turno','vehiculo','conductor','transportadora']                                                                      
+      //let relations:any = ['detalle_solicitud_turnos_pedido','detalle_solicitud_turnos_pedido.detalle_lotes_item_turno','vehiculo','conductor','transportadora']                                                                      
+      let relations:any = ['detalle_solicitud_turnos_pedido','detalle_solicitud_turnos_pedido.detalle_lotes_item_turno']                                                                      
 
      let turnos = await this.pedidosService.getAsyncQuery2(ruote,where,relations);
-     //console.log('turnos',turnos)
+     //////console.log('turnos',turnos)
 
      //Filtrar turnos cuya bodega en items sea igual a al abodega de la linea seleccionada
      let turnosBodegaLote:any = turnos.filter(turno=> turno.detalle_solicitud_turnos_pedido.filter((item: { bodega: string; detalle_lotes_item_turno:any })=>item.bodega === bodega && item.detalle_lotes_item_turno.filter((itemLote: { lote: any; })=>itemLote.lote == lote).length >0).length >0 )
 
-     //console.log('turnosBodegaLote',bodega, lote,turnosBodegaLote)
+     //////console.log('turnosBodegaLote',bodega, lote,turnosBodegaLote)
     //Recorrer los turnos y obtener las cantidades comprometidas asociadas a la bodega y el lote                                                          
      for(let turnoBodegaLote of turnosBodegaLote){
        
         cantidadComprometidaItemLote = cantidadComprometidaItemLote+ await this.comprometidoItemLoteInTurno(idLinea,itemcode,lote,turnoBodegaLote.detalle_solicitud_turnos_pedido);
      }
 
-     //console.log('cantidadComprometidaItemLote',cantidadComprometidaItemLote)
+     //////console.log('cantidadComprometidaItemLote',cantidadComprometidaItemLote)
     return cantidadComprometidaItemLote;
   }
 
@@ -4458,7 +4584,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   selectedLote(lote:any){
-    ////console.log('lote seleccionado',lote);
+    ////////console.log('lote seleccionado',lote);
     //Buscar linea de lote seleccionado en resultado lotes SAP
     const indexLoteSap = this.lotesItemBodega.findIndex(item=>item.lote === lote);
 
@@ -4469,7 +4595,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   seleccionarLotesItemBodega(){
-    ////console.log('lotesItemBodegaSelected',this.lotesItemBodegaSelected);
+    ////////console.log('lotesItemBodegaSelected',this.lotesItemBodegaSelected);
     // if(this.lotesItemBodegaSelected.filter(lote=>lote.cantidad_bodega_lote>)){
 
     // }else{
@@ -4494,12 +4620,12 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   cambioValorCampoTablaLotesItem(event:any,idLinea:any,valorCampo:any,arrayLinea:any,campo:string){
-      // ////console.log('event',event);
-      // ////console.log('idLinea',idLinea);
-      // ////console.log('valorCampo',valorCampo);
-      // ////console.log('arrayLinea',arrayLinea);
-      // ////console.log('campo',campo);
-      // ////console.log('idLinea',idLinea);
+      // ////////console.log('event',event);
+      // ////////console.log('idLinea',idLinea);
+      // ////////console.log('valorCampo',valorCampo);
+      // ////////console.log('arrayLinea',arrayLinea);
+      // ////////console.log('campo',campo);
+      // ////////console.log('idLinea',idLinea);
 
       let index = this.lotesItemLine.findIndex(item=>item.id === idLinea);
       //this.lotesItemLine[index].lineaUpdate.update = true;
@@ -4509,8 +4635,8 @@ async validarHoraCargue():Promise<boolean>{
       }
 
       if(campo==='cantidad_cargue_lote'){
-       ////console.log('valorCampo',valorCampo);
-       ////console.log('parseFloat(arrayLinea[campo])',parseFloat(arrayLinea['cantidad_bodega_lote']));
+       ////////console.log('valorCampo',valorCampo);
+       ////////console.log('parseFloat(arrayLinea[campo])',parseFloat(arrayLinea['cantidad_bodega_lote']));
         if(valorCampo> parseFloat(arrayLinea['cantidad_bodega_lote'])){
           this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad a cagar del lote supera la cantidad existente en la bodega'});
           valorCampo =0;
@@ -4531,18 +4657,18 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   pressEnterTablaLotesItem(event:any,idLinea:any,valorCampo:any,arrayLinea:any,campo:string){
-      // ////console.log('event',event);
-      // ////console.log('idLinea',idLinea);
-      // ////console.log('valorCampo',valorCampo);
-      // ////console.log('arrayLinea',arrayLinea);
-      // ////console.log('campo',campo);
+      // ////////console.log('event',event);
+      // ////////console.log('idLinea',idLinea);
+      // ////////console.log('valorCampo',valorCampo);
+      // ////////console.log('arrayLinea',arrayLinea);
+      // ////////console.log('campo',campo);
 
       let index = this.lotesItemLine.findIndex(item=>item.id === idLinea);
       //this.lotesItemLine[index].lineaUpdate.update = true;
 
       if (event.key === "Enter") {
       
-        // ////////////////////////console.log('ENTER PRESS');
+        // ////////////////////////////console.log('ENTER PRESS');
         // if(event.target.value ===''){
         //   event.target.value =0;
         // }
@@ -4577,9 +4703,9 @@ async validarHoraCargue():Promise<boolean>{
       totalSacos+=parseFloat(loteItemLine.cantidad_sacos_lote);
     }
 
-    ////console.log('totalTon',totalTon);
+    ////////console.log('totalTon',totalTon);
     this.totalTonItem.nativeElement.value = totalTon;
-    ////console.log('totalSacos',totalSacos);
+    ////////console.log('totalSacos',totalSacos);
     this.totalSacosItem.nativeElement.value = totalSacos
   }
   
@@ -4594,14 +4720,14 @@ async validarHoraCargue():Promise<boolean>{
 
   asignarLotesItem(){
 
-   ////console.log('lotesItemLine',JSON.stringify(this.lotesItemLine))
+   ////////console.log('lotesItemLine',JSON.stringify(this.lotesItemLine))
 
     let cantidad_solicitada = this.totalSolicitado.nativeElement.value;
     let totalTon = this.totalTonItem.nativeElement.value;
     let totalSacos = this.totalSacosItem.nativeElement.value;
     let idLinea = this.itemLineSelected[0].id;
 
-    ////console.log('this.itemLineSelected',this.itemLineSelected);
+    ////////console.log('this.itemLineSelected',this.itemLineSelected);
     
 
     if(parseFloat(totalTon) ===0 || parseFloat(totalSacos)===0 ){

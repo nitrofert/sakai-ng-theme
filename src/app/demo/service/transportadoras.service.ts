@@ -25,6 +25,17 @@ export class TransportadorasService {
         return this.http.get<any>(url);
     }
 
+    filterTransportadoras(params:any):Observable<any> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/transportadoras/filter`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url,{params:params});
+    }
+
+    
+
     create(nuevaTransportadora:any):Observable<any>{
       
         //const requestOptions = this.urlApiService.getHeadersAPI();

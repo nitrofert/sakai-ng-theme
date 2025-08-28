@@ -106,7 +106,7 @@ export class VehiculosComponent  implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////console.log(permisos);
+              //////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -122,7 +122,7 @@ export class VehiculosComponent  implements  OnInit{
               this.showBtnActivate = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='activar').valor;
               
               this.infoUsuario = await this.usuariosService.infoUsuario();
-              //////////console.log(this.infoUsuario);
+              ////////////console.log(this.infoUsuario);
               this.getTransportadoras();
   
             },
@@ -137,7 +137,7 @@ export class VehiculosComponent  implements  OnInit{
     this.vehiculosService.getVehiculos()
     .subscribe({
         next:(vehiculos)=>{
-         // //console.log(vehiculos)
+         // ////console.log(vehiculos)
 
           let dataVehiculos:any[] = [];
               for(let vehiculo of vehiculos){
@@ -182,7 +182,7 @@ export class VehiculosComponent  implements  OnInit{
   }
 
   editar(event:any){
-    //console.log(event)
+    ////console.log(event)
     const ref = this.dialogService.open(FormVehiculoComponent, {
       data: {
        id: event
@@ -208,7 +208,7 @@ export class VehiculosComponent  implements  OnInit{
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-        //console.log(event);
+        ////console.log(event);
         let idsInactivar = event.map((item: { id: any; })=>{
           return item.id;
         })
@@ -255,7 +255,7 @@ export class VehiculosComponent  implements  OnInit{
       header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        //console.log(event);
+        ////console.log(event);
         let idsActivar = event.map((item: { id: any; })=>{
           return item.id;
         })

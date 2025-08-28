@@ -832,7 +832,7 @@ export const images:any = {
 export class PdfSolicitudCargue {
 
     header:any = (turno:any)=> {
-       //console.log('header');
+       ////console.log('header');
         return {
             margin: 8,
         columns: [
@@ -939,7 +939,7 @@ export class PdfSolicitudCargue {
         documentAssembly: true
     }
     content:any = (data:any)=>{
-       //console.log('content');
+       ////console.log('content');
         //Armar detalle observaciones
         let detalleObservaciones:any[] = [];
         let bodyTableObservaciones:any[] = [];
@@ -1621,7 +1621,7 @@ export class PdfSolicitudCargue {
     }
 
     footer:any =(infoUsuario:any)=> {
-       //console.log('footer');
+       ////console.log('footer');
         return {
             
         margin: 8,
@@ -1787,7 +1787,7 @@ export class PdfSolicitudCargue {
                 private usuarioService:UsuarioService){}
     
     async generarPDF(data:any):Promise<void>{
-        console.log('datakey',data.dataKey);
+        //console.log('datakey',data.dataKey);
         let datakey = data.dataKey.split('-');
         // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
         // let infoTurno = await lastValueFrom(infoTurno$);
@@ -1797,16 +1797,16 @@ export class PdfSolicitudCargue {
         let locaciones$ = this.almacenesService.getLocaciones()
         let locaciones = await lastValueFrom(locaciones$);
 
-       //console.log('locaciones',locaciones);
+       ////console.log('locaciones',locaciones);
 
-       //console.log('infoTurno',infoTurno);
+       ////console.log('infoTurno',infoTurno);
 
         let filesAtach$ = this.functionsService.filesToBase64({id_relacion:infoTurno.solicitud.usuario.id,
                                                            proceso:'firma',
                                                            entidad:'usuario'});
         let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
 
-       //console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno)
+       ////console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno)
 
         if(filesAtachByEstadoHistorialTurno.length === 0){
             filesAtachByEstadoHistorialTurno.push(`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQcAAABYCAIAAAB3ZqVmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAADfSURBVHhe7dMxAQAwEAOh+jedzn8awANvwGUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVsC1fUBYOJv6tIhuAAAAAElFTkSuQmCC`)
@@ -1814,7 +1814,7 @@ export class PdfSolicitudCargue {
         
         this.images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
        // this.images.FirmaAutorizador = filesAtachByEstadoHistorialTurno[0];
-       //console.log(filesAtachByEstadoHistorialTurno[0]);
+       ////console.log(filesAtachByEstadoHistorialTurno[0]);
 
         let nombreUsuario:string = infoTurno.solicitud.usuario.roles.filter((role: { nombre: string; })=>role.nombre==='CLIENTE LOGISTICA').length>0?infoTurno.solicitud.usuario.nombre_responsable:infoTurno.solicitud.usuario.nombrecompleto;       
 
@@ -1831,10 +1831,10 @@ export class PdfSolicitudCargue {
             email: emailUsuario,
             firma: filesAtachByEstadoHistorialTurno[0]
         }
-       //console.log('infoUsuario',infoUsuario);
+       ////console.log('infoUsuario',infoUsuario);
 
 
-        console.log('infoTurno',infoTurno);
+        //console.log('infoTurno',infoTurno);
         let cliente: any = {
             nombre: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].CardName,
             nit: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].FederalTaxID,
@@ -1842,28 +1842,28 @@ export class PdfSolicitudCargue {
             contactotelefono: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].telefono_contacto,
             contatoemail: infoTurno.solicitud.clientes.filter((cliente: { CardCode: any; })=>cliente.CardCode === datakey[datakey.length-2])[0].email_contacto
         }
-       //console.log('cliente',cliente);
+       ////console.log('cliente',cliente);
 
         let comercial:any =  {
             nombre: infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: { CardCode: any; })=>pedido.CardCode === datakey[datakey.length-2])[0].vendedor
         }
-       //console.log('comercial',comercial);
+       ////console.log('comercial',comercial);
 
         let trasnportadora:any = {
             nombre: infoTurno.transportadora.nombre,
             nit: infoTurno.transportadora.nit
         }
-       //console.log('trasnportadora',trasnportadora);
+       ////console.log('trasnportadora',trasnportadora);
         let vehiculo:any = {
             placa: infoTurno.vehiculo.placa
         }
-       //console.log('vehiculo',vehiculo);
+       ////console.log('vehiculo',vehiculo);
         let conductor:any =  {
             nombre: infoTurno.conductor.nombre,
             cedula: infoTurno.conductor.cedula,
             telefono: infoTurno.conductor.numerocelular
         }
-       //console.log('conductor',conductor);
+       ////console.log('conductor',conductor);
 
         let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-2] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; cantidad_sacos:any}) => {
 
@@ -1879,7 +1879,7 @@ export class PdfSolicitudCargue {
               destino: `${linea.municipioentrega} ${linea.lugarentrega}`
             }
         })
-       //console.log('productos',productos);
+       ////console.log('productos',productos);
 
         let observacionesArray:any = infoTurno.observacion!=""?infoTurno.observacion.split(";"):[];
         
@@ -1887,7 +1887,7 @@ export class PdfSolicitudCargue {
             return { observacion:data.trim() };
         })
 
-       //console.log('observaciones',observaciones);
+       ////console.log('observaciones',observaciones);
 
 
         let dataPdf: any = {

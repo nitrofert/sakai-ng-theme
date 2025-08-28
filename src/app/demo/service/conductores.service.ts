@@ -85,7 +85,14 @@ export class ConductoresService {
 
     }
 
-    
+     filterConductores(params:any):Observable<any> {
+
+        //const requestOptions = this.urlApiService.getHeadersAPI();
+
+        const url:string = `${this.api_url}/api/conductores/filter`;
+        //return this.http.get<any>(url, requestOptions);
+        return this.http.get<any>(url,{params:params});
+    }
 
     
 
