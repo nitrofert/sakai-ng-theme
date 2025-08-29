@@ -172,6 +172,8 @@ loadingTablePedidos:boolean = true;
 vehiculoSeleccionado2:any;
 vehiculosFiltrados2:any[] = [];
 
+vehiculosSeleccionadosSolictid:any[] = []
+
 
 constructor(private pedidosService: PedidosService,
             private almacenesService: AlmacenesService,
@@ -1117,26 +1119,38 @@ adicionarVehiculo(){
 }
 
 
-filtrarVehiculo(event:any){
+async filtrarVehiculo(event:any){
    if(event.query.length>=3){
     ////console.log(event)
     // let transportadorasAfiltrar = await this.functionsService.resolveObservable(this.transportadorasService.filterTransportadoras({nombre:event.query}))
     // this.transportadorasFiltrados = this.filter(event,transportadorasAfiltrar);
-    this.vehiculosService.filterVehiculos({placa:event.query})
-        .subscribe(data=>{
+  //   this.vehiculosService.filterVehiculos({placa:event.query})
+  //       .subscribe(data=>{
 
-          data.map((item: { code: any; placa: string; name: any; tipo_vehiculo: any; label: string; clase:any})=>{
+  //         data.map((item: { code: any; placa: string; name: any; tipo_vehiculo: any; label: string; clase:any})=>{
+  //           item.code = item.placa;
+  //             item.name = item.placa;
+  //             item.label = item.placa+' ('+item.tipo_vehiculo.capacidad+' TON)';
+  //             item.clase = item.tipo_vehiculo;
+  //         })
+  //         this.vehiculosFiltrados = data
+  //         //////console.log(this.transportadorasFiltrados)
+  //       })
+         let data =  await this.functionsService.resolveObservable(this.vehiculosService.filterVehiculos({placa:event.query}))
+          await data.map((item: { code: any; placa: string; name: any; tipo_vehiculo: any; label: string; clase:any})=>{
             item.code = item.placa;
               item.name = item.placa;
               item.label = item.placa+' ('+item.tipo_vehiculo.capacidad+' TON)';
               item.clase = item.tipo_vehiculo;
           })
           this.vehiculosFiltrados = data
-          //////console.log(this.transportadorasFiltrados)
-        })
-
     
-  }
+   }
+
+
+ 
+  
+
   // else{
   //   this.vehiculosFiltrados = this.filter(event,this.vehiculos);
   // }
@@ -1218,18 +1232,18 @@ async seleccionarVehiculo(vehiculoSeleccionado:any){
 
        ////console.log('vehiculoSeleccionado',this.vehiculoSeleccionado)
       ////////////////////////// //// //////////////////console.log(vehiculoSeleccionado)
-      this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
-      //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
-      let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
+      // this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
+      // //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
+      // let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
 
-      this.pesobruto = vehiculoSeleccionado.pesovacio;
-      this.pesoneto = vehiculoSeleccionado.pesomax;
-      //////////////////////////// //// //////////////////console.log(this.capacidadVehiculo,capacidaVh);
-      this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
+      // this.pesobruto = vehiculoSeleccionado.pesovacio;
+      // this.pesoneto = vehiculoSeleccionado.pesomax;
+      // //////////////////////////// //// //////////////////console.log(this.capacidadVehiculo,capacidaVh);
+      // this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
 
-      this.vehiculosFiltrados2 = [this.vehiculoSeleccionado]
-      this.vehiculoSeleccionado2 = this.vehiculoSeleccionado;
-      
+      // this.vehiculosFiltrados2 = [this.vehiculoSeleccionado]
+      // this.vehiculoSeleccionado2 = this.vehiculoSeleccionado;
+      // console.log(vehiculoSeleccionado)
 
       //Verificar si el conductor asociado al vehiculo seleccionado existe en conductores
       //let conductor = this.conductores.find(conductor => conductor.code === vehiculoSeleccionado.conductor);
@@ -1488,6 +1502,8 @@ async adicionVehiculoSolicitud(){
               pedidos:[]
           });
 
+          this.vehiculosSeleccionadosSolictid.push(this.vehiculoSeleccionado)
+
           ////console.log('this.vehiculosEnSolicitud', this.vehiculosEnSolicitud);
           //this.envioLineaCarguePedido =false;
           this.envioAdicionVehiculo = false;
@@ -1526,9 +1542,17 @@ resetearForm(){
 }
 
 async adicionarItemPedido(placa:string){
-  ////////////////////////////// //// //////////////////console.log(placa);
-  // let vehiculo = await this.vehiculos.find(vehiculo =>vehiculo.code === placa);
-  // this.vehiculoSeleccionado = vehiculo;
+ 
+  let vehiculo = await this.vehiculosSeleccionadosSolictid.find(vehiculo =>vehiculo.code === placa);
+  this.vehiculoSeleccionado2 = vehiculo;
+
+  this.capacidadVehiculo = this.vehiculoSeleccionado2.capacidad;
+  //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
+  let capacidaVh = await this.cacluarCapacidadDisponibleVH(this.vehiculoSeleccionado2.code); 
+  this.pesobruto = this.vehiculoSeleccionado2.pesovacio;
+  this.pesoneto = this.vehiculoSeleccionado2.pesomax;
+  this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
+
   let clienteSeleccionado:any;
   if(Object.prototype.toString.call(this.clienteSeleccionado) === '[object Array]'){
     clienteSeleccionado = this.clienteSeleccionado[0];

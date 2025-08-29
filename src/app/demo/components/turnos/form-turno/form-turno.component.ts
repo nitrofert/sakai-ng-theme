@@ -3802,6 +3802,7 @@ async validarHoraCargue():Promise<boolean>{
 
 
     this.bodegas = bodegas;
+    console.log('bodegas',bodegas)
 
     
 
@@ -4146,7 +4147,7 @@ async validarHoraCargue():Promise<boolean>{
             clientes: clientesNuevoTurno.map((cliente)=>{ return cliente.id}),
             detalle_solicitud
           }
-           ////////////////////console.log('newSolicitud',newSolicitud);
+           console.log('newSolicitud',newSolicitud);
           
           this.solicitudTurnoService.create(newSolicitud)
               .subscribe({
