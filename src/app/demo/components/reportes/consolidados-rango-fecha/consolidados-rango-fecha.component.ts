@@ -51,7 +51,7 @@ export class ConsolidadosRangoFechaComponent implements  OnInit{
     
     
       if(event[1]){
-        ////console.log(this.filtroRnagoFechas,this.rangoFechas);
+        //////console.log(this.filtroRnagoFechas,this.rangoFechas);
         //this.filtroRnagoFechas = event;
         this.rangoFechas = this.filtroRnagoFechas;
         await this.setReporte();

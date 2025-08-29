@@ -832,7 +832,7 @@ export const images:any = {
 export class PdfRemision {
 
     header:any = (remision:any, almacen:string='')=> {
-       ////console.log('header');
+       //////console.log('header');
         return {
             margin: 8,
         columns: [
@@ -960,7 +960,7 @@ export class PdfRemision {
     }
 
     content:any = (data:any)=>{
-       ////console.log('content');
+       //////console.log('content');
         //Armar detalle observaciones
         let detalleObservaciones:any[] = [];
         let bodyTableObservaciones:any[] = [];
@@ -1627,7 +1627,7 @@ export class PdfRemision {
     }
 
     footer:any =(infoUsuario:any,data:any)=> {
-       ////console.log('footer');
+       //////console.log('footer');
         return {
             
         margin: 8,
@@ -1895,12 +1895,12 @@ export class PdfRemision {
     
     
     async generarPDF(turno:any,remision:any):Promise<void>{
-       ////console.log('datakey',data.dataKey);
+       //////console.log('datakey',data.dataKey);
         //let datakey = data.dataKey.split('-');
         // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(turno);
         // let infoTurno = await lastValueFrom(infoTurno$);
         let infoTurno = turno;
-        //console.log('infoTurno',infoTurno);
+        ////console.log('infoTurno',infoTurno);
 
         let locaciones$ = this.almacenesService.getLocaciones()
         let locaciones = await lastValueFrom(locaciones$);
@@ -1908,14 +1908,14 @@ export class PdfRemision {
         let almacenes$ =this.almacenesService.getAlmacenes();
         let almacenes:any[] = await this.functionsService.objectToArray((await lastValueFrom(almacenes$)));
 
-        //console.log('locaciones',locaciones);
-        //console.log('almacenes',almacenes);
+        ////console.log('locaciones',locaciones);
+        ////console.log('almacenes',almacenes);
 
 
 
         let remisiones_turno:any[] = [];
 
-        //console.log('infoTurno.detalle_solicitud_turnos_remisiones',infoTurno.detalle_solicitud_turnos_remisiones)
+        ////console.log('infoTurno.detalle_solicitud_turnos_remisiones',infoTurno.detalle_solicitud_turnos_remisiones)
 
         let infoRemison:any = infoTurno.detalle_solicitud_turnos_remisiones.find((itemremision: { docnum: any; })=>itemremision.docnum === remision);
        
@@ -1971,20 +1971,20 @@ export class PdfRemision {
         linea_remision.detalle_remision = detalle_remision;
         remisiones_turno.push(linea_remision);
 
-        //console.log('remisiones_turno',remisiones_turno);
+        ////console.log('remisiones_turno',remisiones_turno);
 
         let almacen:string = almacenes.filter(almacen=>almacen.WhsCode_Code === remisiones_turno[0].detalle_remision[0].bodega)[0].WhsName;
 
-       ////console.log('locaciones',locaciones);
+       //////console.log('locaciones',locaciones);
 
-       ////console.log('infoTurno',infoTurno);
+       //////console.log('infoTurno',infoTurno);
 
         let filesAtach$ = this.functionsService.filesToBase64({id_relacion:infoTurno.solicitud.usuario.id,
                                                            proceso:'firma',
                                                            entidad:'usuario'});
         let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
 
-       ////console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno)
+       //////console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno)
 
         if(filesAtachByEstadoHistorialTurno.length === 0){
             filesAtachByEstadoHistorialTurno.push(`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQcAAABYCAIAAAB3ZqVmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAADfSURBVHhe7dMxAQAwEAOh+jedzn8awANvwGUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVsC1fUBYOJv6tIhuAAAAAElFTkSuQmCC`)
@@ -1992,7 +1992,7 @@ export class PdfRemision {
         
         this.images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
        // this.images.FirmaAutorizador = filesAtachByEstadoHistorialTurno[0];
-       ////console.log(filesAtachByEstadoHistorialTurno[0]);
+       //////console.log(filesAtachByEstadoHistorialTurno[0]);
 
         let nombreUsuario:string = infoTurno.solicitud.usuario.roles.filter((role: { nombre: string; })=>role.nombre==='CLIENTE LOGISTICA').length>0?infoTurno.solicitud.usuario.nombre_responsable:infoTurno.solicitud.usuario.nombrecompleto;       
 
@@ -2009,7 +2009,7 @@ export class PdfRemision {
             email: emailUsuario,
             firma: filesAtachByEstadoHistorialTurno[0]
         }
-       ////console.log('infoUsuario',infoUsuario);
+       //////console.log('infoUsuario',infoUsuario);
 
 
 
@@ -2022,30 +2022,30 @@ export class PdfRemision {
         contatoemail: remisiones_turno[0].cliente.email_contacto,
         destino_pedido_item:remisiones_turno[0].destino
     }
-   //console.log('cliente',cliente);
+   ////console.log('cliente',cliente);
 
 
         let comercial:any =  {
             //nombre: infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: { CardCode: any; })=>pedido.CardCode === datakey[datakey.length-1])[0].vendedor
             nombre: ''
         }
-       ////console.log('comercial',comercial);
+       //////console.log('comercial',comercial);
 
         let trasnportadora:any = {
             nombre: infoTurno.transportadora.nombre,
             nit: infoTurno.transportadora.nit
         }
-       ////console.log('trasnportadora',trasnportadora);
+       //////console.log('trasnportadora',trasnportadora);
         let vehiculo:any = {
             placa: infoTurno.vehiculo.placa
         }
-       ////console.log('vehiculo',vehiculo);
+       //////console.log('vehiculo',vehiculo);
         let conductor:any =  {
             nombre: infoTurno.conductor.nombre,
             cedula: infoTurno.conductor.cedula,
             telefono: infoTurno.conductor.numerocelular
         }
-       ////console.log('conductor',conductor);
+       //////console.log('conductor',conductor);
 
         //let productos:any =  remisiones_turno[0].detalle_remision;
 
@@ -2071,8 +2071,8 @@ export class PdfRemision {
         let observaciones:any = observacionesArray.map((data:any)=>{
             return { observacion:data.trim() };
         })
-       //console.log('remisiones_turno[0].fecha',remisiones_turno[0].fecha); 
-       //console.log('new Date( remisiones_turno[0].fecha',new Date( `${remisiones_turno[0].fecha}T05:00:00.000Z`));
+       ////console.log('remisiones_turno[0].fecha',remisiones_turno[0].fecha); 
+       ////console.log('new Date( remisiones_turno[0].fecha',new Date( `${remisiones_turno[0].fecha}T05:00:00.000Z`));
 
 
         let dataPdf: any = {

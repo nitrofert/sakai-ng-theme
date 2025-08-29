@@ -108,7 +108,7 @@ export class FormUsuarioComponent implements  OnInit {
     ){}
 
   async ngOnInit() {
-   ////////////console.log(this.roles);
+   //////////////console.log(this.roles);
     
     this.getRoles();
    
@@ -143,9 +143,9 @@ export class FormUsuarioComponent implements  OnInit {
 
     this.locacionesSeleccionados = locacionesUsuario;
 
-   ////////////console.log(usuario);
+   //////////////console.log(usuario);
     let clientesUsuario = await usuario.clientes.map((cliente: { code: any; id: any; name: any; CardName: any; CardCode: any;label: any; })=>{ cliente.code = cliente.id; cliente.name = cliente.CardName; cliente.label=cliente.CardCode+' - '+cliente.CardName; return cliente})
-    ////console.log(clientesUsuario);
+    //////console.log(clientesUsuario);
     this.clientesSAPSeleccionados = clientesUsuario;
 
   }
@@ -173,7 +173,7 @@ export class FormUsuarioComponent implements  OnInit {
   }
 
   async getClientes(){
-   ////////////console.log('clientes');
+   //////////////console.log('clientes');
     /*this.sb1SLService.getClientesSAP()
         .subscribe({
             next: async (clientesSAP)=>{
@@ -189,7 +189,7 @@ export class FormUsuarioComponent implements  OnInit {
               }
 
               this.clientesSAP = clientesSAP.value;
-             ////////////console.log( this.clientesSAP);
+             //////////////console.log( this.clientesSAP);
 
               //for(let rol of roles){
               //    rol.code = rol.id;
@@ -211,7 +211,7 @@ export class FormUsuarioComponent implements  OnInit {
         });
 
         this.clientesSAP = clientes;
-        ////console.log(this.clientesSAP[0]);
+        //////console.log(this.clientesSAP[0]);
         this.getLocaciones();
           
              
@@ -221,7 +221,7 @@ export class FormUsuarioComponent implements  OnInit {
     this.almacenesService.getLocaciones()
         .subscribe({
             next:async (locaciones)=>{
-               ////////////console.log(locaciones);
+               //////////////console.log(locaciones);
                 let dataLocaciones:any[] = [];
                 for(let locacion of locaciones){
                   locacion.code = locacion.id,
@@ -258,7 +258,7 @@ export class FormUsuarioComponent implements  OnInit {
 
 
   seleccionaRrol(roles:any){
-   ////console.log(roles)
+   //////console.log(roles)
 
     if(roles.filter((opcion: { nombre: string; }) =>opcion.nombre === 'CLIENTE LOGISTICA').length >0){
         this.validarCamposClienteLogistica = true;
@@ -288,12 +288,12 @@ export class FormUsuarioComponent implements  OnInit {
 
   filter(event: any, arrayFiltrar:any[]) {
 
-    //////////////console.log(arrayFiltrar);
+    ////////////////console.log(arrayFiltrar);
     const filtered: any[] = [];
     const query = event.query;
     for (let i = 0; i < arrayFiltrar.length; i++) {
         const linea = arrayFiltrar[i];
-        ////////////console.log(linea)
+        //////////////console.log(linea)
         if (linea.label.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
           
             filtered.push(linea);
@@ -313,7 +313,7 @@ export class FormUsuarioComponent implements  OnInit {
     }else if(this.password!= this.password2){
       this.messageService.add({severity:'error', summary:'Error', detail:'Los passwords ingresados no coinciden'});
     }else{
-      ////////////console.log(this.hierarchy,this.visible, this.opcionPadre);
+      //////////////console.log(this.hierarchy,this.visible, this.opcionPadre);
         let nuevoUsuario ={
           username:this.username,
           password:this.password,
@@ -331,11 +331,11 @@ export class FormUsuarioComponent implements  OnInit {
           clientes: this.clientesSAPSeleccionados.map((cliente)=>{ return {CardCode:cliente.CardCode,CardName:cliente.CardName,FederalTaxID:cliente.FederalTaxID,EmailAddress:cliente.EmailAddress}}),
           locaciones:this.locacionesSeleccionados.map((locacion)=>{ return locacion.id})
         }
-       ////////////console.log(nuevoUsuario);
+       //////////////console.log(nuevoUsuario);
         this.usuariosService.create(nuevoUsuario)
             .subscribe({
                 next: (usuario)=>{
-                 ////////////console.log(usuario);
+                 //////////////console.log(usuario);
                   this.messageService.add({severity:'success', summary:'información', detail:`El usuario ${usuario.nombrecompleto} fue registrado correctamente`});
                   if(this.filesToUpload.length > 0 && this.uploadActivo){
                     for(let anexo of this.filesToUpload){
@@ -349,7 +349,7 @@ export class FormUsuarioComponent implements  OnInit {
                       this.functionsService.uploadFile(body)
                           .subscribe({
                             next:(result)=>{
-                             ////console.log('Upload ok',result);
+                             //////console.log('Upload ok',result);
                               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
                             },
                             error:(err)=>{
@@ -379,7 +379,7 @@ export class FormUsuarioComponent implements  OnInit {
       this.messageService.add({severity:'error', summary:'Error', detail:'Los passwords ingresados no coinciden'});
     }else{
 
-      //////console.log(this.clientesSAPSeleccionados);
+      ////////console.log(this.clientesSAPSeleccionados);
       
       let editarUsuario:any ={
         username:this.username,
@@ -403,7 +403,7 @@ export class FormUsuarioComponent implements  OnInit {
         this.usuariosService.update(editarUsuario,this.config.data.id)
             .subscribe({
                 next: async (usuario)=>{
-                 ////////////console.log(usuario);
+                 //////////////console.log(usuario);
                   this.messageService.add({severity:'success', summary:'información', detail:`El usuario ${this.nombrecompleto} fue actualizado correctamente`});
                   if(this.filesToUpload.length > 0 && this.uploadActivo){
 
@@ -411,7 +411,7 @@ export class FormUsuarioComponent implements  OnInit {
                     let deleteFile$ = this.functionsService.deleteFiles({entidad:'usuario',id_relacion:usuario.id,proceso:'firma'});
                     let deleteFile = await lastValueFrom(deleteFile$);
 
-                   ////console.log(deleteFile);
+                   //////console.log(deleteFile);
 
                     //registrar nueva firma
                     for(let anexo of this.filesToUpload){
@@ -425,7 +425,7 @@ export class FormUsuarioComponent implements  OnInit {
                       this.functionsService.uploadFile(body)
                           .subscribe({
                             next:(result)=>{
-                             ////console.log('Upload ok',result);
+                             //////console.log('Upload ok',result);
                               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
                             },
                             error:(err)=>{
@@ -457,7 +457,7 @@ export class FormUsuarioComponent implements  OnInit {
   }
 
   removeFile($event:any,uploaderFile: FileUpload){
-      ////console.log('remove',$event,)
+      //////console.log('remove',$event,)
       this.filesToUpload = [];
       let currentFiles = uploaderFile.files.filter((file: any)=>file != $event.file);
       //uploaderFiles.files = currentFiles;
@@ -465,10 +465,10 @@ export class FormUsuarioComponent implements  OnInit {
   }
 
   loadFile(uploaderFile: any ){
-    ////console.log('filesToUpload',uploaderFile);
+    //////console.log('filesToUpload',uploaderFile);
     let currentFiles = uploaderFile;
     for(let currentFile of currentFiles){
-      ////console.log('currentFile',currentFile);
+      //////console.log('currentFile',currentFile);
       //const [file] = currentFile;
       this.filesToUpload.push({
         file:currentFile,

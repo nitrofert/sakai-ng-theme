@@ -64,9 +64,9 @@ import { lastValueFrom } from 'rxjs';
     }
 
     getPermisosModulo(modulo:string):Observable<any> {
-        ////////////////console.log(modulo);
+        //////////////////console.log(modulo);
         modulo = modulo.replace(/\//g, '_')
-        //////console.log('modulo',modulo);
+        ////////console.log('modulo',modulo);
         const url:string = `${this.api_url}/api/usuarios/permisos-modulo/${modulo}`;
         return  this.http.get<any>(url);
     }
@@ -82,8 +82,8 @@ import { lastValueFrom } from 'rxjs';
         //const modulo = this.router.url;
         let permiso = false;
         let permisosModulo = await this.permisosModulo(modulo);
-        //////////////console.log(permisosModulo);
-        //////////////console.log(permisosModulo.find((permisoModulo: { accion: string; })=>permisoModulo.accion === accion))
+        ////////////////console.log(permisosModulo);
+        ////////////////console.log(permisosModulo.find((permisoModulo: { accion: string; })=>permisoModulo.accion === accion))
         if(permisosModulo.find((permisoModulo: { accion: string; })=>permisoModulo.accion === accion) && permisosModulo.find((permisoModulo: { accion: string; })=>permisoModulo.accion === accion).valor){
             permiso = true;
         }

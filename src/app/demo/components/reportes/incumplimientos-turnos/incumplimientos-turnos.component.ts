@@ -122,8 +122,8 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
       this.verEncabezado = false;
     }
 
-    //////////////console.log('this.filtroRnagoFechas[0]',this.filtroRnagoFechas[0]);
-    //////////////console.log('this.filtroRnagoFechas[1]',this.filtroRnagoFechas[1]);
+    ////////////////console.log('this.filtroRnagoFechas[0]',this.filtroRnagoFechas[0]);
+    ////////////////console.log('this.filtroRnagoFechas[1]',this.filtroRnagoFechas[1]);
 
     await this.setReporte();
    
@@ -131,7 +131,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    ////////////////console.log('changes',changes['rangoFechas'].currentValue)
+    //////////////////console.log('changes',changes['rangoFechas'].currentValue)
     this.loading = true;
     this.filtroRnagoFechas = changes['rangoFechas'].currentValue
     this.setReporte();
@@ -141,7 +141,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     
     
     if(event[1]){
-      ////////////////console.log(this.filtroRnagoFechas);
+      //////////////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       //this.setReporte();
   
@@ -152,7 +152,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     let localidades =  await this.localidadesService.getLocalidades();
 
    
-    ////console.log('localidades',localidades);
+    //////console.log('localidades',localidades);
     return localidades;
    
   }
@@ -160,7 +160,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
 
   async getDependencias():Promise<any>{
     let dependencias_all =  await this.dependenciasService.getDependencias();
-    ////console.log('dependencias_all',dependencias_all);
+    //////console.log('dependencias_all',dependencias_all);
     return dependencias_all ;
    
         
@@ -180,7 +180,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
 
     let infoTurnos = await this.solicitudTurnoService.allInfoTurnos(params);
     
-    //////////console.log('infoTurnos',infoTurnos);
+    ////////////console.log('infoTurnos',infoTurnos);
 
     //return infoTurnos.filter((turno: { turnos_estado: EstadosDealleSolicitud; })=>turno.turnos_estado === EstadosDealleSolicitud.DESPACHADO)
 
@@ -193,7 +193,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
 
     
 
-     ////console.log('locaciones',locaciones);
+     //////console.log('locaciones',locaciones);
 
      return locaciones;
   }
@@ -207,7 +207,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     this.locaciones = await this.getLocaciones();
 
     let infoTurnos = await this.getInfoTurnos();
-    ////console.log('infoTurnos incumplimientos',infoTurnos);
+    //////console.log('infoTurnos incumplimientos',infoTurnos);
     this.infoTurnos = infoTurnos;
 
 
@@ -219,7 +219,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
                                         (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length==0
                                         && turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 )
                                       )
-    ////////console.log('turnosApCn',turnosApCn);
+    //////////console.log('turnosApCn',turnosApCn);
 
    
 
@@ -228,8 +228,8 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     let clientes:any[] = [];
     await turnosApCn.map((turno:any)=>{
         turno.detalle_solicitud_turnos_pedido.map((pedido:any)=>{
-          //////console.log('pedido.localidad',pedido.localidad);
-          //////console.log('this.localidades',this.localidades);
+          ////////console.log('pedido.localidad',pedido.localidad);
+          ////////console.log('this.localidades',this.localidades);
           if(zonas.filter(zona=>zona.code === pedido.localidad).length==0){
             zonas.push({
                 code:pedido.localidad,
@@ -246,7 +246,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
           })
           }
         })
-        //////console.log('turno.localidad',turno.locacion);
+        ////////console.log('turno.localidad',turno.locacion);
         if(locaciones.filter(locacion=>locacion.code === turno.locacion).length==0){
           locaciones.push({
               code:turno.locacion,
@@ -257,7 +257,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
         
     });
 
-    ////console.log('locaciones turnos',locaciones);
+    //////console.log('locaciones turnos',locaciones);
 
     let objString:string = "";
 
@@ -297,7 +297,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
     dataTable = [];
 
     for(let locacion of locaciones){
-      ////console.log('locacion',locacion);
+      //////console.log('locacion',locacion);
       let turnosIncumplidosLocacion = turnosApCn.filter((turno: { detalle_solicitud_turnos_historial: any[]; detalle_solicitud_turnos_pedido:any[]; locacion:any }) => 
                                                     (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length>0 
                                                      && (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO))[0].novedades.filter((novedad: { novedad: string; })=> novedad.novedad ==='VEHÍCULO NO SE PRESENTA').length>0)
@@ -322,7 +322,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
   }
 
   dataTable = await this.functionsService.sortArrayObject(dataTable.filter(data=>data.prcTonINCU >0),'prcTonINCU','DESC');
-  ////console.log('this.dataTableIncumplimientoLocacion',dataTable);
+  //////console.log('this.dataTableIncumplimientoLocacion',dataTable);
 
 
   this.dataTableIncumplimientoLocacion.data=dataTable;
@@ -341,7 +341,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
                                                    );
        
 
-      ////////console.log('turnosIncumplidosCliente',turnosIncumplidosCliente);
+      //////////console.log('turnosIncumplidosCliente',turnosIncumplidosCliente);
       let toneladasIncumplidasCliente = 0;
       await turnosIncumplidosCliente.map((turno:any)=>{
           //turno.detalle_solicitud_turnos_pedido.filter((pedido: { CardCode: any; })=>pedido.CardCode === cliente.code)
@@ -352,14 +352,14 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
           })
       })
 
-      //////////console.log('toneladasIncumplidasCliente',toneladasIncumplidasCliente);
+      ////////////console.log('toneladasIncumplidasCliente',toneladasIncumplidasCliente);
 
       let turnosCumplidosCliente = turnosApCn.filter((turno: { detalle_solicitud_turnos_historial: any[]; detalle_solicitud_turnos_pedido:any[] }) => 
                                                   (turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.CANCELADO).length==0 && turno.detalle_solicitud_turnos_historial.filter(historial=>historial.estado === EstadosDealleSolicitud.AUTORIZADO).length>0 )
                                                    && turno.detalle_solicitud_turnos_pedido.filter(pedido=>pedido.CardCode === cliente.code).length>0
                                                 );
 
-      //////////console.log('turnosCumplidosCliente',turnosCumplidosCliente);
+      ////////////console.log('turnosCumplidosCliente',turnosCumplidosCliente);
 
       let toneladasCumplidasCliente = 0;
       await turnosCumplidosCliente.map((turno:any)=>{
@@ -381,7 +381,7 @@ export class IncumplimientosTurnosComponent implements  OnInit, OnChanges {
       let nombreCliente = cliente.label.replace(/"/g, "");;
 
       objString=`{"cliente":"${nombreCliente}","tonCUMP":${toneladasCumplidasCliente},"prcTonCUMP":${prcTonCUMP},"tonINCU":${toneladasIncumplidasCliente},"prcTonINCU":${prcTonINCU}}`;
-      ////////console.log(objString);
+      //////////console.log(objString);
 
       dataTable.push(JSON.parse(objString));
 
