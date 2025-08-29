@@ -820,13 +820,16 @@ export class CalendarioTurnosComponent implements OnInit {
     let objectEvent = JSON.parse(clickInfo.event.title);
     let orden = clickInfo.event.id;
 
-    //////////// ////////////////console.log((clickInfo)
 
+    // console.log('orden',orden)
+    // console.log('tablaTurnosLocalidad',this.tablaTurnosLocalidad)
+    let infoTurno = this.tablaTurnosLocalidad.find(item=>item.id == orden)
+    //console.log('infoTurno',infoTurno);
     
     const ref = this.dialogService.open(FormTurnoComponent, {
       data: {
           id: parseInt(orden),
-          infoTurno:this.selectedItem[0]
+          infoTurno
       },
       header: `Orden de cargue: ${orden}` ,
       width: '70%',
