@@ -498,9 +498,8 @@
                             </span>
                         </div>
                         <div class="field col-1">
-                            <p-button icon="pi pi-pencil" 
-                                      [disabled]="transportadoraSeleccionada.length==0 || transportadoraSeleccionada.id==0" 
-                                      pTooltip="Editar transportadora" 
+                            <p-button [icon]="transportadoraSeleccionada.length===0?'pi pi-plus':'pi pi-pencil'" 
+                                      [pTooltip]="transportadoraSeleccionada.length===0?'Nueva transportadora':'Editar transportadora'" 
                                       tooltipPosition="top" 
                                       (onClick)="nuevaTransportadora()"></p-button>
                         </div>
@@ -525,9 +524,13 @@
                             </span>
                         </div>
                         <div class="field col-1">
-                            <p-button icon="pi pi-pencil" 
+                            <!-- <p-button icon="pi pi-pencil" 
                                       [disabled]="vehiculoSeleccionado.length==0 || vehiculoSeleccionado.id==0" 
                                       pTooltip="Editar vehículo" 
+                                      tooltipPosition="top" 
+                                      (onClick)="nuevoVehiculo()"></p-button> -->
+                            <p-button [icon]="vehiculoSeleccionado.length===0?'pi pi-plus':'pi pi-pencil'" 
+                                      [pTooltip]="vehiculoSeleccionado.length===0?'Nuevo vehículo':'Editar vehículo'" 
                                       tooltipPosition="top" 
                                       (onClick)="nuevoVehiculo()"></p-button>
                         </div>
@@ -589,9 +592,14 @@
                             </span>
                         </div>
                         <div class="field col-1">
-                            <p-button icon="pi pi-pencil" 
+                            <!-- <p-button icon="pi pi-pencil" 
                                       [disabled]="conductorSeleccionado.length==0 || conductorSeleccionado.id==0" 
                                       pTooltip="Editar conductor" 
+                                      tooltipPosition="top" 
+                                      (onClick)="nuevoConductor()"></p-button> -->
+
+                            <p-button [icon]="conductorSeleccionado.length===0?'pi pi-plus':'pi pi-pencil'" 
+                                      [pTooltip]="conductorSeleccionado.length===0?'Nuevo conductor':'Editar conductor'" 
                                       tooltipPosition="top" 
                                       (onClick)="nuevoConductor()"></p-button>
                         </div>

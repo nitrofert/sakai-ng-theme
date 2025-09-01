@@ -314,6 +314,7 @@ turnoBase:number =0;
 
 infoHistorialTurno:any;
 
+
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private ordenesCargueService: OrdenesCargueService, 
@@ -3821,6 +3822,8 @@ async validarHoraCargue():Promise<boolean>{
   }
   
   async seleccionarBodega(bodegaSeleccionada:any){
+
+    console.log(bodegaSeleccionada)
 
     if(this.locaciones.filter(locacion=>locacion.code === bodegaSeleccionada.locacion_codigo2).length>0){
 

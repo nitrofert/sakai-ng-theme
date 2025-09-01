@@ -173,6 +173,8 @@ vehiculoSeleccionado2:any;
 vehiculosFiltrados2:any[] = [];
 
 vehiculosSeleccionadosSolictid:any[] = []
+transportadorasSeleccionadosSolictid:any[] = []
+conductoresSeleccionadosSolictid:any[] = []
 
 
 constructor(private pedidosService: PedidosService,
@@ -1159,9 +1161,9 @@ async filtrarVehiculo(event:any){
   //     transportadorasAfiltrar.push(transportadora);
   // }
  // this.transportadorasFiltrados = this.filter(event,transportadorasAfiltrar);
-  this.vehiculosFiltrados.unshift({
-    id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
-  });
+  // this.vehiculosFiltrados.unshift({
+  //   id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
+  // });
   // //TODO: quitar del listado de vehiculos los vehiculos que ya esten asociados a la solicitud en curso
   
   // let vehiculosAfiltrar:any[] = [];
@@ -1308,14 +1310,14 @@ filtrarConductor(event:any){
   //   }
   // }
   // this.conductoresFiltrados = this.filter(event,conductoresAfiltrar);
-  this.conductoresFiltrados.unshift({
-    id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo conductor"
-  });
+  // this.conductoresFiltrados.unshift({
+  //   id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo conductor"
+  // });
 }
 
 
 
-  filtrarTransportadora(event:any){
+filtrarTransportadora(event:any){
   
   if(event.query.length>=3){
     ////console.log(event)
@@ -1343,9 +1345,9 @@ filtrarConductor(event:any){
   //     transportadorasAfiltrar.push(transportadora);
   // }
  // this.transportadorasFiltrados = this.filter(event,transportadorasAfiltrar);
-  this.transportadorasFiltrados.unshift({
-    id:0, code: "Nuevo", name: "Nuevo", label:"+ Nueva transportadora"
-  });
+  // this.transportadorasFiltrados.unshift({
+  //   id:0, code: "Nuevo", name: "Nuevo", label:"+ Nueva transportadora"
+  // });
 }
 
 seleccionarTransportadora(transportadoraSeleccionada:any){
@@ -1363,7 +1365,7 @@ nuevaTransportadora(){
   
   const ref = this.dialogService.open(FormTransportadoraComponent, {
     data: {
-        id: parseInt(this.transportadoraSeleccionada.id)
+        id: parseInt(this.transportadoraSeleccionada?this.transportadoraSeleccionada.id:0)
     },
     header: this.transportadoraSeleccionada.id==0?`Nueva transportadora`:`Editar transportadora` ,
     width: '70%',
@@ -1392,7 +1394,7 @@ nuevaTransportadora(){
 nuevoVehiculo(){
   const ref = this.dialogService.open(FormVehiculoComponent, {
     data: {
-        id: parseInt(this.vehiculoSeleccionado.id)
+        id: parseInt(this.vehiculoSeleccionado?this.vehiculoSeleccionado.id:0)
     },
     header: this.vehiculoSeleccionado.id==0?`Nuevo Vehículo`:`Editar vehículo ${this.vehiculoSeleccionado.code}` ,
     width: '70%',
@@ -1418,9 +1420,10 @@ nuevoVehiculo(){
 }
 
 nuevoConductor(){
+
   const ref = this.dialogService.open(FormConductorComponent, {
     data: {
-        id: parseInt(this.conductorSeleccionado.id)
+        id: parseInt(this.conductorSeleccionado?this.conductorSeleccionado.id:0)
     },
     header: this.conductorSeleccionado.id==0?`Nuevo Conductor`:`Editar conductor` ,
     width: '70%',
@@ -1503,6 +1506,8 @@ async adicionVehiculoSolicitud(){
           });
 
           this.vehiculosSeleccionadosSolictid.push(this.vehiculoSeleccionado)
+          this.transportadorasSeleccionadosSolictid.push(this.transportadoraSeleccionada)
+          this.conductoresSeleccionadosSolictid.push(this.conductorSeleccionado)
 
           ////console.log('this.vehiculosEnSolicitud', this.vehiculosEnSolicitud);
           //this.envioLineaCarguePedido =false;
@@ -1846,7 +1851,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
             //Obtener index del vehiculo en la solicitud
              ////console.log('this.vehiculoSeleccionado',this.vehiculoSeleccionado2)
             ////console.log('this.vehiculoSeleccionado',this.vehiculoSeleccionado2)
-            let indexVehiculo = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa === this.vehiculoSeleccionado.code);
+            let indexVehiculo = this.vehiculosEnSolicitud.findIndex(vehiculo => vehiculo.placa === this.vehiculoSeleccionado2.code);
              ////console.log('indexVehiculo',indexVehiculo)
              ////console.log('this.vehiculosEnSolicitud[indexVehiculo]',this.vehiculosEnSolicitud[indexVehiculo])
             //Obtener pedidos asociados al vehiculo en la solicitud
@@ -1899,7 +1904,7 @@ async seleccionarPedidosAlmacenCliente(event:any){
 
             ////////////console.log(pdidosVehiculo,this.pedidosCliente);
   
-            this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado.code);
+            this.vehiculosEnSolicitud[indexVehiculo].cantidad = await this.cantidadCargaVehiculo(this.vehiculoSeleccionado2.code);
             this.vehiculosEnSolicitud[indexVehiculo].pedidos = pdidosVehiculo;
             this.envioLineaCarguePedido =false;
             this.dialogPedidosCliente = false;
@@ -2288,13 +2293,13 @@ async grabarSolicitud(){
         municipioentrega:vehiculo.municipioentrega,
         observacion:vehiculo.observacion!=''?`${vehiculo.observacion};`:'',
         condiciontpt: this.condicion_tpt,
-        // transportadora:this.transportadoras.find(transportadora => transportadora.code === vehiculo.transportadora).id,
-        // vehiculo:this.vehiculos.find(vehiculoo => vehiculoo.code === vehiculo.placa).id,
-        // conductor:this.conductores.find(conductor=>conductor.code === vehiculo.conductor).id,
+        transportadora:this.transportadorasSeleccionadosSolictid.find(transportadora => transportadora.code === vehiculo.transportadora).id,
+        vehiculo:this.vehiculosSeleccionadosSolictid.find(vehiculoo => vehiculoo.code === vehiculo.placa).id,
+        conductor:this.conductoresSeleccionadosSolictid.find(conductor=>conductor.code === vehiculo.conductor).id,
 
-        transportadora:this.transportadoraSeleccionada.id,
-        vehiculo:this.vehiculoSeleccionado.id,
-        conductor:this.conductorSeleccionado.id,
+        // transportadora:this.transportadoraSeleccionada.id,
+        // vehiculo:this.vehiculoSeleccionado.id,
+        // conductor:this.conductorSeleccionado.id,
 
         locacion:this.almacenSeleccionado.code,
         pedidos_detalle_solicitud:pedidosVehiculo
