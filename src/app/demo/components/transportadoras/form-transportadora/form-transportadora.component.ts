@@ -25,7 +25,7 @@ export class FormTransportadoraComponent implements  OnInit {
   updateMode:boolean = false;
   permisosModulo!:any[];
   notificaciones:boolean = false;
-
+  id:number = 0
 
   constructor(
     public ref: DynamicDialogRef, public config: DynamicDialogConfig,
@@ -117,6 +117,7 @@ export class FormTransportadoraComponent implements  OnInit {
               .subscribe({
                   next: (Transportadora)=>{
                    //////////////console.log(Transportadora);
+                   this.id = Transportadora.id
                     this.messageService.add({severity:'success', summary:'información', detail:`La Transportadora ${nuevoTransportadora.nombre} fue actualizada correctamente`});
                   },
                   error:(err)=> {
@@ -132,6 +133,7 @@ export class FormTransportadoraComponent implements  OnInit {
               .subscribe({
                   next: (Transportadora)=>{
                    //////////////console.log(Transportadora);
+                   this.id = Transportadora.id
                     this.messageService.add({severity:'success', summary:'información', detail:`El Transportadora ${Transportadora.nombre} fue registrado correctamente`});
                   },
                   error:(err)=> {
@@ -148,12 +150,18 @@ export class FormTransportadoraComponent implements  OnInit {
   
     cancelar(){
       let infoTransportadora = {
-        nit:this.nit,
-        nombre:this.nombre,
+        code:this.nit,
         email:this.email,
-        nombre_contacto:this.nombre_contacto,
-        telefono_contacto:this.telefono_contacto,
         email_contacto:this.email_contacto,
+        id:this.id,
+        label:`${this.nit} - ${this.nombre.toUpperCase()}`,
+        name:this.nombre.toUpperCase(),
+        nombre:this.nombre.toUpperCase(),
+        nit:this.nit,
+        nombre_contacto:this.nombre_contacto,
+        nombre_puerto:this.nombre_puerto,
+        telefono_contacto:this.telefono_contacto,
+        notificaciones:this.notificaciones,
         update:this.updateMode
       }
       this.ref.close(infoTransportadora);

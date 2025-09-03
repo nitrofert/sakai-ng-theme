@@ -1226,6 +1226,7 @@ filtrarVehiculo2(event:any){
 }
 
 async seleccionarVehiculo(vehiculoSeleccionado:any){
+  console.log(vehiculoSeleccionado)
  
   if(vehiculoSeleccionado.id == 0){
       //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
@@ -1234,14 +1235,14 @@ async seleccionarVehiculo(vehiculoSeleccionado:any){
 
        ////console.log('vehiculoSeleccionado',this.vehiculoSeleccionado)
       ////////////////////////// //// //////////////////console.log(vehiculoSeleccionado)
-      // this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
-      // //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
-      // let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
+      this.capacidadVehiculo = vehiculoSeleccionado.capacidad;
+      //Verificar si el vehiculo esta asociado a la solicitud actual y calcula la capacidad disponible
+      let capacidaVh = await this.cacluarCapacidadDisponibleVH(vehiculoSeleccionado.code); 
 
-      // this.pesobruto = vehiculoSeleccionado.pesovacio;
-      // this.pesoneto = vehiculoSeleccionado.pesomax;
-      // //////////////////////////// //// //////////////////console.log(this.capacidadVehiculo,capacidaVh);
-      // this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
+      this.pesobruto = vehiculoSeleccionado.pesovacio;
+      this.pesoneto = vehiculoSeleccionado.pesomax;
+      //////////////////////////// //// //////////////////console.log(this.capacidadVehiculo,capacidaVh);
+      this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
 
       // this.vehiculosFiltrados2 = [this.vehiculoSeleccionado]
       // this.vehiculoSeleccionado2 = this.vehiculoSeleccionado;
@@ -1252,6 +1253,16 @@ async seleccionarVehiculo(vehiculoSeleccionado:any){
       //if(conductor != undefined) this.conductorSeleccionado = conductor;
   }
 
+}
+
+unselectVehiculo(vehiculoSeleccionado:any){
+  console.log(vehiculoSeleccionado)
+  if(!vehiculoSeleccionado){
+    this.capacidadVehiculo =0;
+    this.pesobruto = 0;
+    this.pesoneto = 0;
+    this.capacidadDisponibleVehiculo = 0;
+  }
 }
 
 async seleccionarVehiculo2(vehiculoSeleccionado:any){
@@ -1351,7 +1362,7 @@ filtrarTransportadora(event:any){
 }
 
 seleccionarTransportadora(transportadoraSeleccionada:any){
-  //////////////////// //// //////////////////console.log(transportadoraSeleccionada)
+  console.log(transportadoraSeleccionada)
   if(transportadoraSeleccionada.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevaTransportadora();
@@ -1365,9 +1376,9 @@ nuevaTransportadora(){
   
   const ref = this.dialogService.open(FormTransportadoraComponent, {
     data: {
-        id: parseInt(this.transportadoraSeleccionada?this.transportadoraSeleccionada.id:0)
+        id: parseInt(this.transportadoraSeleccionada.length==0?0:this.transportadoraSeleccionada.id)
     },
-    header: this.transportadoraSeleccionada.id==0?`Nueva transportadora`:`Editar transportadora` ,
+    header: this.transportadoraSeleccionada.length>0?`Nueva transportadora`:`Editar transportadora` ,
     width: '70%',
     height:'auto',
     contentStyle: {"overflow": "auto"},
@@ -1378,12 +1389,14 @@ nuevaTransportadora(){
     //this.getTransportadoras();
     //////////////////// //// //////////////////console.log(infoTransportadora)
     
-    if(infoTransportadora.update){
-      this.transportadoraSeleccionada.code = infoTransportadora.nit;
-      this.transportadoraSeleccionada.nit = infoTransportadora.nit;
-      this.transportadoraSeleccionada.nombre = infoTransportadora.nombre;
-      this.transportadoraSeleccionada.name = infoTransportadora.nombre;
-      this.transportadoraSeleccionada.label  = infoTransportadora.nit+' - '+infoTransportadora.nombre;
+    if(infoTransportadora){
+      // this.transportadoraSeleccionada.code = infoTransportadora.nit;
+      // this.transportadoraSeleccionada.nit = infoTransportadora.nit;
+      // this.transportadoraSeleccionada.nombre = infoTransportadora.nombre;
+      // this.transportadoraSeleccionada.name = infoTransportadora.nombre;
+      // this.transportadoraSeleccionada.label  = infoTransportadora.nit+' - '+infoTransportadora.nombre;
+
+      this.transportadoraSeleccionada = infoTransportadora;
 
       //////////////////// //// //////////////////console.log(this.transportadoraSeleccionada)
     }
@@ -1392,11 +1405,12 @@ nuevaTransportadora(){
 }
 
 nuevoVehiculo(){
+  
   const ref = this.dialogService.open(FormVehiculoComponent, {
     data: {
-        id: parseInt(this.vehiculoSeleccionado?this.vehiculoSeleccionado.id:0)
+        id: parseInt(this.vehiculoSeleccionado.length==0?0:this.vehiculoSeleccionado.id)
     },
-    header: this.vehiculoSeleccionado.id==0?`Nuevo Vehículo`:`Editar vehículo ${this.vehiculoSeleccionado.code}` ,
+    header: this.vehiculoSeleccionado.length==0?`Nuevo Vehículo`:`Editar vehículo ${this.vehiculoSeleccionado.code}` ,
     width: '70%',
     height:'auto',
     contentStyle: {"overflow": "auto"},
@@ -1406,14 +1420,16 @@ nuevoVehiculo(){
   ref.onClose.subscribe(async (infoVehiculo) => {
     //this.getVehiculos();
     //////////////////// //// //////////////////console.log(infoVehiculo)
-    if(infoVehiculo.update){
+    if(infoVehiculo){
       this.capacidadVehiculo = infoVehiculo.capacidad;
       let capacidaVh = await this.cacluarCapacidadDisponibleVH(infoVehiculo.placa); 
       this.capacidadDisponibleVehiculo = this.capacidadVehiculo - capacidaVh;
-      this.vehiculoSeleccionado.code = infoVehiculo.placa;
-      this.vehiculoSeleccionado.placa = infoVehiculo.placa;
-      this.vehiculoSeleccionado.capacidad = infoVehiculo.capacidad;
-      this.vehiculoSeleccionado.label = infoVehiculo.placa;
+
+      // this.vehiculoSeleccionado.code = infoVehiculo.placa;
+      // this.vehiculoSeleccionado.placa = infoVehiculo.placa;
+      // this.vehiculoSeleccionado.capacidad = infoVehiculo.capacidad;
+      // this.vehiculoSeleccionado.label = infoVehiculo.placa;
+      this.vehiculoSeleccionado = infoVehiculo
     }
     //////////////////////////// //// //////////////////console.log("Refresh calendar");
   });
@@ -1423,9 +1439,9 @@ nuevoConductor(){
 
   const ref = this.dialogService.open(FormConductorComponent, {
     data: {
-        id: parseInt(this.conductorSeleccionado?this.conductorSeleccionado.id:0)
+        id: parseInt(this.conductorSeleccionado.length==0?0:this.conductorSeleccionado.id)
     },
-    header: this.conductorSeleccionado.id==0?`Nuevo Conductor`:`Editar conductor` ,
+    header: this.conductorSeleccionado.length>0?`Nuevo Conductor`:`Editar conductor` ,
     width: '70%',
     height:'auto',
     contentStyle: {"overflow": "auto"},
@@ -1435,26 +1451,29 @@ nuevoConductor(){
   ref.onClose.subscribe((infoConductor) => {
     //this.getConductores();
     //////////////////// //// //////////////////console.log(infoConductor)
-    if(infoConductor.update){
-      this.conductorSeleccionado.code = infoConductor.cedula;
-      this.conductorSeleccionado.cedula = infoConductor.cedula;
-      this.conductorSeleccionado.name = infoConductor.nombre;
-      this.conductorSeleccionado.nombre = infoConductor.nombre;
-      this.conductorSeleccionado.label = infoConductor.cedula+' - '+infoConductor.nombre;
-      this.conductorSeleccionado.numerotelefono = infoConductor.numerotelefono;
-      this.conductorSeleccionado.numerocelular = infoConductor.numerocelular;
-      this.conductorSeleccionado.email = infoConductor.email;
+    if(infoConductor){
+      // this.conductorSeleccionado.code = infoConductor.cedula;
+      // this.conductorSeleccionado.cedula = infoConductor.cedula;
+      // this.conductorSeleccionado.name = infoConductor.nombre;
+      // this.conductorSeleccionado.nombre = infoConductor.nombre;
+      // this.conductorSeleccionado.label = infoConductor.cedula+' - '+infoConductor.nombre;
+      // this.conductorSeleccionado.numerotelefono = infoConductor.numerotelefono;
+      // this.conductorSeleccionado.numerocelular = infoConductor.numerocelular;
+      // this.conductorSeleccionado.email = infoConductor.email;
+      this.conductorSeleccionado=infoConductor;
     }
   });
 }
 
 seleccionarConductor(conductorSeleccionado:any){
-  //////////////////// //// //////////////////console.log(conductorSeleccionado)
+  console.log(conductorSeleccionado)
   if(conductorSeleccionado.id == 0){
     //TODO: LLamar al dialogDynamic para cargar component de creación de vehiculo
     this.nuevoConductor();
   }
 }
+
+
 
 async adicionVehiculoSolicitud(){
   //this.envioLineaCarguePedido =true;

@@ -69,12 +69,22 @@ export class ListaHistorialTurnoComponent implements OnInit {
     public functionsService:FunctionsService,
     private novedadesService:NovedadesService) { }
 
-ngOnInit() {
+  async ngOnInit() {
   this.turnoId = this.config.data.id;
   ////console.log(this.config.data);
 
   this.estadosTurno2  = this.solicitudTurnoService.estadosTurno;
-  this.infoHistorial = this.config.data.historial;
+
+  if(this.config.data.historial){
+    this.infoHistorial = this.config.data.historial;
+  }
+
+  if(this.config.data.id){
+    let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(this.config.data.id);
+    let infoHistorialTurno = await lastValueFrom(historialTurno$);
+    this.infoHistorial = infoHistorialTurno.detalle_solicitud_turnos_historial;
+  }
+  
   //this.getTurno(this.turnoId);
   this.getHistoial(this.infoHistorial);
   

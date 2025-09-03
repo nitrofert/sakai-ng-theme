@@ -511,6 +511,7 @@
                                                 (completeMethod)="filtrarVehiculo($event)" 
                                                 field="label" 
                                                 [dropdown]="true"
+                                                (ngModelChange)="unselectVehiculo(vehiculoSeleccionado)"
                                                 (onSelect)="seleccionarVehiculo(vehiculoSeleccionado)"
                                                 [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && vehiculoSeleccionado.length==0}">
 
@@ -536,7 +537,7 @@
                         </div>
                         <div class="field col-12 md:col-4 ">
                             <span class="p-float-label">
-                                <input pInputText id="clase" type="text" disabled [value]="!vehiculoSeleccionado.clase?'':vehiculoSeleccionado.clase.tipo" [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && vehiculoSeleccionado.length==0}" />
+                                <input pInputText id="clase" type="text" disabled [value]="vehiculoSeleccionado.length==0?'':vehiculoSeleccionado.clase?vehiculoSeleccionado.clase.tipo:''" [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && vehiculoSeleccionado.length==0}" />
                                 <label for="clase"><h6>Clase vehículo</h6></label>
                             </span>
                         </div>
@@ -610,7 +611,7 @@
                                        id="numerotelefonico" 
                                        type="text" 
                                        disabled 
-                                       [value]="!conductorSeleccionado.numerotelefono?'':conductorSeleccionado.numerotelefono" />
+                                       [value]="conductorSeleccionado.length===0?'':conductorSeleccionado.numerotelefono" />
                                 <label for="numerotelefonico"><h6>Número télefono</h6></label>
                             </span>
                         </div>
@@ -621,7 +622,7 @@
                                            inputId="numerocelular" 
                                            disabled 
                                            pInputText 
-                                           [value]="!conductorSeleccionado.numerocelular?'':conductorSeleccionado.numerocelular"> 
+                                           [value]="conductorSeleccionado.length===0?'':conductorSeleccionado.numerocelular"> 
                                     <label for="numerocelular"><h6>Número celular</h6></label>
                                 </span>
                         </div>
@@ -632,7 +633,7 @@
                                            inputId="email" 
                                            disabled 
                                            pInputText 
-                                           [value]="!conductorSeleccionado.email?'':conductorSeleccionado.email"> 
+                                           [value]="conductorSeleccionado.length===0?'':conductorSeleccionado.email"> 
                                     <label for="email"><h6>Email</h6></label>
                                 </span>
                         </div>

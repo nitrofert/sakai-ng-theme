@@ -70,12 +70,26 @@ export class ConductoresComponent implements  OnInit{
                                 field:'celular'
                               },
                               'estado': {
-                                                label:'Estado',
-                                                type:'text', 
-                                                sizeCol:'6rem', 
-                                                align:'center',
-                                                field:'estado'
-                                              }
+                                label:'Estado',
+                                type:'text', 
+                                sizeCol:'6rem', 
+                                align:'center',
+                                field:'estado'
+                              },
+                              'tieneArl': {
+                                label:'¿Tiene ARL?',
+                                type:'text', 
+                                sizeCol:'6rem', 
+                                align:'center',
+                                field:'celular'
+                              },
+                              'arlVigente': {
+                                label:'¿ARL vigente?',
+                                type:'text', 
+                                sizeCol:'6rem', 
+                                align:'center',
+                                field:'celular'
+                              }
                           }
                         ];
   
@@ -130,12 +144,26 @@ export class ConductoresComponent implements  OnInit{
   getConductores(){
     this.conductoresService.getConductores2()
     .subscribe({
-        next:(conductores)=>{
-          ////////console.log(clientes)
+        next:async (conductores)=>{
+          console.log(conductores)
 
           let dataConductores:any[] = [];
               for(let conductor of conductores){
                 
+                let tieneArl = conductor.historial_arl.length===0?'No':'Si';
+                let arlVigente = 'No';
+                let diasVencido =0;
+
+                if(tieneArl==='Si'){
+                  let arlActiva = conductor.historial_arl.find((arl: { estado: string; })=>arl.estado ==='ACTIVO');
+                  console.log('arlActiva',arlActiva);
+                  diasVencido = await this.functionsService.dateDif(new Date(), new Date(`${arlActiva.fechafin}T05:00:00.000z`))
+                  console.log('diasVencido',diasVencido)
+                  if(diasVencido<=0){
+                    arlVigente = 'Si';
+                  }
+                }
+
                 dataConductores.push({
                   id:conductor.id,
                   nombre:conductor.nombre,
@@ -143,7 +171,10 @@ export class ConductoresComponent implements  OnInit{
                   email:conductor.email,
                   numerotelefono:conductor.numertelefono,
                   celular:conductor.numerocelular,
-                  estado:conductor.estado
+                  estado:conductor.estado,
+                  tieneArl,
+                  arlVigente
+
 
                 });
               }

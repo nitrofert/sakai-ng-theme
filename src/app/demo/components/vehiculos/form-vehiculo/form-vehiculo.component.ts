@@ -32,6 +32,7 @@ export class FormVehiculoComponent implements  OnInit {
   pesovacio:number = 0;
   pesomax:number = 0;
   volumen:number = 0;
+  id:number =0;
   updateMode:boolean = false;
 
   constructor(
@@ -47,7 +48,7 @@ export class FormVehiculoComponent implements  OnInit {
     ){}
 
     ngOnInit() {
-     //////console.log(this.config.data.id);
+      console.log(this.config.data.id);
       this.getTipoVehiculos();
       this.getConductores();
       if(this.config.data.id!=0){
@@ -157,7 +158,7 @@ export class FormVehiculoComponent implements  OnInit {
     }
 
     seleccionarConductor(conductor:any){
-     //////////////console.log(conductor);
+    
       if(conductor.id ===0){ 
         //TODO: LLamar al formulario de creacion de tipo vehiculo
         this.nuevoConductor();
@@ -217,7 +218,7 @@ export class FormVehiculoComponent implements  OnInit {
         //Registrar vehiculo
         
         let nuevoVehiculo = {
-          placa:this.placa,
+          placa:this.placa.toUpperCase(),
           tipo_vehiculo:this.tipoSeleccionado.id,
           capacidad:this.capacidad,
           pesovacio:this.pesovacio,
@@ -231,6 +232,7 @@ export class FormVehiculoComponent implements  OnInit {
           this.vehiculosService.update(nuevoVehiculo,this.config.data.id)
           .subscribe({
               next: (vehiculo)=>{
+                this.id = vehiculo.id
                 this.messageService.add({severity:'success', summary:'información', detail:`El vehículo ${vehiculo.placa} fue actualizado correctamente`});
               },
               error:(err)=>{
@@ -243,6 +245,7 @@ export class FormVehiculoComponent implements  OnInit {
           this.vehiculosService.create(nuevoVehiculo)
           .subscribe({
               next: (vehiculo)=>{
+                this.id = vehiculo.id
                 this.messageService.add({severity:'success', summary:'información', detail:`El vehículo ${vehiculo.placa} fue registrado correctamente`});
               },
               error:(err)=>{
@@ -257,14 +260,24 @@ export class FormVehiculoComponent implements  OnInit {
   
     cancelar(){
       let infoVehiculo = {
-        placa:this.placa,
         capacidad:this.capacidad,
-        pesovacio:this.pesovacio,
+        clase:this.tipoSeleccionado,
+        code:this.placa.toUpperCase(),
+        id:this.id,
+        label:`${this.placa.toUpperCase()} (${this.capacidad} TON)`,
+        name:this.placa.toUpperCase(),
         pesomax:this.pesomax,
-        volumen:this.volumen,
+        pesovacio:this.pesovacio,
+        placa:this.placa.toUpperCase(),
         tipo_vehiculo:this.tipoSeleccionado,
-        update:this.updateMode
+        volumen:this.volumen,
+
+        update:this.updateMode,
+
+        
       }
+
+
       this.ref.close(infoVehiculo);
     }
 

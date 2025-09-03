@@ -48,6 +48,7 @@ export class FormConductorComponent  implements  OnInit {
   loadingTableHistorialARL:boolean = false;
 
   historialARLLineSelected:any[] = [];
+  id:number = 0;
 
   @ViewChild('filterTable') filterTable!: ElementRef;
 
@@ -122,6 +123,7 @@ export class FormConductorComponent  implements  OnInit {
               .subscribe({
                   next: (conductor)=>{
                    //////////////console.log(conductor);
+                   this.id = conductor.id
                     this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${this.nombre} fue actualizado correctamente`});
                   },
                   error:(err)=> {
@@ -136,6 +138,7 @@ export class FormConductorComponent  implements  OnInit {
               .subscribe({
                   next: (conductor)=>{
                    //////////////console.log(conductor);
+                   this.id = conductor.id
                     this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue registrado correctamente`});
                   },
                   error:(err)=> {
@@ -152,9 +155,13 @@ export class FormConductorComponent  implements  OnInit {
   
     cancelar(){
       let infoConductor ={
-        nombre:this.nombre,
         cedula:this.cedula,
+        code:this.cedula,
         email:this.email,
+        id: this.id,
+        label:`${this.cedula} - ${this.nombre.toUpperCase()}`,
+        name:this.nombre.toUpperCase(),
+        nombre:this.nombre.toUpperCase(),
         numerotelefono:this.numerotelefonico,
         numerocelular:this.numerocelular
         
