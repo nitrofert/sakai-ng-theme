@@ -4755,7 +4755,7 @@ async validarHoraCargue():Promise<boolean>{
     }
 
     //////////////console.log('totalTon',totalTon);
-    this.totalTonItem.nativeElement.value = Math.round(totalTon);
+    this.totalTonItem.nativeElement.value = totalTon;
     //////////////console.log('totalSacos',totalSacos);
     this.totalSacosItem.nativeElement.value = totalSacos
   }
