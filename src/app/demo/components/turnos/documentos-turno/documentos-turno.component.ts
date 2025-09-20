@@ -179,11 +179,21 @@ remisiones:any[] =[];
 
   async getDocumentos(turno:any){
 
-    //////console.log('turnos',turno)
+    console.log('turnos',turno)
 
 
-    let clientes:any[] = JSON.parse(JSON.stringify(turno.solicitud.clientes));
+   // let clientes:any[] = JSON.parse(JSON.stringify(turno.solicitud.clientes));
+
+    let clientes:any[] = [];
+
+    for(let cliente of turno.solicitud.clientes){
+      if(turno.detalle_solicitud_turnos_pedido.find((pedido: { CardCode: any; })=>pedido.CardCode === cliente.CardCode)){
+        clientes.push(cliente)
+      }
+    }
+
     for(let cliente of clientes){
+      console.log('cliente',cliente)
       let turnoCliente:any = JSON.parse(JSON.stringify(turno));
       let dataKey:string = `${turnoCliente.solicitud.id}-${turnoCliente.id}-${turnoCliente.vehiculo.id}-${cliente.CardCode}-${turnoCliente.detalle_solicitud_turnos_pedido[0].id}`;
       let detalle_pedido_cliente:any[] = turnoCliente.detalle_solicitud_turnos_pedido.filter((item: { CardCode: any; })=>item.CardCode === cliente.CardCode);

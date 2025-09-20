@@ -7,7 +7,7 @@ import { TurnosRoutingModule } from './turnos-routing.module';
 import { PrimengModule } from 'src/app/layout/shared/primeng/primeng.module';
 import { BreadCrumbModule } from 'src/app/layout/shared/breadcrumb/app.breadcrumb.module';
 
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AlmacenesService } from '../../service/almacenes.service';
 import { OrdenesCargueService } from '../../service/ordenes-cargue.service';
 
@@ -39,6 +39,7 @@ import { RemisionesComponent } from './remisiones/remisiones.component';
 import { UsbPortModule } from 'src/app/layout/shared/usb-port/usb-port.module';
 import { PdfRemision } from '../solicitudescargue/config-pdf/remision';
 import { PdfTiqueteBascula } from '../solicitudescargue/config-pdf/tiquete-turno';
+import { TurnosMovilComponent } from './vista-movil-turno/turnos-movil';
 
 
 
@@ -49,7 +50,8 @@ import { PdfTiqueteBascula } from '../solicitudescargue/config-pdf/tiquete-turno
     VistaEstadosTurnoComponent,
     InspeccionDespachoComponent,
     DocumentosTurnoComponent,
-    RemisionesComponent
+    RemisionesComponent,
+    TurnosMovilComponent
     
     
   ],
@@ -66,11 +68,14 @@ import { PdfTiqueteBascula } from '../solicitudescargue/config-pdf/tiquete-turno
     DynamicPdfModule,
     DynamicDrawModule,
     DynamicUploadModule,
-    UsbPortModule
+    UsbPortModule,
+    WebCamModule
     
   ],
   providers:[AlmacenesService, 
              DialogService,
+             DynamicDialogRef,
+             DynamicDialogConfig,
              OrdenesCargueService, 
              SolicitudTurnoService, 
              PedidosService, 

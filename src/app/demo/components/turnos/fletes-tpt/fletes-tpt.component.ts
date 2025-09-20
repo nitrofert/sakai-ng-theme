@@ -702,7 +702,7 @@ usuario!:any;
     for(let pedido of pedidosTurno){
       //////////////////////////// ////////////// //////////////console.log(pedido);
       let cantidadComprometida = 0;
-      cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id);
+      cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id,pedido.linenum);
       //////////////////////// ////////////// //////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
@@ -715,9 +715,9 @@ usuario!:any;
     return pedidosTurno
   }
 
-  async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:string, idPedido:number):Promise<number>{
+  async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:string, idPedido:number,linenum:number):Promise<number>{
     
-    const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidasItemBodega(itemcode,bodega, idPedido);
+    const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidasItemBodega(itemcode,bodega, idPedido,linenum);
     const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
   
     return cantidadComprometida;
@@ -2534,7 +2534,7 @@ async validarHoraCargue():Promise<boolean>{
     for(let pedido of pedidos){
      ////// ////////////// //////////////console.log(pedido);
       let cantidadComprometida=0; 
-      cantidadComprometida += await this.getCantidadComprometidaItemPedidoBodega(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
+      cantidadComprometida += await this.getCantidadComprometidaItemPedidoBodega(pedido.docnum,pedido.itemcode,pedido.codigo_almacen,pedido.linenum);
       //cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
       pedido.comprometida = cantidadComprometida;
       //pedido.pendiente 
@@ -2543,9 +2543,9 @@ async validarHoraCargue():Promise<boolean>{
     return pedidos;
   }
 
-  async getCantidadComprometidaItemPedidoBodega(pedido:any, itemcode:string, bodega:string):Promise<number>{
+  async getCantidadComprometidaItemPedidoBodega(pedido:any, itemcode:string, bodega:string,linenum:number):Promise<number>{
   
-    const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidas(pedido,itemcode,bodega,0);
+    const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidas(pedido,itemcode,bodega,0,linenum);
     const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
   
     return cantidadComprometida;

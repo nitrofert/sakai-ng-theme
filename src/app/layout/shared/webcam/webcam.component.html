@@ -1,4 +1,4 @@
-<div class="grid">
+<!-- <div class="grid">
     <div class="col-12">
         <div
             class="card"
@@ -19,7 +19,7 @@
                     </div>
                     <div class="field col-12 md:col-6">
                         <canvas
-                            class="w-full border-2 border-solid border-700 block m-2"
+                            class="w-full border-2 border-solid border-700 block"
                             #canvas
                         ></canvas>
                     </div>
@@ -50,8 +50,32 @@
                     ></button>
                 </span>
 
-                <!-- <button (click)="capturarFoto()">Capturar Foto</button> -->
+                
             </div>
         </div>
     </div>
+</div> -->
+
+<div class="webcam-container">
+  <!-- Video en vivo -->
+  <video #video autoplay playsinline class="video-preview"></video>
+
+  <!-- Canvas oculto (usado para capturar foto) -->
+  <canvas #canvas class="canvas-preview"></canvas>
+
+  <!-- Botones de acción -->
+  <div class="actions">
+    <button pButton type="button" label="📸 Capturar" (click)="capturarFoto()" [disabled]="loading"></button>
+    <button pButton type="button" label="💾 Guardar" (click)="guardarFoto()" [disabled]="loading || !imagenDataURL"></button>
+  </div>
+
+  <p-progressSpinner *ngIf="loading" strokeWidth="4"></p-progressSpinner>
+
+  <!-- Vista previa de la foto tomada -->
+  <div class="photo-preview" *ngIf="imagenDataURL">
+    <p>Vista previa:</p>
+    <img [src]="imagenDataURL" alt="Foto capturada" />
+  </div>
+
+  
 </div>

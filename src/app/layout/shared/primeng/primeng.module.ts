@@ -52,6 +52,7 @@ import {TreeTableModule} from 'primeng/treetable';
 import {BreadcrumbModule} from 'primeng/breadcrumb';
 import {FileUploadModule} from 'primeng/fileupload';
 import {InputMaskModule} from 'primeng/inputmask';
+import { OverlayModule } from 'primeng/overlay';
 
 
 
@@ -109,7 +110,8 @@ import {InputMaskModule} from 'primeng/inputmask';
     ToggleButtonModule,
     TooltipModule,
     TimelineModule,
-    TreeTableModule
+    TreeTableModule,
+    OverlayModule
   ]
 })
 export class PrimengModule { }

@@ -114,6 +114,8 @@ filesInspeccion:any[] = [];
 historial:any;
 inspeccion:any
 
+activeStateTabs:boolean[] = [false,false,false]
+
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private ordenesCargueService: OrdenesCargueService, 
@@ -254,6 +256,8 @@ inspeccion:any
      fecha_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].fecha_accion;
      hora_accion = this.historial.detalle_solicitud_turnos_historial.filter((historial: { estado: EstadosDealleSolicitud; })=>historial.estado === EstadosDealleSolicitud.CARGADO)[0].hora_accion;
      this.hora_fin_cargue = await this.functionsService.setTImeToDate(new Date(fecha_accion),hora_accion);
+
+     this.tiempo_de_cargue = await this.functionsService.dateDif(this.hora_fin_cargue,this.hora_inicio_cargue,'hours')
     }
 
     let inspeccion$ = this.solicitudTurnoService.getInspeccionTurnosByID(this.turno.id);

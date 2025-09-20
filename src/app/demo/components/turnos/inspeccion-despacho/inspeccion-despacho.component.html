@@ -454,23 +454,298 @@
                             <h6>Firma y cedula conductor</h6>
                         </div>
                     </div>
-                    <!--
-                    <div class="col-12 text-center">
-                        <p-button
-                            label="Impresión de inspección despacho"
-                            class="w-auto"
-                            styleClass="p-button-danger"
-                            icon="pi pi-file-pdf"
-                            iconPos="right"
-                            (click)="imprimirInspeccion()"
-                        ></p-button>
-                    </div>
-                    -->
+                   
                 </p-tabPanel>
             </p-tabView>
         </div>
     </div>
 </div>
+
+<div class="grid">
+    <div class="col-12">
+        <p-accordion [multiple]="true">
+            <p-accordionTab  [(selected)]="activeStateTabs[0]">
+                <ng-template pTemplate="header">
+                    <span class="text-sm">
+                         <i class="pi pi-truck mr-2"></i>
+                        <span>Inspección del vehiculo</span>
+                    </span>
+                </ng-template>
+                 <div class="text-justify">
+                    El objetivo de esta lista de chequeo es para garantizar
+                    las condiciones de la operación del despacho de un
+                    vehiculo con los procesos de calidad. Estos items son de
+                    obligatorio cumplimiento. En caso de presentar anomalía
+                    en el vehículo queda fuera de servicio inmediatamente y
+                    reportar al técnico de despacho encargado.
+                </div>
+                <div class="p-fluid p-formgrid grid pt-1 mt-2">
+                    <div class="field col-12">
+                        <span>
+                            <label for="bodega"><h6>Estado vehículo</h6></label>
+                        </span>
+                        <p-selectButton
+                            [options]="stateOptions"
+                            [(ngModel)]="estado_vehiculo"
+                            class="w-3 "
+                            optionLabel="label"
+                            optionValue="value"
+                            (onChange)="cambioValor()"
+                        >
+                        </p-selectButton>
+                        
+                    </div>
+
+                    <div class="field col-12">
+                        <span>
+                            <label for="bodega"><h6>Chequeo vehículo</h6></label>
+                        </span>
+                        <div *ngFor="let itemData of dataTableChekVehiculo " class="p-fluid p-formgrid grid">
+                            <p-divider align="left" class="field col-12 -mb-5">
+                                <div class="inline-flex align-items-center text-xs">
+                                    <b>{{itemData.label}}</b>
+                                </div>
+                            </p-divider>
+
+                            <div class="field col-12 md:col-6 ">
+                                
+                                 <p-selectButton
+                                    [options]="stateOptions"
+                                    [(ngModel)]="itemData.estado"
+                                    class="w-3"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    (onChange)="cambioValor()"
+                                >
+                                </p-selectButton>
+                            </div>
+
+                             <div class="field col-12 md:col-6">
+                                
+                                    <input
+                                        pInputText
+                                        type="text"
+                                        [(ngModel)]="
+                                            itemData.observacion
+                                        "
+                                        (change)="cambioValor()"
+                                        placeholder="Observaciones"
+                                    />
+                                
+                             </div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </p-accordionTab>
+            <p-accordionTab  [(selected)]="activeStateTabs[1]">
+                <ng-template pTemplate="header">
+                    <span class="text-sm">
+                         <i class="pi pi-box mr-2"></i>
+                        <span>Inspección de la carga</span>
+                    </span>
+                </ng-template>
+                 <div class="text-justify">
+                    El conductor debe estar presente al momento del cargue y
+                        verificar de igual manera el proceso de despacho
+                        validando conformidad y calidad.
+                </div>
+                <div class="p-fluid p-formgrid grid pt-1 mt-2">
+                  
+
+                    <div class="field col-12">
+                        <span>
+                            <label for="bodega"><h6>Chequeo producto</h6></label>
+                        </span>
+                        <div *ngFor="let itemData of dataTableChekCarga " class="p-fluid p-formgrid grid">
+                            <p-divider align="left" class="field col-12 -mb-5">
+                                <div class="inline-flex align-items-center text-xs">
+                                    <b>{{itemData.label}}</b>
+                                </div>
+                            </p-divider>
+
+                            <div class="field col-12 md:col-6 ">
+                                
+                                 <p-selectButton
+                                    [options]="stateOptions"
+                                    [(ngModel)]="itemData.estado"
+                                    class="w-3"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    (onChange)="cambioValor()"
+                                >
+                                </p-selectButton>
+                            </div>
+
+                             <div class="field col-12 md:col-6">
+                                    <input
+                                        pInputText
+                                        type="text"
+                                        [(ngModel)]="
+                                            itemData.observacion
+                                        "
+                                        (change)="cambioValor()"
+                                        placeholder="Observaciones"
+                                    />
+                             </div>
+                        </div>
+                    </div>
+
+                </div>
+            </p-accordionTab>
+            <p-accordionTab  [(selected)]="activeStateTabs[2]"  [disabled]="
+                        estado != estadosTurno.CARGADO &&
+                        estado != estadosTurno.CARGANDO &&
+                        estado != estadosTurno.PESADOF &&
+                        estado != estadosTurno.DESPACHADO
+                            ? true
+                            : false
+                    ">
+                <ng-template pTemplate="header">
+                    <span class="text-sm">
+                         <i class="pi pi-check mr-2"></i>
+                        <span>Aceptación - firma inspección</span>
+                    </span>
+                    
+                </ng-template>
+                 <div class="p-fluid p-formgrid grid pt-1 mt-2">
+                    <div class="field col-12 md:col-6">
+                        <div class="p-inputgroup">
+                        <span class="p-float-label">
+                        <input
+                                pInputText
+                                type="text"
+                                disabled
+                                [value]="hora_llegada | date:'dd/MM/yyyy HH:mm'"
+                            />
+                            <label for="fechacargue"
+                                ><h6>Hora de llegada</h6></label
+                            >
+                        </span>
+                            <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
+                        </div>
+                    </div>
+                
+                    <div class="field col-12 md:col-6">
+                        <div class="p-inputgroup">
+                        <span class="p-float-label">
+                        <input
+                                pInputText
+                                type="text"
+                                disabled
+                                [value]="hora_inicio_cargue | date:'dd/MM/yyyy HH:mm'"
+                            />
+                            <label for="fechacargue"
+                                ><h6>Hora inicio cargue</h6></label
+                            >
+                        </span>
+                            <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <div class="p-inputgroup">
+                        <span class="p-float-label">
+                        <input
+                                pInputText
+                                type="text"
+                                disabled
+                                [value]="hora_fin_cargue | date:'dd/MM/yyyy HH:mm'"
+                            />
+                            <label for="fechacargue"
+                                ><h6>Hora fin cargue</h6></label
+                            >
+                        </span>
+                            <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <div class="p-inputgroup">
+                        <span class="p-float-label">
+                        <input
+                                pInputText
+                                type="text"
+                                disabled
+                                [value]="tiempo_de_cargue | date:'HH:mm'"
+                            />
+                            <label for="fechacargue"
+                                ><h6>Tiempo de cargue</h6></label
+                            >
+                        </span>
+                            <span class="p-inputgroup-addon"><i class="pi pi-clock"></i></span>
+                        </div>
+                    </div>
+
+                    
+            
+                    <p-divider align="left" class="field col-12 -mb-5 -mt-3">
+                        <div class="inline-flex align-items-center text-xs">
+                            <b>Total unidades a cargar</b>
+                        </div>
+                    </p-divider>
+
+                    <div class="field col-12 md:col-6 -mt-2">
+                        <input
+                                pInputText
+                                id="peso_neto"
+                                type="number"
+                                [(ngModel)]="cantidad_unidades"
+                                (ngModelChange)="cambioValor()"
+                                [ngClass]="{
+                                    'ng-invalid ng-dirty':
+                                        0 === cantidad_unidades
+                                }"
+                            />
+                    </div>
+                    
+                    <div class="field col-12 md:col-6 -mt-2">
+                        <p-selectButton
+                            [options]="stateOptions"
+                            [(ngModel)]="conforme_cantidades"
+                            class="w-3"
+                            optionLabel="label"
+                            optionValue="value"
+                            (onChange)="cambioValor()"
+                        >
+                        </p-selectButton>
+                    </div>
+
+                    <p-divider align="left" class="field col-12 -mb-5 -mt-3">
+                        <div class="inline-flex align-items-center text-xs">
+                            <b>Calidad</b>
+                        </div>
+                    </p-divider>
+
+                    
+                    <div class="field col-12 md:col-6 -mt-2">
+                        <p-selectButton
+                            [options]="stateOptions"
+                            [(ngModel)]="conforme_cantidades"
+                            class="w-3"
+                            optionLabel="label"
+                            optionValue="value"
+                            (onChange)="cambioValor()"
+                        >
+                        </p-selectButton>
+                    </div>
+
+                 </div>
+
+                
+
+
+                
+                
+              
+            </p-accordionTab>
+        </p-accordion>
+    </div>
+</div>
+
+
+
 
 <!-- Dialog loading -->
 <p-dialog

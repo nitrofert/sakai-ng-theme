@@ -1627,10 +1627,10 @@ async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
 async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   
   for(let pedido of pedidos){
-  ////////////console.log(pedido);
+  console.log(pedido);
     let cantidadComprometida=0; 
-    cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
-    cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen);
+    cantidadComprometida += await this.getCantidadComprometidaItemPedido(pedido.docnum,pedido.itemcode,pedido.codigo_almacen,pedido.linenum);
+    cantidadComprometida += await this.getCantidadComprometidaItemPedidoInSolicitud(pedido.docnum,pedido.itemcode,pedido.codigo_almacen,pedido.linenum);
     cantidadComprometida += await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.docnum,pedido.itemcode,pedido.codigo_almacen,pedido.linenum);
     pedido.comprometida = cantidadComprometida;
     //pedido.pendiente 
@@ -1639,9 +1639,9 @@ async calcularCantidadesComprometidas(pedidos:any):Promise<any[]>{
   return pedidos;
 }
 
-async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:string):Promise<number>{
+async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:string,linenum:number):Promise<number>{
   
-  const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidas(pedido,itemcode,bodega,0);
+  const cantidadComprometida$ = this.pedidosService.getCantidadesComprometidas(pedido,itemcode,bodega,0,linenum);
   const cantidadComprometida = await lastValueFrom(cantidadComprometida$);
 
   return cantidadComprometida;
@@ -1649,13 +1649,13 @@ async getCantidadComprometidaItemPedido(pedido:any, itemcode:string, bodega:stri
 
 }
 
-async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string): Promise<number>{
+async getCantidadComprometidaItemPedidoInSolicitud(pedido:any, itemcode:string, bodega:string,linenum?:number): Promise<number>{
   //////////////////////// //// //////////////////console.log(pedido, itemcode, bodega);
     let cantidadComprometida =0;
     for(let vehiculo of this.vehiculosEnSolicitud){
         for(let lineaPedido of vehiculo.pedidos){
          ////////////////////////// //// //////////////////console.log(lineaPedido.pedido, lineaPedido.itemcode, lineaPedido.bodega);
-            if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega){
+            if(lineaPedido.pedido == pedido && lineaPedido.itemcode == itemcode && lineaPedido.bodega == bodega && lineaPedido.linenum === linenum){
               
               cantidadComprometida+=lineaPedido.cantidad;
             }

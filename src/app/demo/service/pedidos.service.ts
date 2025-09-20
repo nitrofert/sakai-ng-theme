@@ -96,14 +96,14 @@ export class PedidosService {
         return pedidosClientes;
     }
 
-    getCantidadesComprometidas(pedidonum:string,itemcode:string, bodega:string,idPedido:number, tipoTurno:string ='RETIRO'):Observable<number> {
+    getCantidadesComprometidas(pedidonum:string,itemcode:string, bodega:string,idPedido:number, linea:number,tipoTurno:string ='RETIRO'):Observable<number> {
         const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas`;
-        return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido,tipoTurno}});
+        return this.http.get<number>(url,{params:{pedidonum,itemcode,bodega,idPedido,tipoTurno,linea}});
     }
 
-    getCantidadesComprometidasItemBodega(itemcode:string, bodega:string,idPedido:number):Observable<number> {
+    getCantidadesComprometidasItemBodega(itemcode:string, bodega:string,idPedido:number,linea:number):Observable<number> {
         const url:string = `${this.api_url}/api/solicitud-turnos/cantidades-comprometidas-item-bodega`;
-        return this.http.get<number>(url,{params:{itemcode,bodega,idPedido}});
+        return this.http.get<number>(url,{params:{itemcode,bodega,idPedido,linea}});
     }
 
     getCantidadesComprometidasBodegaItem(itemcode:string, bodega:string):Observable<number> {

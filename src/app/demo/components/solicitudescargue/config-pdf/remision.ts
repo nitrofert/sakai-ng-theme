@@ -1908,8 +1908,8 @@ export class PdfRemision {
         let almacenes$ =this.almacenesService.getAlmacenes();
         let almacenes:any[] = await this.functionsService.objectToArray((await lastValueFrom(almacenes$)));
 
-        ////console.log('locaciones',locaciones);
-        ////console.log('almacenes',almacenes);
+        //console.log('locaciones',locaciones);
+        //console.log('almacenes',almacenes);
 
 
 
@@ -1939,6 +1939,8 @@ export class PdfRemision {
         //Buscar en detalle_pedidos_turno los items coincidentes con la remision.docnum
 
         let detalle_pedidos_turno = infoTurno.detalle_solicitud_turnos_pedido.filter((pedido:{remision:any})=>pedido.remision === infoRemison.docnum);
+
+        console.log(detalle_pedidos_turno)
 
         for(let pedido of detalle_pedidos_turno){
             let linea_detalle_remision = {
