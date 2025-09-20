@@ -1413,13 +1413,22 @@
 
                     <div class="field col-12 lg:col-6 xl:col-4">
                         <span class="p-float-label">
-                            <input
+                            <!-- <input
                                 pInputText
                                 id="item"
                                 type="text"
                                 #totalTonItem
                                 readonly
                                 [disabled]="itemLineSelected.length===0 || (itemLineSelected[0].maneja_lote==='Y')"
+                                [value]="itemLineSelected.length> 0 && (itemLineSelected[0].maneja_lote==='N')?itemLineSelected[0].cantidad:0 "
+                            /> -->
+                            <input
+                                pInputText
+                                id="item"
+                                type="text"
+                                #totalTonItem
+                                
+                                [disabled]="itemLineSelected.length===0 || (itemLineSelected[0].maneja_lote==='Y' && lotesItemLine.length ===0)"
                                 [value]="itemLineSelected.length> 0 && (itemLineSelected[0].maneja_lote==='N')?itemLineSelected[0].cantidad:0 "
                             />
                             <label for="cliente"><h6>Total TON a cargar</h6></label>

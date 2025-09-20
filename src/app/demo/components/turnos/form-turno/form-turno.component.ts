@@ -2164,7 +2164,7 @@ async validarHoraCargue():Promise<boolean>{
               
             // }else{
               
-              //this.updateTurno(data);
+              this.updateTurno(data);
             
             //}
             
