@@ -137,7 +137,16 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
     formGestionLotesItem:boolean = false;
 
-    dataFormGestionLotesItem:any;
+    dataFormGestionLotesItem:any = {
+            linea_id: 0,
+            header: `Gestionar lotes item `,
+            bodega: '',
+            cantidad_solicitada:0,
+            total_lotes:0,
+            total_sacos:0,
+
+            lotes:[]
+        }
 
     evidenciasCargue:any[] = [];
 

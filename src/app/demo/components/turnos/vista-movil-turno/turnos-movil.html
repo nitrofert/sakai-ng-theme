@@ -982,10 +982,12 @@
                                 pInputText
                                 id="cantidadbodega"
                                 type="number"
-                                disabled
-                                [value]="!dataFormGestionLotesItem?'':dataFormGestionLotesItem.total_lotes"
+                                [disabled]="!dataFormGestionLotesItem || dataFormGestionLotesItem.total_lotes===0" 
+                                
+                                [(ngModel)]="dataFormGestionLotesItem.total_lotes"
                                 
                             />
+                            <!-- [value]="!dataFormGestionLotesItem?'':dataFormGestionLotesItem.total_lotes" -->
                             <label for="cantidadbodega"><h6>Total lotes</h6></label>
                         </span>
                         <span class="p-inputgroup-addon">TON</span>
