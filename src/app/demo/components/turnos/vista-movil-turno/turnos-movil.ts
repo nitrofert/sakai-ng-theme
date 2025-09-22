@@ -1099,7 +1099,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             ////////console.log(data);
             
               
-           //this.updateTurno(data);
+           this.updateTurno(data);
             
             
             
