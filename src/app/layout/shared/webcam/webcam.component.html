@@ -64,10 +64,11 @@
   <canvas #canvas class="canvas-preview"></canvas>
 
   <!-- Botones de acción -->
-  <div class="actions">
+<div class="actions">
     <button pButton type="button" label="📸 Capturar" (click)="capturarFoto()" [disabled]="loading"></button>
     <button pButton type="button" label="💾 Guardar" (click)="guardarFoto()" [disabled]="loading || !imagenDataURL"></button>
-  </div>
+    <button pButton type="button" label="🔄 Cambiar cámara" (click)="cambiarCamara()" [disabled]="loading"></button>
+</div>
 
   <p-progressSpinner *ngIf="loading" strokeWidth="4"></p-progressSpinner>
 

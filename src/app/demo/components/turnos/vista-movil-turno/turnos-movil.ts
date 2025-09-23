@@ -1361,8 +1361,9 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
               
                 let infoHistorialTurno =  await this.getHistorialTurno(turno.id)
 
+                console.log('this.filesToUpload',this.filesToUpload)
                 
-                if(this.filesToUpload.length > 0 && this.uploadActivo){
+                if(this.filesToUpload && this.filesToUpload.length > 0 && this.uploadActivo){
                   for(let anexo of this.filesToUpload){
                     let body = new FormData();
                     body.append('file', anexo.file, anexo.file.name);
@@ -1384,6 +1385,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
                   }
                   
                 }
+
+
 
                 // if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
 
@@ -1652,6 +1655,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         let indexItemPedido = this.pedidos_turno.findIndex(item=>item.id === this.dataFormGestionLotesItem.linea_id)
         this.pedidos_turno[indexItemPedido].cantidad_sacos =this.dataFormGestionLotesItem.total_sacos
         this.pedidos_turno[indexItemPedido].detalle_lotes_item_turno =lotesItemLine;
+        this.pedidos_turno[indexItemPedido].lineaUpdate.update = true;
         // this.lotesItems = lotesItemLine;
         // console.log('this.lotesItems',this.lotesItems);
         this.formGestionLotesItem = false;
