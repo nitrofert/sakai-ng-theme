@@ -17,3 +17,8 @@
 :host ::ng-deep .custom-upload .p-fileupload-choose {
   display: none !important;
 }
+
+::ng-deep .p-autocomplete-panel {
+  width: 100% !important; /* hereda el ancho del input */
+  max-height: 200px; /* opcional, limita la altura con scroll */
+}
