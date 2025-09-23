@@ -848,13 +848,13 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     let valido:boolean = false;
 
     console.log('this.pedidos_turno',this.pedidos_turno)
-    console.log('this.pedidos_turno.filter(pedido=>!pedido.cubicacion.length)',this.pedidos_turno.filter(pedido=>pedido.cubicacion ===""))
+    console.log('this.pedidos_turno.filter(pedido=>!pedido.cubicacion.length)',this.pedidos_turno.filter(pedido=>pedido.cubicacion ==="" || !pedido.cubicacion))
 
     if(this.estado === this.estadosTurno.CARGANDO && this.pedidos_turno.filter(pedido=>pedido.maneja_lote==='Y' && pedido.detalle_lotes_item_turno.length ===0).length>0){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe asignar lotes de producccion para cada item de producto-destino.'});
     }else if(this.estado === this.estadosTurno.CARGANDO && this.pedidos_turno.filter(pedido=>pedido.maneja_lote==='N' && !pedido.cantidad_sacos ).length>0){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe asignar la cantidad de sacos a cargar para todas las lineas de pedido del turno, y esta debe ser mayor a cero.'});
-    }else if(this.estado === this.estadosTurno.CARGANDO && this.pedidos_turno.filter(pedido=>pedido.cubicacion ==="").length>0){
+    }else if(this.estado === this.estadosTurno.CARGANDO && this.pedidos_turno.filter(pedido=>pedido.cubicacion ==="" || !pedido.cubicacion).length>0){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe ingresar la cubicacion para las lineas de items.'});
     }else if(this.estado === this.estadosTurno.CARGANDO && await this.validarEvidenciasItemPedido()=== false){
            this.messageService.add({severity:'error', summary: '!Error¡', detail: `No se han adjuntado evidencias del cargue`});
