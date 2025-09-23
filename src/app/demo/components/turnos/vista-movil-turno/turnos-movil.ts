@@ -848,6 +848,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     let valido:boolean = false;
 
     console.log('this.pedidos_turno',this.pedidos_turno)
+    console.log('this.pedidos_turno.filter(pedido=>!pedido.cubicacion.length)',this.pedidos_turno.filter(pedido=>pedido.cubicacion ===""))
 
     if(this.estado === this.estadosTurno.CARGANDO && this.pedidos_turno.filter(pedido=>pedido.maneja_lote==='Y' && pedido.detalle_lotes_item_turno.length ===0).length>0){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe asignar lotes de producccion para cada item de producto-destino.'});
@@ -1355,7 +1356,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     this.solicitudTurnoService.updateInfoTruno(this.turno.id,data)
       .subscribe({
             next:async (turno)=>{
-               //console.log("turno actualizado",turno);
+               console.log("turno actualizado",turno);
 
               
                 let infoHistorialTurno =  await this.getHistorialTurno(turno.id)
