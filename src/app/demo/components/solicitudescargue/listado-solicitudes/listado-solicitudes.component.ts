@@ -631,6 +631,17 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     let newData = await this.functionsService.extraerCampos(this.solicitudesExtendida, fields);
 
+    newData.map((data: { [x: string]: string | number | Date; fechaformateada: string; })=>{
+      console.log('data["Hora Turno"]',data["Hora Turno"])
+      let fechaformateadaHora = new Date(data["Hora Turno"]).toLocaleString()
+      let fechaformateada = new Date(data["Fecha Turno"]).toLocaleString()
+      //data.fechaformateada = fechaformateada
+      data["Fecha Turno"] = fechaformateada.split(',')[0];
+      data["Hora Turno"] = fechaformateadaHora.split(',')[1];
+    })
+
+    console.log('data export',newData)
+
     await this.functionsService.exportarXLS(newData, 'Solicitudes de cargue');
 
     /*import("xlsx").then(xlsx => {

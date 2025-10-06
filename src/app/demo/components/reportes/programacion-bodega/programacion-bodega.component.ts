@@ -117,6 +117,7 @@ export class ProgramacionBodegaComponent implements OnInit {
       'itemcode': {label:'Número de artículo',type:'text', sizeCol:'6rem', align:'center',field:"itemcode"},
       'itemname': {label:'Descripción artículo/serv.',type:'text', sizeCol:'6rem', align:'center', editable:false,field:"itemname"},
       'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
+      'vehiculos': {label:'Vehiculos item',type:'number', sizeCol:'6rem', align:'center',editable:false,"sum":true,field:"vehiculos"},
       
     }];
 
@@ -128,6 +129,7 @@ export class ProgramacionBodegaComponent implements OnInit {
       'id': {label:'',type:'', sizeCol:'0rem', align:'center'},
       'estado': {label:'Estado',type:'text', sizeCol:'6rem', align:'center',field:"estado"},
       'cantidad': {label:'Cantidad a cargar',type:'number', sizeCol:'6rem', align:'center',currency:"TON",side:"rigth", editable:false,"sum":true,field:"cantidad"},
+      'vehiculos': {label:'Vehiculos item',type:'number', sizeCol:'6rem', align:'center',editable:false,"sum":true,field:"vehiculos"},
       //'bgcolor': {label:'',type:'', sizeCol:'6rem', align:'center'}
       
     }];
@@ -315,10 +317,11 @@ export class ProgramacionBodegaComponent implements OnInit {
     this.loadingPDB = true;
     this.lineasProgramacionDiariaBodega = await this.functionsService.clonObject(this.turnosFehaSeleccionada.filter(linea => linea.pedidos_turno_bodega=== this.bodegaSeleccionada.code && 
                                                                                     linea.turnos_estado != EstadosDealleSolicitud.CANCELADO));
-    //////console.log(this.lineasProgramacionDiariaBodega );
+   // console.log('this.lineasProgramacionDiariaBodega',this.lineasProgramacionDiariaBodega );  
     this.configTablaProgramacionDiaria();
 
     this.lineasConsolidadoProgramacionDiariaBodega = (await this.getInfoTablaConsolidadoProgramacionDiaria()).consolidadoItems;
+    console.log('this.lineasConsolidadoProgramacionDiariaBodega',this.lineasConsolidadoProgramacionDiariaBodega );  
     this.configTablaConsolidadoProgramacionDiaria();
 
     await this.configTablaGestionBodega();
@@ -348,6 +351,7 @@ export class ProgramacionBodegaComponent implements OnInit {
     let dataTable:any[] = [];
 
     for(let linea of data){
+
         dataTable.push({
           hora:new Date(linea.turnos_horacita).toLocaleTimeString(),
           id:linea.turnos_id,
@@ -399,6 +403,8 @@ export class ProgramacionBodegaComponent implements OnInit {
   }
 
   async configTablaConsolidadoProgramacionDiaria(){
+
+    
     
     let tabla:any = {
       header:  this.configHeaderTablaConsolidadoProgramacionDiaria(),
@@ -460,11 +466,23 @@ export class ProgramacionBodegaComponent implements OnInit {
     let dataTable:any[] = [];
 
     for(let linea of data){
+
+        let array_lineas_item = this.lineasProgramacionDiariaBodega.filter((item: { pedidos_turno_itemcode: any; })=>item.pedidos_turno_itemcode === linea.pedidos_turno_itemcode);
+        let array_vehiculos_item:any[] = []
+        if(array_lineas_item.length>0){
+          for(let item of array_lineas_item){
+            if(!array_vehiculos_item.find(vehiculo=>vehiculo.placa === item.vehiculos_placa)){
+              array_vehiculos_item.push({placa:item.vehiculos_placa})
+            }
+          }
+        }
+
         dataTable.push({
       
           itemcode:linea.pedidos_turno_itemcode,
           itemname:linea.pedidos_turno_itemname,
           cantidad:linea.pedidos_turno_cantidad,
+          vehiculos:array_vehiculos_item.length
         });
     }
 
@@ -501,10 +519,22 @@ export class ProgramacionBodegaComponent implements OnInit {
     let dataTable:any[] = [];
 
     for(let linea of data){
+
+        let array_lineas_estado = this.lineasProgramacionDiariaBodega.filter((item: { turnos_estado: any; })=>item.turnos_estado === linea.turnos_estado);
+        let array_vehiculos_estado:any[] = []
+        if(array_lineas_estado.length>0){
+          for(let item of array_lineas_estado){
+            if(!array_vehiculos_estado.find(linea=>linea.placa === item.vehiculos_placa)){
+              array_vehiculos_estado.push({placa:item.vehiculos_placa})
+            }
+          }
+        }
+
         dataTable.push({
           id: this.estadosTurno.filter((estado: { name: any; })=>estado.name === linea.turnos_estado)[0].order,
           estado:linea.turnos_estado,
           cantidad:linea.pedidos_turno_cantidad,
+          vehiculos:array_vehiculos_estado.length
           //bgcolor:this.estadosTurno.find((estado: { name: any; })=>estado.name === linea.turnos_estado).backgroundColor
         });
     }
