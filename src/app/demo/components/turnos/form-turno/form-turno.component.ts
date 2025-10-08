@@ -2122,9 +2122,9 @@ async validarHoraCargue():Promise<boolean>{
 
     //////////////console.log(this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length);
 
-    console.log('this.estado',this.estado);
-    console.log('this.estadosTurno.CARGADO',this.estadosTurno.CARGADO);
-    console.log('this.inspeccionTurno.cantidad_unidades',this.inspeccionTurno.cantidad_unidades);
+    // console.log('this.estado',this.estado);
+    // console.log('this.estadosTurno.CARGADO',this.estadosTurno.CARGADO);
+    // //console.log('this.inspeccionTurno.cantidad_unidades',this.inspeccionTurno.cantidad_unidades);
 
     this.cambioEstado = true;
 
