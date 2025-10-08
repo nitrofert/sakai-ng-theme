@@ -332,8 +332,9 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             .subscribe({
                 next:async (turnosLocalidad)=>{
 
-                    //console.log('turnosLocalidad',turnosLocalidad);
-                    this.turnosLocalidad = await turnosLocalidad.map((turno: { code: any; id: any; name: string; vehiculo: { placa: any; }; conductor: { nombre: any; }; fechacita: any; label: string; estado:string })=>{
+                    console.log('turnosLocalidad',turnosLocalidad);
+                    let tmpTurnosLocalidad = turnosLocalidad.filter((turno: { estado: any; })=>turno.estado === this.estadosTurno.PESADO || turno.estado === this.estadosTurno.CARGANDO   )
+                    this.turnosLocalidad = await tmpTurnosLocalidad.map((turno: { code: any; id: any; name: string; vehiculo: { placa: any; }; conductor: { nombre: any; }; fechacita: any; label: string; estado:string })=>{
                         turno.code=turno.id, 
                         turno.name = `${turno.id} - ${turno.vehiculo.placa} - ${turno.conductor.nombre} - ${turno.fechacita} - ${turno.estado}`;
                         turno.label = `${turno.id} - ${turno.vehiculo.placa} - ${turno.conductor.nombre} - ${turno.fechacita} - ${turno.estado}`;
@@ -1083,7 +1084,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para ${this.accion} el turno, debe seleccionar una novedad.` });
       this.cambioEstado = false;
-    }else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.CARGADO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
+    }else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.CARGANDO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad de unidades a recibir en la inspección debe ser mayor a cero.` });
       this.cambioEstado = false;
     } else if(await this.validarFechaEstado()){

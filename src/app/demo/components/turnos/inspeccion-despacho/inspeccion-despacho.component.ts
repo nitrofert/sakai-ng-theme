@@ -369,6 +369,9 @@ activeStateTabs:boolean[] = [false,false,false]
       estado_vehiculo:this.estado_vehiculo
 
     }
+
+    console.log('dataInspenccion',dataInspenccion);
+
     this.onChangeData.emit(dataInspenccion);
   }
  

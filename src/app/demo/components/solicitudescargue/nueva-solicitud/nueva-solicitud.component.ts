@@ -2442,52 +2442,53 @@ async validaCamposNull(pedidos:any[]):Promise<boolean>{
 
 async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
 
-  //let lineasPedidosBloquear:any[] = [];
+  let lineasPedidosBloquear:any[] = [];
 
-  ////////// //// //////////////////console.log(this.pedidos[0].docnum, this.pedidosAlmacenCliente);
+  //////// //// //////////////////console.log(this.pedidos[0].docnum, this.pedidosAlmacenCliente);
 
 
-  // for(let turno of solicitud.detalle_solicitud_turnos){
-  //     for(let pedido of turno.detalle_solicitud_turnos_pedido){
-  //       /*lineasPedidosBloquear.push({
-  //           Code:`${turno.id}-${pedido.id}`,
-  //           Name:`${turno.id}-${pedido.id}`,
-  //           U_NF_ORDCARGUE:turno.id,
-  //           U_NF_PEDIDO:this.pedidosAlmacenCliente.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedido && pedidoCliente.linenum===pedido.linea).docentry,
-  //           U_NF_LINEA:pedido.linea,
-  //           U_NF_ABIERTO:'SI',
-  //           U_NF_CANTIDAD:pedido.cantidad,
-  //           U_NF_BODEGA: pedido.bodega,
-  //       })*/
-  //       ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedidonum && pedidoCliente.linenum===pedido.linea));
-  //       ////////// //// //////////////////console.log(pedido.pedidonum);
+  for(let turno of solicitud.detalle_solicitud_turnos){
+      for(let pedido of turno.detalle_solicitud_turnos_pedido){
+        /*lineasPedidosBloquear.push({
+            Code:`${turno.id}-${pedido.id}`,
+            Name:`${turno.id}-${pedido.id}`,
+            U_NF_ORDCARGUE:turno.id,
+            U_NF_PEDIDO:this.pedidosAlmacenCliente.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedido && pedidoCliente.linenum===pedido.linea).docentry,
+            U_NF_LINEA:pedido.linea,
+            U_NF_ABIERTO:'SI',
+            U_NF_CANTIDAD:pedido.cantidad,
+            U_NF_BODEGA: pedido.bodega,
+        })*/
+        ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedidonum && pedidoCliente.linenum===pedido.linea));
+        ////////// //// //////////////////console.log(pedido.pedidonum);
 
-  //       ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
-  //       let lineaPedidoBloqueo = {
-  //           Code:`${turno.id}-${pedido.id}-${new Date().getTime()}`,
-  //           Name:`${turno.id}-${pedido.id}-${new Date().getTime()}`,
-  //           U_NF_ORDCARGUE:turno.id,
-  //           //U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
-  //           U_NF_PEDIDO:pedido.docentry,
-  //           U_NF_LINEA:pedido.linea,
-  //           U_NF_ABIERTO:'SI',
-  //           U_NF_CANTIDAD:pedido.cantidad,
-  //           U_NF_BODEGA: pedido.bodega
-  //       }
+        ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
+        let time = new Date().getTime()
+        let lineaPedidoBloqueo = {
+            Code:`${turno.id}-${pedido.id}-${time}`,
+            Name:`${turno.id}-${pedido.id}-${time}`,
+            U_NF_ORDCARGUE:turno.id,
+            //U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
+            U_NF_PEDIDO:`${pedido.objectType}-${pedido.docentry}`,
+            U_NF_LINEA:pedido.linea,
+            U_NF_ABIERTO:'SI',
+            U_NF_CANTIDAD:pedido.cantidad,
+            U_NF_BODEGA: pedido.bodega
+        }
 
-  //       //// //// //////////////////console.log(lineaPedidoBloqueo);
+        //// //// //////////////////console.log(lineaPedidoBloqueo);
 
-  //       this.sB1SLService.bloqueoPedidos(lineaPedidoBloqueo)
-  //           .subscribe({
-  //               next:(result)=>{
-  //                 ////////// //// //////////////////console.log(result);
-  //               },
-  //               error:(err)=>{
-  //                 console.error(err);
-  //               }
-  //           });
-  //     }
-  // }
+        this.sB1SLService.bloqueoPedidos(lineaPedidoBloqueo)
+            .subscribe({
+                next:(result)=>{
+                  console.log(result);
+                },
+                error:(err)=>{
+                  console.error(err);
+                }
+            });
+      }
+  }
 
   
 

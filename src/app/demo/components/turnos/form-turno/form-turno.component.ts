@@ -2122,6 +2122,10 @@ async validarHoraCargue():Promise<boolean>{
 
     //////////////console.log(this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length);
 
+    console.log('this.estado',this.estado);
+    console.log('this.estadosTurno.CARGADO',this.estadosTurno.CARGADO);
+    console.log('this.inspeccionTurno.cantidad_unidades',this.inspeccionTurno.cantidad_unidades);
+
     this.cambioEstado = true;
 
     if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
@@ -2133,7 +2137,7 @@ async validarHoraCargue():Promise<boolean>{
     }else if((this.accion == 'validar revision inventario' ) && ( !this.comentario)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe ingesar un comentario.` });
       this.cambioEstado = false;
-    }else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.CARGADO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
+    }else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.CARGANDO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad de unidades a recibir en la inspección debe ser mayor a cero.` });
       this.cambioEstado = false;
     } else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.PESADOF /*|| this.estado === this.estadosTurno.DESPACHADO*/) && (this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length)){
@@ -4304,7 +4308,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   setInsppeccion($event:any){
-    //////////////////console.log($event);
+    console.log('setInsppeccion',$event);
 
     this.inspeccionTurno = {
       fecha_inspeccion: new Date($event.fecha_inspeccion),
