@@ -2442,7 +2442,7 @@ async validarHoraCargue():Promise<boolean>{
                 let horacargue = `${this.fechacargue.toISOString().split("T")[0]}T${this.horacargue.toISOString().split("T")[1]}`;
                 data.fechacita = new Date(this.fechacargue);
                 data.horacita = new Date(horacargue);
-                //data.estado = this.estado;
+                data.estado = this.estado;
                 data.transportadora = this.transportadoraSeleccionada.id;
                 data.vehiculo = this.vehiculoSeleccionado.id;
                 data.conductor = this.conductorSeleccionado.id;
@@ -4188,7 +4188,17 @@ async validarHoraCargue():Promise<boolean>{
 
                     });
 
-                    
+                    this.solicitudTurnoService.getSolicitudesTurnoById(result.id)
+                        .subscribe({
+                              next:async (solicitud)=>{
+                                await this.bloqueoPedidosSolicitud(solicitud);
+                                //await this.configEmails(solicitud);
+                              },
+                              error:(err)=>{
+                                console.error(err);
+                                this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});            
+                              }
+                    });                    
                     
                     this.accion = 'actualizar la información del turno por cambio de bodega '
                     this.tituloEstado = "actualizar la información del turno por cambio de bodega ";
@@ -4251,6 +4261,61 @@ async validarHoraCargue():Promise<boolean>{
     }
     
   }
+
+  async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
+
+  let lineasPedidosBloquear:any[] = [];
+
+  //////// //// //////////////////console.log(this.pedidos[0].docnum, this.pedidosAlmacenCliente);
+
+
+  for(let turno of solicitud.detalle_solicitud_turnos){
+      for(let pedido of turno.detalle_solicitud_turnos_pedido){
+        /*lineasPedidosBloquear.push({
+            Code:`${turno.id}-${pedido.id}`,
+            Name:`${turno.id}-${pedido.id}`,
+            U_NF_ORDCARGUE:turno.id,
+            U_NF_PEDIDO:this.pedidosAlmacenCliente.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedido && pedidoCliente.linenum===pedido.linea).docentry,
+            U_NF_LINEA:pedido.linea,
+            U_NF_ABIERTO:'SI',
+            U_NF_CANTIDAD:pedido.cantidad,
+            U_NF_BODEGA: pedido.bodega,
+        })*/
+        ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum===pedido.pedidonum && pedidoCliente.linenum===pedido.linea));
+        ////////// //// //////////////////console.log(pedido.pedidonum);
+
+        ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
+        let time = new Date().getTime()
+        let lineaPedidoBloqueo = {
+            Code:`${turno.id}-${pedido.id}-${time}`,
+            Name:`${turno.id}-${pedido.id}-${time}`,
+            U_NF_ORDCARGUE:turno.id,
+            //U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
+            U_NF_PEDIDO:`${pedido.objectType}-${pedido.docentry}`,
+            U_NF_LINEA:pedido.linea,
+            U_NF_ABIERTO:'SI',
+            U_NF_CANTIDAD:pedido.cantidad,
+            U_NF_BODEGA: pedido.bodega
+        }
+
+        //// //// //////////////////console.log(lineaPedidoBloqueo);
+
+        this.sB1SLService.bloqueoPedidos(lineaPedidoBloqueo)
+            .subscribe({
+                next:(result)=>{
+                  console.log(result);
+                },
+                error:(err)=>{
+                  console.error(err);
+                }
+            });
+      }
+  }
+
+  
+
+ 
+}
 
 
   async clearUploader(uploaderFiles: FileUpload){
