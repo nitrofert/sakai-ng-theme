@@ -4,8 +4,8 @@
     [baseZIndex]="10000"
     rejectButtonStyleClass="p-button-text"
 ></p-confirmDialog>
-<!-- <div class="grid">
-    <div class="col-12">
+<div class="grid">
+    <div *ngIf="urlBase==='/portal/turnos'"class="col-12">
         <div class="card">
             <p-tabView styleClass="tabview-custom">
                 <p-tabPanel>
@@ -459,9 +459,9 @@
             </p-tabView>
         </div>
     </div>
-</div> -->
+</div>
 
-<div class="grid">
+<div *ngIf="urlBase==='/portal/turnos/movil'" class="grid">
     <div class="col-12">
         <p-accordion [multiple]="true">
             <p-accordionTab  [(selected)]="activeStateTabs[0]">

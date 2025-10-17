@@ -116,6 +116,8 @@ inspeccion:any
 
 activeStateTabs:boolean[] = [false,false,false]
 
+urlBase:string = '';
+
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private ordenesCargueService: OrdenesCargueService, 
@@ -140,6 +142,8 @@ activeStateTabs:boolean[] = [false,false,false]
     //this.displayModal = true;
     //this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
+    console.log('url base inspeccion',this.router.url);
+    this.urlBase = this.router.url;
    ////////console.log('ngOnInit inspeccion');
    //////////console.log('turno estado inspeccion', this.estado);
     this.getPermisosModulo();
