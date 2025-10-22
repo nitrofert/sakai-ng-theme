@@ -2474,7 +2474,7 @@ async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
             U_NF_ABIERTO:'SI',
             U_NF_CANTIDAD:pedido.cantidad,
             U_NF_BODEGA: pedido.bodega,
-            U_NF_CANT_PEDIDO:pedido.cantidad_pedido,
+            //U_NF_CANT_PEDIDO:pedido.cantidad_pedido,
         }
 
         //// //// //////////////////console.log(lineaPedidoBloqueo);
