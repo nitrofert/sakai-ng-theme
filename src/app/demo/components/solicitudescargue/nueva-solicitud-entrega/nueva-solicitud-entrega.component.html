@@ -583,16 +583,22 @@
                                                 <label for="vhiculo"><h6>Seleccione una tranportadora</h6></label>
                                             </span>
                                         </div>
-                                        <div class="field col-1">
+                                        <!-- <div class="field col-1">
                                             <p-button icon="pi pi-pencil" 
                                                       [disabled]="transportadoraSeleccionada.length==0 || transportadoraSeleccionada.id==0" 
                                                       pTooltip="Editar transportadora" 
                                                       tooltipPosition="top" 
                                                       (onClick)="nuevaTransportadora()"></p-button>
+                                        </div> -->
+                                        <div class="field col-1">
+                                            <p-button [icon]="transportadoraSeleccionada.length===0?'pi pi-plus':'pi pi-pencil'" 
+                                                    [pTooltip]="transportadoraSeleccionada.length===0?'Nueva transportadora':'Editar transportadora'" 
+                                                    tooltipPosition="top" 
+                                                    (onClick)="nuevaTransportadora()"></p-button>
                                         </div>
                                         <div class="field col-11">
                                             <span class="p-float-label">
-                                                <p-autoComplete id="vhiculo" 
+                                                <!-- <p-autoComplete id="vhiculo" 
                                                                 [(ngModel)]="vehiculoSeleccionado" 
                                                                 [suggestions]="vehiculosFiltrados" 
                                                                 (completeMethod)="filtrarVehiculo($event)" 
@@ -606,16 +612,37 @@
                                                                 </ng-template>
                 
                                                                
+                                                </p-autoComplete> -->
+                                                <p-autoComplete id="vhiculo" 
+                                                                [(ngModel)]="vehiculoSeleccionado" 
+                                                                [suggestions]="vehiculosFiltrados" 
+                                                                (completeMethod)="filtrarVehiculo($event)" 
+                                                                field="label" 
+                                                                [dropdown]="true"
+                                                                (ngModelChange)="unselectVehiculo(vehiculoSeleccionado)"
+                                                                (onSelect)="seleccionarVehiculo(vehiculoSeleccionado)"
+                                                                [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && vehiculoSeleccionado.length==0}">
+
+                                                                <ng-template let-value pTemplate="selectedItem">
+                                                                    <span style="font-size:18px">{{value}}</span>
+                                                                </ng-template>
+
+                                                            
                                                 </p-autoComplete>
                                                 <label for="vhiculo"><h6>Seleccione un vehículo</h6></label>
                                             </span>
                                         </div>
                                         <div class="field col-1">
-                                            <p-button icon="pi pi-pencil" 
+                                            <!-- <p-button icon="pi pi-pencil" 
                                                       [disabled]="vehiculoSeleccionado.length==0 || vehiculoSeleccionado.id==0" 
                                                       pTooltip="Editar vehículo" 
                                                       tooltipPosition="top" 
-                                                      (onClick)="nuevoVehiculo()"></p-button>
+                                                      (onClick)="nuevoVehiculo()"></p-button> -->
+                                                <p-button [icon]="vehiculoSeleccionado.length===0?'pi pi-plus':'pi pi-pencil'" 
+                                                    [pTooltip]="vehiculoSeleccionado.length===0?'Nuevo vehículo':'Editar vehículo'" 
+                                                    tooltipPosition="top" 
+                                                    (onClick)="nuevoVehiculo()">
+                                                </p-button>
                                         </div>
                                         <div class="field col-12 md:col-4 ">
                                             <span class="p-float-label">
@@ -675,11 +702,16 @@
                                             </span>
                                         </div>
                                         <div class="field col-1">
-                                            <p-button icon="pi pi-pencil" 
+                                            <!-- <p-button icon="pi pi-pencil" 
                                                       [disabled]="conductorSeleccionado.length==0 || conductorSeleccionado.id==0" 
                                                       pTooltip="Editar conductor" 
                                                       tooltipPosition="top" 
-                                                      (onClick)="nuevoConductor()"></p-button>
+                                                      (onClick)="nuevoConductor()"></p-button> -->
+                                                <p-button [icon]="conductorSeleccionado.length===0?'pi pi-plus':'pi pi-pencil'" 
+                                                    [pTooltip]="conductorSeleccionado.length===0?'Nuevo conductor':'Editar conductor'" 
+                                                    tooltipPosition="top" 
+                                                    (onClick)="nuevoConductor()">
+                                                </p-button>
                                         </div>
                                         
                                         <div class="field col-12 md:col-4 ">

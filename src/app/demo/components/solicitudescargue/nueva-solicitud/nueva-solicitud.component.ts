@@ -2198,9 +2198,9 @@ async grabarSolicitud(){
       let pedidosVehiculo:any[] = [];
       // //////////////////console.log(this.pedidosCliente);
       for(let pedido of vehiculo.pedidos){
-        ////////////console.log('this.pedidosCliente',this.pedidosCliente);
+        console.log('this.pedidosCliente',this.pedidosCliente);
        ////// //// //////////////////console.log(this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode));
-        let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode);
+        let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.pedido && pedidoCliente.itemcode === pedido.itemcode && pedidoCliente.linenum === pedido.linenum);
        //////////console.log('infoPedido',infoPedido);
        if(clientes_pedidos.filter(cliente=>cliente.CardCode === pedido.CardCode).length ===0){
          clientes_pedidos.push({ CardCode:pedido.CardCode, CardName:pedido.CardName, pedidos:[pedido.pedido]})

@@ -873,44 +873,100 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
             this.importeVehiculosSolicitud= [];
         }
 
-        async filtrarVehiculo(event:any){
-            //TODO: quitar del listado de vehiculos los vehiculos que ya esten asociados a la solicitud en curso
+        // async filtrarVehiculo(event:any){
+        //     //TODO: quitar del listado de vehiculos los vehiculos que ya esten asociados a la solicitud en curso
             
-            let vehiculosAfiltrar:any[] = [];
-            for(let vehiculo of this.vehiculos){
-              if(this.vehiculosEnSolicitud.filter(vehiculoSolicitud =>vehiculoSolicitud.placa == vehiculo.code).length == 0){
-                vehiculosAfiltrar.push(vehiculo);
-              }
-            }
-            this.vehiculosFiltrados =  this.filter(event,vehiculosAfiltrar);
-            this.vehiculosFiltrados.unshift({
-              id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
-            });
-            //////////////////////////// //// ////////////////console.log(this.vehiculosFiltrados);
+        //     let vehiculosAfiltrar:any[] = [];
+        //     for(let vehiculo of this.vehiculos){
+        //       if(this.vehiculosEnSolicitud.filter(vehiculoSolicitud =>vehiculoSolicitud.placa == vehiculo.code).length == 0){
+        //         vehiculosAfiltrar.push(vehiculo);
+        //       }
+        //     }
+        //     this.vehiculosFiltrados =  this.filter(event,vehiculosAfiltrar);
+        //     this.vehiculosFiltrados.unshift({
+        //       id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo vehículo"
+        //     });
+        //     //////////////////////////// //// ////////////////console.log(this.vehiculosFiltrados);
+        // }
+
+        async filtrarVehiculo(event:any){
+          if(event.query.length>=3){
+         
+                let data =  await this.functionsService.resolveObservable(this.vehiculosService.filterVehiculos({placa:event.query}))
+                  await data.map((item: { code: any; placa: string; name: any; tipo_vehiculo: any; label: string; clase:any})=>{
+                    item.code = item.placa;
+                      item.name = item.placa;
+                      item.label = item.placa+' ('+item.tipo_vehiculo.capacidad+' TON)';
+                      item.clase = item.tipo_vehiculo;
+                  })
+                  this.vehiculosFiltrados = data
+            
+          }
         }
           
-        async filtrarConductor(event:any){
-            let conductoresAfiltrar:any[] = [];
-            for(let conductor of this.conductores){
-              if(this.vehiculosEnSolicitud.filter(vehiculoSolicitud =>vehiculoSolicitud.conductor == conductor.code).length == 0){
-                conductoresAfiltrar.push(conductor);
-              }
-            }
-            this.conductoresFiltrados =  this.filter(event,conductoresAfiltrar);
-            this.conductoresFiltrados.unshift({
-              id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo conductor"
-            });
+        // async filtrarConductor(event:any){
+        //     let conductoresAfiltrar:any[] = [];
+        //     for(let conductor of this.conductores){
+        //       if(this.vehiculosEnSolicitud.filter(vehiculoSolicitud =>vehiculoSolicitud.conductor == conductor.code).length == 0){
+        //         conductoresAfiltrar.push(conductor);
+        //       }
+        //     }
+        //     this.conductoresFiltrados =  this.filter(event,conductoresAfiltrar);
+        //     this.conductoresFiltrados.unshift({
+        //       id:0, code: "Nuevo", name: "Nuevo", label:"+ Nuevo conductor"
+        //     });
+        // }
+
+        filtrarConductor(event:any){
+          if(event.query.length>=3){
+            
+            this.conductoresService.filterConductores({texto:event.query})
+                .subscribe(data=>{
+
+                  data.map((item: { code: any; cedula: string; name: any; nombre: string; label: string; })=>{
+                    item.code = item.cedula;
+                        item.name = item.nombre;
+                        item.label = item.cedula+' - '+item.nombre;
+                  })
+                  this.conductoresFiltrados = data
+                  //////console.log(this.transportadorasFiltrados)
+                })
+
+            
+          }
+      
         }
           
-        async filtrarTransportadora(event:any){
-            let transportadorasAfiltrar:any[] = [];
-            for(let transportadora of this.transportadoras){
-                transportadorasAfiltrar.push(transportadora);
-            }
-            this.transportadorasFiltrados =  this.filter(event,transportadorasAfiltrar);
-            this.transportadorasFiltrados.unshift({
-              id:0, code: "Nuevo", name: "Nuevo", label:"+ Nueva transportadora"
-            });
+        // async filtrarTransportadora(event:any){
+        //     let transportadorasAfiltrar:any[] = [];
+        //     for(let transportadora of this.transportadoras){
+        //         transportadorasAfiltrar.push(transportadora);
+        //     }
+        //     this.transportadorasFiltrados =  this.filter(event,transportadorasAfiltrar);
+        //     this.transportadorasFiltrados.unshift({
+        //       id:0, code: "Nuevo", name: "Nuevo", label:"+ Nueva transportadora"
+        //     });
+        // }
+
+        filtrarTransportadora(event:any){
+  
+          if(event.query.length>=3){
+           
+            this.transportadorasService.filterTransportadoras({nombre:event.query})
+                .subscribe(data=>{
+
+                  data.map((item: { code: any; nit: string; name: any; nombre: string; label: string; })=>{
+                    item.code = item.nit;
+                    item.name = item.nombre;
+                    item.label = item.nit+' - '+item.nombre;
+                  })
+                  this.transportadorasFiltrados = data
+                  //////console.log(this.transportadorasFiltrados)
+                })
+
+            
+          }
+         
         }
 
         seleccionarTransportadora(transportadoraSeleccionada:any){
@@ -944,6 +1000,16 @@ import { TipoVehiculosService } from "src/app/demo/service/tipo-vehiculo.service
                 //if(conductor != undefined) this.conductorSeleccionado = conductor;
             }
           
+        }
+
+        unselectVehiculo(vehiculoSeleccionado:any){
+          console.log(vehiculoSeleccionado)
+          if(!vehiculoSeleccionado){
+            this.capacidadVehiculo =0;
+            this.pesobruto = 0;
+            this.pesoneto = 0;
+            this.capacidadDisponibleVehiculo = 0;
+          }
         }
           
         nuevaTransportadora(){
