@@ -3626,7 +3626,7 @@ async validarHoraCargue():Promise<boolean>{
                  
                 }else{
 
-                  let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0];
+                  let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode && pedidoCliente.linenum === pedido.linenum)[0];
 
                   ///let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
                   let email_vendedor = infoPedido.email_vendedor;

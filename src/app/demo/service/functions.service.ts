@@ -722,6 +722,11 @@ uploadSoportesPago(body:any):Observable<any>{
   const url:string = `${this.api_url}/api/soportes-pago`;
   return this.http.post<any[]>(url,body); 
 }
+
+pagosFactura(id:any):Observable<any>{
+  const url:string = `${this.api_url}/api/soportes-pago/factura/${id}`;
+  return this.http.get<any[]>(url); 
+}
   
 
 }

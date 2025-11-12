@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { FunctionsService } from 'src/app/demo/service/functions.service';
@@ -12,6 +12,7 @@ import { MenuService } from 'src/app/layout/shared/menu/app.menu.service';
 import { ClientesService } from 'src/app/demo/service/clientes.service';
 import { FormFacturaComponent } from '../../reportes/form-factura/form-factura.component';
 import { FileUpload } from 'primeng/fileupload';
+import { lastValueFrom } from 'rxjs';
 
 interface UploadEvent {
     originalEvent: Event;
@@ -57,7 +58,7 @@ export class CargueSoporteFacturasComponent  implements  OnInit{
   loading:boolean = true;
   globalFilterFields:any[]= ['DocNum','NumAtCard','PEDIDO','TIPOFAC','DocDate','DocDueDate','Dias de vencimiento','PymntGroup','DocTotal','creditCompany'];
   selectedItem:any[] = []; 
-  columnsTable:number=this.globalFilterFields.length+2; 
+  columnsTable:number=6; 
   hoy:Date = new Date();
 
   info_usuario!:any;
@@ -75,6 +76,8 @@ export class CargueSoporteFacturasComponent  implements  OnInit{
   cntFacturas:number =0;
   totalFacturas:number =0;
 
+  totalSaldoFacturas:number =0;
+
   totalSoportes:number =0;
 
 
@@ -82,6 +85,26 @@ export class CargueSoporteFacturasComponent  implements  OnInit{
 
   cargueSoporte:boolean = true;
   uploadedFiles:any[] =[];
+
+  displayModal:boolean = false;
+
+  loadingCargue:boolean = false;
+
+
+  dialogSoportes:boolean = false;
+
+  titleDialogSoportes:string = 'Soportes de Pago de la Factura';
+
+  soportesFactura:any[] = [];
+  selectedItemSoportes:any[] = [];
+
+
+  dialogDetallePagos:boolean = false;
+
+  titleDialogDetallePagos:string = 'Soportes de Pago de la Factura';
+
+  soportesDetallePagos:any[] = [];
+  selectedItemDetallePagos:any[] = [];
 
   rangoFechas:Date[] = [];
   @ViewChild('dateFilter') dateFilter!: any;
@@ -240,7 +263,7 @@ async getFacturasCliente(){
   ////console.log('facturasCliente',facturasCliente);
   facturasCliente =(await this.functionsService.objectToArray(facturasCliente));
   this.facturasCliente = facturasCliente;
-  ////////////////console.log('facturasCliente',facturasCliente);
+  console.log('facturasCliente',facturasCliente);
 
   let facturasClienteAgrupada = await  this.functionsService.groupArray(facturasCliente,'DocNum');
 
@@ -255,6 +278,16 @@ async getFacturasCliente(){
     linea.creditCompany = linea.LIQUITECH=='NO'?'Nitrofert':'Nitrocredit';
     linea.valorPago =0
     ////////////////console.log(linea.diasvencimiento);
+    let pagosFactura:any[] = await this.getPagosFactura(linea.DocNum);
+    console.log('pagosFactura',pagosFactura);
+    if(pagosFactura.length>0){
+      let totalPagos:any = await this.functionsService.groupArray(pagosFactura.filter(item=>item.estado==='Pendiente'),'factura',[{valor_a_pagar:0}]);
+       console.log('totalPagos',totalPagos);
+      linea.pagosFactura = totalPagos[0].valor_a_pagar;
+    }else{
+      linea.pagosFactura = 0;
+    }
+    
   }
 
  ////////////////console.log('facturasClienteAgrupada',facturasClienteAgrupada);
@@ -266,6 +299,13 @@ async getFacturasCliente(){
   //await this.setFiltros();
 
   this.loading = false;
+}
+
+async getPagosFactura(id:any):Promise<any>{
+  let pagosFactura$ = this.functionsService.pagosFactura(id);
+  let pagosFactura = await lastValueFrom(pagosFactura$);
+  return pagosFactura;
+
 }
 
 async setFiltros(table: Table):Promise<void>{
@@ -540,12 +580,15 @@ PresionaEnter(event:any, linea?:any){
      this.cntFacturas = lineasSeleccionadas.length
 
     let totalPago = 0;
+    let totalSaldos =0;
 
     for(let factura of lineasSeleccionadas){
       totalPago = totalPago+factura.valorPago
+      totalSaldos = totalSaldos +(factura.LIQUITECH=='NO'?(factura.DocTotal-factura.PAGADOAFECHA):(factura.SALDOLIQUITECH))
     }
 
     this.totalFacturas = totalPago;
+    this.totalSaldoFacturas = totalSaldos;
 
     this.selectedItem = lineasSeleccionadas;
   }
@@ -585,9 +628,19 @@ PresionaEnter(event:any, linea?:any){
         this.messageService.add({severity:'error', summary: '¡Error!', detail:  `Debe ingresar el valor a pagar al menos de una factura`});
       }else if(this.totalFacturas!=this.totalSoportes){
         this.messageService.add({severity:'error', summary: '¡Error!', detail:  `El valor total a pagar en las facturas seleccionadas es diferente al valor a pagar del soporte `});
+      }else if(this.totalSaldoFacturas<this.totalSoportes){
+        this.messageService.add({severity:'error', summary: '¡Error!', detail:  `El valor total a pagar en las facturas seleccionadas es mayor al valor total de los saldos a pagar`});
       }else if(this.filesToUpload.length ===0){
         this.messageService.add({severity:'error', summary: '¡Error!', detail:  `Debe adicionar al menos un soporte a cargar`});
       }else{
+
+          this.confirmationService.confirm({
+        message: `¿Esta seguro de realizar el cargue de los soportes de pago para las facturas seleccionadas?`,
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        
+        accept: async () => {
+          
           let data = {
             cliente:this.clienteSeleccionado,
             facturas:this.selectedItem
@@ -596,35 +649,56 @@ PresionaEnter(event:any, linea?:any){
           this.functionsService.uploadSoportesPago(data)
               .subscribe({
                   next:(result)=>{
-                    //////////console.log('Upload ok',result);
-                    //this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
-                    // if(this.filesToUpload.length > 0){
-                    //     for(let anexo of this.filesToUpload){
-                    //       let body = new FormData();
-                    //       body.append('file', anexo.file, anexo.file.name);
-                    //       body.append('entidad', 'turnos');
-                    //       body.append('id_relacion', turno.detalle_solicitud_turnos_historial[turno.detalle_solicitud_turnos_historial.length-1].id);
-                    //       body.append('proceso', turno.estado);
-                    //       body.append('nombre', anexo.file.name);
+                    console.log('Upload ok',result);
+                    
+                    if(this.filesToUpload.length > 0){
+                        for(let anexo of this.filesToUpload){
+                          let body = new FormData();
+                          body.append('file', anexo.file, anexo.file.name);
+                          body.append('entidad', 'pagos');
+                          body.append('id_relacion', result.id);
+                          body.append('proceso', 'upload');
+                          body.append('nombre', anexo.file.name);
 
-                    //       this.functionsService.uploadFile(body)
-                    //           .subscribe({
-                    //             next:(result)=>{
-                    //               //////////console.log('Upload ok',result);
-                    //               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
-                    //             },
-                    //             error:(err)=>{
-                    //               this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
-                    //             }
-                    //           })
-                    //     }
+                          this.functionsService.uploadFile(body)
+                              .subscribe({
+                                next:(result)=>{
+                                  //////////console.log('Upload ok',result);
+                                  this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
+                                },
+                                error:(err)=>{
+                                  this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
+                                }
+                              })
+                        }
                   
-                    // }
+                    }
+
+                    let facturasCargadas = result.detalle_soportes_pago.map((factura: { valor_a_pagar: any; factura: any; })=>{
+                        let index = this.facturasClienteAgrupada.findIndex(linea=>linea.DocNum === factura.factura);
+                        this.facturasClienteAgrupada[index].pagosFactura = this.facturasClienteAgrupada[index].pagosFactura + factura.valor_a_pagar;
+                        return factura.factura
+                    });
+                    this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente los soportes de pago de las facturas seleccionadas ${facturasCargadas.join(', ')  }`});
                   },
                   error:(err)=>{
                     this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al momento de subir el archivo :'+err});
                   }
           })
+        },
+        reject: (type: any) => {
+                      switch(type) {
+                          case ConfirmEventType.REJECT:
+                              //this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+                          break;
+                          case ConfirmEventType.CANCEL:
+                              //this.messageService.add({severity:'warn', summary:'Cancelled', detail:'You have cancelled'});
+                          break;
+                      }
+                  }
+        });
+
+         
       }
     }
 
@@ -635,6 +709,41 @@ PresionaEnter(event:any, linea?:any){
 
         this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
     }
+
+    async verDetallePagosFactura(linea:any){
+      console.log('verDetallePagosFactura',linea);
+      let pagosFactura:any[] = await this.getPagosFactura(linea.DocNum);
+      console.log('pagosFactura',pagosFactura);
+      this.dialogDetallePagos = true;
+      this.titleDialogDetallePagos = `Detalle de Pago de la Factura ${linea.DocNum}`;
+
+      this.soportesDetallePagos = pagosFactura;
+
+    }
+
+    async verSoportesFactura(linea:any){
+      console.log('verSoportesFactura',linea);
+
+      let idUpload = linea.soportes.id 
+
+      let soportesFactura$ =  this.functionsService.loadFiles({entidad:'pagos', id_relacion:idUpload});
+      let soportesFactura = await lastValueFrom(soportesFactura$);
+
+      console.log('soportesFactura',soportesFactura);
+
+      
+      this.dialogSoportes = true;
+      this.titleDialogSoportes = `Soportes de Pago de la Factura `;
+      this.soportesFactura = soportesFactura;
+
+
+    }
+
+    verSoporte(linea:any){
+      console.log('verSoporte',linea);
+      window.open(linea.linkS3,'_blank');
+    }
+  
   
 
 }
