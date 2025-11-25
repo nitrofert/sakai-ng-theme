@@ -2495,7 +2495,7 @@ async validarHoraCargue():Promise<boolean>{
               data.inspeccion = this.inspeccionTurno;
             }
             
-         console.log('Data update turno',data);
+         console.log('Data update turno',JSON.stringify( data));
 
     return data;
   }
