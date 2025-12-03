@@ -2465,8 +2465,8 @@ async bloqueoPedidosSolicitud(solicitud:any):Promise<void>{
         ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
         let time = new Date().getTime()
         let lineaPedidoBloqueo = {
-            Code:`${turno.id}-${pedido.id}-${time}`,
-            Name:`${turno.id}-${pedido.id}-${time}`,
+            Code:`${turno.id}-${pedido.id}-${time}-999`,
+            Name:`${turno.id}-${pedido.id}-${time}-999`,
             U_NF_ORDCARGUE:turno.id,
             //U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
             U_NF_PEDIDO:`${pedido.objectType}-${pedido.docentry}`,
