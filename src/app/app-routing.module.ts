@@ -26,6 +26,7 @@ import { RoleAccesGuard } from './demo/components/auth/guard/rol-acces.guard';
                     { path: 'reportes', loadChildren: () => import('./demo/components/reportes/reportes.module').then(m => m.ReportesModule) },
                     { path: 'locaciones', loadChildren: () => import('./demo/components/locaciones/locaciones.module').then(m => m.LocacionesModule) },
                     { path: 'clientes', loadChildren: () => import('./demo/components/clientes/clientes.module').then(m => m.ClientesModule) },
+                    { path: 'pedidos', loadChildren: () => import('./demo/components/pedidos/pedidos.module').then(m => m.PedidosModule) },
 
                     { path: 'buques', loadChildren: () => import('./demo/components/costado-buque/costado-buque.module').then(m => m.CostadoBuqueModule) },
                     { path: 'finanzas', loadChildren: () => import('./demo/components/finanzas/finanzas.module').then(m => m.FinanzasModule) },
