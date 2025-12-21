@@ -481,6 +481,7 @@
                                             optionLabel="label" 
                                             placeholder="Seleccione una hora"
                                             inputId="horacargue"
+                                            [ngClass]="{'ng-invalid ng-dirty' : envioAdicionVehiculo && !horacargueSeleccionada}"
                                             (onChange)="seleccionarHoraCita()">
                                             
                                             <ng-template let-option pTemplate="item">
