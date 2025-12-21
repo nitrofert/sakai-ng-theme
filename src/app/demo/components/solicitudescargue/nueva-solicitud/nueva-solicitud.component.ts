@@ -1030,7 +1030,11 @@ async seleccionarAlmacen(almacenSeleccionado:any){
     ////////////////// //// ////////////////////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
     ////////////////// //// ////////////////////console.log(this.horainicio, this.horafin);
     this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
+    console.log('diasNoAtencion',this.diasNoAtencion);
+   
+
     this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion;
+     console.log('horariosLocacion',this.horariosLocacion);
 
     //////////////// //// ////////////////////console.log('horariosLocacion',this.horariosLocacion);
     await this.seleccionarFechaCita();
@@ -1076,7 +1080,7 @@ async seleccionarFechaCita():Promise<void>{
   //console.log('this.fechacargue',this.fechacargue)
   //console.log('diaSeleccionado',diaSeleccionado)
   let horariosSeleccionados = this.horariosLocacion.filter(horario=>horario.dias_atencion.includes(diaSeleccionado.fullname));
-  //console.log('horariosSeleccionados',horariosSeleccionados)
+  console.log('horariosSeleccionados',horariosSeleccionados)
 
   let horaInicio = parseInt(horariosSeleccionados[0].horainicio.split(':')[0]);
   //console.log('horaInicio',horaInicio)
@@ -1546,8 +1550,8 @@ async adicionVehiculoSolicitud(){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
   }else if(!(await this.validarHoraCargue())){
     this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
-  // }else if(!this.horacargueSeleccionada.activo){
-  //   this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+  }else if(!this.horacargueSeleccionada.activo){
+    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
   }else{
 
     this.confirmationService.confirm({
@@ -2143,7 +2147,7 @@ async validarHoraCargue():Promise<boolean>{
 
   for(let horario of this.horariosSeleccionados){
 
-    //console.log('horario',horario);
+    console.log('horario',horario);
     //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
     //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
     //////////////// //// ////////////////////console.log(new Date(this.horacargue));
