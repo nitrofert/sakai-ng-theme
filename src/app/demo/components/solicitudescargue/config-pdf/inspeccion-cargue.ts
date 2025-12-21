@@ -12,7 +12,7 @@ export class PdfInspeccionCargue {
     estadosTurno:any = EstadosDealleSolicitud;
 
     header:any = (turno:any)=> {
-        ////////console.log('header');
+        //////////console.log('header');
         return {
             margin: 8,
         columns: [
@@ -119,7 +119,7 @@ export class PdfInspeccionCargue {
         documentAssembly: true
     }
     content:any =  (data:any)=>{
-        //////console.log('content', data);
+        ////////console.log('content', data);
         //Armar detalle observaciones
         let detalleObservaciones:any[] = [];
         let bodyTableObservaciones:any[] = [];
@@ -362,7 +362,7 @@ export class PdfInspeccionCargue {
 
        let histoarial_turno = data.historial;
 
-       //////console.log('histoarial_turno',histoarial_turno);
+       ////////console.log('histoarial_turno',histoarial_turno);
 
        let info_llegada:any[] = [];
        let info_inicio_cargue :any[] = [];
@@ -372,9 +372,9 @@ export class PdfInspeccionCargue {
        info_inicio_cargue = histoarial_turno.filter((historial: { estado: any; })=>historial.estado === this.estadosTurno.CARGANDO);
        info_fin_cargue = histoarial_turno.filter((historial: { estado: any; })=>historial.estado === this.estadosTurno.CARGADO);
      
-       //////console.log('info_llegada',info_llegada);
-       //////console.log('info_inicio_cargue',info_inicio_cargue);
-       //////console.log('info_fin_cargue',info_fin_cargue);
+       ////////console.log('info_llegada',info_llegada);
+       ////////console.log('info_inicio_cargue',info_inicio_cargue);
+       ////////console.log('info_fin_cargue',info_fin_cargue);
        
      
        
@@ -1647,7 +1647,7 @@ export class PdfInspeccionCargue {
     }
 
     footer:any =(firmas:any)=> {
-       //////console.log('footer', firmas);
+       ////////console.log('footer', firmas);
         return {
             
         margin: 8,
@@ -1818,7 +1818,7 @@ export class PdfInspeccionCargue {
     
     async generarPDF(data:any):Promise<void>{
         
-       //////console.log('datakey',data.dataKey);
+       ////////console.log('datakey',data.dataKey);
         let datakey = data.dataKey.split('-');
         // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
         // let infoTurno = await lastValueFrom(infoTurno$);
@@ -1831,9 +1831,9 @@ export class PdfInspeccionCargue {
 
         let locacion = locaciones.filter((localidad: { code: any; })=>localidad.code === infoTurno.locacion);
 
-        //////console.log('locaciones',locaciones);
+        ////////console.log('locaciones',locaciones);
 
-        //////console.log('infoTurno',infoTurno);
+        ////////console.log('infoTurno',infoTurno);
 
         let inspeccion_turno = infoTurno.detalle_solicitud_turnos_inspeccion;
 
@@ -1850,7 +1850,7 @@ export class PdfInspeccionCargue {
                                                            entidad:'usuario'});
         let filesAtachByInspector = await lastValueFrom(filesAtach$);
 
-        //////console.log('filesAtachByInspector',filesAtachByInspector)
+        ////////console.log('filesAtachByInspector',filesAtachByInspector)
 
         if(filesAtachByInspector.length === 0){
             filesAtachByInspector.push(`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQcAAABYCAIAAAB3ZqVmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAADfSURBVHhe7dMxAQAwEAOh+jedzn8awANvwGUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVsC1fUBYOJv6tIhuAAAAAElFTkSuQmCC`)
@@ -1858,10 +1858,10 @@ export class PdfInspeccionCargue {
         
         this.images.Logo = await this.functionsService.convertImagenLocalToBase64('assets/demo/images/logos/nitrofert.png');
        // this.images.FirmaAutorizador = filesAtachByEstadoHistorialTurno[0];
-       //////////console.log(filesAtachByEstadoHistorialTurno[0]);
+       ////////////console.log(filesAtachByEstadoHistorialTurno[0]);
 
 
-        ////console.log('inspeccion_turno',inspeccion_turno)
+        //////console.log('inspeccion_turno',inspeccion_turno)
 
         let fileInspeccion$ = this.functionsService.filesToBase64({id_relacion:inspeccion_turno[0].id,
                                                            proceso:'firma-conductor',
@@ -1869,7 +1869,7 @@ export class PdfInspeccionCargue {
 
         let filesAtachByInspeccion = await lastValueFrom(fileInspeccion$);
 
-       ////////console.log('filesAtachByInspeccion',filesAtachByInspeccion)
+       //////////console.log('filesAtachByInspeccion',filesAtachByInspeccion)
 
         if(filesAtachByInspeccion.length === 0){
             filesAtachByInspeccion.push(`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQcAAABYCAIAAAB3ZqVmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAADfSURBVHhe7dMxAQAwEAOh+jedzn8awANvwGUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVkBZAWUFlBVQVsC1fUBYOJv6tIhuAAAAAElFTkSuQmCC`)
@@ -1885,14 +1885,14 @@ export class PdfInspeccionCargue {
             email: inspector.email,
             firma: filesAtachByInspector[0]
         }
-        //////console.log('infoUsuario',infoUsuario);
+        ////////console.log('infoUsuario',infoUsuario);
 
         let firmas:any = {
             conductor:filesAtachByInspeccion[0],
             inspector:filesAtachByInspector[0]
         }
 
-       //////console.log(firmas);
+       ////////console.log(firmas);
 
 
 
@@ -1902,17 +1902,17 @@ export class PdfInspeccionCargue {
             nombre: infoTurno.transportadora.nombre,
             nit: infoTurno.transportadora.nit
         }
-        ////////console.log('trasnportadora',trasnportadora);
+        //////////console.log('trasnportadora',trasnportadora);
         let vehiculo:any = {
             placa: infoTurno.vehiculo.placa
         }
-        ////////console.log('vehiculo',vehiculo);
+        //////////console.log('vehiculo',vehiculo);
         let conductor:any =  {
             nombre: infoTurno.conductor.nombre,
             cedula: infoTurno.conductor.cedula,
             telefono: infoTurno.conductor.numerocelular
         }
-        ////////console.log('conductor',conductor);
+        //////////console.log('conductor',conductor);
 
         let productos:any =  infoTurno.detalle_solicitud_turnos_pedido.filter((pedido: {cantidad: number; CardCode: any; itemcode:string })=>pedido.CardCode === datakey[datakey.length-2] && pedido.cantidad>0 && !pedido.itemcode.startsWith('SF')).map((linea: { pedidonum: any; itemname: any; cantidad: any; municipioentrega: any; lugarentrega: any; CardName:any, lote_produccion:any, toneladas_metircas:any, cantidad_sacos:any, remision:any, cubicacion:any }) => {
             return {
@@ -1931,7 +1931,7 @@ export class PdfInspeccionCargue {
 
             }
         })
-        ////////console.log('productos',productos);
+        //////////console.log('productos',productos);
 
         let observacionesArray:any = infoTurno.observacion!=""?infoTurno.observacion.split(";"):[];
         
@@ -1939,7 +1939,7 @@ export class PdfInspeccionCargue {
             return { observacion:data.trim() };
         })
 
-        ////////console.log('observaciones',observaciones);
+        //////////console.log('observaciones',observaciones);
 
 
         let dataPdf: any = {

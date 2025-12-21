@@ -113,7 +113,7 @@ export class ConductoresComponent implements  OnInit{
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////console.log(permisos);
+              //////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -130,7 +130,7 @@ export class ConductoresComponent implements  OnInit{
   
               
               this.infoUsuario = await this.usuariosService.infoUsuario();
-              //////////////console.log(this.infoUsuario);
+              ////////////////console.log(this.infoUsuario);
               this.getConductores();
   
             },
@@ -145,7 +145,7 @@ export class ConductoresComponent implements  OnInit{
     this.conductoresService.getConductores2()
     .subscribe({
         next:async (conductores)=>{
-          console.log(conductores)
+          //console.log(conductores)
 
           let dataConductores:any[] = [];
               for(let conductor of conductores){
@@ -156,9 +156,9 @@ export class ConductoresComponent implements  OnInit{
 
                 if(tieneArl==='Si'){
                   let arlActiva = conductor.historial_arl.find((arl: { estado: string; })=>arl.estado ==='ACTIVO');
-                  console.log('arlActiva',arlActiva);
+                  //console.log('arlActiva',arlActiva);
                   diasVencido = await this.functionsService.dateDif(new Date(), new Date(`${arlActiva.fechafin}T05:00:00.000z`))
-                  console.log('diasVencido',diasVencido)
+                  //console.log('diasVencido',diasVencido)
                   if(diasVencido<=0){
                     arlVigente = 'Si';
                   }
@@ -205,7 +205,7 @@ export class ConductoresComponent implements  OnInit{
   }
 
   editar(event:any){
-    //////console.log(event)
+    ////////console.log(event)
     const ref = this.dialogService.open(FormConductorComponent, {
       data: {
        id: event
@@ -231,7 +231,7 @@ export class ConductoresComponent implements  OnInit{
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-        //////console.log(event);
+        ////////console.log(event);
         let idsInactivar = event.map((item: { id: any; })=>{
           return item.id;
         })
@@ -278,7 +278,7 @@ export class ConductoresComponent implements  OnInit{
       header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        //////console.log(event);
+        ////////console.log(event);
         let idsActivar = event.map((item: { id: any; })=>{
           return item.id;
         })

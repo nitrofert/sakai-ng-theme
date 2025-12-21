@@ -87,7 +87,7 @@ export class InventarioBodegaComponent implements  OnInit{
               }
               
               this.allbodegas = almacenesTMP;
-              ////////console.log(this.allbodegas);
+              //////////console.log(this.allbodegas);
               this.getLocaciones();
              
             },
@@ -108,11 +108,11 @@ export class InventarioBodegaComponent implements  OnInit{
                 locacion.label = locacion.locacion
               })
               //this.locaciones = locaciones;
-              ////////console.log(locaciones);
+              //////////console.log(locaciones);
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               this.locacionSeleccionada = this.locaciones[0];
               this.seleccionarLocacion(this.locacionSeleccionada);
-              //////////////////////////////////////// ////////console.log();
+              //////////////////////////////////////// //////////console.log();
             },
             error:(err)=>{
               console.error(err);
@@ -136,16 +136,16 @@ export class InventarioBodegaComponent implements  OnInit{
 }
 
 seleccionarLocacion(locacion:any){
-  ////// ////////console.log('allbodegas',this.allbodegas);
-  ////// ////////console.log('locacion',locacion);
+  ////// //////////console.log('allbodegas',this.allbodegas);
+  ////// //////////console.log('locacion',locacion);
 
   let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
-  ////////console.log(bodegas_locacion);
+  //////////console.log(bodegas_locacion);
   if(bodegas_locacion.length==0){
     //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La locación ${locacion.label} no tiene bodegas asociadas`});
-    //////////// ////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
+    //////////// //////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
   }else{
-    ////////////////// ////////console.log(bodegas_locacion);
+    ////////////////// //////////console.log(bodegas_locacion);
     this.bodegas = bodegas_locacion;
     this.bodegaSeleccionada = this.bodegas[0];
     this.seleccionarBodega(this.bodegaSeleccionada);
@@ -154,7 +154,7 @@ seleccionarLocacion(locacion:any){
 }
 
 seleccionarBodega(bodega:any){
-  ////////////// ////////console.log(bodega);
+  ////////////// //////////console.log(bodega);
  this.getInventario();
 }
 
@@ -164,8 +164,8 @@ getInventario(){
       .subscribe({
           next:async (inventarios)=>{
             let inventariosBodegas = (await this.functionsService.objectToArray(inventarios)).filter((linea: { WhsCode: any; })=> linea.WhsCode === this.bodegaSeleccionada.WhsCode_Code);
-            //////console.log(' this.bodegaSeleccionada', this.bodegaSeleccionada);
-            //////console.log('inventariosBodegas',inventariosBodegas);
+            ////////console.log(' this.bodegaSeleccionada', this.bodegaSeleccionada);
+            ////////console.log('inventariosBodegas',inventariosBodegas);
             let headersTabla = this.configHeaderTablaInventarioBodega();
             let dataTable = await this.configDataTablaInventarioBodega(inventariosBodegas);
             this.tablaInventarioBodega= {
@@ -183,7 +183,7 @@ getInventario(){
 
 filter(event: any, arrayFiltrar:any[]) {
 
-  //////////////////////////////////////////////////// ////////console.log((arrayFiltrar);
+  //////////////////////////////////////////////////// //////////console.log((arrayFiltrar);
   const filtered: any[] = [];
   const query = event.query;
   for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -215,7 +215,7 @@ filtrarBodega(event:any){
       //'bgcolor': {label:'',type:'', sizeCol:'6rem', align:'center'}
       
     }];
-   // // ////////console.log('headersTable',headersTable);
+   // // //////////console.log('headersTable',headersTable);
 
     return headersTable;
   }
@@ -225,7 +225,7 @@ filtrarBodega(event:any){
     for(let linea of pedidos){
 
       if(linea.ItemCode === 'OR2070000'){
-        //////console.log(linea);
+        ////////console.log(linea);
 
       }
 

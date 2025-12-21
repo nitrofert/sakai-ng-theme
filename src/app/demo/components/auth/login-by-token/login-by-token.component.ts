@@ -36,14 +36,14 @@ export class LoginByTokenComponent implements OnInit{
 
   async ngOnInit(): Promise<void> {
       let obj_parseUrl:any = this.router.parseUrl(this.router.url)
-      ////console.log('obj_parseUrl',obj_parseUrl);
+      //////console.log('obj_parseUrl',obj_parseUrl);
       if(obj_parseUrl.queryParams.token){
         localStorage.setItem('token',obj_parseUrl.queryParams.token)
         this.loading = true;
         this.authService.validateTokenToLogin(obj_parseUrl.queryParams.token)
             .subscribe({
                 next:(result)=>{
-                    ////console.log('result',result)
+                    //////console.log('result',result)
                     localStorage.clear();
                     localStorage.setItem('token',result.token)
                     this.wellcomeMessage = `Hola ${result.user.fullname} bienvenido al portal de autogestión`;
@@ -53,7 +53,7 @@ export class LoginByTokenComponent implements OnInit{
                     },2000)
                 },
                 error:(err)=>{
-                    ////console.log('error',err);
+                    //////console.log('error',err);
                     this.loading = false;
                     this.errorMessage = `Acceso denegado. <br>Consulte con el administrador del sistema.`;
                     localStorage.clear();

@@ -28,7 +28,7 @@ import { Router } from '@angular/router';
 //   }
 
 //   ngOnChanges(changes: SimpleChanges) {
-//    console.log('cambios webcam',changes);
+//    //console.log('cambios webcam',changes);
 //    this.loading = changes['loading'].currentValue;
 //   }
 
@@ -60,7 +60,7 @@ import { Router } from '@angular/router';
 //     // Convertir la imagen del canvas a formato base64
 //     const imagenDataURL = canvas.toDataURL('image/png');
 //     this.imagenDataURL = imagenDataURL;
-//    //////console.log(imagenDataURL);  // Aquí puedes hacer algo con la imagen capturada
+//    ////////console.log(imagenDataURL);  // Aquí puedes hacer algo con la imagen capturada
 //   }
 
 //   guadarFoto(){
@@ -95,7 +95,7 @@ import { Router } from '@angular/router';
 //   }
 
 // //   ngOnChanges(changes: SimpleChanges) {
-// //   console.log('cambios webcam', changes);
+// //   //console.log('cambios webcam', changes);
 // //   this.loading = changes['loading'].currentValue;
 // // }
 
@@ -191,7 +191,7 @@ export class WebCamComponent implements OnInit, OnDestroy {
   private async obtenerDispositivos() {
     const dispositivos = await navigator.mediaDevices.enumerateDevices();
     this.dispositivos = dispositivos.filter(d => d.kind === 'videoinput');
-    console.log('Cámaras detectadas:', this.dispositivos);
+    //console.log('Cámaras detectadas:', this.dispositivos);
   }
 
   private async iniciarCamara(deviceId?: string) {
@@ -223,7 +223,7 @@ export class WebCamComponent implements OnInit, OnDestroy {
     this.indiceCamara = (this.indiceCamara + 1) % this.dispositivos.length;
     const nuevoDeviceId = this.dispositivos[this.indiceCamara].deviceId;
 
-    console.log('Cambiando a cámara:', this.dispositivos[this.indiceCamara].label);
+    //console.log('Cambiando a cámara:', this.dispositivos[this.indiceCamara].label);
     await this.iniciarCamara(nuevoDeviceId);
   }
 

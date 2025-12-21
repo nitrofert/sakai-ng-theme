@@ -299,6 +299,36 @@
                             }"
                         >
                         </p-calendar>
+                        <!-- <p-dropdown [options]="arrayHorasDiaLocacion" 
+                                            [(ngModel)]="horacargueSeleccionada" 
+                                            
+                                            optionLabel="label" 
+                                            placeholder="Seleccione una hora"
+                                            inputId="horacargue"
+                                            (onChange)="seleccionarHoraCita()">
+                                            
+                                            <ng-template let-option pTemplate="item">
+                                                <div class="item-row" [ngClass]="{ 'disabled-item': !option.activo }">
+                                                    <span class="label">{{ option.label }}</span>
+                                                    <span class="pill m-1" *ngIf="!option.activo">
+                                                        <i class="pi pi-lock" aria-hidden="true"></i>
+                                                        
+                                                    </span>
+                                                </div>
+                                            </ng-template>
+
+                                            
+                                            <ng-template let-option pTemplate="selectedItem">
+                                                <div class="selected-row" [ngClass]="{ 'disabled-item': option && !option.activo }">
+                                                    <span class="label">{{ option.label }}</span>
+                                                    <span class="pill m-1" *ngIf="!option.activo">
+                                                        <i class="pi pi-lock" aria-hidden="true"></i>
+                                                        
+                                                    </span>
+                                                </div>
+                                            </ng-template>
+
+                        </p-dropdown> -->
                         <label for="horacargue"
                             ><h6>Hora estimada del cargue</h6></label
                         >
@@ -1455,7 +1485,7 @@
                             #dtLotes
                             [value]="lotesItemLine"
                             dataKey="lote"
-                            [rows]="10"
+                            [rows]="20"
                             
                             [loading]="loadingTableLotesItem"
                             [rowHover]="true"

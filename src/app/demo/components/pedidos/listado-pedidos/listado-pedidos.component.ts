@@ -62,9 +62,9 @@ export class ListadoPedidosComponent implements  OnInit{
     this.pedidosService.getSaldosPedidos()
         .subscribe({
             next:async (pedidos)=>{
-               console.log('pedidos',pedidos);
+               //console.log('pedidos',pedidos);
               let pedidosAbiertos = await this.functionsService.objectToArray(pedidos);
-              //////console.log('pedidosAbiertos',pedidosAbiertos);
+              ////////console.log('pedidosAbiertos',pedidosAbiertos);
               let headersTabla = this.configHeaderTablaPedidos();
               let dataTable = await this.configDataTablaPedidos(pedidosAbiertos);
               this.tablaPedidos= {
@@ -111,7 +111,7 @@ export class ListadoPedidosComponent implements  OnInit{
       //'bgcolor': {label:'',type:'', sizeCol:'6rem', align:'center'}
       
     }];
-   // // ////////console.log('headersTable',headersTable);
+   // // //////////console.log('headersTable',headersTable);
 
     return headersTable;
   }

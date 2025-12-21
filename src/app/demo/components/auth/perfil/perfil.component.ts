@@ -70,7 +70,7 @@ getPermisosModulo(){
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-           //////////////console.log(permisos);
+           ////////////////console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -80,7 +80,7 @@ getPermisosModulo(){
             }
             this.permisosModulo = permisos;
            
-           //////////////console.log(this.permisosModulo);
+           ////////////////console.log(this.permisosModulo);
             this.getInfoUsuario();
           
           },
@@ -93,7 +93,7 @@ getPermisosModulo(){
 
 async getInfoUsuario():Promise<void> {
   this.infoUsuario = await this.usuariosService.infoUsuario();
-//////console.log(this.infoUsuario);
+////////console.log(this.infoUsuario);
 
  this.id_usuario = this.infoUsuario.id;
 
@@ -129,7 +129,7 @@ editar(){
     this.messageService.add({severity:'error', summary:'Error', detail:'Los passwords ingresados no coinciden'});
   }else{
 
-    ////////console.log(this.clientesSAPSeleccionados);
+    //////////console.log(this.clientesSAPSeleccionados);
     
     let editarUsuario:any ={
       username:this.username,
@@ -150,7 +150,7 @@ editar(){
       this.usuariosService.update(editarUsuario,this.id_usuario)
           .subscribe({
               next: async (usuario)=>{
-               //////////////console.log(usuario);
+               ////////////////console.log(usuario);
                 this.messageService.add({severity:'success', summary:'información', detail:`El usuario ${this.nombrecompleto} fue actualizado correctamente`});
                 if(this.filesToUpload.length > 0 && this.uploadActivo){
 
@@ -158,7 +158,7 @@ editar(){
                   let deleteFile$ = this.functionsService.deleteFiles({entidad:'usuario',id_relacion:usuario.id,proceso:'firma'});
                   let deleteFile = await lastValueFrom(deleteFile$);
 
-                 //////console.log(deleteFile);
+                 ////////console.log(deleteFile);
 
                   //registrar nueva firma
                   for(let anexo of this.filesToUpload){
@@ -172,7 +172,7 @@ editar(){
                     this.functionsService.uploadFile(body)
                         .subscribe({
                           next:(result)=>{
-                           //////console.log('Upload ok',result);
+                           ////////console.log('Upload ok',result);
                             this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente la firma del usuario ${anexo.file.name}`});
                           },
                           error:(err)=>{
@@ -202,7 +202,7 @@ clearUploader(uploaderFile: FileUpload){
 }
 
 removeFile($event:any,uploaderFile: FileUpload){
-    //////console.log('remove',$event,)
+    ////////console.log('remove',$event,)
     this.filesToUpload = [];
     let currentFiles = uploaderFile.files.filter((file: any)=>file != $event.file);
     //uploaderFiles.files = currentFiles;
@@ -210,10 +210,10 @@ removeFile($event:any,uploaderFile: FileUpload){
 }
 
 loadFile(uploaderFile: any ){
-  //////console.log('filesToUpload',uploaderFile);
+  ////////console.log('filesToUpload',uploaderFile);
   let currentFiles = uploaderFile;
   for(let currentFile of currentFiles){
-    //////console.log('currentFile',currentFile);
+    ////////console.log('currentFile',currentFile);
     //const [file] = currentFile;
     this.filesToUpload.push({
       file:currentFile,

@@ -314,6 +314,8 @@ turnoBase:number =0;
 
 infoHistorialTurno:any;
 
+arrayHorasDiaLocacion:any[] = [];
+
 
   constructor( private messageService: MessageService,
               private confirmationService: ConfirmationService,
@@ -1946,9 +1948,18 @@ async validarHoraCargue():Promise<boolean>{
   async aprobarTurno(){
     if(await this.validarFormulario()){
       this.accion = 'aprobar'
-      this.formEstadoTurno = true;
-      this.tituloEstado = "Aprobar turno "+this.turnoId;
-      this.novedad = false;
+
+      if((await this.validarDisponibilidadHoraLocacion())=== false){
+        this.messageService.add({severity:'error', summary: '!Error¡', detail: `La hora seleccionada no está disponible para citas, por favor seleccione otra hora o fecha.` });
+        //this.cambioEstado = false;
+      }else {
+        this.formEstadoTurno = true;
+        this.tituloEstado = "Aprobar turno "+this.turnoId;
+        this.novedad = false;
+      }
+
+
+      
     }
   }
 
@@ -2116,6 +2127,52 @@ async validarHoraCargue():Promise<boolean>{
     // ////////////// ////////////////////////console.log(this.solictudProduccionSeleccionada)
   }
 
+  async validarDisponibilidadHoraLocacion():Promise<boolean>{
+    let valido:boolean = true;
+
+    let diasSemana = this.functionsService.dias;
+    let diaSeleccionado = diasSemana.find(diaSemana => diaSemana.id === this.fechacargue.getUTCDay());
+    //console.log('this.fechacargue',this.fechacargue)
+    //console.log('diaSeleccionado',diaSeleccionado)
+    let horariosSeleccionados = this.horariosLocacion.filter(horario=>horario.dias_atencion.includes(diaSeleccionado.fullname));
+    //console.log('horariosSeleccionados',horariosSeleccionados)
+
+    let horaInicio = parseInt(horariosSeleccionados[0].horainicio.split(':')[0]);
+    //console.log('horaInicio',horaInicio)
+    let horaFin = parseInt(horariosSeleccionados[0].horafin.split(':')[0]);
+    //console.log('horaFin',horaFin)
+
+
+
+    this.arrayHorasDiaLocacion = [];
+    for(horaInicio; horaInicio<=horaFin; horaInicio++){
+      let fechaInicioCargue = new Date(new Date(this.fechacargue).setHours(horaInicio,0,0));
+      //console.log('fechaInicioCargue',fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }))
+
+      let fechaFinCargue = new Date(new Date(this.fechacargue).setHours(horaInicio+1,0,0));
+      //console.log('fechaFinCargue',fechaFinCargue)
+      
+      let turnosFechaHora = await this.pedidosService.getTurnosByFechaHora({fechaInicioCargue:fechaInicioCargue,fechaFinCargue:fechaFinCargue, locacion:this.turno.locacion, estados:JSON.stringify([this.estadosTurno.SOLICITADO])});
+
+      let turnos_hora_locacion = !this.locaciones.find(locacion=>locacion.code == this.turno.locacion).turnos_hora?4:this.locaciones.find(locacion=>locacion.code == this.turno.locacion).turnos_hora;
+      
+      this.arrayHorasDiaLocacion.push({
+        label:fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }),
+        hora: fechaInicioCargue.toTimeString().split(' ')[0],
+        activo: (turnosFechaHora.length < turnos_hora_locacion) ? true : false
+      })
+    }
+
+    console.log('this.arrayHorasDiaLocacion',this.arrayHorasDiaLocacion)
+    console.log('franja hora cita',`${new Date(this.horacargue).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]}:00:00`)
+    console.log('hora selecionada', this.arrayHorasDiaLocacion.find(item=>item.hora === `${new Date(this.horacargue).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]}:00:00`))
+
+    if(!this.arrayHorasDiaLocacion.find(item=>item.hora === `${new Date(this.horacargue).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]}:00:00`)){
+      return false;
+    }
+    return this.arrayHorasDiaLocacion.find(item=>item.hora === `${new Date(this.horacargue).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]}:00:00`).activo;
+  }
+
  async cambiarEstadoTurno(){
 
     //////////////console.log(this.remisionesPorCliente);
@@ -2128,7 +2185,7 @@ async validarHoraCargue():Promise<boolean>{
 
     this.cambioEstado = true;
 
-    if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
+     if((this.accion == 'pausar' ||  this.accion == 'cancelar' ) && ( this.novedadesSeleccionadas.length==0)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para ${this.accion} el turno, debe seleccionar una novedad.` });
       this.cambioEstado = false;
     }else if((this.accion == 'solicitud produccion' ) && ( this.solictudProduccionSeleccionada.length==0)){
@@ -2495,7 +2552,7 @@ async validarHoraCargue():Promise<boolean>{
               data.inspeccion = this.inspeccionTurno;
             }
             
-         console.log('Data update turno',JSON.stringify( data));
+         console.log('Data update turno',data);
 
     return data;
   }
@@ -3626,7 +3683,7 @@ async validarHoraCargue():Promise<boolean>{
                  
                 }else{
 
-                  let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode && pedidoCliente.linenum === pedido.linenum)[0];
+                  let infoPedido = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0];
 
                   ///let email_vendedor = this.pedidosCliente.filter(pedidoCliente=>pedidoCliente.docnum === pedido.docnum && pedidoCliente.itemcode === pedido.itemcode)[0].email_vendedor;
                   let email_vendedor = infoPedido.email_vendedor;
@@ -4287,8 +4344,8 @@ async validarHoraCargue():Promise<boolean>{
         ////////// //// //////////////////console.log(this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry);
         let time = new Date().getTime()
         let lineaPedidoBloqueo = {
-            Code:`${turno.id}-${pedido.id}-${time}-999`,
-            Name:`${turno.id}-${pedido.id}-${time}-999`,
+            Code:`${turno.id}-${pedido.id}-${time}`,
+            Name:`${turno.id}-${pedido.id}-${time}`,
             U_NF_ORDCARGUE:turno.id,
             //U_NF_PEDIDO:this.pedidos.find(pedidoCliente=>pedidoCliente.docnum==pedido.pedidonum ).docentry,
             U_NF_PEDIDO:`${pedido.objectType}-${pedido.docentry}`,

@@ -48,7 +48,7 @@ export class FormVehiculoComponent implements  OnInit {
     ){}
 
     ngOnInit() {
-      console.log(this.config.data.id);
+      //console.log(this.config.data.id);
       this.getTipoVehiculos();
       this.getConductores();
       if(this.config.data.id!=0){
@@ -67,7 +67,7 @@ export class FormVehiculoComponent implements  OnInit {
                       conductor.name = conductor.nombre;
                       conductor.label = conductor.cedula+' - '+conductor.nombre;
                     }
-                   //////////////console.log(conductores);
+                   ////////////////console.log(conductores);
                     this.conductores = conductores;
                 },
                 error: (err)=>{
@@ -80,7 +80,7 @@ export class FormVehiculoComponent implements  OnInit {
       this.vehiculosService.getVehiculoById(id)
           .subscribe({
               next:(infoVehiculo)=>{
-                 //////////////console.log(infoVehiculo);
+                 ////////////////console.log(infoVehiculo);
                   this.placa = infoVehiculo.placa;
                   this.capacidad = infoVehiculo.capacidad;
                   this.pesovacio = infoVehiculo.pesovacio;
@@ -106,7 +106,7 @@ export class FormVehiculoComponent implements  OnInit {
                   tipoVehiculo.name = tipoVehiculo.tipo;
                   tipoVehiculo.label = tipoVehiculo.tipo;
                 }
-               ////////////////console.log(tipoVehiculos);
+               //////////////////console.log(tipoVehiculos);
                 this.tipoVehiculos = tipoVehiculos;
               },
               error: (err)=>{
@@ -131,7 +131,7 @@ export class FormVehiculoComponent implements  OnInit {
 
     filter(event: any, arrayFiltrar:any[]) {
 
-      ////////////////console.log(arrayFiltrar);
+      //////////////////console.log(arrayFiltrar);
       const filtered: any[] = [];
       const query = event.query;
       for (let i = 0; i < arrayFiltrar.length; i++) {
@@ -144,7 +144,7 @@ export class FormVehiculoComponent implements  OnInit {
       }
 
     seleccionarTipo(tipo:any){
-     //////////////console.log(tipo);
+     ////////////////console.log(tipo);
       if(tipo.id ===0){ 
         //TODO: LLamar al formulario de creacion de tipo vehiculo
         this.nuevoTipo();
@@ -181,7 +181,7 @@ export class FormVehiculoComponent implements  OnInit {
     
       refTipo.onClose.subscribe(() => {
         
-       //////////////console.log("Refresh calendar");
+       ////////////////console.log("Refresh calendar");
       });
     }
 
@@ -282,7 +282,7 @@ export class FormVehiculoComponent implements  OnInit {
     }
 
     keyPress(event:any){
-     //////////////console.log(event);
+     ////////////////console.log(event);
       
       var key =  event.keyCode;
       let teclasFuncionales:any[] =[8,46,9,13];
@@ -291,7 +291,7 @@ export class FormVehiculoComponent implements  OnInit {
       if((parseInt(key)>=48 && parseInt(key)<=57 && !event.shiftKey) || (parseInt(key)>=65 && parseInt(key)<=90) || (parseInt(key)>=96 && parseInt(key)<=105) || teclasFuncionales.includes(key)){
         
       }else{
-       //////////////console.log(key);
+       ////////////////console.log(key);
         event.preventDefault();
       }
   }

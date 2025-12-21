@@ -21,7 +21,7 @@ export class SerialPortComponent {
       this.port = await (navigator as any).serial.requestPort();
       // Configura la conexión (define la velocidad en baudios, etc.)
       await this.port.open({ baudRate: 9600 });
-     //////console.log('Conectado al puerto serial');
+     ////////console.log('Conectado al puerto serial');
 
       // Lee datos en un bucle
       const textDecoder = new TextDecoderStream();

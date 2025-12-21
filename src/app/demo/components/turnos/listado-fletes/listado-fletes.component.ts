@@ -165,7 +165,7 @@ turnosEntites:any[] = [];
     //this.getPermisosModulo();
     
    
-   ////////////////////////console.log(this.infousuario);
+   //////////////////////////console.log(this.infousuario);
     //this.configTablaProgramacionDiaria();
 
     
@@ -176,7 +176,7 @@ turnosEntites:any[] = [];
   }
 
   ngOnChanges(changes: SimpleChanges){
-    //console.log('changes',changes['rangoFechas'])
+    ////console.log('changes',changes['rangoFechas'])
     if(changes['rangoFechas']){
       this.filtroRnagoFechas = changes['rangoFechas'].currentValue
       this.getPermisosModulo();
@@ -188,7 +188,7 @@ turnosEntites:any[] = [];
 
   async getPermisosModulo(){
     const modulo = this.router.url;
-    //console.log('modulo',modulo);
+    ////console.log('modulo',modulo);
     
 
     this.showBtnNew =  await this.usuariosService.permisoModuloAccion('/portal/solicitudes-de-cargue','crear');
@@ -199,7 +199,7 @@ turnosEntites:any[] = [];
 
 
     this.verFletes = await this.usuariosService.permisoModuloAccion('/dashboard-logistica','ver fletes');
-    ////////////console.log(this.verFletes);
+    //////////////console.log(this.verFletes);
 
     this.getLocalidades();
     
@@ -240,7 +240,7 @@ turnosEntites:any[] = [];
             
             this.allbodegas = almacenesTMP;
 
-           //////console.log('almacenes calback');
+           ////////console.log('almacenes calback');
             this.getLocaciones();
            
            
@@ -252,7 +252,7 @@ turnosEntites:any[] = [];
       }); 
     }else{
       this.allbodegas = this.almacenes;
-     //////console.log('almacenes input')
+     ////////console.log('almacenes input')
       this.getLocaciones();
     }
     
@@ -268,12 +268,12 @@ turnosEntites:any[] = [];
                 locacion.label = locacion.locacion
               })
               //this.locaciones = locaciones;
-            // ////////////////////////////////////////////////console.log(locaciones);
+            // //////////////////////////////////////////////////console.log(locaciones);
               this.locaciones = await this.setLocaciones(locaciones,this.infousuario.locaciones);
               //this.locacionSeleccionada = this.locaciones[0];
               //this.seleccionarLocacion(this.locacionSeleccionada);
-              //////////////console.log('aqui va');
-              //////////////////////////////////////////////////console.log();
+              ////////////////console.log('aqui va');
+              ////////////////////////////////////////////////////console.log();
               await this.setDashboard();
             },
             error:(err)=>{
@@ -299,14 +299,14 @@ turnosEntites:any[] = [];
 
 
   seleccionarLocacion(locacion:any){
-    ////////////////////////////console.log(locacion);
+    //////////////////////////////console.log(locacion);
     let bodegas_locacion = this.allbodegas.filter(bodega=> bodega.locacion2 === locacion.locacion);
-    ////////////////////////////console.log(bodegas_locacion);
+    //////////////////////////////console.log(bodegas_locacion);
     if(bodegas_locacion.length==0){
       //this.messageService.add({severity:'error', summary: '!Error¡', detail:  `La locación ${locacion.label} no tiene bodegas asociadas`});
-      //////////////////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
+      ////////////////////////console.log(`La locación ${locacion.label} no tiene bodegas asociadas`);
     }else{
-      ////////////////////////////console.log(bodegas_locacion);
+      //////////////////////////////console.log(bodegas_locacion);
       this.bodegas = bodegas_locacion;
       this.bodegaSeleccionada = this.bodegas[0];
       this.seleccionarBodega(this.bodegaSeleccionada);
@@ -317,13 +317,13 @@ turnosEntites:any[] = [];
   }
 
   seleccionarBodega(bodega:any){
-    ////////////////////////console.log(bodega);
+    //////////////////////////console.log(bodega);
    
   }
 
   async setDashboard():Promise<void>{
     
-   //////console.log('Set Dashboard');
+   ////////console.log('Set Dashboard');
     this.getSolicitudesTurno();
     
 }
@@ -339,7 +339,7 @@ async getSolicitudesTurno(){
   this.solicitudTurnoService.getSolicitudesTurnoExtendido(params)
   .subscribe({
     next: async (solicitudesTurnos)=>{
-       ////////////console.log(solicitudesTurnos);
+       //////////////console.log(solicitudesTurnos);
        let dataPieChart:any[] = [];
        let dataBarStackChart:any[any] = [];
       
@@ -370,12 +370,12 @@ async getSolicitudesTurno(){
                                                             let hoy = new Date();
                                                             hoy.setHours(parseInt(horacita.split(":")[0]),parseInt(horacita.split(":")[1]),parseInt(horacita.split(":")[2]));
                                                             solicitud.detalle_solicitudes_turnos_horacita2 =hoy;
-                                                            //////////////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
+                                                            ////////////////////////console.log(solicitud.detalle_solicitudes_turnos_estado);
                                                             if(this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado)){
                                                               solicitud.bgColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).backgroundColor;
                                                               solicitud.txtColor = this.estadosTurno.find(estado =>estado.name === solicitud.detalle_solicitudes_turnos_estado).textColor;
                                                             }else{
-                                                              ////////////////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
+                                                              //////////////////console.log('Estado sin color',solicitud.detalle_solicitudes_turnos_estado, 'Se le asigna color bg-indigo-50');
                                                               solicitud.bgColor = 'indigo-50';
                                                               solicitud.txtColor = 'primary-900';
                                                             }
@@ -418,7 +418,7 @@ async getSolicitudesTurno(){
 
                                                             solicitud.detalle_solicitudes_turnos_pedidos_dependencia_label = this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia)?this.dependencias.find((denpendencia: { id: any; })=>denpendencia.id === solicitud.detalle_solicitudes_turnos_pedidos_dependencia).name:'';
                                                             solicitud.detalle_solicitudes_turnos_pedidos_localidad_label = this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad)?this.localidades.find((localidad: { id: any; })=>localidad.id === solicitud.detalle_solicitudes_turnos_pedidos_localidad).name:'';
-                                                            //////////////////console.log(solicitud);
+                                                            ////////////////////console.log(solicitud);
                                                             
 
         //return solicitud
@@ -427,17 +427,17 @@ async getSolicitudesTurno(){
       //await this.configPieChart(dataPieChart);
       //await this.configBarSatckChart(dataBarStackChart);
 
-       //////////////////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
+       ////////////////////////////////console.log(dataBarStackChart,dataPieChart,solicitudesTurnos.raw);
 
        this.turnos = solicitudesTurnos.raw.filter((item: { detalle_solicitudes_turnos_condiciontpt: string; })=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP');
        let turnosFletes:any  = solicitudesTurnos.raw.filter((data: { detalle_solicitudes_turnos_pedidos_itemcode: string; })=>data.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF'));
        this.turnosEntites = await this.setTurnosEntites(solicitudesTurnos.entities);
-       //////////console.log(this.turnosEntites); 
+       ////////////console.log(this.turnosEntites); 
        
       
         await this.setTableFletes(turnosFletes);
              
-       //////////////console.log('this.solicitudesExtendida',this.solicitudesExtendida);
+       ////////////////console.log('this.solicitudesExtendida',this.solicitudesExtendida);
        this.loading = false;
     },
     error:(err)=>{
@@ -468,7 +468,7 @@ async setTurnosEntites(solicitudes:any): Promise<any>{
 
 async setTableFletes(turnos:any[]):Promise<void>{
 
-  ////////////console.log(turnos);
+  //////////////console.log(turnos);
 
 
 
@@ -477,7 +477,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
  })
  //this.tablaFletesTurnos = tablaFletesTurnos;
  this.tablaFletesTurnos = turnos;
-//////console.log('this.tablaFletesTurnos',this.tablaFletesTurnos);
+////////console.log('this.tablaFletesTurnos',this.tablaFletesTurnos);
  this.loading = false;
 
 
@@ -488,7 +488,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
     
     
     if(event[1]){
-      ////////////////console.log(this.filtroRnagoFechas);
+      //////////////////console.log(this.filtroRnagoFechas);
       //this.filtroRnagoFechas = event;
       this.getSolicitudesTurno();
   
@@ -512,10 +512,10 @@ async setTableFletes(turnos:any[]):Promise<void>{
    if(index>0){
     index+=1;
    }
-   //////////////////////////////console.log(index);
+   ////////////////////////////////console.log(index);
 
    filtro[index].value = value;*/
-   //////////////////////////////console.log(field,value, filtro,other,other2 );
+   ////////////////////////////////console.log(field,value, filtro,other,other2 );
    //table.filter(value,field,filtro[0].matchMode);
  
   }
@@ -542,7 +542,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   nuevaSolicitud(event: any){
-    //////////////////////////////////console.log(event);
+    ////////////////////////////////////console.log(event);
     //this.router.navigate(['/portal/solicitudes-de-cargue/nueva'],);
     
 
@@ -553,7 +553,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   gestionarSolicitud(){
-    //////////////console.log(this.selectedItem);
+    ////////////////console.log(this.selectedItem);
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar la solicitud No. ${this.selectedItem[0].solicitudes_turno_id} turno de cargue No. ${this.selectedItem[0].detalle_solicitudes_turnos_id}?`,
       header: 'Confirmación',
@@ -574,7 +574,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// //////////////////////console.log(("Refresh calendar");
+          //////////// ////////////////////////console.log(("Refresh calendar");
           this.getSolicitudesTurno();
           this.selectedItem=[];
         });
@@ -595,7 +595,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   }
 
   gestionarFletes(){
-   //////////console.log(this.selectedItemFletes);
+   ////////////console.log(this.selectedItemFletes);
     
     this.confirmationService.confirm({
       message: `Esta seguro de gestionar el flete del turno No. ${this.selectedItemFletes[0].detalle_solicitudes_turnos_id}?`,
@@ -618,7 +618,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
         ref.onClose.subscribe(() => {
           //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
           //this.getCalendar();
-          //////////// //////////////////////console.log(("Refresh calendar");
+          //////////// ////////////////////////console.log(("Refresh calendar");
           this.getSolicitudesTurno();
           this.selectedItemFletes=[];
         });
@@ -649,7 +649,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
       accept: async () => {
 
         let turnosSinFletes:any[] = await this.getTurnosSinFletes();
-       //////console.log('turnosSinFletes',turnosSinFletes);
+       ////////console.log('turnosSinFletes',turnosSinFletes);
         this.getSaldosPedidosFletes(turnosSinFletes);
 
       },
@@ -672,8 +672,8 @@ async setTableFletes(turnos:any[]):Promise<void>{
     let turnosSinFletes:any[] = [];
 
     for(let turno of this.turnos){
-      ////////////console.log(turno.detalle_solicitudes_turnos_id);
-      ////////////console.log(this.turnos.filter(item=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP' && item.detalle_solicitudes_turnos_id===turno.detalle_solicitudes_turnos_id && item.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF')))
+      //////////////console.log(turno.detalle_solicitudes_turnos_id);
+      //////////////console.log(this.turnos.filter(item=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP' && item.detalle_solicitudes_turnos_id===turno.detalle_solicitudes_turnos_id && item.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF')))
       if(this.turnos.filter(item=>item.detalle_solicitudes_turnos_condiciontpt==='TRANSP' && item.detalle_solicitudes_turnos_id===turno.detalle_solicitudes_turnos_id && item.detalle_solicitudes_turnos_pedidos_itemcode.startsWith('SF')).length ===0){
         if(turnosSinFletes.filter(item=>item.detalle_solicitudes_turnos_id=== turno.detalle_solicitudes_turnos_id).length ===0){
           turnosSinFletes.push(turno);
@@ -690,9 +690,9 @@ async setTableFletes(turnos:any[]):Promise<void>{
       this.pedidosService.getSaldosPedidosFletes()
           .subscribe({
               next:async (saldos)=>{
-                  //////console.log('fletes con saldo sin turno',saldos);
+                  ////////console.log('fletes con saldo sin turno',saldos);
                   let fletes = (await this.functionsService.objectToArray(saldos)).filter((saldo: {ItemCode: any; TIPOPROD: string;Turno_Portal:any})=>saldo.TIPOPROD=='Flete' && saldo.ItemCode.startsWith('SF') && saldo.Turno_Portal!=null); 
-                  ////////////console.log(fletes);
+                  //////////////console.log(fletes);
                  
                   await this.matchTurnosFletes(turnos,fletes);
                   
@@ -708,7 +708,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
   async matchTurnosFletes(turnos:any, fletes:any): Promise<void>{
     let flete:any = [];
     for await (let turno of turnos){
-      ////////////console.log(turno.detalle_solicitudes_turnos_id);
+      //////////////console.log(turno.detalle_solicitudes_turnos_id);
       if(fletes.filter((flete: { Turno_Portal: any; })=>flete.Turno_Portal == turno.detalle_solicitudes_turnos_id).length>0){
           flete = fletes.find((flete: { Turno_Portal: any; })=>flete.Turno_Portal == turno.detalle_solicitudes_turnos_id);
           await this.asignarFleteTurno(turno.detalle_solicitudes_turnos_id,flete);
@@ -718,11 +718,11 @@ async setTableFletes(turnos:any[]):Promise<void>{
 
   async asignarFleteTurno(turnoid:any, flete:any):Promise<void>{
 
-    //////////console.log('turno',turnoid);
+    ////////////console.log('turno',turnoid);
     
     let turno:any= this.turnosEntites.find(turnoEntitie=>turnoEntitie.id === turnoid);
-    //////console.log('turno',turno);
-    //////console.log('flete',flete);
+    ////////console.log('turno',turno);
+    ////////console.log('flete',flete);
     
     let detalle_solicitud_turnos_pedido:any[]=turno.detalle_solicitud_turnos_pedido;
     for await(let pedido of detalle_solicitud_turnos_pedido){
@@ -733,7 +733,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
                                                   pedido.lineaUpdate = {update:false, create:false};
                                                   pedido.cantidadOld =pedido.cantidad;
                                                 });*/
-    ////////console.log(detalle_solicitud_turnos_pedido);              
+    //////////console.log(detalle_solicitud_turnos_pedido);              
     let lineaFlete:any = {
       CardCode:flete.CardCode,
       CardName:flete.CardName,
@@ -771,7 +771,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
       id:0
     }
 
-   //////console.log('lineaFlete new',lineaFlete);
+   ////////console.log('lineaFlete new',lineaFlete);
 
     detalle_solicitud_turnos_pedido.push(lineaFlete);
 
@@ -787,26 +787,26 @@ async setTableFletes(turnos:any[]):Promise<void>{
                   pedidos_detalle_solicitud:detalle_solicitud_turnos_pedido
     };
 
-   //////console.log('data',data);
+   ////////console.log('data',data);
     
     this.solicitudTurnoService.updateInfoTruno(turno.id,data)
         .subscribe({
           next:async (turno)=>{
-           //////console.log('turno actualizado',turno);
+           ////////console.log('turno actualizado',turno);
             this.messageService.add({severity:'success', summary:'!Información!', detail:`Se adiciono correctamente la linea de felete para el turno ${turno.id} asociada al pedido ${flete.DocNum}`});
 
            let turnosSinFlete = await this.getTurnosSinFletes();
 
-           //////console.log('turnoSinFlete',turnosSinFlete);
+           ////////console.log('turnoSinFlete',turnosSinFlete);
 
             let turnoSinFlete:any = turnosSinFlete.find(linea => linea.detalle_solicitudes_turnos_id === turno.id);
 
-           //////console.log('turnoSinFlete',turnoSinFlete);
-           //////console.log('turno.detalle_solicitud_turnos_pedido',turno.detalle_solicitud_turnos_pedido,lineaFlete.docentry,lineaFlete.pedidonum);
+           ////////console.log('turnoSinFlete',turnoSinFlete);
+           ////////console.log('turno.detalle_solicitud_turnos_pedido',turno.detalle_solicitud_turnos_pedido,lineaFlete.docentry,lineaFlete.pedidonum);
 
             let lineaFletePedido =await turno.detalle_solicitud_turnos_pedido.find((pedido: { docentry: any; pedidonum: any; })=>pedido.docentry== lineaFlete.docentry && pedido.pedidonum==lineaFlete.pedidonum)
 
-           //////console.log('lineaFletePedido',lineaFletePedido);
+           ////////console.log('lineaFletePedido',lineaFletePedido);
             
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_id = lineaFletePedido.id;
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_pedidonum = lineaFletePedido.pedidonum;
@@ -846,7 +846,7 @@ async setTableFletes(turnos:any[]):Promise<void>{
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_updated_at= lineaFletePedido.updaeteAt;
             turnoSinFlete.detalle_solicitudes_turnos_pedidos_detalleSolicitudId= turno.id;
 
-           //////console.log('turnoSinFlete',turnoSinFlete);
+           ////////console.log('turnoSinFlete',turnoSinFlete);
 
             this.tablaFletesTurnos.push(turnoSinFlete);
 

@@ -63,7 +63,7 @@ export class FormConductorComponent  implements  OnInit {
     ){}
 
     ngOnInit() {
-      //////////////console.log(this.config.data.id);
+      ////////////////console.log(this.config.data.id);
       if(this.config.data.id!=0){
         this.getInfoConductor(this.config.data.id);
         this.updateMode = true;
@@ -74,7 +74,7 @@ export class FormConductorComponent  implements  OnInit {
       this.conductoresService.getConductorById(id)
           .subscribe({
               next:(infoConductor)=>{
-                  ////console.log('infoConductor',infoConductor);
+                  //////console.log('infoConductor',infoConductor);
                   this.infoConductor = infoConductor;
                   this.nombre= infoConductor.nombre;
                   this.cedula=  infoConductor.cedula;
@@ -122,7 +122,7 @@ export class FormConductorComponent  implements  OnInit {
             this.conductoresService.update(nuevoConductor,this.config.data.id)
               .subscribe({
                   next: (conductor)=>{
-                   //////////////console.log(conductor);
+                   ////////////////console.log(conductor);
                    this.id = conductor.id
                     this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${this.nombre} fue actualizado correctamente`});
                   },
@@ -137,7 +137,7 @@ export class FormConductorComponent  implements  OnInit {
             this.conductoresService.create(nuevoConductor)
               .subscribe({
                   next: (conductor)=>{
-                   //////////////console.log(conductor);
+                   ////////////////console.log(conductor);
                    this.id = conductor.id
                     this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue registrado correctamente`});
                   },
@@ -170,7 +170,7 @@ export class FormConductorComponent  implements  OnInit {
     }
 
     keyPress(event:any){
-       //////////////console.log(event);
+       ////////////////console.log(event);
         
         var key =  event.keyCode;
         let teclasFuncionales:any[] =[8,46,9,13];
@@ -182,7 +182,7 @@ export class FormConductorComponent  implements  OnInit {
            teclasFuncionales.includes(key)){
           
         }else{
-         //////////////console.log(key);
+         ////////////////console.log(key);
           event.preventDefault();
         }
     }
@@ -225,7 +225,7 @@ export class FormConductorComponent  implements  OnInit {
     }
 
     downloadARL(arl:any){
-      ////console.log(arl);
+      //////console.log(arl);
 
       let query:any = {
         id:arl.fileid
@@ -234,7 +234,7 @@ export class FormConductorComponent  implements  OnInit {
       this.functionsService.loadFiles(query)
                  .subscribe({
                    next:(result)=>{
-                     ////console.log('loadFiles ok',result);
+                     //////console.log('loadFiles ok',result);
                      window.open(result[0].linkS3);
                      
                    },
@@ -259,9 +259,9 @@ export class FormConductorComponent  implements  OnInit {
           proceso: 'arl',
         }
     
-        //////console.log(event)
+        ////////console.log(event)
         for(let file of uploaderFiles.files){
-            //////console.log(file);
+            ////////console.log(file);
        
              let body = new FormData();
              body.append('file', file, file.name);
@@ -270,12 +270,12 @@ export class FormConductorComponent  implements  OnInit {
              body.append('proceso', this.dataUpload.proceso);
              body.append('nombre', file.name);
        
-            //////console.log(body)
+            ////////console.log(body)
        
              this.functionsService.uploadFile(body)
                  .subscribe({
                    next:(result)=>{
-                     ////console.log('Upload ok',result);
+                     //////console.log('Upload ok',result);
                      
                      this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${file.name}`});
 
@@ -294,7 +294,7 @@ export class FormConductorComponent  implements  OnInit {
                     this.conductoresService.updateARl(updateArlConductor,this.config.data.id)
                       .subscribe({
                           next: (historialARL)=>{
-                            ////console.log(historialARL);
+                            //////console.log(historialARL);
                             //this.messageService.add({severity:'success', summary:'información', detail:`El conductor ${conductor.nombre} fue actualizado correctamente`});
                             this.historialARL = historialARL;
                             this.displayModalRegistroARL=false;
@@ -329,7 +329,7 @@ export class FormConductorComponent  implements  OnInit {
     }
      
       progressUpload(event :any){
-      //////console.log('progress ',event)
+      ////////console.log('progress ',event)
       }
 
 

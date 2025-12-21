@@ -71,7 +71,7 @@ export class ListaHistorialTurnoComponent implements OnInit {
 
   async ngOnInit() {
   this.turnoId = this.config.data.id;
-  ////console.log(this.config.data);
+  //////console.log(this.config.data);
 
   this.estadosTurno2  = this.solicitudTurnoService.estadosTurno;
 
@@ -93,11 +93,11 @@ export class ListaHistorialTurnoComponent implements OnInit {
 getPermisosModulo(){
   
   const modulo = this.router.url;
-  //////////////////console.log(modulo);
+  ////////////////////console.log(modulo);
   this.usuariosService.getPermisosModulo(modulo)
       .subscribe({
           next: async (permisos)=>{
-            ////////////////////////console.log(permisos);
+            //////////////////////////console.log(permisos);
             if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
               this.router.navigate(['/auth/access']);
             }
@@ -129,7 +129,7 @@ async getNovedades():Promise<void>{
                   novedad.label = novedad.novedad;
                 });
 
-               //////////////console.log(novedades);
+               ////////////////console.log(novedades);
                 this.novedades = novedades;
             },
             error:(err)=>{
@@ -147,7 +147,7 @@ async getTurno(id: number){
   this.solicitudTurnoService.getTurnosByID(id)
       .subscribe({
             next:async (turno)=>{
-               ////console.log('turno',turno.detalle_solicitud_turnos_historial);
+               //////console.log('turno',turno.detalle_solicitud_turnos_historial);
 
 
                 let historialTurno$ = this.solicitudTurnoService.getHistorialTurnosByID(id);
@@ -281,14 +281,14 @@ async getHistoial(data:any){
 
 async setEventsTimeLine(data:any):Promise<void>{
 
-  //////////////console.log(data, this.estadosTurno2);
+  ////////////////console.log(data, this.estadosTurno2);
 
 
 
   let events:any[] =[];
   let index:number = 0;
   for(let event of data){
-  //////console.log(event);
+  ////////console.log(event);
    let id_relacion = eval(event.index);
    let proceso = event.estado;
    let entidad = 'turnos';
@@ -319,13 +319,13 @@ async setEventsTimeLine(data:any):Promise<void>{
      }
    });
 
-  //////console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno);
+  ////////console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno);
 
    
    
     //let dateEvent = new Date(new Date(event.fecha).getTime()+(60*60000*5));
     let dateEventTime = new Date(event.fecha+' '+event.hora);
-    //////////////console.log(event.fecha,dateEvent, dateEventTime);
+    ////////////////console.log(event.fecha,dateEvent, dateEventTime);
     events.push({ status: event.estado, 
                   date: `${dateEventTime.toLocaleDateString()} ${dateEventTime.toLocaleTimeString("en-US", { hour12: true, timeZone:'America/Bogota' })}`,
                   usuario:event.usuario,
@@ -356,11 +356,11 @@ async setEventsTimeLine(data:any):Promise<void>{
 
   this.events = events;
 
-  ////////////console.log(this.events);
+  //////////////console.log(this.events);
 }
 
 download(link:string){
- //////console.log(link);
+ ////////console.log(link);
   window.open(link);
 }
 

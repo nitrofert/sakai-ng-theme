@@ -142,10 +142,10 @@ urlBase:string = '';
     //this.displayModal = true;
     //this.loadingCargue = true;
     //this.condicion_tpt="RETIRA";
-    console.log('url base inspeccion',this.router.url);
+    //console.log('url base inspeccion',this.router.url);
     this.urlBase = this.router.url;
-   ////////console.log('ngOnInit inspeccion');
-   //////////console.log('turno estado inspeccion', this.estado);
+   //////////console.log('ngOnInit inspeccion');
+   ////////////console.log('turno estado inspeccion', this.estado);
     this.getPermisosModulo();
     //this.setFormInspeccion();
 
@@ -153,16 +153,16 @@ urlBase:string = '';
   }
 
   ngOnChanges(changes: SimpleChanges){
-    //////////////////////console.log('changes',changes['rangoFechas'].currentValue)
+    ////////////////////////console.log('changes',changes['rangoFechas'].currentValue)
 
-    ////////console.log('ngOnChanges inspeccion')
+    //////////console.log('ngOnChanges inspeccion')
    
     //this.estado = changes['estado'].currentValue;
     //this.turno = changes['turno'].currentValue;
     //this.pedidos = changes['pedidos'].currentValue;
-    ////////console.log('turno estado inspeccion',this.estado);
-    ////////console.log('turno inspeccion',this.turno);
-    ////////console.log('turno pedidos',this.pedidos);
+    //////////console.log('turno estado inspeccion',this.estado);
+    //////////console.log('turno inspeccion',this.turno);
+    //////////console.log('turno pedidos',this.pedidos);
     this.setFormInspeccion();
    
     
@@ -175,11 +175,11 @@ urlBase:string = '';
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    //////////console.log(modulo);
+    ////////////console.log(modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
-              ////////////////////////// ////////////// //////////////console.log(permisos);
+              ////////////////////////// ////////////// ////////////////console.log(permisos);
               if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                 this.router.navigate(['/auth/access']);
               }
@@ -189,7 +189,7 @@ urlBase:string = '';
               }
               this.permisosModulo = permisos;
               //this.multiplesClientes = await this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Seleccionar multiples clientes').valor;
-              ////////////////////////////// ////////////// //////////////console.log(this.multiplesClientes);
+              ////////////////////////////// ////////////// ////////////////console.log(this.multiplesClientes);
               /*
               this.showBtnNew = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='crear').valor;
               this.showBtnEdit = this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='actualizar').valor;
@@ -199,7 +199,7 @@ urlBase:string = '';
 
               const infoUsuario = await this.usuariosService.infoUsuario();
               this.rolesUsuario = infoUsuario.roles;
-              ////////////////// ////////////// //////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
+              ////////////////// ////////////// ////////////////console.log(await this.functionsService.validRoll(this.rolesUsuario,this.tiposRol.CLIENTE));
              
             
 
@@ -214,9 +214,9 @@ urlBase:string = '';
 
   async setFormInspeccion(){
 
-    ///////console.log('Pedidos items',this.pedidos)
+    /////////console.log('Pedidos items',this.pedidos)
 
-    ////console.log('Turno inspeccion',this.turno)
+    //////console.log('Turno inspeccion',this.turno)
     
     let fecha_accion!:any;
     let hora_accion!:any;
@@ -269,7 +269,7 @@ urlBase:string = '';
  
     if(this.inspeccion.detalle_solicitud_turnos_inspeccion.length > 0){
        let inspeccion = this.inspeccion.detalle_solicitud_turnos_inspeccion[0];
-       //////console.log(inspeccion);
+       ////////console.log(inspeccion);
        this.estado_vehiculo = inspeccion.estado_vehiculo;
        this.cantidad_unidades = inspeccion.cantidad_unidades;
        this.conforme_cantidades = inspeccion.conforme_cantidades;
@@ -332,7 +332,7 @@ urlBase:string = '';
     this.dataTableProductosTurno = dataTableProductosTurno;
     this.dataTableProductosTurno.colsSum = colsSum;
 
-    ////////console.log('this.dataTableProductosTurno',this.dataTableProductosTurno);    
+    //////////console.log('this.dataTableProductosTurno',this.dataTableProductosTurno);    
   }
  
 
@@ -342,7 +342,7 @@ urlBase:string = '';
     this.solicitudTurnoService.getTurnosByID(id)
         .subscribe({
               next:async (turno)=>{
-                 ////////console.log('turno',turno);
+                 //////////console.log('turno',turno);
                   
                   
               },
@@ -358,9 +358,9 @@ urlBase:string = '';
 
 
   cambioValor(){
-    ////////console.log('estado_vehiculo',this.estado_vehiculo)
-    ////////console.log('dataTableChekVehiculo',this.dataTableChekVehiculo);
-    ////////console.log('dataTableChekCarga',this.dataTableChekCarga);
+    //////////console.log('estado_vehiculo',this.estado_vehiculo)
+    //////////console.log('dataTableChekVehiculo',this.dataTableChekVehiculo);
+    //////////console.log('dataTableChekCarga',this.dataTableChekCarga);
     let dataInspenccion:any = {
       fecha_inspeccion: new Date(),
       dataTableChekVehiculo:this.dataTableChekVehiculo,
@@ -374,7 +374,7 @@ urlBase:string = '';
 
     }
 
-    console.log('dataInspenccion',dataInspenccion);
+    //console.log('dataInspenccion',dataInspenccion);
 
     this.onChangeData.emit(dataInspenccion);
   }
@@ -415,7 +415,7 @@ urlBase:string = '';
  
 
   cargarFirma(){
-    //////console.log('this.turno.detalle_solicitud_turnos_inspeccion',this.turno.detalle_solicitud_turnos_inspeccion);
+    ////////console.log('this.turno.detalle_solicitud_turnos_inspeccion',this.turno.detalle_solicitud_turnos_inspeccion);
     const ref = this.dialogService.open(DynamicDrawComponent, {
       data: {
           id_relacion: this.inspeccion.detalle_solicitud_turnos_inspeccion[0].id,
@@ -444,30 +444,30 @@ urlBase:string = '';
 
   async configSumTabla(headersTable:any[],dataTable:any[]):Promise<any>{
     let colsSum:any[] = [];
-    ////////////////////////////// //////////////////console.log(dataTable);
-    ////////////////////////////////// //////////////////console.log(Object.keys(headersTable[0]));
+    ////////////////////////////// ////////////////////console.log(dataTable);
+    ////////////////////////////////// ////////////////////console.log(Object.keys(headersTable[0]));
     let objString:string = "";
     let colsSumSwitch:boolean = false;
     for(let key of Object.keys(headersTable[0])){
       objString+=`"${key}":`
       if(headersTable[0][key].sum){
-        ////////////////////////////////// //////////////////console.log(key);
+        ////////////////////////////////// ////////////////////console.log(key);
         colsSumSwitch = true;
         let total = await this.functionsService.sumColArray(dataTable,JSON.parse(`[{"${key}":0}]`));
-        ////////////////////////////////// //////////////////console.log(total[0][key]);
+        ////////////////////////////////// ////////////////////console.log(total[0][key]);
         objString+=`${parseFloat(total[0][key])},`
       }else{
         objString+=`"",`
       }
     }
     objString = `{${objString.substring(0,objString.length-1)}}`;
-    ////////////////////////////////// //////////////////console.log(objString);
+    ////////////////////////////////// ////////////////////console.log(objString);
     if(colsSumSwitch){
       colsSum.push(JSON.parse(objString));
     }
     
 
-    ////////////////////////////////// //////////////////console.log(colsSum);
+    ////////////////////////////////// ////////////////////console.log(colsSum);
 
     return colsSum;
 

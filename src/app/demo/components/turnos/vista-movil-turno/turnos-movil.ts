@@ -197,7 +197,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        //////console.log(this.turno);
+        ////////console.log(this.turno);
         this.render();
         
     }
@@ -213,12 +213,12 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     getPermisosModulo(){
   
         const modulo = this.router.url;
-        console.log('modulo',modulo)
+        //console.log('modulo',modulo)
         
         this.usuariosService.getPermisosModulo(modulo)
             .subscribe({
                 next: async (permisos)=>{
-                ////////////// //////////////////console.log(permisos);
+                ////////////// ////////////////////console.log(permisos);
                 if(!permisos.find((permiso: { accion: string; })=>permiso.accion==='leer')){
                     this.router.navigate(['/auth/access']);
                 }
@@ -252,7 +252,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         this.almacenesService.getLocaciones()
             .subscribe({
                 next:(locaciones)=>{
-                //////console.log('locaciones',locaciones);
+                ////////console.log('locaciones',locaciones);
                 this.locaciones = locaciones;
                 //this.getAlmacenes();
                 
@@ -296,7 +296,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
         this.localidades = localidadesAlmacenes.sort((a,b)=>{ return a.name <b.name ? -1 : 1});
         
-                    //console.log(this.localidadSeleccionada)
+                    ////console.log(this.localidadSeleccionada)
     }
 
     cambioFecha(event:any){
@@ -319,7 +319,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     }
 
     async getTurnosPorLocalidad(localidad:string){
-        //////console.log('getTurnosPorLocalidad')
+        ////////console.log('getTurnosPorLocalidad')
         this.displayModal = true;
         this.loadingCargue = true;
         this.completeCargue=false;
@@ -332,7 +332,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             .subscribe({
                 next:async (turnosLocalidad)=>{
 
-                    console.log('turnosLocalidad',turnosLocalidad);
+                    //console.log('turnosLocalidad',turnosLocalidad);
                     let tmpTurnosLocalidad = turnosLocalidad.filter((turno: { estado: any; })=>turno.estado === this.estadosTurno.PESADO || turno.estado === this.estadosTurno.CARGANDO   )
                     this.turnosLocalidad = await tmpTurnosLocalidad.map((turno: { code: any; id: any; name: string; vehiculo: { placa: any; }; conductor: { nombre: any; }; fechacita: any; label: string; estado:string })=>{
                         turno.code=turno.id, 
@@ -369,7 +369,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     }
 
     async filtrarTurnos(event:any){
-        //console.log('turnosLocalidad',this.turnosLocalidad);
+        ////console.log('turnosLocalidad',this.turnosLocalidad);
          if(this.turnosLocalidad.length===0){
             this.messageService.add({severity:'warn', summary: 'Confirmación', detail:  `La locación seleccionada no tiene turnos programados para el rango de fechas seleccionado.`});
         }else{
@@ -379,7 +379,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     }
 
     async seleccionarTurno(turno:any){
-        console.log('turnoSeleccionado',JSON.parse(JSON.stringify(turno)))
+        //console.log('turnoSeleccionado',JSON.parse(JSON.stringify(turno)))
         
         this.turno = turno;
         
@@ -393,15 +393,15 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         this.tipoTurno = turno.tipo
         let historial = await this.getHistorialTurno(turno.id)
 
-        //console.log('historal',historial)
+        ////console.log('historal',historial)
         turno.detalle_solicitud_turnos_historial = historial.detalle_solicitud_turnos_historial
 
         let pedidos_turno = await this.functionsService.resolveObservable(this.solicitudTurnoService.getPedidosTurno(turno.id)) 
-        console.log('pedidos_turno',pedidos_turno.filter((pedido: { estado: string; })=>pedido.estado==='A'))
+        //console.log('pedidos_turno',pedidos_turno.filter((pedido: { estado: string; })=>pedido.estado==='A'))
 
         turno.detalle_solicitud_turnos_pedido = await this.functionsService.clonObject(pedidos_turno.filter((pedido: { estado: string; })=>pedido.estado==='A')) ;
 
-        console.log('turno',turno)
+        //console.log('turno',turno)
 
         this.pedidos_turno = await this.calcularDisponibilidadPedido(turno.detalle_solicitud_turnos_pedido);
 
@@ -425,7 +425,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             return pedido;
         })
 
-        //console.log('this.pedidos_turno',this.pedidos_turno)
+        ////console.log('this.pedidos_turno',this.pedidos_turno)
         this.configSplitButton(this.estado,this.permisosModulo);
         
     }
@@ -454,7 +454,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         ref.onClose.subscribe(() => {
             //this.getTurnosPorLocalidad(this.localidadSeleccionada.code)
             //this.getCalendar();
-            //////////////////// ////////////// //////////////////////console.log(("Refresh calendar");
+            //////////////////// ////////////// ////////////////////////console.log(("Refresh calendar");
         });
 
 
@@ -470,15 +470,15 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     async calcularDisponibilidadPedido(pedidosTurno:any):Promise<any[]>{
     
     for(let pedido of pedidosTurno){
-      //////////////////////////// ////////////// //////////////////////console.log(pedido);
+      //////////////////////////// ////////////// ////////////////////////console.log(pedido);
       let cantidadComprometida = 0;
       cantidadComprometida = await this.getCantidadComprometidaItemPedido(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id, pedido.linenum);
       cantidadComprometida += this.tipoTurno==='RETIRO'?await this.getCantidadComprometidaItemPedidoOtrasBodegas(pedido.pedidonum,pedido.itemcode,pedido.bodega, pedido.id,pedido.linenum):0;
-      //////////////////////// ////////////// //////////////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
+      //////////////////////// ////////////// ////////////////////////console.log('cantidadComprometida',cantidadComprometida , new Date());
       pedido.comprometida= cantidadComprometida;
       pedido.cantidadbodega = await this.getInventarioItenBodega(pedido.itemcode,pedido.bodega);
-      //////////////////////// ////////////// //////////////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
-     ////////////console.log('this.tipoTurno',this.tipoTurno);
+      //////////////////////// ////////////// ////////////////////////console.log('pedido.cantidadbodega',pedido.cantidadbodega , new Date());
+     //////////////console.log('this.tipoTurno',this.tipoTurno);
       pedido.disponible = this.tipoTurno==='RETIRO'?((pedido.cantidadbodega-cantidadComprometida)<0?0:(pedido.cantidadbodega-cantidadComprometida)):((pedido.cantidad_pedido-cantidadComprometida)<0?0:pedido.cantidad_pedido-cantidadComprometida);
       
       
@@ -513,21 +513,21 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega2(itemcode, bodega);
     const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
     
-    ////////////////////////////// ////////////// //////////////////////console.log(inventarioItemBodega);
+    ////////////////////////////// ////////////// ////////////////////////console.log(inventarioItemBodega);
     const arrayInventariosItemBodega = await this.functionsService.objectToArray(inventariosItemBodega);
-    ////////console.log('arrayInventariosItemBodega',arrayInventariosItemBodega);
+    //////////console.log('arrayInventariosItemBodega',arrayInventariosItemBodega);
 
     const inventarioItemBodega:any[] = arrayInventariosItemBodega.filter((inventario: { ItemCode: string; 
                                                                                   WhsCode: string; 
                                                                                 }) => inventario.ItemCode == itemcode && 
                                                                                       inventario.WhsCode == bodega);
-    //////////////////////////// ////////////// //////////////////////console.log(inventarioItemBodega);                                                                                  
+    //////////////////////////// ////////////// ////////////////////////console.log(inventarioItemBodega);                                                                                  
 
     let cantidadInventarioItenBodega:number = 0;
     
      inventarioItemBodega.forEach(function(a){cantidadInventarioItenBodega += parseFloat(a.OnHand);});
 
-    //////////////////////////// ////////////// //////////////////////console.log(cantidadInventarioItenBodega);    
+    //////////////////////////// ////////////// ////////////////////////console.log(cantidadInventarioItenBodega);    
   
     return cantidadInventarioItenBodega;
   }
@@ -543,7 +543,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
 
   filtrarLotes(event:any,pedido:any){
-    console.log('pedido',pedido)
+    //console.log('pedido',pedido)
   }
 
   seleccionarLotes(lotesSeleccionados:any,pedido:any){
@@ -552,13 +552,13 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
   async gestionarLote(pedido:any){
 
-    console.log(pedido)
+    //console.log(pedido)
 
     if(pedido.maneja_lote==='Y'){
        
         //consultar lotes del item y bodega
         let inventarioLotesItemBodega = await this.functionsService.resolveObservable(this.pedidosService.getInventarioLotesItemBodega(pedido.itemcode,pedido.bodega))
-        //console.log('inventarioLotesItemBodega',inventarioLotesItemBodega)
+        ////console.log('inventarioLotesItemBodega',inventarioLotesItemBodega)
         let lotesItemBodega:any[] = [];
         let total_lotes=0;
         let total_sacos= 0;
@@ -571,8 +571,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             let cantidad_sacos_lote =0;
 
             //Validar si el lote item y linea tiene asignado un lote
-            console.log('pedido.id',pedido.id);
-            console.log('inventarioLotesItemBodega[item].Lote',inventarioLotesItemBodega[item].Lote);
+            //console.log('pedido.id',pedido.id);
+            //console.log('inventarioLotesItemBodega[item].Lote',inventarioLotesItemBodega[item].Lote);
 
             if(lotesItem.length>0){
                 let existeLote = lotesItem.find(itemLote=>itemLote.id === pedido.id && itemLote.lote ===inventarioLotesItemBodega[item].Lote);
@@ -611,7 +611,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
             lotes:lotesItemBodega
         }
-        console.log('this.dataFormGestionLotesItem',this.dataFormGestionLotesItem);
+        //console.log('this.dataFormGestionLotesItem',this.dataFormGestionLotesItem);
         this.formGestionLotesItem = true;
 
     }else{
@@ -624,12 +624,12 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
     //obtener lineas de items diferentes al id linea seleccioanda e igual al item seleccionado y bodega
     let itemsTurno = !pedidosTurno?this.pedidos_turno.filter(item=>item.id != idLinea && item.itemcode === itemcode && item.bodega == bodega):pedidosTurno.filter((item: { id: any; itemcode: any; bodega:any })=>item.id != idLinea && item.itemcode === itemcode && item.bodega == bodega);
-    //////////console.log('itemsTurno',itemsTurno);
+    ////////////console.log('itemsTurno',itemsTurno);
     //recorrer los items del turno diferentes a la linea seleccionada, 
     for(let itemTurno of itemsTurno){
       //obtener los lotes que sean igual al item seleccionado y lote seleccioando
       let lotesItem:any = itemTurno.detalle_lotes_item_turno.filter((item: { lote: any; }) => item.lote === lote)
-      //////////console.log('lotesItem',lotesItem);
+      ////////////console.log('lotesItem',lotesItem);
       for(let loteItem of lotesItem){
         cantidadComprometidaItemLote = cantidadComprometidaItemLote+parseFloat(loteItem.cantidad_cargue_lote)
       }
@@ -669,19 +669,19 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
       let relations:any = ['detalle_solicitud_turnos_pedido','detalle_solicitud_turnos_pedido.detalle_lotes_item_turno']                                                                      
 
      let turnos = await this.pedidosService.getAsyncQuery2(ruote,where,relations);
-     //////////console.log('turnos',turnos)
+     ////////////console.log('turnos',turnos)
 
      //Filtrar turnos cuya bodega en items sea igual a al abodega de la linea seleccionada
      let turnosBodegaLote:any = turnos.filter(turno=> turno.detalle_solicitud_turnos_pedido.filter((item: { bodega: string; detalle_lotes_item_turno:any })=>item.bodega === bodega && item.detalle_lotes_item_turno.filter((itemLote: { lote: any; })=>itemLote.lote == lote).length >0).length >0 )
 
-     //////////console.log('turnosBodegaLote',bodega, lote,turnosBodegaLote)
+     ////////////console.log('turnosBodegaLote',bodega, lote,turnosBodegaLote)
     //Recorrer los turnos y obtener las cantidades comprometidas asociadas a la bodega y el lote                                                          
      for(let turnoBodegaLote of turnosBodegaLote){
        
         cantidadComprometidaItemLote = cantidadComprometidaItemLote+ await this.comprometidoItemLoteInTurno(idLinea,itemcode,lote,turnoBodegaLote.detalle_solicitud_turnos_pedido);
      }
 
-     //////////console.log('cantidadComprometidaItemLote',cantidadComprometidaItemLote)
+     ////////////console.log('cantidadComprometidaItemLote',cantidadComprometidaItemLote)
     return cantidadComprometidaItemLote;
   }
 
@@ -698,12 +698,12 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 //   }
 
   cambioValorCampoTablaLotesItem(event:any,idLinea:any,valorCampo:any,arrayLinea:any,campo:string){
-      // ////////////console.log('event',event);
-      // ////////////console.log('idLinea',idLinea);
-      // ////////////console.log('valorCampo',valorCampo);
-      // ////////////console.log('arrayLinea',arrayLinea);
-      // ////////////console.log('campo',campo);
-      // ////////////console.log('idLinea',idLinea);
+      // //////////////console.log('event',event);
+      // //////////////console.log('idLinea',idLinea);
+      // //////////////console.log('valorCampo',valorCampo);
+      // //////////////console.log('arrayLinea',arrayLinea);
+      // //////////////console.log('campo',campo);
+      // //////////////console.log('idLinea',idLinea);
 
       let index = this.lotesItemLine.findIndex(item=>item.id === idLinea);
       //this.lotesItemLine[index].lineaUpdate.update = true;
@@ -713,8 +713,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
       }
 
       if(campo==='cantidad_cargue_lote'){
-       ////////////console.log('valorCampo',valorCampo);
-       ////////////console.log('parseFloat(arrayLinea[campo])',parseFloat(arrayLinea['cantidad_bodega_lote']));
+       //////////////console.log('valorCampo',valorCampo);
+       //////////////console.log('parseFloat(arrayLinea[campo])',parseFloat(arrayLinea['cantidad_bodega_lote']));
         if(valorCampo> parseFloat(arrayLinea['cantidad_bodega_lote'])){
           this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad a cagar del lote supera la cantidad existente en la bodega'});
           valorCampo =0;
@@ -735,18 +735,18 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
   pressEnterTablaLotesItem(event:any,idLinea:any,valorCampo:any,arrayLinea:any,campo:string){
-      // ////////////console.log('event',event);
-      // ////////////console.log('idLinea',idLinea);
-      // ////////////console.log('valorCampo',valorCampo);
-      // ////////////console.log('arrayLinea',arrayLinea);
-      // ////////////console.log('campo',campo);
+      // //////////////console.log('event',event);
+      // //////////////console.log('idLinea',idLinea);
+      // //////////////console.log('valorCampo',valorCampo);
+      // //////////////console.log('arrayLinea',arrayLinea);
+      // //////////////console.log('campo',campo);
 
       let index = this.lotesItemLine.findIndex(item=>item.id === idLinea);
       //this.lotesItemLine[index].lineaUpdate.update = true;
 
       if (event.key === "Enter") {
       
-        // ////////////////////////////////console.log('ENTER PRESS');
+        // //////////////////////////////////console.log('ENTER PRESS');
         // if(event.target.value ===''){
         //   event.target.value =0;
         // }
@@ -781,9 +781,9 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
       totalSacos+=parseFloat(loteItemLine.cantidad_sacos_lote);
     }
 
-    ////////////console.log('totalTon',totalTon);
+    //////////////console.log('totalTon',totalTon);
     this.totalTonItem.nativeElement.value = totalTon;
-    ////////////console.log('totalSacos',totalSacos);
+    //////////////console.log('totalSacos',totalSacos);
     this.totalSacosItem.nativeElement.value = totalSacos
   }
   
@@ -848,8 +848,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   async validarFormulario():Promise<boolean> {
     let valido:boolean = false;
 
-    console.log('this.pedidos_turno',this.pedidos_turno)
-    console.log('this.pedidos_turno.filter(pedido=>!pedido.cubicacion.length)',this.pedidos_turno.filter(pedido=>pedido.cubicacion ==="" || !pedido.cubicacion))
+    //console.log('this.pedidos_turno',this.pedidos_turno)
+    //console.log('this.pedidos_turno.filter(pedido=>!pedido.cubicacion.length)',this.pedidos_turno.filter(pedido=>pedido.cubicacion ==="" || !pedido.cubicacion))
 
     if(this.estado === this.estadosTurno.CARGANDO && this.pedidos_turno.filter(pedido=>pedido.maneja_lote==='Y' && pedido.detalle_lotes_item_turno.length ===0).length>0){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Debe asignar lotes de producccion para cada item de producto-destino.'});
@@ -875,7 +875,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     let valido = true;
     let totalEvidencias =0;
     for(let item of this.pedidos_turno){
-     // ////////////////console.log(item);
+     // //////////////////console.log(item);
       if(!item.itemcode.startsWith('SF')){
         let id_relacion = item.id;
         let proceso = 'cargado';
@@ -914,7 +914,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
    async configSplitButton(estadoActual:string, permisosModulo:any){
-    console.log(estadoActual);
+    //console.log(estadoActual);
 
     this.arrayBtnTurnos = [];
 
@@ -941,11 +941,11 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
      
 
       case this.estadosTurno.PESADO:
-        console.log('pesado')
+        //console.log('pesado')
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Inicio cargue').valor){
-            console.log('pesado')
+            //console.log('pesado')
           if(this.tipoTurno==='RETIRO'){
-            console.log('pesado')
+            //console.log('pesado')
             this.arrayBtnTurnos.push(this.btnCargue);
           }else{
             //this.arrayBtnTurnos.push(this.btnDescargue);
@@ -959,9 +959,9 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
       break;
 
       case this.estadosTurno.CARGANDO:
-         console.log('cargando')
+         //console.log('cargando')
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Fin cargue').valor){
-            console.log('cargando')
+            //console.log('cargando')
           this.arrayBtnTurnos.push(this.btnFinCargue);
 
         }
@@ -996,13 +996,13 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
   
     async clearUploader(uploaderFiles: FileUpload){
-        ////////////console.log(uploaderFiles,this.filesToUpload);
+        //////////////console.log(uploaderFiles,this.filesToUpload);
         uploaderFiles.onClear;
     }
 
     
     removeFile($event:any,uploaderFiles: FileUpload){
-        //////////////console.log('remove',$event,)
+        ////////////////console.log('remove',$event,)
         this.filesToUpload = [];
         let currentFiles = uploaderFiles.files.filter((file: any)=>file != $event.file);
         //uploaderFiles.files = currentFiles;
@@ -1010,10 +1010,10 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     }
 
     loadFiles(uploaderFiles: any ){
-        //////////////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
+        ////////////////console.log('filesToUpload',uploaderFiles, this.uploadedFiles);
         let currentFiles = uploaderFiles;
         for(let currentFile of currentFiles){
-        //////////////console.log('currentFile',currentFile);
+        ////////////////console.log('currentFile',currentFile);
         //const [file] = currentFile;
         this.filesToUpload.push({
             file:currentFile,
@@ -1021,12 +1021,12 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         })
         }
 
-        //////////////console.log('this.filesToUpload',this.filesToUpload);
+        ////////////////console.log('this.filesToUpload',this.filesToUpload);
     }
 
     
   setInsppeccion($event:any){
-    //////////////console.log($event);
+    ////////////////console.log($event);
 
     this.inspeccionTurno = {
       fecha_inspeccion: new Date($event.fecha_inspeccion),
@@ -1069,15 +1069,15 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
     }
 
-    ////////////console.log(this.inspeccionTurno);
+    //////////////console.log(this.inspeccionTurno);
   }
 
   
  async cambiarEstadoTurno(){
 
-    //////////console.log(this.remisionesPorCliente);
+    ////////////console.log(this.remisionesPorCliente);
 
-    //////////console.log(this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length);
+    ////////////console.log(this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length);
 
     this.cambioEstado = true;
 
@@ -1098,7 +1098,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         accept: async () => {
   
            let data:any = await this.configDataTurno();
-            ////////console.log(data);
+            //////////console.log(data);
             
               
            this.updateTurno(data);
@@ -1126,20 +1126,20 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
    async validarFechaEstado():Promise<boolean>{
 
-    //////////console.log('estados turno',this.estadosTurno,);
+    ////////////console.log('estados turno',this.estadosTurno,);
 
     let error = false;
     let turno_actual = this.turno.estado;
     //let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.infoHistorialTurno.detalle_solicitud_turnos_historial)),'id','ASC')
     
-    //////console.log('this.infoHistorialTurno.detalle_solicitud_turnos_historial',this.infoHistorialTurno.detalle_solicitud_turnos_historial)
+    ////////console.log('this.infoHistorialTurno.detalle_solicitud_turnos_historial',this.infoHistorialTurno.detalle_solicitud_turnos_historial)
     let historial_turno:any[] = await this.functionsService.sortArrayObject(JSON.parse(JSON.stringify(this.turno.detalle_solicitud_turnos_historial)),'id','ASC')
 
-    ////////console.log('historial_turno',historial_turno);
+    //////////console.log('historial_turno',historial_turno);
 
     if(historial_turno.length > 0){
       let ultimoEstado = historial_turno[historial_turno.length-1];
-      ////////console.log('ultimoEstado',ultimoEstado);
+      //////////console.log('ultimoEstado',ultimoEstado);
       let fecha_accion_ultimo_estado = new Date(`${ultimoEstado.fecha_accion} ${ultimoEstado.hora_accion}`);
       
 
@@ -1147,7 +1147,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
       //fecha_accion_ultimo_estado.setHours(ultimoEstado.hora_accion.split(':')[0],ultimoEstado.hora_accion.split(':')[1],ultimoEstado.hora_accion.split(':')[2]);
 
-      //////////console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
+      ////////////console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
 
       let fechaaccion = new Date(this.fechaaccion);
 
@@ -1157,8 +1157,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
       fechaaccion.setHours(horaaccion.getHours(),horaaccion.getMinutes(),horaaccion.getSeconds());
 
-      ////////console.log('fechaaccion',fechaaccion);
-      ////////console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
+      //////////console.log('fechaaccion',fechaaccion);
+      //////////console.log('fecha_accion_ultimo_estado',fecha_accion_ultimo_estado);
 
       if(fechaaccion < fecha_accion_ultimo_estado){
         this.messageService.add({severity:'error', summary: '!Error¡', detail: `La fecha del nuevo estado ${fechaaccion.toISOString().split('T')[0]} ${fechaaccion.toTimeString().split(' ')[0]} no puede ser menor a fecha de accion del ultimo estado "${ultimoEstado.estado}" ${fecha_accion_ultimo_estado.toISOString().split('T')[0]} ${fecha_accion_ultimo_estado.toTimeString().split(' ')[0]}.` });
@@ -1174,8 +1174,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   
   async configDataTurno():Promise<any> {
     
-   //////////console.log('turno para validar estado',this.turno.condiciontpt);
-    //console.log('config turno')
+   ////////////console.log('turno para validar estado',this.turno.condiciontpt);
+    ////console.log('config turno')
     let nuevoEstado = "";
     let mensaje ="";
 
@@ -1285,7 +1285,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     };
 
     // if(this.estado===this.estadosTurno.SOLINVENTARIO){
-    //   //////// ////////////// ////////////////////console.log(this.existeInventario);
+    //   //////// ////////////// //////////////////////console.log(this.existeInventario);
     //   data.historial.disponibilidad = this.existeInventario;
     //   data.historial.fechadisponibilidad = this.fechadisponibilidad;
     // }
@@ -1310,8 +1310,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         // data.peso_neto = this.peso_neto;
         // data.adicional = this.adicional;
 
-        //////////console.log('this.lotesItems',this.lotesItems);
-        //////////console.log('this.pedidosTurno',this.pedidosTurno);
+        ////////////console.log('this.lotesItems',this.lotesItems);
+        ////////////console.log('this.pedidosTurno',this.pedidosTurno);
 
         // if(this.lotesItems.length>0){
         //     for(let itemPedido of this.pedidos_turno){
@@ -1328,7 +1328,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         //  data.remision = this.remision;
         //}
 
-        //////////console.log(this.observacionesCargue);
+        ////////////console.log(this.observacionesCargue);
 
         // if(this.observacionesCargue.length > 0){
         //   data.observacion = this.observacionesCargue.join(';');
@@ -1347,7 +1347,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         data.inspeccion = this.inspeccionTurno;
     }
     
-    console.log('Data update turno',data);
+    //console.log('Data update turno',data);
 
     return data;
   }
@@ -1357,12 +1357,12 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     this.solicitudTurnoService.updateInfoTruno(this.turno.id,data)
       .subscribe({
             next:async (turno)=>{
-               console.log("turno actualizado",turno);
+               //console.log("turno actualizado",turno);
 
               
                 let infoHistorialTurno =  await this.getHistorialTurno(turno.id)
 
-                console.log('this.filesToUpload',this.filesToUpload)
+                //console.log('this.filesToUpload',this.filesToUpload)
                 
                 if(this.filesToUpload && this.filesToUpload.length > 0 && this.uploadActivo){
                   for(let anexo of this.filesToUpload){
@@ -1376,7 +1376,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
                     this.functionsService.uploadFile(body)
                         .subscribe({
                           next:(result)=>{
-                            //////////////console.log('Upload ok',result);
+                            ////////////////console.log('Upload ok',result);
                             this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo ${anexo.file.name}`});
                           },
                           error:(err)=>{
@@ -1391,7 +1391,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
                 // if(turno.estado===this.estadosTurno.DESPACHADO && turno.condiciontpt ==='TRANSP' && turno.detalle_solicitud_turnos_pedido.filter((pedido: { itemcode: string; })=>pedido.itemcode.startsWith('SF')).length === 0){
 
-                //   //////////console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
+                //   ////////////console.log('Turno de tranportasociedad sin flete: Envio de notificación creacion de flete');
 
                 //   let email_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.email:turno.detalle_solicitud_turnos_pedido[0].email_asistente;
                 //   let nombre_destino_flete = turno.detalle_solicitud_turnos_pedido[0].email_asistente==null?turno.solicitud.usuario.nombrecompleto:turno.detalle_solicitud_turnos_pedido[0].nombre_asistente;
@@ -1411,7 +1411,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
                 // this.pedidos_turno.map((pedido)=>{
                 //   pedido.lineaUpdate = {update:false, create:false};
                 //   if(turno.estado===this.estadosTurno.DESPACHADO || turno.estado===this.estadosTurno.ENTREGADO){
-                //    //////////console.log('pedido',pedido);
+                //    ////////////console.log('pedido',pedido);
                     
                 //     pedido.remision = turno.detalle_solicitud_turnos_pedido.filter((lineaPedido: { itemcode: any; id: any; })=>lineaPedido.itemcode === pedido.itemcode && lineaPedido.id === pedido.id)[0].remision;
                 //   }
@@ -1498,7 +1498,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
                         }
 
                     });
-                //////console.log('turno.estado',turno.estado)
+                ////////console.log('turno.estado',turno.estado)
                     // if(turno.estado!=this.estadosTurno.PESADOF){
                       this.cambioEstado = false;
                     // }
@@ -1524,11 +1524,11 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     this.dataUpload.id_relacion = pedido.id;
     this.dataUpload.proceso = 'Cargado';
 
-    console.log('this.dataUpload',this.dataUpload)
+    //console.log('this.dataUpload',this.dataUpload)
 
     let filesAtach$ = this.functionsService.loadFiles({id_relacion:this.dataUpload.id_relacion,proceso:this.dataUpload.proceso,entidad:this.dataUpload.entidad});
     let filesAtachByEstadoHistorialTurno = await lastValueFrom(filesAtach$);
-    console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno)
+    //console.log('filesAtachByEstadoHistorialTurno',filesAtachByEstadoHistorialTurno)
     if(filesAtachByEstadoHistorialTurno.length>0){
         this.dataFormCargueEvidencias.evidencias = filesAtachByEstadoHistorialTurno;
     }
@@ -1549,29 +1549,29 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
   async cambioValorLote(valor:number, saldo:number,lote:any){
-    console.log(valor,saldo,lote)
+    //console.log(valor,saldo,lote)
     if(valor!=undefined){
         if(valor>saldo){
             let index = await this.dataFormGestionLotesItem.lotes.findIndex((item: { lote: any; })=>item.lote===lote);
             this.messageService.add({severity:'error', summary: 'Informaciónn', detail:  `La cantidad a cargar del lote ${lote} es mayor a la cantidad disponible.`});
-            console.log(index,this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote)
+            //console.log(index,this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote)
             this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote =0;
-            //console.log(this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote)
+            ////console.log(this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote)
             
         }
         this.calcularToneladasLotes()
     }else{
-        console.log('no valor')
+        //console.log('no valor')
     }
     
   }
 
   async cambioValorSacos(valor:number, lote:any){
-        console.log(valor,lote)
+        //console.log(valor,lote)
          if(valor!=undefined){
             // let index = await this.dataFormGestionLotesItem.lotes.findIndex((item: { lote: any; })=>item.lote===lote);
-            // console.log(index,this.dataFormGestionLotesItem.lotes[index].cantidad_sacos_lote)
-            // console.log(this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote)
+            // //console.log(index,this.dataFormGestionLotesItem.lotes[index].cantidad_sacos_lote)
+            // //console.log(this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote)
             this.calcularToneladasSacos()
          }
         
@@ -1579,10 +1579,10 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
   async validarLote(valor:number,lote:any){
-     console.log('valor',valor)
+     //console.log('valor',valor)
      if(valor===undefined){
          if(lote){
-            console.log('lote',lote)
+            //console.log('lote',lote)
             let index = await this.dataFormGestionLotesItem.lotes.findIndex((item: { lote: any; })=>item.lote===lote);
             this.dataFormGestionLotesItem.lotes[index].cantidad_cargue_lote =0;
             this.calcularToneladasLotes()
@@ -1592,10 +1592,10 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
   async validarSaco(valor:number,lote:any){
-     console.log('valor',valor)
+     //console.log('valor',valor)
      if(valor===undefined){
          if(lote){
-            console.log('lote',lote)
+            //console.log('lote',lote)
             let index = await this.dataFormGestionLotesItem.lotes.findIndex((item: { lote: any; })=>item.lote===lote);
             this.dataFormGestionLotesItem.lotes[index].cantidad_sacos_lote =0;
              this.calcularToneladasSacos()
@@ -1605,17 +1605,17 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
   async calcularToneladasLotes(){
-    console.log('calcularToneladasLotes');
+    //console.log('calcularToneladasLotes');
     let total_lotes =0;
     this.dataFormGestionLotesItem.lotes.map((item: { cantidad_cargue_lote: any; cantidad_sacos_lote: any; })=>{
         let cantidad_carga_lote = !item.cantidad_cargue_lote?0:item.cantidad_cargue_lote;
         total_lotes=total_lotes+cantidad_carga_lote;
     })
     // await this.dataFormGestionLotesItem.lotes.forEach((lote:any,index:any)=>{
-    //     console.log('index',index)
-    //     console.log('lote',lote)
+    //     //console.log('index',index)
+    //     //console.log('lote',lote)
     // })
-    console.log('total_lotes',total_lotes)
+    //console.log('total_lotes',total_lotes)
     this.dataFormGestionLotesItem.total_lotes = total_lotes;
   }
 
@@ -1629,9 +1629,9 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
   async asignarLotesItem(){
-    console.log('this.dataFormGestionLotesItem.total_sacos',this.dataFormGestionLotesItem.total_sacos);
-    console.log('this.dataFormGestionLotesItem.cantidad_solicitada',this.dataFormGestionLotesItem.cantidad_solicitada);
-    console.log('this.dataFormGestionLotesItem.total_lotes',this.dataFormGestionLotesItem.total_lotes)
+    //console.log('this.dataFormGestionLotesItem.total_sacos',this.dataFormGestionLotesItem.total_sacos);
+    //console.log('this.dataFormGestionLotesItem.cantidad_solicitada',this.dataFormGestionLotesItem.cantidad_solicitada);
+    //console.log('this.dataFormGestionLotesItem.total_lotes',this.dataFormGestionLotesItem.total_lotes)
     if(this.dataFormGestionLotesItem.total_sacos===0 ){
         this.messageService.add({severity:'error', summary: 'Informaciónn', detail:  `La cantidad total de sacos a cargar del item debe ser mayor a cero.`});       
     }else if(this.dataFormGestionLotesItem.total_lotes!=this.dataFormGestionLotesItem.cantidad_solicitada){
@@ -1658,21 +1658,21 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
         this.pedidos_turno[indexItemPedido].detalle_lotes_item_turno =lotesItemLine;
         this.pedidos_turno[indexItemPedido].lineaUpdate.update = true;
         // this.lotesItems = lotesItemLine;
-        // console.log('this.lotesItems',this.lotesItems);
+        // //console.log('this.lotesItems',this.lotesItems);
         this.formGestionLotesItem = false;
     }
   }
 
    UploadFiles(event:any,uploaderFiles: FileUpload){
   
-        console.log(event)
-        console.log(uploaderFiles)
-        console.log(uploaderFiles.files)
+        //console.log(event)
+        //console.log(uploaderFiles)
+        //console.log(uploaderFiles.files)
         if(!uploaderFiles.files.length){
             this.messageService.add({severity:'error', summary: '!Error¡', detail: `Debe seleccionar al menos un archivo para subir.` });
         }else{
              for(let file of uploaderFiles.files){
-                //////console.log(file);
+                ////////console.log(file);
 
                 let body = new FormData();
                 body.append('file', file, file.name);
@@ -1681,12 +1681,12 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
                 body.append('proceso', this.dataUpload.proceso);
                 body.append('nombre', file.name);
 
-                //////console.log(body)
+                ////////console.log(body)
 
                 this.functionsService.uploadFile(body)
                     .subscribe({
                         next:(result)=>{
-                        console.log('Upload ok',result);
+                        //console.log('Upload ok',result);
 
                         this.dataFormCargueEvidencias.evidencias.push(result)
                         
@@ -1722,7 +1722,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     body.append('proceso', this.dataUpload.proceso);
     body.append('nombre', fileName);
 
-   //////console.log('guardarFoto',body)
+   ////////console.log('guardarFoto',body)
 
     
 
@@ -1730,14 +1730,14 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
           .subscribe({
             next:(result)=>{
                this.loading = false;
-              console.log('Upload ok',result);
+              //console.log('Upload ok',result);
               this.dataFormCargueEvidencias.evidencias = [
                     ...this.dataFormCargueEvidencias.evidencias,
                     result
                 ];
-            //   console.log('this.dataFormCargueEvidencias.evidencias',this.dataFormCargueEvidencias.evidencias);
-            //   console.log('Upload ok',result.nombre);
-            //   console.log('Upload ok',result.linkS3);
+            //   //console.log('this.dataFormCargueEvidencias.evidencias',this.dataFormCargueEvidencias.evidencias);
+            //   //console.log('Upload ok',result.nombre);
+            //   //console.log('Upload ok',result.linkS3);
             //   //this.dataFormCargueEvidencias.evidencias.push(result)
               this.messageService.add({severity:'success', summary: 'Confirmación', detail:  `Se ha cargado correctamente el anexo capture_${fileName}.png`});
               this.changeDetector.detectChanges()
