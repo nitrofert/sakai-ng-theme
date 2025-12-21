@@ -86,6 +86,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+
+	console.log('servidor azure');
         
         this.getInfoUsuario();
 
