@@ -1155,9 +1155,9 @@ async seleccionarHoraCita(hora?:string):Promise<void>{
   console.log('horacargue',this.horacargue);
   this.cambioHoraCita();
 
-  // if(!this.horacargueSeleccionada.activo){
-  //   this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
-  // }
+  if(!this.horacargueSeleccionada.activo){
+    this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+  }
 
 }
 

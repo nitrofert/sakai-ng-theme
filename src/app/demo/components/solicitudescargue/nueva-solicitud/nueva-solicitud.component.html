@@ -467,15 +467,15 @@
                         </div>
                         <div class="field col-12 md:col-6  mt-3">
                             <span class="p-float-label">
-                                <p-calendar [(ngModel)]="horacargue"  
+                                <!-- <p-calendar [(ngModel)]="horacargue"  
                                             [timeOnly]="true" 
                                             [hourFormat]="'12'" 
                                             [disabledDates]="invalidDates" 
                                             inputId="timeonly"
                                             (ngModelChange)="cambioHoraCita()">
-                                </p-calendar>
+                                </p-calendar> -->
 
-                                <!-- <p-dropdown [options]="arrayHorasDiaLocacion" 
+                                <p-dropdown [options]="arrayHorasDiaLocacion" 
                                             [(ngModel)]="horacargueSeleccionada" 
                                             
                                             optionLabel="label" 
@@ -504,7 +504,7 @@
                                                 </div>
                                             </ng-template>
 
-                                </p-dropdown> -->
+                                </p-dropdown>
                                 <label for="horacargue"><h6>Hora estimada del cargue</h6></label>
                             </span>
                             
