@@ -1155,9 +1155,9 @@ async seleccionarHoraCita(hora?:string):Promise<void>{
   console.log('horacargue',this.horacargue);
   this.cambioHoraCita();
 
-  if(!this.horacargueSeleccionada.activo){
-    this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
-  }
+  // if(!this.horacargueSeleccionada.activo){
+  //   this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+  // }
 
 }
 
@@ -1546,8 +1546,8 @@ async adicionVehiculoSolicitud(){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
   }else if(!(await this.validarHoraCargue())){
     this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
-  }else if(!this.horacargueSeleccionada.activo){
-    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+  // }else if(!this.horacargueSeleccionada.activo){
+  //   this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
   }else{
 
     this.confirmationService.confirm({
@@ -2136,37 +2136,37 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
 
 async validarHoraCargue():Promise<boolean>{
   let horarioValido:boolean = true;
-   console.log('horacargue',this.horacargue); 
-   console.log('horacargue',this.horacargue.getTime()); 
+  //  console.log('horacargue',this.horacargue); 
+  //  console.log('horacargue',this.horacargue.getTime()); 
 
-   console.log('this.horariosSeleccionados',this.horariosSeleccionados);
+  //  console.log('this.horariosSeleccionados',this.horariosSeleccionados);
 
   for(let horario of this.horariosSeleccionados){
 
-    console.log('horario',horario);
+    //console.log('horario',horario);
     //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
     //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
     //////////////// //// ////////////////////console.log(new Date(this.horacargue));
 
-    console.log('!!!!!this.fechacargue',`${this.fechacargue}`);
+    //console.log('!!!!!this.fechacargue',`${this.fechacargue}`);
 
-    // let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
-    // let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
-    let horainicio = new Date(new Date(this.fechacargue).setHours(horario.horainicio.split(':')[0],0,0));
-    let horafin = new Date(new Date(this.fechacargue).setHours(horario.horafin.split(':')[0],0,0));
+    let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
+    let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
+    // let horainicio = new Date(new Date(this.fechacargue).setHours(horario.horainicio.split(':')[0],0,0));
+    // let horafin = new Date(new Date(this.fechacargue).setHours(horario.horafin.split(':')[0],0,0));
     let horacargue = new Date(this.horacargue);
 
-    console.log('horainicio',horainicio);
-    console.log('horainicio',horainicio.getTime());
-    console.log('horafin',horafin);
-    console.log('horafin',horafin.getTime());
-    console.log('horacargue',horacargue); 
-     console.log('horacargue',horacargue.getTime()); 
+    // console.log('horainicio',horainicio);
+    // console.log('horainicio',horainicio.getTime());
+    // console.log('horafin',horafin);
+    // console.log('horafin',horafin.getTime());
+    // console.log('horacargue',horacargue); 
+    // console.log('horacargue',horacargue.getTime()); 
 
 
-    console.log('horainicio>= horacargue',horainicio>= horacargue); 
+    // console.log('horainicio>= horacargue',horainicio>= horacargue); 
 
-    if(horainicio.getTime()<= horacargue.getTime() && horafin.getTime() >= horacargue.getTime()){
+    if(horainicio<= horacargue && horafin >= horacargue){
       //////////////// //// ////////////////////console.log('hora valida en horario id '+horario.id);
     }else{
       //////////////// //// ////////////////////console.log('hora invalida en horario id '+horario.id);

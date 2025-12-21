@@ -1949,14 +1949,18 @@ async validarHoraCargue():Promise<boolean>{
     if(await this.validarFormulario()){
       this.accion = 'aprobar'
 
-      if((await this.validarDisponibilidadHoraLocacion())=== false){
-        this.messageService.add({severity:'error', summary: '!Error¡', detail: `La hora seleccionada no está disponible para citas, por favor seleccione otra hora o fecha.` });
-        //this.cambioEstado = false;
-      }else {
-        this.formEstadoTurno = true;
-        this.tituloEstado = "Aprobar turno "+this.turnoId;
-        this.novedad = false;
-      }
+      // if((await this.validarDisponibilidadHoraLocacion())=== false){
+      //   this.messageService.add({severity:'error', summary: '!Error¡', detail: `La hora seleccionada no está disponible para citas, por favor seleccione otra hora o fecha.` });
+      //   //this.cambioEstado = false;
+      // }else {
+      //   this.formEstadoTurno = true;
+      //   this.tituloEstado = "Aprobar turno "+this.turnoId;
+      //   this.novedad = false;
+      // }
+
+      this.formEstadoTurno = true;
+      this.tituloEstado = "Aprobar turno "+this.turnoId;
+      this.novedad = false;
 
 
       
