@@ -822,9 +822,9 @@ async getTurno(id: number){
       this.fechacargue = fechacargue;
       
       
-      let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
-      //this.horacargue = new Date(turno.horacita);
-      this.horacargue = horacargue;
+      //let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+      this.horacargue = new Date(turno.horacita);
+      //this.horacargue = horacargue;
       this.condicion_tpt = turno.condiciontpt;
       //this.horacargue = new Date();
       this.placa = turno.vehiculo.placa;
