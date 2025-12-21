@@ -1559,15 +1559,15 @@ async adicionVehiculoSolicitud(){
         ////////////////console.log(this.fechacargue.toISOString());
   
         ////////////////console.log(this.horacargue.toISOString());
-        let horacargue = `${this.fechacargue.toISOString().split("T")[0]}T${this.horacargue.toISOString().split("T")[1]}`;
+        //let horacargue = `${this.fechacargue.toISOString().split("T")[0]}T${this.horacargue.toISOString().split("T")[1]}`;
         ////////////////console.log(new Date(horacargue));
 
 
           
             this.vehiculosEnSolicitud.push({
               fechacargue:this.fechacargue,
-              //horacargue:this.horacargue,
-              horacargue:new Date(horacargue),
+              horacargue:this.horacargue,
+              //horacargue:new Date(horacargue),
               //cliente: this.clienteSeleccionado.code,
               estado: "pendiente",
               placa:this.vehiculoSeleccionado.code,
