@@ -517,6 +517,14 @@ export class PdfOrdenCargue {
                                                  fontSize:8,
                                                  blod:true,
                                              }
+                                         ],
+                                         [
+                                             {
+                                                 text:'',
+                                                 alignment:'left',
+                                                 fontSize:8,
+                                                 blod:true,
+                                             }
                                          ]
                                      ]
                                  },
@@ -590,6 +598,18 @@ export class PdfOrdenCargue {
                                                  blod:true
                                                 
                                              }
+                                         ],
+                                         [
+                                             {
+                                                 text:data.horacita,
+                                                 alignment:'center',
+                                                 fontSize:8,
+                                                 blod:true,
+                                                 colSpan:3,
+                                                
+                                             },
+                                             {},
+                                             {}
                                          ]
                                      ]
                                  }
@@ -1182,7 +1202,7 @@ export class PdfOrdenCargue {
          let infoTurno$ = this.solicitudTurnoService.getTurnosByID(datakey[1]);
         // let infoTurno = await lastValueFrom(infoTurno$);
         let infoTurno = data
-       ////////console.log('infoTurno',infoTurno);
+        console.log('infoTurno',infoTurno);
         let locaciones$ = this.almacenesService.getLocaciones()
         let locaciones = await lastValueFrom(locaciones$);
        ////////console.log('locaciones',locaciones);
@@ -1191,6 +1211,11 @@ export class PdfOrdenCargue {
 
         locacion.nit = locacion.locacion==='NITROCARIBE'?'901594213-9':'901174177-1';
         this.images.Logo = await this.functionsService.convertImagenLocalToBase64(locacion.locacion==='NITROCARIBE'?'assets/demo/images/logos/NITROCARIBE.png':'assets/demo/images/logos/nitrofert.png');
+
+        let fechacita = new Date(infoTurno.fechacita);
+        console.log('fechacita',fechacita);
+        let horacita = new Date(infoTurno.horacita);
+        console.log('horacita',horacita);
 
         
 
@@ -1302,9 +1327,13 @@ export class PdfOrdenCargue {
 
         let dataPdf: any = {
             turno:infoTurno.id,
-            diaSolicitud: new Date().getDate(),
-            mesSolicitud: new Date().getMonth() + 1,
-            anioSolicitud: new Date().getFullYear(),
+            // diaSolicitud: new Date().getDate(),
+            // mesSolicitud: new Date().getMonth() + 1,
+            // anioSolicitud: new Date().getFullYear(),
+            diaSolicitud: horacita.getDate(),
+            mesSolicitud: horacita.getMonth() + 1,
+            anioSolicitud: horacita.getFullYear(),
+            horacita:horacita.toLocaleTimeString('en-US', { hour12: true }),
             locacion ,
             horaIngreso,
             cliente,

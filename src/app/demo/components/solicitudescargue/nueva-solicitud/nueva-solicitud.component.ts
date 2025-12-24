@@ -1030,7 +1030,11 @@ async seleccionarAlmacen(almacenSeleccionado:any){
     ////////////////// //// ////////////////////console.log(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
     ////////////////// //// ////////////////////console.log(this.horainicio, this.horafin);
     this.diasNoAtencion = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion);
+    //console.log('diasNoAtencion',this.diasNoAtencion);
+   
+
     this.horariosLocacion = this.locaciones.filter(locacion=>locacion.code === almacenSeleccionado.code)[0].horarios_locacion;
+    //console.log('horariosLocacion',this.horariosLocacion);
 
     //////////////// //// ////////////////////console.log('horariosLocacion',this.horariosLocacion);
     await this.seleccionarFechaCita();
@@ -1075,55 +1079,52 @@ async seleccionarFechaCita():Promise<void>{
   let diaSeleccionado = diasSemana.find(diaSemana => diaSemana.id === this.fechacargue.getUTCDay());
   //console.log('this.fechacargue',this.fechacargue)
   //console.log('diaSeleccionado',diaSeleccionado)
+
+  //Obtener el horario de la locacion para el dia seleccionado
   let horariosSeleccionados = this.horariosLocacion.filter(horario=>horario.dias_atencion.includes(diaSeleccionado.fullname));
   //console.log('horariosSeleccionados',horariosSeleccionados)
 
-  let horaInicio = parseInt(horariosSeleccionados[0].horainicio.split(':')[0]);
-  //console.log('horaInicio',horaInicio)
-  let horaFin = parseInt(horariosSeleccionados[0].horafin.split(':')[0]);
-  //console.log('horaFin',horaFin)
+  //validadr si la locacion tiene horarios de atencion para el dia seleccionado
+  if(horariosSeleccionados.length==0){
+    this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La locación seleccionada no tiene horarios de atención para el día seleccionado, por favor seleccione otra fecha.'});
+  }else{
 
+    let horaInicio = parseInt(horariosSeleccionados[0].horainicio.split(':')[0]);
+    //console.log('horaInicio',horaInicio)
+    let horaFin = parseInt(horariosSeleccionados[0].horafin.split(':')[0]);
+    //console.log('horaFin',horaFin)
 
+    //Generar array de horas del dia para la locacion seleccionada
+    this.arrayHorasDiaLocacion = [];
+    for(horaInicio; horaInicio<=horaFin; horaInicio++){
+      let fechaInicioCargue = new Date(new Date(this.fechacargue).setHours(horaInicio,0,0));
+      //console.log('fechaInicioCargue',fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }))
 
-  this.arrayHorasDiaLocacion = [];
-  for(horaInicio; horaInicio<=horaFin; horaInicio++){
-    let fechaInicioCargue = new Date(new Date(this.fechacargue).setHours(horaInicio,0,0));
-    //console.log('fechaInicioCargue',fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }))
+      let fechaFinCargue = new Date(new Date(this.fechacargue).setHours(horaInicio+1,0,0));
+      //console.log('fechaFinCargue',fechaFinCargue)
+      
+      //Buscar turnos en la locacion para la fecha y hora seleccionada
+      let turnosFechaHora = await this.pedidosService.getTurnosByFechaHora({fechaInicioCargue:fechaInicioCargue,fechaFinCargue:fechaFinCargue, locacion:this.almacenSeleccionado.code, estados:JSON.stringify([])});
 
-    let fechaFinCargue = new Date(new Date(this.fechacargue).setHours(horaInicio+1,0,0));
-    //console.log('fechaFinCargue',fechaFinCargue)
-    
-    let turnosFechaHora = await this.pedidosService.getTurnosByFechaHora({fechaInicioCargue:fechaInicioCargue,fechaFinCargue:fechaFinCargue, locacion:this.almacenSeleccionado.code, estados:JSON.stringify([])});
+      let turnos_hora_locacion = !this.locaciones.find(locacion=>locacion.code == this.almacenSeleccionado.code).turnos_hora?4:this.locaciones.find(locacion=>locacion.code == this.almacenSeleccionado.code).turnos_hora;
+      
+      this.arrayHorasDiaLocacion.push({
+        label:fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }),
+        hora: fechaInicioCargue.toTimeString().split(' ')[0],
+        activo: (turnosFechaHora.length < turnos_hora_locacion) ? true : false
+      })
 
-    let turnos_hora_locacion = !this.locaciones.find(locacion=>locacion.code == this.almacenSeleccionado.code).turnos_hora?4:this.locaciones.find(locacion=>locacion.code == this.almacenSeleccionado.code).turnos_hora;
-    
-    this.arrayHorasDiaLocacion.push({
-      label:fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }),
-      hora: fechaInicioCargue.toTimeString().split(' ')[0],
-      activo: (turnosFechaHora.length < turnos_hora_locacion) ? true : false
-    })
-
-    
-
-
+    }
   }
 
-  //console.log('arrayHorasDiaLocacion',this.arrayHorasDiaLocacion);
 
-
-
-  //let horarioSeleccionados:any[] = [];
   this.horariosSeleccionados = horariosSeleccionados;
 
-  /*for(let horario of this.horariosLocacion){
-    //////////////// //// ////////////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
-  }*/
-  //////////////// //// ////////////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
-  //await this.cambioHoraCita();
+ 
 }
 
 async cambioHoraCita():Promise<void>{
-  console.log('this.horacargue',this.horacargue);
+  //console.log('this.horacargue',this.horacargue);
   /*for(let horario of this.horariosSeleccionados){
     //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
     //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
@@ -1153,12 +1154,74 @@ async seleccionarHoraCita(hora?:string):Promise<void>{
   //console.log('hora seleccionada',this.horacargueSeleccionada);
   this.horacargue = new Date(`${this.fechacargue.toISOString().split('T')[0]}T${this.horacargueSeleccionada.hora}`)
   console.log('horacargue',this.horacargue);
-  this.cambioHoraCita();
+  //await this.cambioHoraCita();
 
-  // if(!this.horacargueSeleccionada.activo){
-  //   this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+  if(!this.horacargueSeleccionada.activo){
+    this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+  }
+
+}
+
+async validarHoraCargue():Promise<boolean>{
+  let horarioValido:boolean = true;
+
+
+  //console.log('fecha cargue',this.fechacargue); 
+  
+
+  let horainicio = new Date(new Date(this.horacargue).setHours(this.horariosSeleccionados[0].horainicio.split(':')[0],0,0));
+  let horafin = new Date(new Date(this.horacargue).setHours(this.horariosSeleccionados[0].horafin.split(':')[0],0,0));
+
+  console.log('hora cargue',this.horacargue); 
+  console.log('horario Seleccionado',this.horariosSeleccionados[0])
+
+  console.log('hora horainicio',horainicio); 
+  console.log('horario horafin',horafin)
+
+
+  if(horainicio<= this.horacargue && horafin >= this.horacargue){
+      //////////////// //// ////////////////////console.log('hora valida en horario id '+horario.id);
+  }else{
+    //////////////// //// ////////////////////console.log('hora invalida en horario id '+horario.id);
+    horarioValido = false;
+  }
+
+  //console.log('horacargueSeleccionada',this.horacargueSeleccionada);
+
+  // for(let horario of this.horariosSeleccionados){
+
+  //   //console.log('horario',horario);
+  //   //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
+  //   //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
+  //   //////////////// //// ////////////////////console.log(new Date(this.horacargue));
+
+  //   //console.log('!!!!!this.fechacargue',`${this.fechacargue}`);
+
+  //   let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
+  //   let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
+  //   // let horainicio = new Date(new Date(this.fechacargue).setHours(horario.horainicio.split(':')[0],0,0));
+  //   // let horafin = new Date(new Date(this.fechacargue).setHours(horario.horafin.split(':')[0],0,0));
+  //   let horacargue = new Date(this.horacargue);
+
+  //   // console.log('horainicio',horainicio);
+  //   // console.log('horainicio',horainicio.getTime());
+  //   // console.log('horafin',horafin);
+  //   // console.log('horafin',horafin.getTime());
+  //   // console.log('horacargue',horacargue); 
+  //   // console.log('horacargue',horacargue.getTime()); 
+
+
+  //   // console.log('horainicio>= horacargue',horainicio>= horacargue); 
+
+  //   if(horainicio<= horacargue && horafin >= horacargue){
+  //     //////////////// //// ////////////////////console.log('hora valida en horario id '+horario.id);
+  //   }else{
+  //     //////////////// //// ////////////////////console.log('hora invalida en horario id '+horario.id);
+  //     horarioValido = false;
+  //   }
   // }
 
+  return horarioValido;
 }
 
 cambioAlmacen(){
@@ -1534,20 +1597,25 @@ seleccionarConductor(conductorSeleccionado:any){
 async adicionVehiculoSolicitud(){
   //this.envioLineaCarguePedido =true;
 
+   
+
   this.envioAdicionVehiculo = true;
   //////console.log('this.vehiculoSeleccionado',this.vehiculoSeleccionado)
   ////////////////////////// //// ////////////////////console.log(this.sitioentrega,Object.keys(this.vehiculoSeleccionado).length,Object.keys(this.conductorSeleccionado).length, Object.keys(this.transportadoraSeleccionada).length);
   if(Object.keys(this.vehiculoSeleccionado).length ==0 || 
      Object.keys(this.conductorSeleccionado).length ==0 ||
-     Object.keys(this.transportadoraSeleccionada).length ==0 //||
+     Object.keys(this.transportadoraSeleccionada).length ==0 ||
+     !this.horacargueSeleccionada
      //this.sitioentrega=="" ||
      //this.municipioentrega==""
      ){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: 'Los campos resaltados en rojo son obligatorios'});
-  }else if(!(await this.validarHoraCargue())){
+  }else if(this.horariosSeleccionados.length==0){
+    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La locación seleccionada no tiene horarios de atención para el día seleccionado, por favor seleccione otra fecha.'});
+  }else  if(!(await this.validarHoraCargue())){
     this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La fecha y hora de cargue seleccionada esta fuera del horario de atención de la locación.'});
-  // }else if(!this.horacargueSeleccionada.activo){
-  //   this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+  } else  if(!this.horacargueSeleccionada.activo){
+    this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
   }else{
 
     this.confirmationService.confirm({
@@ -2134,48 +2202,7 @@ confirmRemovePedidoItem(placa:string,pedido:string,item:string) {
   });
 }
 
-async validarHoraCargue():Promise<boolean>{
-  let horarioValido:boolean = true;
-  //  console.log('horacargue',this.horacargue); 
-  //  console.log('horacargue',this.horacargue.getTime()); 
 
-  //  console.log('this.horariosSeleccionados',this.horariosSeleccionados);
-
-  for(let horario of this.horariosSeleccionados){
-
-    //console.log('horario',horario);
-    //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2])));
-    //////////////// //// ////////////////////console.log(new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2])));
-    //////////////// //// ////////////////////console.log(new Date(this.horacargue));
-
-    //console.log('!!!!!this.fechacargue',`${this.fechacargue}`);
-
-    let horainicio = new Date(new Date().setHours(horario.horainicio.split(':')[0],horario.horainicio.split(':')[1],horario.horainicio.split(':')[2]));
-    let horafin = new Date(new Date().setHours(horario.horafin.split(':')[0],horario.horafin.split(':')[1],horario.horafin.split(':')[2]));
-    // let horainicio = new Date(new Date(this.fechacargue).setHours(horario.horainicio.split(':')[0],0,0));
-    // let horafin = new Date(new Date(this.fechacargue).setHours(horario.horafin.split(':')[0],0,0));
-    let horacargue = new Date(this.horacargue);
-
-    // console.log('horainicio',horainicio);
-    // console.log('horainicio',horainicio.getTime());
-    // console.log('horafin',horafin);
-    // console.log('horafin',horafin.getTime());
-    // console.log('horacargue',horacargue); 
-    // console.log('horacargue',horacargue.getTime()); 
-
-
-    // console.log('horainicio>= horacargue',horainicio>= horacargue); 
-
-    if(horainicio<= horacargue && horafin >= horacargue){
-      //////////////// //// ////////////////////console.log('hora valida en horario id '+horario.id);
-    }else{
-      //////////////// //// ////////////////////console.log('hora invalida en horario id '+horario.id);
-      horarioValido = false;
-    }
-  }
-
-  return horarioValido;
-}
 
 async cacluarCapacidadDisponibleVH(placa:string):Promise<number>{
   let capacidadDisponibleVH = 0;
