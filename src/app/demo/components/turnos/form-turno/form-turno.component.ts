@@ -314,6 +314,8 @@ turnoBase:number =0;
 
 infoHistorialTurno:any;
 
+horacargueSeleccionada:any;
+
 arrayHorasDiaLocacion:any[] = [];
 
 
@@ -821,8 +823,12 @@ async getTurno(id: number){
       let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
       this.fechacargue = fechacargue;
       
+      //Obtener fecha de cargue turno
+      console.log('fecha cargue turno',new Date(this.turno.horacita))
+      let horacargue = new Date(this.turno.horacita)
       
-      let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+      //let horacargue = new Date(new Date(fechacargue).setHours(parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[0]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[1]),parseInt(new Date(turno.horacita).toLocaleTimeString("en-US", { hour12: false }).split(":")[2])));
+
       //this.horacargue = new Date(turno.horacita);
       this.horacargue = horacargue;
       this.condicion_tpt = turno.condiciontpt;
@@ -1177,12 +1183,51 @@ async getTurno(id: number){
     let horariosSeleccionados = this.horariosLocacion.filter(horario=>horario.dias_atencion.includes(diaSeleccionado.fullname));
     //let horarioSeleccionados:any[] = [];
     this.horariosSeleccionados = horariosSeleccionados;
+
+    if(horariosSeleccionados.length==0){
+      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La locación seleccionada no tiene horarios de atención para el día seleccionado, por favor seleccione otra fecha.'});
+    }else{
+
+        let horaInicio = parseInt(horariosSeleccionados[0].horainicio.split(':')[0]);
+        //console.log('horaInicio',horaInicio)
+        let horaFin = parseInt(horariosSeleccionados[0].horafin.split(':')[0]);
+        //console.log('horaFin',horaFin)
+        //Generar array de horas del dia para la locacion seleccionada
+        this.arrayHorasDiaLocacion = [];
+        for(horaInicio; horaInicio<=horaFin; horaInicio++){
+          let fechaInicioCargue = new Date(new Date(this.fechacargue).setHours(horaInicio,0,0));
+          //console.log('fechaInicioCargue',fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }))
+
+          let fechaFinCargue = new Date(new Date(this.fechacargue).setHours(horaInicio+1,0,0));
+          //console.log('fechaFinCargue',fechaFinCargue)
+          
+          //Buscar turnos en la locacion para la fecha y hora seleccionada
+          let turnosFechaHora = await this.pedidosService.getTurnosByFechaHora({fechaInicioCargue:fechaInicioCargue,fechaFinCargue:fechaFinCargue, locacion:this.localidad, estados:JSON.stringify([this.estadosTurno.SOLICITADO])});
+          // console.log('turnosFechaHora',turnosFechaHora)
+          // console.log('turnosFechaHora sin turno actual',turnosFechaHora.filter(turno => turno.id != this.turno.id))
+
+          let turnos_hora_locacion = !this.locaciones.find(locacion=>locacion.code == this.localidad).turnos_hora?4:this.locaciones.find(locacion=>locacion.code == this.localidad).turnos_hora;
+          
+          this.arrayHorasDiaLocacion.push({
+            label:fechaInicioCargue.toLocaleTimeString('en-US', { hour12: true }),
+            hora: fechaInicioCargue.toTimeString().split(' ')[0],
+            activo: (turnosFechaHora.filter(turno => turno.id != this.turno.id).length < turnos_hora_locacion) ? true : false
+            //activo: (turnosFechaHora.length < turnos_hora_locacion) ? true : false
+          })
+
+        }
+        console.log("this.arrayHorasDiaLocacion", this.arrayHorasDiaLocacion)
+        
+        if(this.arrayHorasDiaLocacion.find(hora=>hora.hora === `${this.horacargue.toTimeString().split(':')[0]}:00:00`)){
+          this.horacargueSeleccionada = this.arrayHorasDiaLocacion.find(hora=>hora.hora === `${this.horacargue.toTimeString().split(':')[0]}:00:00`); 
+          await this.seleccionarHoraCita();
+        }
+
+    }
   
-    /*for(let horario of this.horariosLocacion){
-      //////////////// ////////////// ////////////////////////console.log(horario.dias_atencion.includes(diaSeleccionado.fullname));
-    }*/
+  
     //////////////// ////////////// ////////////////////////console.log(this.fechacargue.getUTCDay(), diasSemana,diaSeleccionado,this.horariosLocacion,horariosSeleccionados);
-    await this.cambioHoraCita();
+    //await this.cambioHoraCita();
   }
 
   async configTablePedidosAlmacenCliente(){
@@ -1569,7 +1614,17 @@ async getTurno(id: number){
 
   }
 
+  async seleccionarHoraCita(hora?:string):Promise<void>{
+    //console.log('hora seleccionada',this.horacargueSeleccionada);
+    this.horacargue = new Date(`${this.fechacargue.toISOString().split('T')[0]}T${this.horacargueSeleccionada.hora}`)
+    console.log('horacargue',this.horacargue);
+    //await this.cambioHoraCita();
 
+    if(!this.horacargueSeleccionada.activo){
+      this.messageService.add({severity:'warn', summary: '!Advertencia¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+    }
+
+  }
   
   async cambioHoraCita():Promise<void>{
     //////////////// ////////////// ////////////////////////console.log(this.horacargue.toLocaleTimeString());
@@ -1949,18 +2004,17 @@ async validarHoraCargue():Promise<boolean>{
     if(await this.validarFormulario()){
       this.accion = 'aprobar'
 
-      // if((await this.validarDisponibilidadHoraLocacion())=== false){
-      //   this.messageService.add({severity:'error', summary: '!Error¡', detail: `La hora seleccionada no está disponible para citas, por favor seleccione otra hora o fecha.` });
-      //   //this.cambioEstado = false;
-      // }else {
-      //   this.formEstadoTurno = true;
-      //   this.tituloEstado = "Aprobar turno "+this.turnoId;
-      //   this.novedad = false;
-      // }
+      if(!this.horacargueSeleccionada.activo){
+        this.messageService.add({severity:'error', summary: '!Error¡', detail: 'La hora seleccionada no está disponible para citas, por favor seleccione otra hora.'});
+      }else {
+        this.formEstadoTurno = true;
+        this.tituloEstado = "Aprobar turno "+this.turnoId;
+        this.novedad = false;
+      }
 
-      this.formEstadoTurno = true;
-      this.tituloEstado = "Aprobar turno "+this.turnoId;
-      this.novedad = false;
+      // this.formEstadoTurno = true;
+      // this.tituloEstado = "Aprobar turno "+this.turnoId;
+      // this.novedad = false;
 
 
       
