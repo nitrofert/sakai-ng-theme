@@ -392,7 +392,7 @@
                                                 id="disponible"
                                                 type="number"
                                                 [disabled]="pedido.maneja_lote==='Y'"
-                                                [value]="pedido.cantidad_sacos"
+                                                [(ngModel)]="pedido.cantidad_sacos"
                                                 
                                             />
                                             <label for="disponible"><h6>Total sacos</h6></label>

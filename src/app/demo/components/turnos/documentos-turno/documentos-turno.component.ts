@@ -171,6 +171,8 @@ remisiones:any[] =[];
     let turno$ = this.solicitudTurnoService.getDocumentosTurnosByID(id)
     //let turno$ = this.solicitudTurnoService.getTurnosByID(id)
     let turno = await lastValueFrom(turno$);
+
+    console.log('turno',turno)
        
     return turno
 

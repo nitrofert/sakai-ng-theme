@@ -71,6 +71,18 @@ import { UrlApiService } from "./url-api.service";
         return facturasSN;
     }
 
+    getObsRemision(remision:any):Observable<any> {
+        const url:string = `${this.api_url}/api/sb1xe/remision?p_docentry=${remision}`;
+        return this.http.get<any>(url);
+    }
+
+    async getRemision(remision:any):Promise<any>{
+        //////////////////console.log(params);
+        const infoRemision$ = this.getObsRemision(remision);
+        const infoRemision = await lastValueFrom(infoRemision$);
+        return infoRemision;
+    }
+
 
 
 }

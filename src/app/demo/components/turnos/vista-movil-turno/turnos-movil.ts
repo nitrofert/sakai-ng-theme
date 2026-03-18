@@ -848,7 +848,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   async validarFormulario():Promise<boolean> {
     let valido:boolean = false;
 
-    //console.log('this.pedidos_turno',this.pedidos_turno)
+    console.log('this.pedidos_turno',this.pedidos_turno)
     //console.log('this.pedidos_turno.filter(pedido=>!pedido.cubicacion.length)',this.pedidos_turno.filter(pedido=>pedido.cubicacion ==="" || !pedido.cubicacion))
 
     if(this.estado === this.estadosTurno.CARGANDO && this.pedidos_turno.filter(pedido=>pedido.maneja_lote==='Y' && pedido.detalle_lotes_item_turno.length ===0).length>0){

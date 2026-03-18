@@ -372,7 +372,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
           this.solicitudesEntidad = solicitudesTurnos.entities;
 
-         ////////////console.log('this.solicitudesExtendida', this.solicitudesExtendida);
+         console.log('this.solicitudesExtendida', this.solicitudesExtendida);
          ////////////console.log('this.solicitudesEntidad', this.solicitudesEntidad);
           this.loading = false;
         },

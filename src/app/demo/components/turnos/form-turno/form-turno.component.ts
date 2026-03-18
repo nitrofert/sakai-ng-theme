@@ -338,8 +338,10 @@ arrayHorasDiaLocacion:any[] = [];
               private ciudadesService:CiudadesService,
               private sB1SLService:SB1SLService) { }
 
-  ngOnInit() {
+   ngOnInit() {
 
+    //console.log('array',await this.functionsService.objectToArray({ '0': { Valor: '80000.000000' } }));
+    
     // const devices = getDeviceList();
 
     // for (const device of devices) {
@@ -375,7 +377,7 @@ arrayHorasDiaLocacion:any[] = [];
   getPermisosModulo(){
   
     const modulo = this.router.url!='/portal/turnos'?'/portal/turnos':this.router.url;
-    ////////////////////console.log(modulo);
+    console.log('modulo',modulo);
     this.usuariosService.getPermisosModulo(modulo)
         .subscribe({
             next: async (permisos)=>{
@@ -572,6 +574,7 @@ arrayHorasDiaLocacion:any[] = [];
   }
 
 async getTurno(id: number){
+    
     
     //let orden = await this.ordenesCargueService.getOrdenesByID(id);
     ////////console.log('infoturno desde calendario',this.config.data.infoTurno)
@@ -808,6 +811,14 @@ async getTurno(id: number){
   }
 
   async getInfoTurno(turno:any){
+
+    // const valor = await this.functionsService.objectToArray({ '0': { Valor: '80000.000000' } });
+    // console.log('valor',valor);
+    // console.log('valor',valor[0].Valor);
+
+    // let test = { '0': { Valor: '80000.000000' } };
+    // console.log('test',test);
+    // console.log('test',test['0'].Valor);
     
       //////console.log('Cargue informacion del turno',turno);
       this.turno = turno;
@@ -1451,6 +1462,8 @@ async getTurno(id: number){
 
     switch(estadoActual){
       case this.estadosTurno.SOLICITADO:
+         console.log('permisosModulo',this.permisosModulo)
+        console.log('permisosModulo aprobar',this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Aprobar turno').valor);
         if(this.permisosModulo.find((permiso: { accion: string; })=>permiso.accion==='Aprobar turno').valor){
           this.arrayBtnTurnos.push(this.btnAprobar);
         }
@@ -2022,7 +2035,7 @@ async validarHoraCargue():Promise<boolean>{
   }
 
   async pausarTurno(){
-    if(await this.validarFormulario()){
+    if(await this.validarFormulario('pausar')){
       this.accion = 'pausar'
       this.formEstadoTurno = true;
       this.tituloEstado = "Pausar turno "+this.turnoId;
@@ -2252,10 +2265,10 @@ async validarHoraCargue():Promise<boolean>{
     }else if((this.accion == 'validar revision inventario' ) && ( !this.comentario)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Para la accion de ${this.accion}, debe ingesar un comentario.` });
       this.cambioEstado = false;
-    }else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.CARGANDO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
+    }else if((this.accion != 'cancelar' && this.accion != 'pausar') && (this.estado === this.estadosTurno.CARGANDO /*|| this.estado === this.estadosTurno.DESPACHADO*/) && this.inspeccionTurno && this.inspeccionTurno.cantidad_unidades === 0){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `La cantidad de unidades a recibir en la inspección debe ser mayor a cero.` });
       this.cambioEstado = false;
-    } else if(this.accion != 'cancelar' && (this.estado === this.estadosTurno.PESADOF /*|| this.estado === this.estadosTurno.DESPACHADO*/) && (this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length)){
+    } else if((this.accion != 'cancelar' && this.accion != 'pausar') && (this.estado === this.estadosTurno.PESADOF /*|| this.estado === this.estadosTurno.DESPACHADO*/) && (this.remisionesPorCliente.filter(cliente => (cliente.remisiones.filter((remision: { manifiesto: number; })=>remision.manifiesto===0).length) >0).length)){
       this.messageService.add({severity:'error', summary: '!Error¡', detail: `Debe ingresar el número del mafiesto de carga para cada remisión.` });
       this.cambioEstado = false;
     }else if(await this.validarFechaEstado()){
@@ -2602,7 +2615,7 @@ async validarHoraCargue():Promise<boolean>{
             }
 
             if(this.remisionesPorCliente.length>0){
-              
+              console.log('this.remisionesPorCliente',this.remisionesPorCliente)
               data.remisionesPorCliente = this.remisionesPorCliente;
             }
 
@@ -3152,7 +3165,7 @@ async validarHoraCargue():Promise<boolean>{
 
   }
 
-  async validarFormulario():Promise<boolean> {
+  async validarFormulario(accion?:string):Promise<boolean> {
       let valido:boolean = false;
       ////////////console.log('tipoOperacion',this.tipoOperacion);
       ////////////console.log('turnoBase',this.turnoBase);
@@ -3160,7 +3173,10 @@ async validarHoraCargue():Promise<boolean>{
       // if(this.tablaPedidosTurno.data[0].remision==undefined){
       //   ////////////////////console.log('remisión no definida');
       // }
-    
+      if(accion && accion==='pausar'){
+        this.accion = accion;
+        return true;
+      }
       ////////////////////console.log(this.tablaPedidosTurno.data.filter((linea: { remision: null; })=>linea.remision == null).length);
 
       if(!this.fechacargue || 

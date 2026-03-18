@@ -323,7 +323,7 @@ this.usuariosService.getInfoUsuario()
           ////////////////////// //// ////////////////////console.log(infoUsuario);
           let clientesUsuario!:any;
 
-          if(await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.TRANSPORTASOCIEDAD) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.ADMIN)){
+          if(await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.TRANSPORTASOCIEDAD) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.ADMIN) || await this.functionsService.validRoll(infoUsuario.roles,this.tiposRol.CREADORSOLICITUDES)){
             //Listar todos los clientes
             clientesUsuario = await this.clientesService.infoClientes();
 
@@ -510,7 +510,7 @@ getAlmacenes(){
   this.almacenesService.getAlmacenes()
       .subscribe({
           next:(almacenes)=>{
-           //console.log('almacenes',almacenes);
+           console.log('almacenes',almacenes);
             let almacenesTMP:any[] = [];
              
             for(let index in almacenes){
@@ -664,7 +664,7 @@ async seleccionarCliente(clienteSeleccionado:any){
   if(this.verCondTPT && this.condicionSeleccionada.length == 0){
     this.messageService.add({severity:'error', summary:'Error', detail:'Debe seleccionar primero una condición de transporte'});
   }else{
-    ////////console.log('clienteSeleccionado',clienteSeleccionado);
+    console.log('clienteSeleccionado',clienteSeleccionado);
     ////////console.log('condicion tpt',this.condicion_tpt);
     //Recorrer clientes seleccionados
     for await(let cliente of clienteSeleccionado){
@@ -676,9 +676,10 @@ async seleccionarCliente(clienteSeleccionado:any){
       }
     }
 
-    //////console.log('this.pedidosCliente',this.pedidosCliente);
+    console.log('this.pedidosCliente',this.pedidosCliente);
   
     this.pedidos = this.pedidosCliente
+
     this.almacenSeleccionado = [];
     this.vehiculosEnSolicitud = [];
     this.generarTreeTable();

@@ -795,7 +795,7 @@
                         </p-fileUpload>
                     </div>
 
-                    <div *ngIf="(estado === estadosTurno.PESADO ||estado === estadosTurno.CARGANDO ||estado === estadosTurno.CARGADO) && tipoTurno==='RETIRO' " class="field col-12">
+                    <div *ngIf="(estado === estadosTurno.PESADO ||estado === estadosTurno.CARGANDO ||estado === estadosTurno.CARGADO) && tipoTurno==='RETIRO' && (this.accion != 'cancelar' && this.accion != 'pausar')" class="field col-12">
                         <app-inspeccion-despacho
                             [turno]="turno"
                             [estado]="estado"

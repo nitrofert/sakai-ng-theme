@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { lastValueFrom } from "rxjs";
 import { AlmacenesService } from "src/app/demo/service/almacenes.service";
 import { FunctionsService } from "src/app/demo/service/functions.service";
+import { SB1XEService } from "src/app/demo/service/sb1xe.service";
 import { SolicitudTurnoService } from "src/app/demo/service/solicitudes-turno.service";
 import { UsuarioService } from "src/app/demo/service/usuario.service";
 
@@ -1470,10 +1471,18 @@ export class PdfRemision {
              {
                  id:'table-info-transportadora',
                  table:{
-                     widths: [ '10%','10%','25%','10%','20%','25%' ],
+                     widths: [ '10%','10%','10%','25%','10%','15%','20%' ],
                      body:[
                          [
-                             {
+                            {
+                                 text:' ORDEN DE COMPRA',
+                                 alignment:'center',
+                                 fontSize:8,
+                                 blod:true,
+                                 color:"antiquewhite",
+                                 fillColor:"green"
+                             }, 
+                            {
                                  text:' No. AUTORIZACION DE CARGUE',
                                  alignment:'center',
                                  fontSize:8,
@@ -1526,7 +1535,13 @@ export class PdfRemision {
      
                              }
                          ],
-                         [
+                         [    
+                            {
+                                 text:data.NumAtCard,
+                                 alignment:'center',
+                                 fontSize:8,
+                                 blod:true,
+                             },
                              {
                                  text:data.turno,
                                  alignment:'center',
@@ -1890,6 +1905,7 @@ export class PdfRemision {
     constructor(private solicitudTurnoService:SolicitudTurnoService,
                 private functionsService:FunctionsService,
                 private almacenesService: AlmacenesService,
+                private sB1XEService:SB1XEService,
                 private usuarioService:UsuarioService){}
 
     
@@ -1900,7 +1916,19 @@ export class PdfRemision {
         // let infoTurno$ = this.solicitudTurnoService.getTurnosByID(turno);
         // let infoTurno = await lastValueFrom(infoTurno$);
         let infoTurno = turno;
-        //////console.log('infoTurno',infoTurno);
+        console.log('infoTurno',infoTurno);
+
+
+        let infoRemision:any = await this.sB1XEService.getRemision(remision);
+        
+
+        let NumAtCard:any ="";
+
+        if(infoRemision?.data.length>0){
+            NumAtCard = infoRemision.data[0].NumAtCard?infoRemision.data[0].NumAtCard:'';
+        }
+
+        console.log('NumAtCard',NumAtCard);
 
         let locaciones$ = this.almacenesService.getLocaciones()
         let locaciones = await lastValueFrom(locaciones$);
@@ -1932,13 +1960,15 @@ export class PdfRemision {
             neto:infoTurno.peso_neto,
             fecha:infoRemison.fecha,
             turno:infoTurno.id,
-            manifiesto:infoRemison.manifiesto
+            manifiesto:infoRemison.manifiesto,
+            
         }
 
         let detalle_remision:any[] = [];
         //Buscar en detalle_pedidos_turno los items coincidentes con la remision.docnum
 
-        let detalle_pedidos_turno = infoTurno.detalle_solicitud_turnos_pedido.filter((pedido:{remision:any})=>pedido.remision === infoRemison.docnum);
+        //let detalle_pedidos_turno = infoTurno.detalle_solicitud_turnos_pedido.filter((pedido:{remision:any})=>pedido.remision === infoRemison.docnum);
+        let detalle_pedidos_turno = infoTurno.detalle_solicitud_turnos_pedido.filter((pedido:{remision:any})=>pedido.remision.includes(infoRemison.docnum));
 
         //console.log(detalle_pedidos_turno)
 
@@ -1973,7 +2003,7 @@ export class PdfRemision {
         linea_remision.detalle_remision = detalle_remision;
         remisiones_turno.push(linea_remision);
 
-        //////console.log('remisiones_turno',remisiones_turno);
+        console.log('remisiones_turno',remisiones_turno);
 
         let almacen:string = almacenes.filter(almacen=>almacen.WhsCode_Code === remisiones_turno[0].detalle_remision[0].bodega)[0].WhsName;
 
@@ -2091,6 +2121,7 @@ export class PdfRemision {
             observacion:`Remisión basado en pedido de cliente ${remisiones_turno[0].pedidonum}`,
             manifiesto:remisiones_turno[0].manifiesto,
             turno:infoTurno.id,
+            NumAtCard,
             remision:remisiones_turno[0]
         }
 
