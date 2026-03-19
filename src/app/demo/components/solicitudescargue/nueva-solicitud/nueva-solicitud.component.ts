@@ -375,7 +375,7 @@ async getLocaciones(){
   this.almacenesService.getLocaciones()
       .subscribe({
           next:(locaciones)=>{
-              //console.log('locaciones',locaciones);
+              console.log('locaciones',locaciones);
               this.locaciones = locaciones;
           },
           error:(err)=>{
@@ -720,7 +720,7 @@ async seleccionarCliente(clienteSeleccionado:any){
 
 async getSaldosPedidosCliente(cliente:string, condiciontpt:string):Promise<any>{
     let saldosPedidos = await this.pedidosService.getSaldosPedidosCliente(cliente,condiciontpt);
-    ////////console.log(`getSaldosPedidosCliente ${cliente}` ,saldosPedidos);
+    console.log(`getSaldosPedidosCliente ${cliente}` ,saldosPedidos);
     let pedidosClientes:any[] = [];
     for(let indexPedido in saldosPedidos){
           pedidosClientes.push({
@@ -941,32 +941,14 @@ async getPedidosPorCliente(clientesSeleccionados:any){
 }
 
 getAlmacenesEnPedidos(){
-  let almacenesPedidosCliente: any[] = [];
-  ////////console.log('almacenesPedidosCliente',this.almacenes,this.pedidosCliente);
-  for(let pedido of this.pedidosCliente){
-   ////console.log('pedido',pedido)
-    ////////console.log('almacenesPedidosCliente',almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode))
-    if(almacenesPedidosCliente.filter(almacenPedido => almacenPedido.code == pedido.locacioncode).length===0){
-      //TODO: Buscar datos del almacen en array de almacenes
-      
-      if(this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode).length>0){
-        let informacionAlmacen:any = this.almacenes.filter(almacen => almacen.locacion_codigo2 == pedido.locacioncode)[0];
-
-        ////////console.log('informacionAlmacen',informacionAlmacen);
-
-        informacionAlmacen.label = informacionAlmacen.locacion2+' - '+informacionAlmacen.Name_State+ ' ('+informacionAlmacen.State_Code+')';
-        almacenesPedidosCliente.push({
-          code:informacionAlmacen.locacion_codigo2,
-          name:informacionAlmacen.locacion2,
-          label: informacionAlmacen.label,
-          email: informacionAlmacen.CorreoNoti
-        });
-      }
-    }
-  }
-  this.almacenesPedidosCliente = almacenesPedidosCliente;
-  ////////console.log('almacenesPedidosCliente',this.almacenesPedidosCliente);
-
+  this.almacenesPedidosCliente = this.locaciones.map((locacion: any) => ({
+    code: locacion.code,
+    name: locacion.locacion,
+    label: locacion.locacion,
+    email: locacion.email,
+    bodegas: locacion.bodegas || []
+  }));
+  ////////console.log('almacenesPedidosCliente', this.almacenesPedidosCliente);
 }
 
 
@@ -1020,7 +1002,10 @@ generarTreeTable(){
 
 
 filtrarAlmacen(event:any){
-this.almacenesFiltrados = this.filter(event,this.almacenesPedidosCliente);
+  const query = event.query.toLowerCase();
+  this.almacenesFiltrados = query
+    ? this.almacenesPedidosCliente.filter((a: any) => a.label.toLowerCase().includes(query))
+    : [...this.almacenesPedidosCliente];
 }
 
 async seleccionarAlmacen(almacenSeleccionado:any){
@@ -1736,9 +1721,11 @@ async adicionarItemPedido(placa:string){
 }
 
 async getPedidosClientePorAlmacen(almacen:string,cliente?:string){
-  //this.pedidosAlmacenCliente = await this.pedidosService.getPedidosClientePorAlmacen(this.clienteSeleccionado, almacen);
-  //let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacion === almacen && pedido.cardcode === cliente)
-  let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => pedido.locacioncode === almacen && pedido.cardcode === cliente)
+  const locacion = this.locaciones.find((loc: any) => loc.code === almacen);
+  const codigosBodegas: string[] = locacion?.bodegas?.map((b: any) => b.codigo) || [];
+  console.log('codigosBodegas',codigosBodegas)
+  ////////console.log('bodegas locacion', codigosBodegas);
+  let pedidosAlmacenCliente = this.pedidosCliente.filter(pedido => codigosBodegas.includes(pedido.codigo_almacen) && pedido.cardcode === cliente)
   //////////////// //// ////////////////////console.log('pedidosAlmacenCliente',pedidosAlmacenCliente);
   let pedidosAlmacenClienteCalcudada = await this.calcularCantidadesComprometidas(pedidosAlmacenCliente);
 

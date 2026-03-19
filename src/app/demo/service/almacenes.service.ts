@@ -51,12 +51,30 @@ export class AlmacenesService {
     }
 
     getLocacionByCode(code:any):Observable<any>{
-         
+
         const url:string = `${this.api_url}/api/locaciones/${code}`;
         return this.http.get<any>(url);
 
     }
 
-   
-    
+    getBodegasByLocacion(locacionId: number): Observable<any> {
+        const url: string = `${this.api_url}/api/locaciones/${locacionId}/bodegas`;
+        return this.http.get<any>(url);
+    }
+
+    agregarBodega(locacionId: number, data: any): Observable<any> {
+        const url: string = `${this.api_url}/api/locaciones/${locacionId}/bodegas`;
+        return this.http.post<any>(url, data);
+    }
+
+    actualizarBodega(bodegaId: number, data: any): Observable<any> {
+        const url: string = `${this.api_url}/api/locaciones/bodegas/${bodegaId}`;
+        return this.http.patch<any>(url, data);
+    }
+
+    eliminarBodega(bodegaId: number): Observable<any> {
+        const url: string = `${this.api_url}/api/locaciones/bodegas/${bodegaId}`;
+        return this.http.delete<any>(url);
+    }
+
 }
