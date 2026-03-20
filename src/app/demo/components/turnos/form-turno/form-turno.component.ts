@@ -3427,16 +3427,12 @@ async validarHoraCargue():Promise<boolean>{
   getSaldosPedidos(){
 
     let CardCode = this.clienteSeleccionado.CardCode;
-    let locacion = this.localidad;
 
-
-    
-
-    this.pedidosService.getSaldosPedidos(CardCode,locacion)
+    this.pedidosService.getSaldosPedidos(CardCode)
         .subscribe({
             next:async (saldosPedidos)=>{
              //////////console.log('saldosPedidos',saldosPedidos);
-             
+
              let pedidosClientes:any[] = [];
              for(let indexPedido in saldosPedidos){
               
@@ -3521,7 +3517,12 @@ async validarHoraCargue():Promise<boolean>{
   
              }
 
-             this.pedidosCliente = await this.calcularCantidadesComprometidas(pedidosClientes);
+             const pedidosConCantidades = await this.calcularCantidadesComprometidas(pedidosClientes);
+             const locacionActual = this.locaciones.find((loc: any) => loc.code === this.localidad);
+             const codigosBodegas: string[] = locacionActual?.bodegas?.map((b: any) => b.codigo) || [];
+             this.pedidosCliente = codigosBodegas.length > 0
+               ? pedidosConCantidades.filter((p: any) => codigosBodegas.includes(p.codigo_almacen))
+               : pedidosConCantidades;
 
              //// ////////////// ////////////////////////console.log('pedidosCliente',this.pedidosCliente);
              this.configNewTablePedidosAlmacenCliente();
@@ -3903,50 +3904,21 @@ async validarHoraCargue():Promise<boolean>{
   async cambioBodega(){
     this.dialogCambioBodega = true
 
-    
-    
-    const inventariosItemBodega$ = this.pedidosService.getInventarioItenBodega();
-    const inventariosItemBodega = await lastValueFrom(inventariosItemBodega$);
-    
-    //////////console.log('inventariosItemBodega',inventariosItemBodega);
-    //////////console.log('locaciones',this.locaciones);
-    const arrayInventariosItemBodega = await this.objectToArray(inventariosItemBodega);
+    const bodegasEnTurno = new Set(this.pedidosTurno.map((p: any) => p.bodega));
 
-    ////////////////////////console.log(arrayInventariosItemBodega);
-
-    //let almacenesConStockItem:any[] = [];
-
-    let almacenesConStockItem:any[] = arrayInventariosItemBodega;
-
-    /*for(let pedido of this.pedidosTurno){
-      //////////// ////////////////////////console.log(pedido);
-      // ////////////// ////////////////////////console.log(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
-      almacenesConStockItem = almacenesConStockItem.concat(arrayInventariosItemBodega.filter((item: { ItemCode: any; })=>item.ItemCode === pedido.itemcode));
-    }*/
-
-    almacenesConStockItem.map((item)=>{
-      item.label = `${item.Localidad_} - ${item.WhsCode} - ${item.WhsName}`
-    });
-
-    //////////// ////////////////////////console.log(almacenesConStockItem);
-
-    almacenesConStockItem = await this.functionsService.groupArray(almacenesConStockItem,'label');
-
-   //////////console.log('almacenesConStockItem',almacenesConStockItem);
-   ////////////console.log('this.locaciones',this.locaciones);
-    let bodegas:any[] =[];
-
-    for(let almacen of almacenesConStockItem){
-      ////////////console.log('almacen.locacion_codigo2',almacen.locacion_codigo2,this.locaciones.find(item=>item.code == almacen.locacion_codigo2 ));
-      if(this.locaciones.find(item=>item.code == almacen.locacion_codigo2 )){
-        bodegas.push(almacen);
+    let bodegas: any[] = [];
+    for (const locacion of this.locaciones) {
+      for (const bodega of locacion.bodegas || []) {
+        if (!bodegasEnTurno.has(bodega.codigo)) {
+          bodegas.push({
+            codigo: bodega.codigo,
+            nombre: bodega.nombre,
+            label: `${locacion.locacion} - ${bodega.codigo} - ${bodega.nombre}`,
+            locacion_code: locacion.code
+          });
+        }
       }
     }
-
-    //////////// ////////////////////////console.log(bodegas);
-
-    //this.bodegas = almacenesConStockItem;
-
 
     this.bodegas = bodegas;
     ////console.log('bodegas',bodegas)
@@ -3971,10 +3943,10 @@ async validarHoraCargue():Promise<boolean>{
 
     ////console.log(bodegaSeleccionada)
 
-    if(this.locaciones.filter(locacion=>locacion.code === bodegaSeleccionada.locacion_codigo2).length>0){
+    if(this.locaciones.filter(locacion=>locacion.code === bodegaSeleccionada.locacion_code).length>0){
 
-      this.diasNoAtencionCambioBodega = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === bodegaSeleccionada.locacion_codigo2)[0].horarios_locacion);
-      this.horariosLocacionCambioBodega = this.locaciones.filter(locacion=>locacion.code === bodegaSeleccionada.locacion_codigo2)[0].horarios_locacion;
+      this.diasNoAtencionCambioBodega = await this.obtenerDiasNoAtencion(this.locaciones.filter(locacion=>locacion.code === bodegaSeleccionada.locacion_code)[0].horarios_locacion);
+      this.horariosLocacionCambioBodega = this.locaciones.filter(locacion=>locacion.code === bodegaSeleccionada.locacion_code)[0].horarios_locacion;
       if(this.fechacargueCambioBodega){
         await this.seleccionarFechaCitaCambioBodega();
       }
@@ -4034,7 +4006,7 @@ async validarHoraCargue():Promise<boolean>{
 
       // });
       let linea:any = JSON.parse(JSON.stringify(pedido));
-      linea.bodega = bodegaSeleccionada.WhsCode;
+      linea.bodega = bodegaSeleccionada.codigo;
       linea.lineaUpdate = {create:false,update:false};
       pedidosTurnoCambioBodegaTurno.push(linea);
     } 
@@ -4268,7 +4240,7 @@ async validarHoraCargue():Promise<boolean>{
               this.pedidosTurno[indexPedidoTurno].cantidad =0;
               this.pedidosTurno[indexPedidoTurno].estado = 'I';
             }
-            this.observacionesCargue.push(`Se realizará retiro de ${item.cantidad} TON por la bodega ${this.bodegaSeleccionada.WhsCode}`)
+            this.observacionesCargue.push(`Se realizará retiro de ${item.cantidad} TON por la bodega ${this.bodegaSeleccionada.codigo}`)
           }
 
           //////// ////////////////////////console.log(this.pedidosTurno);
@@ -4288,7 +4260,7 @@ async validarHoraCargue():Promise<boolean>{
               transportadora:this.transportadoraSeleccionada.id,
               vehiculo:this.vehiculoSeleccionado.id,
               conductor:this.conductorSeleccionado.id,
-              locacion:this.bodegaSeleccionada.locacion_codigo2 ,
+              locacion:this.bodegaSeleccionada.locacion_code ,
               pedidos_detalle_solicitud:pedidosVehiculo
           }];
 
@@ -4335,7 +4307,7 @@ async validarHoraCargue():Promise<boolean>{
                     this.tituloEstado = "actualizar la información del turno por cambio de bodega ";
                     this.fechaaccion = new Date();
                     this.horaaccion = new Date();
-                    this.comentario = `Se actualiza la información del turno por cambio de bodega. Se genera el turno # ${result.detalle_solicitud_turnos[0].id} asociado a ${this.bodegaSeleccionada.WhsCode}`;
+                    this.comentario = `Se actualiza la información del turno por cambio de bodega. Se genera el turno # ${result.detalle_solicitud_turnos[0].id} asociado a ${this.bodegaSeleccionada.codigo}`;
 
                     if(this.pedidosTurno.length == this.pedidosTurno.filter(pedido =>pedido.estado === 'I').length){
 
