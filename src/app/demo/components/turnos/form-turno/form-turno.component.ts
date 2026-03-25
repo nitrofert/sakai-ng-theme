@@ -38,6 +38,7 @@ export class FormTurnoComponent implements  OnInit {
 
 
   turnoId!:number;
+  turnoVersion: number = 0;
   ordenCargue: any;
   hoy:Date = new Date();
   ayer:Date = new Date((new Date()).setDate(this.hoy.getDate()-1));
@@ -822,6 +823,7 @@ async getTurno(id: number){
     
       //////console.log('Cargue informacion del turno',turno);
       this.turno = turno;
+      this.turnoVersion = turno.version ?? 0;
       this.tipoTurno = this.turno.tipo;
       
       
@@ -2543,6 +2545,7 @@ async validarHoraCargue():Promise<boolean>{
             //this.getRemisiones = true;
 
             let data:any = {
+              version: this.turnoVersion,
               historial : {
                             estado:nuevoEstado,
                             fechaaccion:this.fechaaccion,
@@ -2635,6 +2638,7 @@ async validarHoraCargue():Promise<boolean>{
             next:async (turno)=>{
                //////console.log("turno actualizado",turno);
 
+               this.turnoVersion = turno.version ?? this.turnoVersion;
                await this.getHistorialTurno(turno.id)
 
                //this.infoHistorialTurno.detalle_solicitud_turnos_historial = turno.detalle_solicitud_turnos_historial;
@@ -2780,11 +2784,17 @@ async validarHoraCargue():Promise<boolean>{
             error:(err)=> {
               this.cambioEstado = false;
               console.error(err);
-              this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
-                console.error(err);
-                this.displayModal = false;
-                this.loadingCargue = false;
-                
+              this.displayModal = false;
+              this.loadingCargue = false;
+              if(err.status === 409){
+                this.messageService.add({severity:'warn', summary: 'Conflicto de versión', detail: 'Este turno fue modificado por otro usuario. Se recargará la información actualizada.', life: 6000});
+                this.solicitudTurnoService.getTurnosByID(this.turnoId).subscribe({
+                  next:(turno)=>{ this.getInfoTurno(turno); },
+                  error:()=>{}
+                });
+              } else {
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: err.error.message});
+              }
             }
       });
       
