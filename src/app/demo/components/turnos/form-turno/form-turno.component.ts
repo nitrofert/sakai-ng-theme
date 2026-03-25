@@ -821,7 +821,7 @@ async getTurno(id: number){
     // console.log('test',test);
     // console.log('test',test['0'].Valor);
     
-      //////console.log('Cargue informacion del turno',turno);
+      console.log('Cargue informacion del turno',turno);
       this.turno = turno;
       this.turnoVersion = turno.version ?? 0;
       this.tipoTurno = this.turno.tipo;
@@ -2787,11 +2787,8 @@ async validarHoraCargue():Promise<boolean>{
               this.displayModal = false;
               this.loadingCargue = false;
               if(err.status === 409){
-                this.messageService.add({severity:'warn', summary: 'Conflicto de versión', detail: 'Este turno fue modificado por otro usuario. Se recargará la información actualizada.', life: 6000});
-                this.solicitudTurnoService.getTurnosByID(this.turnoId).subscribe({
-                  next:(turno)=>{ this.getInfoTurno(turno); },
-                  error:()=>{}
-                });
+                this.messageService.add({severity:'warn', summary: 'Conflicto de versión', detail: 'Este turno fue modificado por otro usuario. Por favor vuelva a abrirlo para cargar la información actualizada.', life: 4000});
+                setTimeout(() => { this.ref.close(); }, 4000);
               } else {
                 this.messageService.add({severity:'error', summary: '!Error¡', detail: err.error.message});
               }
