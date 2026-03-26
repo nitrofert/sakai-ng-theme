@@ -69,6 +69,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     
 
     turno:any;
+    turnoVersion: number = 0;
 
     activeStateTabs:boolean[] = [];
     pedidos_turno:any[] = [];
@@ -380,9 +381,10 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
 
     async seleccionarTurno(turno:any){
         //console.log('turnoSeleccionado',JSON.parse(JSON.stringify(turno)))
-        
+
         this.turno = turno;
-        
+        this.turnoVersion = turno.version ?? 0;
+
         this.fechacargue = new Date(turno.fechacita);
         let hora = 60 * 60000;
         let fechacargue = new Date (new Date(turno.fechacita).getTime()+(hora*5))
@@ -574,27 +576,29 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             //console.log('pedido.id',pedido.id);
             //console.log('inventarioLotesItemBodega[item].Lote',inventarioLotesItemBodega[item].Lote);
 
+            let id_bd: number | undefined = undefined;
             if(lotesItem.length>0){
-                let existeLote = lotesItem.find(itemLote=>itemLote.id === pedido.id && itemLote.lote ===inventarioLotesItemBodega[item].Lote);
+                let existeLote = lotesItem.find((itemLote: any) => itemLote.lote === inventarioLotesItemBodega[item].Lote);
                 if(existeLote){
                     cantidad_cargue_lote = existeLote.cantidad_cargue_lote;
                     cantidad_sacos_lote = existeLote.cantidad_sacos_lote;
                     total_lotes = total_lotes+cantidad_cargue_lote;
-                    total_sacos = total_sacos+cantidad_sacos_lote
+                    total_sacos = total_sacos+cantidad_sacos_lote;
+                    id_bd = existeLote.id_bd ?? existeLote.id;
                 }
             }
 
 
             lotesItemBodega.push({
-                    
-                    lote:inventarioLotesItemBodega[item].Lote, 
-                    fecha_vencimiento:inventarioLotesItemBodega[item].Fechavencimiento, 
+                    lote:inventarioLotesItemBodega[item].Lote,
+                    fecha_vencimiento:inventarioLotesItemBodega[item].Fechavencimiento,
                     cantidad_bodega_lote:inventarioLotesItemBodega[item].Stock,
-                    estado:'A', 
-                    cantidad_comprometida:comprometido, 
+                    estado:'A',
+                    cantidad_comprometida:comprometido,
                     saldo:inventarioLotesItemBodega[item].Stock-comprometido,
                     cantidad_cargue_lote,
-                    cantidad_sacos_lote
+                    cantidad_sacos_lote,
+                    id_bd
                 })
         }
 
@@ -788,10 +792,13 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
   
   
-  borrarLote(){
-    
-    let index = this.lotesItemLine.findIndex(item=>item.lote === this.lotesItemLineSelected[0].lote);
-    this.lotesItemLine.splice(index,1)
+  async borrarLote(){
+    const loteAEliminar = this.lotesItemLineSelected[0];
+    if(loteAEliminar?.id_bd){
+      await lastValueFrom(this.solicitudTurnoService.eliminarLote(loteAEliminar.id_bd));
+    }
+    let index = this.lotesItemLine.findIndex(item=>item.lote === loteAEliminar.lote);
+    this.lotesItemLine.splice(index,1);
     this.calcularTotalesItemLotes();
     this.lotesItemLineSelected = [];
   }
@@ -1275,6 +1282,7 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
     //this.getRemisiones = true;
 
     let data:any = {
+        version: this.turnoVersion,
         historial : {
                     estado:nuevoEstado,
                     fechaaccion:this.fechaaccion,
@@ -1359,7 +1367,8 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             next:async (turno)=>{
                //console.log("turno actualizado",turno);
 
-              
+               this.turnoVersion = turno.version ?? this.turnoVersion;
+
                 let infoHistorialTurno =  await this.getHistorialTurno(turno.id)
 
                 //console.log('this.filesToUpload',this.filesToUpload)
@@ -1506,12 +1515,15 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
             },
             error:(err)=> {
               this.cambioEstado = false;
-              console.error(err);
-              this.messageService.add({severity:'error', summary: '!Error¡', detail:  err.error.message});
+              this.displayModal = false;
+              this.loadingCargue = false;
+              if(err.status === 409){
+                this.messageService.add({severity:'warn', summary: 'Conflicto de versión', detail: 'Este turno fue modificado por otro usuario. Recargando la información actualizada...', life: 4000});
+                setTimeout(() => { this.seleccionarTurno(this.turno); }, 4000);
+              }else{
                 console.error(err);
-                this.displayModal = false;
-                this.loadingCargue = false;
-                
+                this.messageService.add({severity:'error', summary: '!Error¡', detail: err.error.message});
+              }
             }
       });
       
@@ -1629,36 +1641,59 @@ export class TurnosMovilComponent implements OnInit, AfterViewInit {
   }
 
   async asignarLotesItem(){
-    //console.log('this.dataFormGestionLotesItem.total_sacos',this.dataFormGestionLotesItem.total_sacos);
-    //console.log('this.dataFormGestionLotesItem.cantidad_solicitada',this.dataFormGestionLotesItem.cantidad_solicitada);
-    //console.log('this.dataFormGestionLotesItem.total_lotes',this.dataFormGestionLotesItem.total_lotes)
-    if(this.dataFormGestionLotesItem.total_sacos===0 ){
-        this.messageService.add({severity:'error', summary: 'Informaciónn', detail:  `La cantidad total de sacos a cargar del item debe ser mayor a cero.`});       
+    if(this.dataFormGestionLotesItem.total_sacos===0){
+        this.messageService.add({severity:'error', summary: 'Informaciónn', detail: `La cantidad total de sacos a cargar del item debe ser mayor a cero.`});
     }else if(this.dataFormGestionLotesItem.total_lotes!=this.dataFormGestionLotesItem.cantidad_solicitada){
-        this.messageService.add({severity:'error', summary: 'Informaciónn', detail:  `La cantidad total de lotes a cargar del item debe ser igual a la cantidad solicitada del item.`});       
+        this.messageService.add({severity:'error', summary: 'Informaciónn', detail: `La cantidad total de lotes a cargar del item debe ser igual a la cantidad solicitada del item.`});
     }else{
+        const pedidoId = this.dataFormGestionLotesItem.linea_id;
+        const lotesConCantidad = this.dataFormGestionLotesItem.lotes.filter((l: any) => l.cantidad_cargue_lote != 0 && l.cantidad_sacos_lote);
 
-        let lotes = this.dataFormGestionLotesItem.lotes.filter((item: { cantidad_cargue_lote: number; cantidad_sacos_lote: any; })=>item.cantidad_cargue_lote !=0 && item.cantidad_sacos_lote)
-        let lotesItemLine:any[] = [];
-        lotes.forEach((lote:any,index:any)=>{
-            
-            lotesItemLine.push({
-                id:this.dataFormGestionLotesItem.linea_id,
-                lote:lote.lote,
-                fecha_vencimiento:lote.fecha_vencimiento,
-                cantidad_bodega_lote:lote.saldo,
-                cantidad_cargue_lote:lote.cantidad_cargue_lote,
-                cantidad_sacos_lote:lote.cantidad_sacos_lote,
-                lineaUpdate:{create:true,update:false}
-            })
-        })
+        // Eliminar lotes que estaban guardados pero ahora tienen cantidad 0
+        const lotesAEliminar = this.dataFormGestionLotesItem.lotes.filter((l: any) => l.id_bd && !lotesConCantidad.find((lc: any) => lc.lote === l.lote));
+        for(const lote of lotesAEliminar){
+            await lastValueFrom(this.solicitudTurnoService.eliminarLote(lote.id_bd));
+        }
 
-        let indexItemPedido = this.pedidos_turno.findIndex(item=>item.id === this.dataFormGestionLotesItem.linea_id)
-        this.pedidos_turno[indexItemPedido].cantidad_sacos =this.dataFormGestionLotesItem.total_sacos
-        this.pedidos_turno[indexItemPedido].detalle_lotes_item_turno =lotesItemLine;
+        // Crear lotes nuevos (sin id_bd)
+        const lotesNuevos = lotesConCantidad.filter((l: any) => !l.id_bd);
+        if(lotesNuevos.length > 0){
+            const payload = lotesNuevos.map((lote: any) => ({
+                lote: lote.lote,
+                fecha_vencimiento: lote.fecha_vencimiento,
+                cantidad_bodega_lote: lote.saldo,
+                cantidad_cargue_lote: lote.cantidad_cargue_lote,
+                cantidad_sacos_lote: lote.cantidad_sacos_lote
+            }));
+            const lotesGuardados = await lastValueFrom(this.solicitudTurnoService.crearLotesPedido(pedidoId, payload));
+            lotesNuevos.forEach((l: any, i: number) => { l.id_bd = lotesGuardados[i]?.id; });
+        }
+
+        // Actualizar lotes existentes (con id_bd)
+        const lotesExistentes = lotesConCantidad.filter((l: any) => l.id_bd);
+        for(const lote of lotesExistentes){
+            await lastValueFrom(this.solicitudTurnoService.actualizarLote(lote.id_bd, {
+                cantidad_cargue_lote: lote.cantidad_cargue_lote,
+                cantidad_sacos_lote: lote.cantidad_sacos_lote,
+                cantidad_bodega_lote: lote.saldo
+            }));
+        }
+
+        const lotesItemLine = lotesConCantidad.map((lote: any) => ({
+            id: pedidoId,
+            id_bd: lote.id_bd,
+            lote: lote.lote,
+            fecha_vencimiento: lote.fecha_vencimiento,
+            cantidad_bodega_lote: lote.saldo,
+            cantidad_cargue_lote: lote.cantidad_cargue_lote,
+            cantidad_sacos_lote: lote.cantidad_sacos_lote,
+            lineaUpdate: {create: false, update: false}
+        }));
+
+        const indexItemPedido = this.pedidos_turno.findIndex((item: any) => item.id === pedidoId);
+        this.pedidos_turno[indexItemPedido].cantidad_sacos = this.dataFormGestionLotesItem.total_sacos;
+        this.pedidos_turno[indexItemPedido].detalle_lotes_item_turno = lotesItemLine;
         this.pedidos_turno[indexItemPedido].lineaUpdate.update = true;
-        // this.lotesItems = lotesItemLine;
-        // //console.log('this.lotesItems',this.lotesItems);
         this.formGestionLotesItem = false;
     }
   }
