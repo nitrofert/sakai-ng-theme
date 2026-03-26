@@ -162,6 +162,26 @@ export class SolicitudTurnoService {
         return this.http.get<any>(url);
     }
 
+    crearLotesPedido(pedidoId: number, lotes: any[]): Observable<any> {
+        const url = `${this.api_url}/api/solicitud-turnos/lotes-pedido/${pedidoId}`;
+        return this.http.post<any>(url, lotes);
+    }
+
+    actualizarLote(loteId: number, data: { cantidad_cargue_lote?: number; cantidad_sacos_lote?: number; cantidad_bodega_lote?: number }): Observable<any> {
+        const url = `${this.api_url}/api/solicitud-turnos/lotes-pedido/${loteId}`;
+        return this.http.patch<any>(url, data);
+    }
+
+    eliminarLote(loteId: number): Observable<void> {
+        const url = `${this.api_url}/api/solicitud-turnos/lotes-pedido/${loteId}`;
+        return this.http.delete<void>(url);
+    }
+
+    eliminarLotesPedido(pedidoId: number): Observable<void> {
+        const url = `${this.api_url}/api/solicitud-turnos/lotes-pedido/pedido/${pedidoId}`;
+        return this.http.delete<void>(url);
+    }
+
     async infoTurno(id?:any):Promise<any> {
         const turno$ = this.getTurnosByID(id);
         const turno = await lastValueFrom(turno$);

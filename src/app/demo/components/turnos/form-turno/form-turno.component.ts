@@ -2584,19 +2584,7 @@ async validarHoraCargue():Promise<boolean>{
                 //////////////console.log('this.lotesItems',this.lotesItems);
                 //////////////console.log('this.pedidosTurno',this.pedidosTurno);
 
-                if(this.lotesItems.length>0){
-                  ////console.log('this.lotesItems.length>0')
-                  ////console.log('this.lotesItems',this.lotesItems)
-
-                  for(let itemPedido of this.pedidosTurno){
-                      ////console.log('itemPedido',itemPedido)
-
-                      let detalle_lotes_item_turno:any[] = this.lotesItems.filter(lotesItem=>lotesItem.id === itemPedido.index);
-                      itemPedido.detalle_lotes_item_turno = detalle_lotes_item_turno;
-                  }
-
-                  //console.log('ad lotes items a pedidosTurno de this.lotesItems',await this.functionsService.clonObject(this.pedidosTurno) )
-                }
+                // Lotes gestionados de forma independiente — ya persistidos en BD
 
 
                 //////console.log('this.pedidosTurno',this.pedidosTurno)
@@ -4685,14 +4673,12 @@ async validarHoraCargue():Promise<boolean>{
     const index =$event.index;
     const campo = $event.campo;
     if(campo==="lote_produccion"){
-      //Gestion de lotes de produccion
       this.itemLineSelected = this.pedidosTurno.filter(lineaPedido=>lineaPedido.id === index);
-      ////////////console.log('this.itemLineSelected',this.itemLineSelected);
-      //Buscar los lotes del item Seleccionado
-      
-      //this.lotesItemLine = this.lotesItems.filter(line=>line.id=== index);
-      this.lotesItemLine =  this.itemLineSelected[0].detalle_lotes_item_turno;
-
+      // Mapear id_bd desde el id de BD para cada lote ya persistido
+      this.lotesItemLine = (this.itemLineSelected[0].detalle_lotes_item_turno || []).map((lote: any) => ({
+        ...lote,
+        id_bd: lote.id_bd ?? lote.id
+      }));
       this.formGestionLotesItem = true;
       this.loadingTableLotesItem = false;
     }
@@ -4941,25 +4927,35 @@ async validarHoraCargue():Promise<boolean>{
   
   
   borrarLote(){
-    
-    let index = this.lotesItemLine.findIndex(item=>item.lote === this.lotesItemLineSelected[0].lote);
-    this.lotesItemLine.splice(index,1)
-    this.calcularTotalesItemLotes();
-    this.lotesItemLineSelected = [];
+    const loteAEliminar = this.lotesItemLineSelected[0];
+    let index = this.lotesItemLine.findIndex(item=>item.lote === loteAEliminar.lote);
+
+    if(loteAEliminar.id_bd){
+      this.solicitudTurnoService.eliminarLote(loteAEliminar.id_bd).subscribe({
+        next: () => {
+          this.lotesItemLine.splice(index, 1);
+          this.calcularTotalesItemLotes();
+          this.lotesItemLineSelected = [];
+        },
+        error: (err) => {
+          console.error(err);
+          this.messageService.add({severity:'error', summary:'Error', detail:'No se pudo eliminar el lote: ' + err.error?.message});
+        }
+      });
+    } else {
+      this.lotesItemLine.splice(index, 1);
+      this.calcularTotalesItemLotes();
+      this.lotesItemLineSelected = [];
+    }
   }
 
   async asignarLotesItem(){
-
-   //////////////console.log('lotesItemLine',JSON.stringify(this.lotesItemLine))
-   //console.log('after asignarLotesItem this.pedidosTurno',await this.functionsService.clonObject(this.pedidosTurno) )
 
     let cantidad_solicitada = this.totalSolicitado.nativeElement.value;
     let totalTon = this.totalTonItem.nativeElement.value;
     let totalSacos = this.totalSacosItem.nativeElement.value;
     let idLinea = this.itemLineSelected[0].id;
-
-    //////////////console.log('this.itemLineSelected',this.itemLineSelected);
-    
+    const pedidoId = this.itemLineSelected[0].id;
 
     if(parseFloat(totalTon) ===0 || parseFloat(totalSacos)===0 ){
       this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad total a cagar y la cantidad total de sacos debe ser mayor a cero'});
@@ -4971,39 +4967,46 @@ async validarHoraCargue():Promise<boolean>{
       this.messageService.add({severity:'error', summary:'Error', detail:'La cantidad total de los lotes no es igual a la cantidad a cagar del item seleccionado'});
     }else{
 
-      // if(this.lotesItems.filter(item=>item.id === this.lotesItemLine[0].id).length===0){
-      //   for(let loteItem of this.lotesItemLine){
-      //     this.lotesItems.push(loteItem);
-      //   }
-      // }else{
-      //   for(let loteLine of this.lotesItemLine){
-      //     let indexLotesItem = this.lotesItems.findIndex(item=>item.id === loteLine.id  && item.lote === loteLine.lote);
-      //     this.lotesItems[indexLotesItem].cantidad_cargue_lote = loteLine.cantidad_cargue_lote;
-      //     this.lotesItems[indexLotesItem].cantidad_sacos_lote = loteLine.cantidad_sacos_lote;
-      //   }
+      // Persistir lotes nuevos (los que no tienen id asignado desde BD)
+      const lotesNuevos = this.lotesItemLine.filter(l => !l.id_bd);
+      if(lotesNuevos.length > 0){
+        const payload = lotesNuevos.map(l => ({
+          lote: l.lote,
+          cantidad_bodega_lote: l.cantidad_bodega_lote,
+          cantidad_cargue_lote: l.cantidad_cargue_lote,
+          cantidad_sacos_lote: l.cantidad_sacos_lote,
+          fecha_vencimiento: l.fecha_vencimiento
+        }));
+        const lotesGuardados: any[] = await lastValueFrom(this.solicitudTurnoService.crearLotesPedido(pedidoId, payload));
+        // Asignar id_bd a cada lote recién guardado
+        lotesNuevos.forEach((l, i) => { l.id_bd = lotesGuardados[i]?.id; });
+      }
 
-      // }
-      // if(parseFloat(totalTon) < parseFloat(cantidad_solicitada) ){
-      //   this.messageService.add({severity:'warn', summary:'Advertencia', detail:'La cantidad total de los lotes no es igual a la cantidad a cagar del item seleccionado'});
-      // }
+      // Actualizar lotes existentes que hayan sido modificados
+      const lotesExistentes = this.lotesItemLine.filter(l => l.id_bd);
+      for(const lote of lotesExistentes){
+        await lastValueFrom(this.solicitudTurnoService.actualizarLote(lote.id_bd, {
+          cantidad_cargue_lote: lote.cantidad_cargue_lote,
+          cantidad_sacos_lote: lote.cantidad_sacos_lote,
+          cantidad_bodega_lote: lote.cantidad_bodega_lote
+        }));
+      }
 
       let indexTablaItemTurno = this.tablaPedidosTurno.data.findIndex((item: { index: any; })=>item.index === idLinea);
       let indexItemTurno = this.pedidosTurno.findIndex((item: { id: any; })=>item.id === idLinea);
-      let lotes = this.lotesItemLine.map((linea)=>{
-        return linea.lote;
-      }).join(', ')
+      let lotes = this.lotesItemLine.map((linea)=>linea.lote).join(', ');
+
       this.tablaPedidosTurno.data[indexTablaItemTurno].cantidad_sacos = totalSacos;
       this.tablaPedidosTurno.data[indexTablaItemTurno].lote_produccion = lotes;
       this.pedidosTurno[indexItemTurno].cantidad_sacos = totalSacos;
       this.pedidosTurno[indexItemTurno].lote_produccion = lotes;
+      this.pedidosTurno[indexItemTurno].detalle_lotes_item_turno = this.lotesItemLine;
       this.pedidosTurno[indexItemTurno].lineaUpdate.update = true;
       this.formGestionLotesItem = false;
 
-        //console.log('before asignarLotesItem this.pedidosTurno',await this.functionsService.clonObject(this.pedidosTurno) )
-
+      this.messageService.add({severity:'success', summary:'Confirmación', detail:'Lotes guardados correctamente'});
     }
-    
-    
+
   }
 
   formatCurrency(value: number) {
